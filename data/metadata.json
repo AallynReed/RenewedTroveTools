@@ -1,0 +1,12 @@
+{
+    "dev": true,
+    "author": "sly.dev",
+    "name": "Renewed Trove Tools",
+    "tech_name": "RenewedTroveTools",
+    "short_name": "RTT",
+    "version": "2023.09.000a",
+    "description": "",
+    "icon": "assets/favicon.ico",
+    "copyright": "2023-present",
+    "app_id": "{5d4bc772-0426-4791-9198-90f78292ba8d}"
+}

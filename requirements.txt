@@ -1,0 +1,11 @@
+python-dotenv
+flet
+python-i18n
+pydantic==1.10.12
+beanie
+cryptography
+requests
+pytz
+python-dateutil
+aiohttp
+cx-freeze
