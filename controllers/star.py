@@ -37,7 +37,7 @@ class StarChartController(Controller):
             self.selected_stat = None
             self.star_chart = get_star_chart()
             self.map = ResponsiveRow()
-            self.star_details = Column(col={"xxl": 2})
+            self.star_details = Column(col={"xxl": 4.5})
             _id = self.page.params.get("id", None)
             if _id:
                 asyncio.create_task(
@@ -107,81 +107,94 @@ class StarChartController(Controller):
                         width=775,
                         height=870,
                     ),
-                    col={"xxl": 5.5},
-                ),
-                self.star_details,
-                Column(
-                    controls=[
-                        TextField(
-                            hint_text="Insert build string",
-                            width=250,
-                            on_change=self.set_star_chart_build,
-                        ),
-                        ElevatedButton(
-                            "Copy build",
-                            width=250,
-                            disabled=not bool(self.star_chart.activated_stars_count),
-                            on_click=self.copy_star_chart_build,
-                        ),
-                        Dropdown(
-                            value=self.selected_stat or "none",
-                            options=[
-                                dropdown.Option(key="none", text="[None]"),
-                                *[
-                                    dropdown.Option(key=stat, text=stat)
-                                    for stat in self.star_chart.stats_list
-                                ],
-                            ],
-                            label="Find stats",
-                            on_change=self.change_selected_stat,
-                            width=250,
-                        ),
-                        Text("Stats", size=22),
-                        *(
-                            [
-                                DataTable(
-                                    heading_row_height=0,
-                                    data_row_max_height=30,
-                                    columns=[DataColumn(Text()), DataColumn(Text())],
-                                    rows=[
-                                        DataRow(
-                                            cells=[
-                                                DataCell(Text(k)),
-                                                DataCell(
-                                                    Text(
-                                                        str(v[0])
-                                                        + (f"%" if v[1] else "")
-                                                    )
-                                                ),
-                                            ]
-                                        )
-                                        for k, v in self.star_chart.activated_stats.items()
-                                    ],
-                                )
-                            ]
-                            if self.star_chart.activated_stats
-                            else [Text("-")]
-                        ),
-                    ],
-                    col={"xxl": 2},
+                    col={"xxl": 6},
                 ),
                 Column(
                     controls=[
                         Text("Abilities", size=22),
                         *(
-                            [Text(a) for a in self.star_chart.activated_abilities]
-                            or [Text("-")]
+                                [Text(a) for a in self.star_chart.activated_abilities]
+                                or [Text("-")]
                         ),
                         Text("Obtainables", size=22),
                         *(
-                            [
-                                Text(f"{v}x  {k}")
-                                for k, v in self.star_chart.activated_obtainables.items()
-                            ]
-                            or [Text("-")]
+                                [
+                                    Text(f"{v}x  {k}")
+                                    for k, v in self.star_chart.activated_obtainables.items()
+                                ]
+                                or [Text("-")]
                         ),
+                        ResponsiveRow(
+                            controls=[
+                                Dropdown(
+                                    value=self.selected_stat or "none",
+                                    options=[
+                                        dropdown.Option(key="none", text="[None]"),
+                                        *[
+                                            dropdown.Option(key=stat, text=stat)
+                                            for stat in self.star_chart.stats_list
+                                        ],
+                                    ],
+                                    label="Find stats",
+                                    on_change=self.change_selected_stat,
+                                    width=250,
+                                    col={"xxl": 4}
+                                ),
+                                TextField(
+                                    hint_text="Insert build string",
+                                    width=250,
+                                    on_change=self.set_star_chart_build,
+                                    col={"xxl": 4}
+                                ),
+                                ElevatedButton(
+                                    "Copy build",
+                                    width=250,
+                                    disabled=not bool(self.star_chart.activated_stars_count),
+                                    on_click=self.copy_star_chart_build,
+                                    col={"xxl": 4}
+                                ),
+                                ResponsiveRow(
+                                    controls=[
+                                        self.star_details,
+                                        Column(
+                                            controls=[
+                                                Text("Stats", size=22),
+                                                *(
+                                                    [
+                                                        DataTable(
+                                                            heading_row_height=0,
+                                                            data_row_max_height=40,
+                                                            columns=[DataColumn(Text()), DataColumn(Text())],
+                                                            rows=[
+                                                                DataRow(
+                                                                    cells=[
+                                                                        DataCell(Text(k, size=13)),
+                                                                        DataCell(
+                                                                            Text(
+                                                                                str(v[0])
+                                                                                + (f"%" if v[1] else ""),
+                                                                                size=13
+                                                                            )
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                                for k, v in self.star_chart.activated_stats.items()
+                                                            ],
+                                                        )
+                                                    ]
+                                                    if self.star_chart.activated_stats
+                                                    else [Text("-")]
+                                                ),
+                                            ],
+                                            col={"xxl": 7.5},
+                                        )
+                                    ]
+                                )
+                            ],
+                            vertical_alignment="center"
+                        )
                     ],
-                    col={"xxl": 2.5},
+                    col={"xxl": 6},
                 ),
             ]
         )
@@ -295,7 +308,7 @@ class StarChartController(Controller):
             ]
         else:
             self.star_details.controls.clear()
-        await self.star_details.update_async()
+        await self.map.update_async()
 
     async def max_branch(self, event):
         if event.control.data.type != StarType.root:

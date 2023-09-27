@@ -1,4 +1,4 @@
-from flet import View, Row, VerticalDivider, Text
+from flet import View, Row, VerticalDivider
 from flet_core.icons import MENU_BOOK_SHARP
 
 from controllers import MasteryController
@@ -6,7 +6,7 @@ from controllers import MasteryController
 
 class MasteryView(View):
     route = "/mastery"
-    title = Text("Mastery")
+    title = "Mastery"
     icon = MENU_BOOK_SHARP
 
     def __init__(self, page):

@@ -1,13 +1,12 @@
-from flet import View, Text
+from flet import View
 from flet_core.icons import DIAMOND_SHARP
-from i18n import t
 
 from controllers import GemSetController
 
 
 class GemSetView(View):
     route = "/gem_calculator"
-    title = Text(t("tabs.0"))
+    title = "tabs.0"
     icon = DIAMOND_SHARP
 
     def __init__(self, page):

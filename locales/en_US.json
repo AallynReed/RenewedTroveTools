@@ -3,8 +3,8 @@
     "tabs": {
         "0": "Gem Set Calculator",
         "1": "Mastery",
-        "2": "[WIP] Star Chart",
-        "3": "[WIP] Gem Simulator"
+        "2": "Star Chart",
+        "3": "Gem Simulator"
     },
     "gem_full_names": {
         "Arcane Fire Gem": "Arcane Fire Gem",
@@ -57,10 +57,10 @@
         "Cosmic": "Cosmic"
     },
     "gem_dragons": {
-        "Fire": "Fire Primordial: Za'Hadeen, Heart of the Flame",
-        "Water": "Water Primordial: Palashien, Soul of the Sea",
-        "Air": "Air Primordial: Scintilla, Spark of the Sky",
-        "Cosmic": "Cosmic Primordial: Taeryn Veernok, Progenitor of the Cosmos"
+        "Fire": "Fire Primordial",
+        "Water": "Water Primordial",
+        "Air": "Air Primordial",
+        "Cosmic": "Cosmic Primordial"
     },
     "gem_abilities": {
         "Explosive Epilogue": "Explosive Epilogue",

@@ -1,4 +1,4 @@
-from flet import View, Text
+from flet import View
 from flet_core.icons import MENU_BOOK_SHARP
 
 from controllers import MagicFindController
@@ -6,7 +6,7 @@ from controllers import MagicFindController
 
 class MagicFindView(View):
     route = "/magic_find"
-    title = Text("Magic Find")
+    title = "Magic Find"
     icon = MENU_BOOK_SHARP
 
     def __init__(self, page):

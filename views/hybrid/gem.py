@@ -1,13 +1,12 @@
-from flet import View, Text
+from flet import View
 from flet_core.icons import SCIENCE_SHARP
-from i18n import t
 
 from controllers import GemController
 
 
 class GemView(View):
     route = "/gem_simulator"
-    title = Text(t("tabs.3"))
+    title = "tabs.3"
     icon = SCIENCE_SHARP
 
     def __init__(self, page):

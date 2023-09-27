@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 from flet import Page, View, Row, Column, VerticalDivider, NavigationRail, NavigationRailLabelType, \
     NavigationRailDestination
+from i18n import t
 
 from utils.functions import get_attr
 
@@ -38,28 +39,29 @@ class Routing:
         return view(self.page)
 
     async def change_view_async(self, view: Type[View]):
-        print(view.controls)
         self.page.controls = [
             Row(
                 controls=[
                     NavigationRail(
-                        selected_index=0,
+                        selected_index=self.views.index(view.__class__),
                         label_type=NavigationRailLabelType.ALL,
                         extended=False,
                         min_width=100,
-                        min_extended_width=400,
+                        min_extended_width=200,
                         destinations=[
                             NavigationRailDestination(
                                 icon=view.icon,
-                                label=view.title.value
+                                label=t(view.title)
                             )
                             for view in self.views
                         ],
-                        on_change=self.change_navigation
+                        on_change=self.change_navigation,
                     ),
                     VerticalDivider(),
                     Column(
-                        controls=view.controls
+                        controls=view.controls,
+                        expand=True,
+                        scroll="auto"
                     ),
                 ],
                 expand=True

@@ -6,7 +6,6 @@ from flet import (
     Text,
     Column,
     Container,
-    Card,
     ResponsiveRow,
     Image,
     Stack,
@@ -18,13 +17,14 @@ from flet import (
     BorderSide,
     BlendMode,
     Row,
-    VerticalDivider
+    VerticalDivider,
+    MainAxisAlignment
 )
 from pytz import UTC
 
 from models.interface import Controller
-from utils import tasks
 from models.trove.shops import Cranny
+from utils import tasks
 
 
 class Widget(Container):
@@ -45,7 +45,7 @@ class RowWidget(Container):
             content=Row(
                 controls=[*controls],
                 vertical_alignment="center",
-                spacing=0
+                alignment=MainAxisAlignment.SPACE_BETWEEN,
             ),
             on_hover=None,
             **kwargs
@@ -57,29 +57,11 @@ class HomeController(Controller):
         if not hasattr(self, "widgets"):
             self.widgets = ResponsiveRow(
                 spacing=0,
+                vertical_alignment="start"
             )
             self.daily_data = load(open("data/daily_buffs.json", encoding="utf-8"))
             self.weekly_data = load(open("data/weekly_buffs.json", encoding="utf-8"))
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
-            self.clock = Text("Trove Time", size=20, col={"xxl": 6})
-        self.clock_widget = Card(
-            content=Column(
-                controls=[
-                    Text("Trove Time", size=24),
-                    ResponsiveRow(
-                        controls=[
-                            self.date,
-                            self.clock,
-                        ],
-                        alignment="center",
-                        spacing=70,
-                    ),
-                ],
-                horizontal_alignment="center",
-            ),
-            height=190,
-            col={"xxl": 2.5}
-        )
         self.daily_widgets = ResponsiveRow(
             controls=[
                 RowWidget(
@@ -285,13 +267,12 @@ class HomeController(Controller):
             ]
         )
         self.widgets.controls = [
-            self.clock_widget,
             Column(
                 controls=[
                     self.daily_widgets,
                     self.weekly_widgets
                 ],
-                col={"xxl": 9.5}
+                col={"xxl": 12}
             ),
             Column(
                 controls=[
@@ -299,11 +280,10 @@ class HomeController(Controller):
                     self.cranny_widgets
                 ],
                 spacing=0,
-                col={"xxl": 3}
+                col={"xxl": 4}
             )
         ]
         tasks = [
-            self.update_clock,
             self.update_daily,
             self.update_weekly,
             self.update_cranny,

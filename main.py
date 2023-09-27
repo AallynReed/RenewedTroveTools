@@ -69,10 +69,10 @@ class App:
 
     async def setup_page(self):
         self.page.title = self.page.metadata.app_name
-        self.page.window_min_width = 1600
-        self.page.window_min_height = 900
-        self.page.window_width = 1600
-        self.page.window_height = 900
+        self.page.window_min_width = 1630
+        self.page.window_min_height = 950
+        self.page.window_width = 1630
+        self.page.window_height = 950
         self.page.snack_bar = SnackBar(content=Text())
         self.page.clock = Text(
             (datetime.utcnow() - timedelta(hours=11)).strftime("%a, %b %d\t\t%H:%M")

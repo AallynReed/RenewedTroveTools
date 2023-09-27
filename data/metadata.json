@@ -1,5 +1,5 @@
 {
-    "dev": true,
+    "dev": false,
     "author": "sly.dev",
     "name": "Renewed Trove Tools",
     "tech_name": "RenewedTroveTools",

@@ -26,7 +26,7 @@ from flet import (
     DataCell,
     Tabs,
     Tab,
-    Stack,
+    Stack
 )
 from i18n import t
 
@@ -95,7 +95,7 @@ class GemSetController(Controller):
                                         col=4,
                                     ),
                                 ],
-                                col={"xxl": 2},
+                                col={"xxl": 3},
                             ),
                             ResponsiveRow(
                                 controls=[
@@ -120,7 +120,7 @@ class GemSetController(Controller):
                                         "15", on_click=self.on_fifteen_level, col=4
                                     ),
                                 ],
-                                col={"xxl": 2},
+                                col={"xxl": 3},
                             ),
                             ResponsiveRow(
                                 controls=[
@@ -141,7 +141,7 @@ class GemSetController(Controller):
                                         col=4,
                                     ),
                                 ],
-                                col={"xxl": 2},
+                                col={"xxl": 3},
                             ),
                             ResponsiveRow(
                                 controls=[
@@ -167,7 +167,7 @@ class GemSetController(Controller):
                                         col=6,
                                     ),
                                 ],
-                                col={"xxl": 2},
+                                col={"xxl": 3},
                             ),
                         ],
                         data="shortcuts_bar",
@@ -224,7 +224,7 @@ class GemSetController(Controller):
                                                 + gem.name,
                                                 size=15,
                                             ),
-                                        ]
+                                        ],
                                     ),
                                     data=gem,
                                     on_click=self.on_gem_click,
@@ -254,7 +254,7 @@ class GemSetController(Controller):
                                             else "green",
                                         ),
                                     ),
-                                    border_radius=2,
+                                    border_radius=1,
                                 ),
                                 col={"xxl": 4},
                             )
@@ -263,20 +263,20 @@ class GemSetController(Controller):
                     )
                     for gem_row in self.gem_set
                 ],
-                col={"xxl": 6},
+                col={"xxl": 7},
             ),
             Column(
                 data="gem_editor",
                 controls=[
                     ResponsiveRow(
                         controls=[
-                            ability_editor := Column(col={"xxl": 6}),
-                            level_editor := Column(col={"xxl": 6}),
+                            ability_editor := Column(col={"xxl": 4}),
+                            level_editor := Column(col={"xxl": 8}),
                             gem_editor := Column(),
                         ]
                     )
                 ],
-                col={"xxl": 6},
+                col={"xxl": 5},
                 disabled=self.selected_gem is None,
             ),
         ]
@@ -352,13 +352,13 @@ class GemSetController(Controller):
                             ],
                             disabled=stat.name == Stat.light,
                             on_change=self.on_stat_change,
-                            col={"xxl": 6},
+                            col={"xxl": 4},
                         ),
                         Text(
                             data=stat,
                             value=f"{stat.display_percentage}"
                             + t("strings.% Augmentation Progress"),
-                            col={"xxl": 2, "xs": 5},
+                            col={"xxl": 3, "xs": 5},
                         ),
                         Row(
                             controls=[
@@ -459,7 +459,7 @@ class GemSetController(Controller):
                                     on_leave=self.cancel_drop_boost,
                                 ),
                             ],
-                            col={"xxl": 3, "xs": 7},
+                            col={"xxl": 5, "xs": 7},
                         ),
                     ],
                     col={"xxl": 4},
@@ -472,10 +472,10 @@ class GemSetController(Controller):
             for i in range(3):
                 stat_row = ResponsiveRow(
                     controls=[
-                        Dropdown(label=t("strings.Change Stat"), col={"xxl": 6}),
+                        Dropdown(label=t("strings.Change Stat"), col={"xxl": 4}),
                         Text(
                             value=f"0" + t("strings.% Augmentation Progress"),
-                            col={"xxl": 2, "xs": 6},
+                            col={"xxl": 3, "xs": 6},
                         ),
                         Row(
                             controls=[
@@ -520,10 +520,11 @@ class GemSetController(Controller):
                                     )
                                 ),
                             ],
-                            col={"xxl": 3, "xs": 6},
+                            col={"xxl": 5, "xs": 6},
                         ),
                     ],
-                    col={"xxl": 4},
+                    vertical_alignment="center",
+                    col={"xxl": 7},
                 )
                 gem_editor.controls.append(stat_row)
         self.calculate_gem_report()
@@ -579,16 +580,16 @@ class GemSetController(Controller):
                         rows=[
                             DataRow(
                                 cells=[
-                                    DataCell(Text(t("stats." + stat), size=15)),
+                                    DataCell(Text(t("stats." + stat), size=13)),
                                     DataCell(
-                                        Text(str(round(value[0], 2))),
+                                        Text(str(round(value[0], 2)), size=13),
                                         on_tap=self.copy_to_clipboard,
                                     ),
                                 ]
                             )
                             for stat, value in stats.items()
                         ],
-                        data_row_max_height=30,
+                        data_row_max_height=35,
                         heading_row_height=30,
                     )
                 ],

@@ -1,5 +1,8 @@
 
 
+import asyncio
+
+from aiohttp import ClientSession
 from flet import (
     AppBar,
     IconButton,
@@ -7,10 +10,8 @@ from flet import (
     PopupMenuItem,
     Divider,
     Row,
-    CircleAvatar,
     Text,
     Container,
-    VerticalDivider,
     Image,
     AlertDialog,
     TextButton,
@@ -23,22 +24,15 @@ from flet_core.icons import (
     LIGHT_MODE,
     DARK_MODE,
     LANGUAGE,
-    HOME,
-    NOW_WIDGETS_SHARP,
-    PERSON,
     BUG_REPORT,
     HELP,
-    LOGOUT,
     DOWNLOAD,
     PALETTE
 )
-from aiohttp import ClientSession
-from models.preferences import AccentColor
-from i18n import t
 
-from utils.localization import Locale
+from models.preferences import AccentColor
 from utils.functions import check_update
-import asyncio
+from utils.localization import Locale
 
 
 async def check_update(current_version):
@@ -81,7 +75,7 @@ class CustomAppBar(AppBar):
                 ),
                 IconButton(
                     data="theme_switcher",
-                    icon=DARK_MODE if self.page.theme_mode == "LIGHT" else LIGHT_MODE,
+                    icon=DARK_MODE if self.page.dark_theme else LIGHT_MODE,
                     on_click=self.change_theme,
                     tooltip="Change theme",
                 ),
@@ -140,7 +134,7 @@ class CustomAppBar(AppBar):
                                     Image(
                                         (
                                             "assets/icons/brands/discord-mark-black.png"
-                                            if self.page.theme_mode == "LIGHT"
+                                            if not self.page.dark_theme
                                             else "assets/icons/brands/discord-mark-white.png"
                                         ),
                                         width=19,
@@ -157,7 +151,7 @@ class CustomAppBar(AppBar):
                                     Image(
                                         (
                                             "assets/icons/brands/github-mark-black.png"
-                                            if self.page.theme_mode == "LIGHT"
+                                            if not self.page.dark_theme
                                             else "assets/icons/brands/github-mark-white.png"
                                         ),
                                         width=19,
@@ -198,7 +192,7 @@ class CustomAppBar(AppBar):
         return actions
 
     async def change_theme(self, _):
-        self.page.theme_mode = "LIGHT" if self.page.theme_mode == "DARK" else "DARK"
+        self.page.theme_mode = "LIGHT" if not self.page.dark_theme else "DARK"
         await self.page.client_storage.set_async("theme", self.page.theme_mode)
         for action in self.actions:
             if action.data == "theme_switcher":
@@ -222,7 +216,7 @@ class CustomAppBar(AppBar):
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
             self.page.snack_bar.open = True
-            self.page.snack_bar.duration = 60000
+            self.page.snack_bar.duration = 1000 #60000
             await self.page.update_async()
 
     async def go_to_update_page(self, _):

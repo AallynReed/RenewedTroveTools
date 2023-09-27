@@ -1,4 +1,4 @@
-from flet import View, Text
+from flet import View
 from flet_core.icons import HOME_SHARP
 
 from controllers import HomeController
@@ -6,7 +6,7 @@ from controllers import HomeController
 
 class HomeView(View):
     route = "/"
-    title = Text("Home")
+    title = "Home"
     icon = HOME_SHARP
 
     def __init__(self, page):

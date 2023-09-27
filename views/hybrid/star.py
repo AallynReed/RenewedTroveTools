@@ -1,4 +1,4 @@
-from flet import View, Icon, Text
+from flet import View
 from flet_core.icons import STARS_SHARP
 
 from controllers import StarChartController
@@ -6,7 +6,7 @@ from controllers import StarChartController
 
 class StarView(View):
     route = "/star_chart"
-    title = Text("Star Chart")
+    title = "Star Chart"
     icon = STARS_SHARP
 
     def __init__(self, page):

@@ -6,7 +6,7 @@ from controllers import GemBuildsController
 
 class GemBuildsView(View):
     route = "/gem_builds"
-    title = Text("Gem Builds")
+    title = "Gem Builds"
     icon = TABLE_VIEW
 
     def __init__(self, page):

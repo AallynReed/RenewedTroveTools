@@ -4,15 +4,14 @@ from enum import Enum
 from math import radians, sin, cos
 from typing import Optional
 
-from beanie import Document, Indexed
 from pydantic import BaseModel
 from pydantic import Field
 
 from utils.functions import random_id
 
 
-class StarBuild(Document):
-    build: Indexed(str, unique=True) = Field(default_factory=random_id)
+class StarBuild(BaseModel):
+    build: str = Field(default_factory=random_id)
     paths: list[str]
 
 
@@ -402,7 +401,7 @@ def rotate(origin, point, angle):
 
 
 def build_branch(back_rotate, last_position, distance, stars):
-    total_angle = 180
+    total_angle = 193
     splits = len(stars) + 1
     division = total_angle / splits
     for i, child in enumerate(stars, 1):
@@ -414,7 +413,7 @@ def build_branch(back_rotate, last_position, distance, stars):
         )
         child["Coords"] = rotated_position
         child["Rotation"] = final_rotation
-        build_branch(-(90 - final_rotation), rotated_position, distance, child["Stars"])
+        build_branch(-((total_angle / 2) - final_rotation), rotated_position, distance, child["Stars"])
 
 
 def rotate_branch(star, origin, angle, distance):
@@ -445,9 +444,9 @@ def rotate_branch(star, origin, angle, distance):
 def get_star_chart(star_string=None):
     star_chart = json.load(open("data/star_chart.json"))
     obj_star_chart = StarChart()
-    origin = 390, 390
+    origin = 330, 370
     point_distance = 60
-    constell_backs = [14, 14, 14]
+    constell_backs = [0, -2, -4]
     for i, (constellation, back_rotate) in enumerate(
         zip(Constellation, constell_backs)
     ):
@@ -458,7 +457,7 @@ def get_star_chart(star_string=None):
         rotated_position = rotate(origin, position, radians(branch_rotation))
         constell = star_chart[constellation.value]
         constell["Coords"] = rotated_position
-        distance = 50
+        distance = 47
         build_branch(back_rotate, position, distance, constell["Stars"])
         rotate_branch(constell, origin, radians(branch_rotation), distance)
 
