@@ -162,7 +162,7 @@ class StarChartController(Controller):
                                                     [
                                                         DataTable(
                                                             heading_row_height=0,
-                                                            data_row_max_height=40,
+                                                            data_row_height=40,
                                                             columns=[DataColumn(Text()), DataColumn(Text())],
                                                             rows=[
                                                                 DataRow(
@@ -243,7 +243,7 @@ class StarChartController(Controller):
                                         Text("Stats", size=14),
                                         DataTable(
                                             heading_row_height=0,
-                                            data_row_max_height=30,
+                                            data_row_height=30,
                                             columns=[
                                                 DataColumn(Text()),
                                                 DataColumn(Text()),
@@ -273,7 +273,7 @@ class StarChartController(Controller):
                                         Text("Abilities", size=14),
                                         DataTable(
                                             heading_row_height=0,
-                                            data_row_max_height=80,
+                                            data_row_height=80,
                                             columns=[DataColumn(Text())],
                                             rows=[
                                                 DataRow(cells=[DataCell(Text(v))])
@@ -290,7 +290,7 @@ class StarChartController(Controller):
                                         Text("Obtainables", size=14),
                                         DataTable(
                                             heading_row_height=0,
-                                            data_row_max_height=50,
+                                            data_row_height=50,
                                             columns=[DataColumn(Text())],
                                             rows=[
                                                 DataRow(cells=[DataCell(Text(v))])
