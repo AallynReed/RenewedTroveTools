@@ -24,7 +24,7 @@ bdist_msi_options = {
     "target_name": metadata.tech_name,
     "upgrade_code": metadata.app_id,
     "add_to_path": False,
-    "install_icon": metadata.icon,
+    "install_icon": str(metadata.icon),
     "all_users": True,
 }
 
@@ -41,7 +41,7 @@ setup(
         Executable(
             "app.py",
             target_name=f"{metadata.tech_name}.exe",
-            icon=metadata.icon,
+            icon=str(metadata.icon),
             base="Win32GUI",
             copyright=f"{metadata.author} {metadata.copyright}",
             shortcut_name=metadata.name,

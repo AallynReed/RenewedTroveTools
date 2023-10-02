@@ -1,11 +1,12 @@
 import logging
 import logging.handlers
+import os
 from datetime import datetime
 
-from utils.path import BasePath
+from pathlib import Path
 
 timestamped_log = "logs/{logger_level}_{logger_name}_" + datetime.utcnow().strftime(
-    "%Y-%m-%d_%H-%M-%S.log"
+    "%Y-%m-%d_%H-%M-%S-%f.log"
 )
 
 
@@ -55,15 +56,15 @@ class Logger:
             "%Y-%m-%d %H:%M:%S",
             style="{",
         )
-        self.logs_folder = BasePath.joinpath("logs")
+        AppdataPath = Path(os.getenv("APPDATA"))
+        self.logs_folder = AppdataPath.joinpath("logs")
         self.logs_folder.mkdir(exist_ok=True)
         self.delete_logs()
         self.logger = logging.getLogger(name)
-        return
         self.logger.setLevel(logging.DEBUG)
         self.logger.propagate = False
         self.debug_handler = logging.handlers.RotatingFileHandler(
-            BasePath.joinpath(
+            AppdataPath.joinpath(
                 timestamped_log.replace("{logger_name}", name).replace(
                     "{logger_level}", "DEBUG"
                 )
@@ -76,7 +77,7 @@ class Logger:
         self.debug_handler.setLevel(logging.DEBUG)
         self.logger.addHandler(self.debug_handler)
         self.timestamped_handler = logging.handlers.RotatingFileHandler(
-            BasePath.joinpath(
+            AppdataPath.joinpath(
                 timestamped_log.replace("{logger_name}", name).replace(
                     "{logger_level}", "INFO"
                 )

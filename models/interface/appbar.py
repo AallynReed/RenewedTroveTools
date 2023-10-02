@@ -38,7 +38,7 @@ from utils.localization import Locale
 async def check_update(current_version):
     async with ClientSession() as session:
         async with session.get(
-            "https://api.github.com/repos/Sly0511/TroveFileExtractor/releases"
+            "https://api.github.com/repos/Sly0511/RenewedTroveTools/releases"
         ) as response:
             version_data = await response.json()
             try:

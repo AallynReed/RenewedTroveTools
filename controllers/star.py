@@ -37,7 +37,7 @@ class StarChartController(Controller):
             self.selected_stat = None
             self.star_chart = get_star_chart()
             self.map = ResponsiveRow()
-            self.star_details = Column(col={"xxl": 4.5})
+            self.star_details = Column(col={"xxl": 6.5})
             _id = self.page.params.get("id", None)
             if _id:
                 asyncio.create_task(
@@ -155,7 +155,6 @@ class StarChartController(Controller):
                                 ),
                                 ResponsiveRow(
                                     controls=[
-                                        self.star_details,
                                         Column(
                                             controls=[
                                                 Text("Stats", size=22),
@@ -186,8 +185,9 @@ class StarChartController(Controller):
                                                     else [Text("-")]
                                                 ),
                                             ],
-                                            col={"xxl": 7.5},
-                                        )
+                                            col={"xxl": 5.5},
+                                        ),
+                                        self.star_details,
                                     ]
                                 )
                             ],
