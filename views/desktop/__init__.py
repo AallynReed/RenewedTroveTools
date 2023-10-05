@@ -1,3 +1,7 @@
+from .mods import ModsView
+from .extractor import ExtractorView
 
-
-views = []
+views = [
+    ModsView,
+    ExtractorView
+]

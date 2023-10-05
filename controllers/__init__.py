@@ -6,3 +6,5 @@ from .home import HomeController
 from .magic_find import MagicFindController
 from .mastery import MasteryController
 from .star import StarChartController
+from .mods import ModsController
+from .extractor import ExtractorController

@@ -8,7 +8,9 @@ from random import randint
 from random import sample
 from string import ascii_letters, digits
 from typing import Callable, Generic, Literal, TypeVar, Union, overload
+
 from aiohttp import ClientSession
+from binary_reader import BinaryReader
 
 
 def random_id(k=8):
@@ -176,3 +178,49 @@ async def check_update(current_version):
             if current_version != version.get("name"):
                 return version.get("html_url")
     return None
+
+def ReadLeb128(buffer: BinaryReader, pos):
+    result = 0
+    shift = 0
+    while 1:
+        buffer.seek(pos)
+        b = buffer.read_bytes()
+        for i, byte in enumerate(b):
+            result |= (byte & 0x7F) << shift
+            pos += 1
+            if not (byte & 0x80):
+                result &= (1 << 32) - 1
+                result = int(result)
+                return result
+            shift += 7
+            if shift >= 64:
+                raise Exception("Too many bytes when decoding varint.")
+
+
+def WriteLeb128(value):
+    r = []
+    while True:
+        byte = value & 0x7f
+        value = value >> 7
+        if (value == 0 and byte & 0x40 == 0) or (value == -1 and byte & 0x40 != 0):
+            r.append(byte)
+            return bytearray(r)
+        r.append(0x80 | byte)
+
+
+def calculate_hash(data):
+    hash_value = 0x811c9dc5
+    prime = 0x1000193
+    length = len(data)
+
+    for i in range(0, length & 0xFFFFFFFC, 4):
+        chunk = int.from_bytes(data[i:i + 4], byteorder='little', signed=True)
+        hash_value = prime * (hash_value ^ chunk)
+
+    remainder = length & 3
+    if remainder > 0:
+        part = 0
+        for i in range(remainder):
+            part |= data[length - remainder + i] << (8 * i)
+        hash_value = prime * (hash_value ^ part)
+    return hash_value & 0xFFFFFFFF

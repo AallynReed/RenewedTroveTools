@@ -50,7 +50,7 @@ class Logger:
     This class implements the logging library and provides an automatic way of logging in 3 outputs
     It will output into a INFO log file, a DEBUG log file and into console in a somewhat concise format"""
 
-    def __init__(self, name, level=logging.DEBUG):
+    def __init__(self, name, level=logging.INFO):
         formatter = logging.Formatter(
             "[{asctime}] [{levelname:<8}] {name:<24}: {message}",
             "%Y-%m-%d %H:%M:%S",
