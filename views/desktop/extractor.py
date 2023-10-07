@@ -1,5 +1,5 @@
 from flet import View
-from flet_core.icons import DIAMOND_SHARP
+from flet_core.icons import UNARCHIVE
 
 from controllers import ExtractorController
 
@@ -7,7 +7,7 @@ from controllers import ExtractorController
 class ExtractorView(View):
     route = "/file_extractor"
     title = "File Extractor"
-    icon = DIAMOND_SHARP
+    icon = UNARCHIVE
 
     def __init__(self, page):
         ctrl = ExtractorController(page=page)

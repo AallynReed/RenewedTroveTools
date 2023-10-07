@@ -14,7 +14,7 @@ from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
 from utils.routing import Routing
-from views import desktop, hybrid, web
+from views import all_views, View404
 
 
 class App:
@@ -86,15 +86,8 @@ class App:
 
     async def gather_views(self):
         self.page.all_views = []
-        # Add hybrid views (views that work both in desktop and web)
-        self.page.all_views.extend(hybrid.views)
-        if self.page.web:
-            # Add web views
-            self.page.all_views.extend(web.views)
-        else:
-            # Add desktop views
-            self.page.all_views.extend(desktop.views)
-        Routing(self.page, self.page.all_views, not_found=hybrid.View404)
+        self.page.all_views.extend(all_views(self.page.web))
+        Routing(self.page, self.page.all_views, not_found=View404)
 
     async def restart_app(self):
         ...

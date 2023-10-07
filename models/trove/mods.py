@@ -217,9 +217,9 @@ class TMod:
         tmod_property_count = data.read_uint16()
         properties = []
         for i in range(tmod_property_count):
-            name_size = data.read_uint8()
+            name_size = ReadLeb128(data, data.pos())
             name = data.read_str(name_size)
-            value_size = data.read_uint8()
+            value_size = ReadLeb128(data, data.pos())
             value = data.read_str(value_size)
             properties.append(TModProperty(KnownProperties(name), value))
         file_stream = data.buffer()[header_size:]
@@ -234,7 +234,7 @@ class TMod:
             size = ReadLeb128(data, data.pos())
             checksum = ReadLeb128(data, data.pos())
             file_stream.seek(offset)
-            content = file_stream.read_bytes(size + (4 - size % 4))
+            content = file_stream.read_bytes(size)
             file = TModFile(path.parent, name, content)
             file.index = index
             files.append(file)

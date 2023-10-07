@@ -9,3 +9,5 @@ python-dateutil
 aiohttp
 binary-reader
 cx-freeze
+humanize
+aiofiles

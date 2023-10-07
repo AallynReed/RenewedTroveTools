@@ -179,6 +179,7 @@ async def check_update(current_version):
                 return version.get("html_url")
     return None
 
+
 def ReadLeb128(buffer: BinaryReader, pos):
     result = 0
     shift = 0

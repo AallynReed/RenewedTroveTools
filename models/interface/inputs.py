@@ -1,15 +1,15 @@
+import calendar
+import datetime
 import re
+from calendar import HTMLCalendar
+from pathlib import Path
 from typing import Optional, Union
 
+import flet as ft
+from dateutil import relativedelta
 from flet import TextField, TextStyle
 
 from utils.functions import long_throttle
-import flet as ft
-import datetime
-import calendar
-from calendar import HTMLCalendar
-from dateutil import relativedelta
-
 
 int_regex = re.compile("^-?\d+$")
 float_regex = re.compile("^-?\d+((?:\.|\,)\d*)?$")
@@ -295,3 +295,49 @@ class FletCalendar(ft.UserControl):
         # Add column to our page container.
         self.calendar_container.content = calendar_column
         return self.calendar_container
+
+
+class PathField(TextField):
+    async def _verify_value(self, event):
+        event.control.border_color = None
+        event.control.label_style = None
+        path = Path(event.control.value)
+        if not path.exists():
+            return False
+        return True
+
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        async def verify_value(event):
+            if not await self._verify_value(event):
+                event.control.border_color = "red"
+                event.control.label_style = TextStyle(color="red")
+                return await event.control.update_async()
+            await event.control.update_async()
+            await handler(event)
+
+        self._add_event_handler("change", verify_value)
+        if handler is not None:
+            self._set_attr("onchange", True)
+        else:
+            self._set_attr("onchange", None)
+
+    @property
+    def on_submit(self):
+        return self._get_event_handler("submit")
+
+    @on_submit.setter
+    def on_submit(self, handler):
+        async def verify_value(event):
+            if not await self._verify_value(event):
+                event.control.border_color = "red"
+                event.control.label_style = TextStyle(color="red")
+                return await event.control.update_async()
+            await event.control.update_async()
+            await handler(event)
+
+        self._add_event_handler("submit", verify_value)
