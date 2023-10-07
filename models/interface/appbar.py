@@ -1,5 +1,3 @@
-
-
 import asyncio
 
 from aiohttp import ClientSession
@@ -27,7 +25,8 @@ from flet_core.icons import (
     BUG_REPORT,
     HELP,
     DOWNLOAD,
-    PALETTE
+    PALETTE,
+    SAVINGS
 )
 
 from models.preferences import AccentColor
@@ -122,7 +121,38 @@ class CustomAppBar(AppBar):
                         )
                         for loc in Locale
                     ],
-                    tooltip="Change language",
+                    disabled=True,
+                    tooltip="Change language (Broken)",
+                ),
+                PopupMenuButton(
+                    data="donate-buttons",
+                    icon=SAVINGS,
+                    items=[
+                        PopupMenuItem(
+                            data="paypal",
+                            content=Row(
+                                controls=[
+                                    Image(
+                                        "assets/icons/brands/paypal-mark.png", width=19
+                                    ),
+                                    Text("Paypal"),
+                                ]
+                            ),
+                            on_click=self.go_url,
+                        ),
+                        PopupMenuItem(
+                            data="kofi",
+                            content=Row(
+                                controls=[
+                                    Image(
+                                        "assets/icons/brands/kofi-mark.png", width=24
+                                    ),
+                                    Text("Kofi"),
+                                ]
+                            ),
+                            on_click=self.go_url,
+                        )
+                    ]
                 ),
                 PopupMenuButton(
                     data="other-buttons",
@@ -157,18 +187,6 @@ class CustomAppBar(AppBar):
                                         width=19,
                                     ),
                                     Text("Github"),
-                                ]
-                            ),
-                            on_click=self.go_url,
-                        ),
-                        PopupMenuItem(
-                            data="paypal",
-                            content=Row(
-                                controls=[
-                                    Image(
-                                        "assets/icons/brands/paypal-mark.png", width=19
-                                    ),
-                                    Text("Paypal"),
                                 ]
                             ),
                             on_click=self.go_url,
@@ -255,6 +273,8 @@ class CustomAppBar(AppBar):
             "discord": "https://discord.gg/duuFEsFWk5",
             "github": "https://github.com/Sly0511/TroveBuilds",
             "paypal": "https://www.paypal.com/paypalme/waterin",
+            "kofi": "https://ko-fi.com/slydev"
+
         }
         await self.page.launch_url_async(urls[event.control.data])
 
