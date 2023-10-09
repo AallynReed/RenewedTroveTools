@@ -238,7 +238,7 @@ class CustomAppBar(AppBar):
             await self.page.update_async()
 
     async def go_to_update_page(self, _):
-        await self.page.launch_url_async(await check_update(self.page.VERSION))
+        await self.page.launch_url_async(await check_update(self.page.metadata.version))
 
     async def change_theme(self, _):
         self.page.theme_mode = "light" if self.page.theme_mode == "dark" else "dark"
