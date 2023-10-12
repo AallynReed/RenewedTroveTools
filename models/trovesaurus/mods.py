@@ -2,9 +2,10 @@ import re
 from datetime import datetime
 from enum import Enum
 from re import compile
-from typing import Union, Any
+from typing import Union
 
 from pydantic import BaseModel, Field, validator
+from aiohttp import ClientSession
 
 paragraph = compile(r"<p>(.*?)<\/p>")
 strong = compile(r"<strong>(.*?)<\/strong>")
@@ -60,6 +61,11 @@ class ModFile(BaseModel):
             or None
         )
 
+    async def download(self):
+        async with ClientSession() as session:
+            async with session.get(f"https://trovesaurus.com/client/downloadfile.php?fileid={self.file_id}") as response:
+                return await response.read()
+
 
 class Mod(BaseModel):
     id: int
@@ -74,21 +80,18 @@ class Mod(BaseModel):
     thumbnail_url: str = Field(alias="image")
     user_id: int = Field(alias="userid")
     notes: str
-    visible: bool
     likes: int = Field(alias="votes")
     author: str
     image_url: str = Field(alias="image_full")
     file_objs: list[ModFile] = Field(alias="downloads", default_factory=list)
+    installed: bool = False
+    installed_file: ModFile = None
 
     @validator('created_at')
     def parse_timestamp(cls, value):
         if isinstance(value, datetime):
             return value
         return datetime.utcfromtimestamp(value)
-
-    @validator('visible')
-    def parse_visible(cls, value):
-        return bool(int(value))
 
     @property
     def clean_description(self):

@@ -11,3 +11,5 @@ binary-reader
 cx-freeze
 humanize
 aiofiles
+aiofile
+toml

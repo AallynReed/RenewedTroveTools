@@ -211,7 +211,19 @@ class TMod:
 
     @classmethod
     def read(cls, path: Path) -> "TMod":
-        data = BinaryReader(open(path, 'rb').read())
+        return cls.read_bytes(path.parent, open(path, 'rb').read())
+
+    @classmethod
+    def read_tmod(cls, path: Path) -> "TMod":
+        return cls.read_bytes(path.parent, open(path, 'rb').read())
+
+    @classmethod
+    def read_zip(cls, path: Path) -> "TMod":
+        return cls.read_bytes(path.parent, open(path, 'rb').read())
+
+    @classmethod
+    def read_bytes(cls, path, data: bytes) -> "TMod":
+        data = BinaryReader(data)
         header_size = data.read_uint64()
         tmod_version = data.read_uint16()
         tmod_property_count = data.read_uint16()
@@ -224,7 +236,11 @@ class TMod:
             properties.append(TModProperty(KnownProperties(name), value))
         file_stream = data.buffer()[header_size:]
         decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS)
-        file_stream = BinaryReader(decompressor.decompress(file_stream))
+        try:
+            file_stream = BinaryReader(decompressor.decompress(file_stream))
+        except:
+            print(file_stream)
+
         files = []
         while data.pos() < header_size:
             name_size = data.read_uint8()
@@ -235,7 +251,7 @@ class TMod:
             checksum = ReadLeb128(data, data.pos())
             file_stream.seek(offset)
             content = file_stream.read_bytes(size)
-            file = TModFile(path.parent, name, content)
+            file = TModFile(path, name, content)
             file.index = index
             files.append(file)
         obj = cls(

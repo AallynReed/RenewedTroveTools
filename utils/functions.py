@@ -199,14 +199,13 @@ def ReadLeb128(buffer: BinaryReader, pos):
 
 
 def WriteLeb128(value):
-    r = []
-    while True:
-        byte = value & 0x7f
-        value = value >> 7
-        if (value == 0 and byte & 0x40 == 0) or (value == -1 and byte & 0x40 != 0):
-            r.append(byte)
-            return bytearray(r)
-        r.append(0x80 | byte)
+    result = bytearray()
+    while value >= 0x80:
+        result.append((value & 0x7F) | 0x80)
+        value >>= 7
+    result.append(value & 0x7F)
+
+    return bytes(result)
 
 
 def calculate_hash(data):
@@ -214,14 +213,19 @@ def calculate_hash(data):
     prime = 0x1000193
     length = len(data)
 
-    for i in range(0, length & 0xFFFFFFFC, 4):
+    for i in range(0, length & ~3, 4):
         chunk = int.from_bytes(data[i:i + 4], byteorder='little', signed=True)
-        hash_value = prime * (hash_value ^ chunk)
+        hash_value ^= chunk
+        hash_value *= prime
 
     remainder = length & 3
     if remainder > 0:
-        part = 0
-        for i in range(remainder):
-            part |= data[length - remainder + i] << (8 * i)
-        hash_value = prime * (hash_value ^ part)
+        part = int.from_bytes(data[-remainder:], byteorder='little', signed=True)
+        hash_value ^= part
+        hash_value *= prime
+
     return hash_value & 0xFFFFFFFF
+
+
+
+
