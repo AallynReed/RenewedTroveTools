@@ -1,6 +1,5 @@
 import asyncio
 import os
-import re
 from pathlib import Path
 
 import flet_core.icons as icons
@@ -13,7 +12,6 @@ from models.interface import PagedDataTable
 from models.interface import ScrollingFrame
 from models.trove.mod import TMod
 from models.trovesaurus.mods import ModFileType
-from utils.aio import AioWatcher
 from utils.trove.directory import get_mods_from_directory, Cfg
 from utils.trove.registry import GetTroveLocations
 from utils.trovesaurus import get_mods_list
@@ -33,14 +31,10 @@ class ModsController(Controller):
                 self.selected_location = str(self.location_names[0][1])
             self.locations = {}
             for name, path in self.location_names:
-                mods_list, enabled, disabled = get_mods_from_directory(path)
+                mods_list = get_mods_from_directory(path)
                 mods_list.sort(key=lambda x: x.name)
-                self.locations[str(path)] = {
-                    "type": name,
-                    "mods": mods_list,
-                    "enabled": enabled,
-                    "disabled": disabled,
-                }
+                self.locations[str(path)] = mods_list
+                break
             self.refresh_locations = False
         asyncio.create_task(self.post_setup(refresh))
 
@@ -48,7 +42,7 @@ class ModsController(Controller):
         if not hasattr(self, "trovesaurus_mods"):
             self.trovesaurus_mods = await get_mods_list()
         self.mod_list = ListView()
-        for mod in self.locations[self.selected_location]["mods"]:
+        for mod in self.locations[self.selected_location]:
             trovesaurus_mod = next(
                 (
                     tmod
@@ -66,6 +60,10 @@ class ModsController(Controller):
             if trovesaurus_mod:
                 trovesaurus_mod.installed = True
                 trovesaurus_mod.installed_file = trovesaurus_file
+            mod.check_conflicts(
+                self.selected_location,
+                self.locations[self.selected_location]
+            )
             self.mod_list.controls.append(
                 ListTile(
                     on_click=self.select_tile,
@@ -114,31 +112,21 @@ class ModsController(Controller):
                                                                             None
                                                                         )
                                                                     ),
-                                                                    # Icon(
-                                                                    #     icons.WARNING_SHARP,
-                                                                    #     color=(
-                                                                    #         "red"
-                                                                    #         if mod in
-                                                                    #            self.locations[self.selected_location][
-                                                                    #                "enabled"]
-                                                                    #         else "yellow"
-                                                                    #     ),
-                                                                    #     visible=bool(
-                                                                    #         self.locations[self.selected_location][
-                                                                    #             "conflicts"].get(mod)
-                                                                    #     ) and mod not in
-                                                                    #             self.locations[self.selected_location][
-                                                                    #                 "enabled"],
-                                                                    #     tooltip="Conflicts with: \n" + "\n".join(
-                                                                    #         [
-                                                                    #             " - " + mod.name
-                                                                    #             for cmod in
-                                                                    #             self.locations[self.selected_location][
-                                                                    #                 "conflicts"].get(
-                                                                    #                 mod, [])
-                                                                    #         ]
-                                                                    #     )
-                                                                    # )
+                                                                    Icon(
+                                                                        icons.WARNING_SHARP,
+                                                                        color=(
+                                                                            "red"
+                                                                            if mod.enabled
+                                                                            else "yellow"
+                                                                        ),
+                                                                        visible=mod.has_conflicts,
+                                                                        tooltip="Conflicts with: \n" + "\n".join(
+                                                                            [
+                                                                                "\t" + cmod.name
+                                                                                for cmod in mod.conflicts
+                                                                            ]
+                                                                        )
+                                                                    )
                                                                 ]
                                                             ),
                                                             padding=Padding(5, 2, 5, 2)
@@ -204,12 +192,13 @@ class ModsController(Controller):
                                         controls=[
                                             Switch(
                                                 data=mod,
-                                                value=mod in self.locations[self.selected_location]["enabled"],
+                                                value=mod.enabled,
                                                 tooltip=(
                                                     "Enable mod"
-                                                    if mod in self.locations[self.selected_location]["disabled"] else
+                                                    if not mod.enabled else
                                                     "Disable mod"
                                                 ),
+                                                disabled=mod.has_conflicts and not mod.enabled,
                                                 on_change=self.toggle_mod,
                                             ),
                                         ]
