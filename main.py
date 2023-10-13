@@ -37,6 +37,7 @@ class App:
         await self.setup_page()
         await self.setup_appbar()
         await self.gather_views()
+        await self.start_tasks()
         await page.go_async("/")
 
     async def load_configurations(self):
@@ -88,6 +89,9 @@ class App:
         self.page.all_views = []
         self.page.all_views.extend(all_views(self.page.web))
         Routing(self.page, self.page.all_views, not_found=View404)
+
+    async def start_tasks(self):
+        self.update_clock.start()
 
     async def restart_app(self):
         ...
