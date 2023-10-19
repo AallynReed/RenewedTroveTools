@@ -413,7 +413,12 @@ def build_branch(back_rotate, last_position, distance, stars):
         )
         child["Coords"] = rotated_position
         child["Rotation"] = final_rotation
-        build_branch(-((total_angle / 2) - final_rotation), rotated_position, distance, child["Stars"])
+        build_branch(
+            -((total_angle / 2) - final_rotation),
+            rotated_position,
+            distance,
+            child["Stars"],
+        )
 
 
 def rotate_branch(star, origin, angle, distance):

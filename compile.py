@@ -3,9 +3,15 @@ from models.metadata import Metadata
 from pathlib import Path
 import subprocess
 
-flet_exe = Path(r"C:\hostedtoolcache\windows\Python\3.11.5\x64\Lib\site-packages\flet\bin\flet\flet.exe")
+flet_exe = Path(
+    r"C:\hostedtoolcache\windows\Python\3.11.5\x64\Lib\site-packages\flet\bin\flet\flet.exe"
+)
 
-subprocess.run(r'.\resedit.exe --update-resource-ico "{0}" IDI_ICON1 "assets/favicon.ico"'.format(flet_exe))
+subprocess.run(
+    r'.\resedit.exe --update-resource-ico "{0}" IDI_ICON1 "assets/favicon.ico"'.format(
+        flet_exe
+    )
+)
 
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
 

@@ -86,7 +86,7 @@ class MagicFindController(Controller):
                     ),
                     Text(
                         f"Sunday Loot Day \u2022 {400 if self.control_values['Patron'] else 100}",
-                        col=9
+                        col=9,
                     ),
                 ],
                 col={"xxl": 6},
@@ -145,7 +145,11 @@ class MagicFindController(Controller):
                 bonus += v[0]
         result *= 1 + bonus / 100
         result *= 2 if self.control_values["Patron"] else 1
-        sunday_bonus = (400 if self.control_values['Patron'] else 100) if self.control_values["Sunday"] else 0
+        sunday_bonus = (
+            (400 if self.control_values["Patron"] else 100)
+            if self.control_values["Sunday"]
+            else 0
+        )
         sunday_bonus *= 1 + bonus / 100
         result += sunday_bonus
         self.results = Card(

@@ -5,13 +5,17 @@ import io
 import zipfile
 import zlib
 from hashlib import md5
+from io import BytesIO
 from pathlib import Path
+from typing import Optional
 
+from aiohttp import ClientSession
 from binary_reader import BinaryReader
 from pydantic import BaseModel
 from toml import dumps
 
 from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
+from ..trovesaurus.mods import Mod
 
 
 class NoFilesError(Exception):
@@ -34,7 +38,7 @@ class Property(BaseModel):
         return self.value
 
     def __repr__(self):
-        return f"<Property {self.name}: \"{self.value}\">"
+        return f'<Property {self.name}: "{self.value}">'
 
     def __eq__(self, other):
         return self.name == other.name and self.value == other.value
@@ -54,7 +58,7 @@ class TroveModFile:
         self._checksum = None
 
     def __str__(self):
-        return f"<TroveModFile \"{self.trove_path} ({self.size}\" bytes)>"
+        return f'<TroveModFile "{self.trove_path} ({self.size}" bytes)>'
 
     def __repr__(self):
         return str(self)
@@ -114,11 +118,18 @@ class TroveMod:
     _zip_content: bytes = None
     _tmod_content: bytes = None
     enabled: bool = True
-    name_conflicts: list[TroveMod] = []
-    file_conflicts: list[TroveMod] = []
+    name_conflicts: list[TroveMod]
+    file_conflicts: list[TroveMod]
+    _trovesaurus_data: Optional[Mod] = None
+
+    def __init__(self):
+        self.properties = []
+        self.files = []
+        self.name_conflicts = []
+        self.file_conflicts = []
 
     def __str__(self):
-        return f"<TroveMod \"{self.name}\">"
+        return f'<TroveMod "{self.name}">'
 
     def __repr__(self):
         return str(self)
@@ -131,6 +142,17 @@ class TroveMod:
     def has_wrong_name(self):
         return self.mod_path.stem != self.name
 
+    def toggle(self):
+        self.enabled = not self.enabled
+        if self.enabled:
+            new_name = self.mod_path.name.partition(".")[0] + ".tmod"
+            new_path = self.cwd.joinpath(new_name)
+        else:
+            new_name = self.mod_path.name.partition(".")[0] + ".tmod.disabled"
+            new_path = self.cwd.joinpath(new_name)
+        self.mod_path.rename(new_path)
+        self.mod_path = new_path
+
     def fix_name(self):
         suffixes = self.mod_path.suffixes
         new_mod_path = self.mod_path.with_name(self.name + "".join(suffixes))
@@ -138,20 +160,31 @@ class TroveMod:
         self.mod_path = new_mod_path
 
     def check_conflicts(self, mods: list[TroveMod]):
+        self.conflicts.clear()
         for mod in mods:
             if mod == self:
                 continue
             if mod.name == self.name:
                 self.name_conflicts.append(mod)
             for file in self.files:
+                if file.trove_path == self.preview_path:
+                    continue
                 for other_file in mod.files:
+                    if other_file.trove_path == mod.preview_path:
+                        continue
                     if file.trove_path == other_file.trove_path:
                         self.file_conflicts.append(mod)
                         break
+                if mod in self.file_conflicts:
+                    break
+
+    @property
+    def conflicts(self):
+        return self.name_conflicts + self.file_conflicts
 
     @property
     def has_conflicts(self):
-        return len(self.name_conflicts) > 0 or len(self.file_conflicts) > 0
+        return bool(self.conflicts)
 
     @property
     def metadata(self) -> str:
@@ -164,15 +197,12 @@ class TroveMod:
         ]
         for prop in needed_props:
             if prop not in [p.name for p in self.properties]:
-                raise MissingPropertyError(f"Property \"{prop}\" is missing")
+                raise MissingPropertyError(f'Property "{prop}" is missing')
         for prop in self.properties:
             if prop.name in needed_props and not prop.value:
-                raise PropertyMalformedError(f"Property \"{prop.name}\" has no value")
+                raise PropertyMalformedError(f'Property "{prop.name}" has no value')
             metadata["properties"][prop.name] = prop.value
-        metadata["files"] = [
-            str(f.trove_path)
-            for f in self.files
-        ]
+        metadata["files"] = [str(f.trove_path) for f in self.files]
         return dumps(metadata)
 
     @property
@@ -228,7 +258,9 @@ class TroveMod:
         for file in self.files:
             if file.trove_path == self.preview_path:
                 return base64.b64encode(file.data).decode("utf-8")
-        return base64.b64encode(open("assets/images/construction.png", "rb").read()).decode("utf-8")
+        return base64.b64encode(
+            open("assets/images/construction.png", "rb").read()
+        ).decode("utf-8")
 
     @property
     def tags(self):
@@ -384,8 +416,22 @@ class TroveMod:
     def tmod_hash(self, value: str):
         self._tmod_hash = value
 
+    @property
+    def hash(self):
+        return self.zip_hash or self.tmod_hash
+
+    @property
+    def trovesaurus_data(self) -> Mod:
+        return self._trovesaurus_data
+
+    @trovesaurus_data.setter
+    def trovesaurus_data(self, value: Mod):
+        self._trovesaurus_data = value
+
 
 class TMod(TroveMod):
+    def __str__(self):
+        return f'<TMod "{self.name}">'
 
     @classmethod
     def read_bytes(cls, path: Path, data: bytes):
@@ -407,15 +453,10 @@ class TMod(TroveMod):
         file_stream = data.buffer()[header_size:]
         decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS)
         try:
-            file_stream = BinaryReader(
-                bytearray(decompressor.decompress(file_stream))
-            )
-        except Exception as e:
-            file_stream = BinaryReader(
-                bytearray(
-                    mod.manual_decompression(file_stream)
-                )
-            )
+            file_stream = BinaryReader(bytearray(decompressor.decompress(file_stream)))
+        except:
+            print("Failed to decompile mod, trying manual decompression: " + str(path))
+            file_stream = BinaryReader(bytearray(mod.manual_decompression(file_stream)))
         while data.pos() < header_size:
             name_size = data.read_uint8()
             name = data.read_str(name_size)
@@ -433,7 +474,7 @@ class TMod(TroveMod):
 
     def manual_decompression(self, data: bytes):
         data = BinaryReader(bytearray(data[7:-5]))
-        data_chunks = (data.size() // (32768 + 5))
+        data_chunks = data.size() // (32768 + 5)
         output = BinaryReader(bytearray())
         for i in range(data_chunks):
             output.extend(bytearray(data.read_bytes(32768)))
@@ -454,12 +495,14 @@ class TMod(TroveMod):
 
 
 class ZMod(TroveMod):
+    def __str__(self):
+        return f'<ZMod "{self.name}">'
 
     @classmethod
     def read_bytes(cls, path: Path, data: io.BytesIO):
         mod = cls()
         mod.zip_content = data.read()
-        mod.cwd = path
+        mod.mod_path = path
         mod.files = []
         with zipfile.ZipFile(data) as f:
             for file_name in f.namelist():
@@ -468,3 +511,112 @@ class ZMod(TroveMod):
                 mod.files.append(TroveModFile(path, Path(file_name), f.read(file_name)))
         mod.name = path.stem
         return mod
+
+
+class TroveModList:
+    enabled: list[TroveMod]
+    disabled: list[TroveMod]
+    _mods: list[TroveMod]
+
+    def __init__(self, path: Path):
+        self.enabled = []
+        self.disabled = []
+        self._mods = []
+        self.installation_path = path
+        self.list_path = path.joinpath("mods")
+        self._populate()
+
+    def __str__(self):
+        return f'<TroveModList "{self.list_path}" count={self.count}>'
+
+    def __repr__(self):
+        return str(self)
+
+    def __iter__(self):
+        return iter(self.mods)
+
+    def __len__(self):
+        return self.count
+
+    async def update_trovesaurus_data(self):
+        hashes_query = "#".join(self.all_hashes)
+        async with ClientSession() as session:
+            async with session.get(
+                f"https://kiwiapi.slynx.xyz/mods/hashes?hashes={hashes_query}"
+            ) as response:
+                data = await response.json()
+                for mod in self:
+                    for k, v in data.keys():
+                        if mod.hash == k:
+                            print(v)
+                            mod.trovesaurus_data = Mod.parse_obj(v)
+                            break
+
+    @property
+    def all_hashes(self):
+        return [mod.hash for mod in self.mods]
+
+    @property
+    def name(self):
+        return self.installation_path.name
+
+    @property
+    def mods(self):
+        if len(self._mods) != self.count:
+            self._mods = self.enabled + self.disabled
+        return self._mods
+
+    def sort_by_name(self):
+        self._mods.sort(key=lambda mod: mod.name)
+
+    @property
+    def mods_with_conflicts(self):
+        return [mod for mod in self.mods if mod.has_conflicts]
+
+    @property
+    def count(self):
+        return len(self.enabled) + len(self.disabled)
+
+    def refresh(self):
+        self._populate()
+
+    def _populate(self):
+        self.enabled.clear()
+        self.disabled.clear()
+        self._populate_tmod_enabled()
+        self._populate_tmod_disabled()
+        self._populate_zip_enabled()
+        self._populate_zip_disabled()
+        self.sort_by_name()
+        for mod in self.mods:
+            mod.check_conflicts(self.mods)
+
+    def _populate_tmod_enabled(self):
+        for file in self.list_path.glob("*.tmod"):
+            file_data = file.read_bytes()
+            mod = TMod.read_bytes(file, file_data)
+            if mod.has_wrong_name:
+                mod.fix_name()
+            self.enabled.append(mod)
+
+    def _populate_tmod_disabled(self):
+        for file in self.list_path.glob("*.tmod.disabled"):
+            file_data = file.read_bytes()
+            mod = TMod.read_bytes(file, file_data)
+            if mod.has_wrong_name:
+                mod.fix_name()
+            mod.enabled = False
+            self.disabled.append(mod)
+
+    def _populate_zip_enabled(self):
+        for file in self.list_path.glob("*.zip"):
+            file_data = file.read_bytes()
+            mod = ZMod.read_bytes(file, BytesIO(file_data))
+            self.enabled.append(mod)
+
+    def _populate_zip_disabled(self):
+        for file in self.list_path.glob("*.zip.disabled"):
+            file_data = file.read_bytes()
+            mod = ZMod.read_bytes(file, BytesIO(file_data))
+            mod.enabled = False
+            self.disabled.append(mod)

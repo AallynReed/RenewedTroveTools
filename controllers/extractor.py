@@ -5,8 +5,26 @@ from datetime import datetime
 from pathlib import Path
 from time import perf_counter
 
-from flet import Column, ResponsiveRow, Row, Switch, Text, TextField, DataTable, DataColumn, IconButton, ElevatedButton, \
-    ProgressBar, Dropdown, dropdown, DataRow, DataCell, MainAxisAlignment, FilePicker, AlertDialog
+from flet import (
+    Column,
+    ResponsiveRow,
+    Row,
+    Switch,
+    Text,
+    TextField,
+    DataTable,
+    DataColumn,
+    IconButton,
+    ElevatedButton,
+    ProgressBar,
+    Dropdown,
+    dropdown,
+    DataRow,
+    DataCell,
+    MainAxisAlignment,
+    FilePicker,
+    AlertDialog,
+)
 from flet_core import icons
 from humanize import naturalsize
 from yaml import dump
@@ -16,7 +34,7 @@ from models.interface.inputs import PathField
 from utils import tasks
 from utils.functions import long_throttle, throttle
 from utils.trove.extractor import find_all_indexes, FileStatus
-from utils.trove.registry import GetTroveLocations
+from utils.trove.registry import get_trove_locations
 
 
 class ExtractorController(Controller):
@@ -25,7 +43,7 @@ class ExtractorController(Controller):
             self.tfi_list = []
             self.main = ResponsiveRow(alignment=MainAxisAlignment.START)
             self.cancel_extraction = False
-        self.trove_locations = list(GetTroveLocations())
+        self.trove_locations = list(get_trove_locations())
         self.locations = self.page.preferences.directories
         if self.trove_locations:
             directory = self.trove_locations[0]
@@ -42,7 +60,6 @@ class ExtractorController(Controller):
             label="Trove directory:",
             value=self.locations.extract_from,
             on_change=self.avoid_text_edit,
-            # on_submit=self.set_text_directory,
             col=10,
         )
         self.extract_to = PathField(
@@ -58,7 +75,6 @@ class ExtractorController(Controller):
             label="Compare changes with:",
             value=self.locations.changes_from,
             on_change=self.avoid_text_edit,
-            # on_submit=self.set_text_directory,
             disabled=not self.page.preferences.advanced_mode,
             col=11,
         )
@@ -67,7 +83,6 @@ class ExtractorController(Controller):
             label="Save changes to:",
             value=self.locations.changes_to,
             on_change=self.avoid_text_edit,
-            # on_submit=self.set_text_directory,
             disabled=not self.page.preferences.advanced_mode,
             col=7,
         )
@@ -112,12 +127,12 @@ class ExtractorController(Controller):
         self.directory_dropdown = Dropdown(
             value=(
                 self.locations.extract_from
-                if self.locations.extract_from in [x[1] for x in self.trove_locations]
+                if self.locations.extract_from in self.trove_locations
                 else "none"
             ),
             options=[
                 dropdown.Option(
-                    key=location[1], text=f"{location[0]} - {str(location[1].name)}"
+                    key=location, text=f"{location.name} - {str(location.name)}"
                 )
                 for location in self.trove_locations
             ]
@@ -907,15 +922,12 @@ class ExtractorController(Controller):
                     self.extraction_progress.controls[1].controls[0].value = progress
                     await self.extraction_progress.update_async()
                 if self.page.preferences.advanced_mode:
-                    # Keep an old copy for comparisons
                     await file.copy_old(
                         self.locations.extract_from,
                         self.locations.changes_from,
                         old_changes,
                     )
-                    # Add changes
                     await file.save(self.locations.extract_from, new_changes)
-                # Save into extracted location
                 await file.save(self.locations.extract_from, self.locations.extract_to)
                 index_relative_path = file.archive.index.path.relative_to(
                     self.locations.extract_from
@@ -1058,6 +1070,4 @@ class ExtractorController(Controller):
         self.page.snack_bar.bgcolor = "green"
         self.page.snack_bar.open = True
         await self.page.update_async()
-        # Refresh changes
         self.refresh_lists.start()
-

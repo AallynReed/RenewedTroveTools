@@ -2,8 +2,16 @@ import re
 from typing import Type
 from urllib.parse import urlparse
 
-from flet import Page, View, Row, Column, VerticalDivider, NavigationRail, NavigationRailLabelType, \
-    NavigationRailDestination
+from flet import (
+    Page,
+    View,
+    Row,
+    Column,
+    VerticalDivider,
+    NavigationRail,
+    NavigationRailLabelType,
+    NavigationRailDestination,
+)
 from i18n import t
 
 from utils.functions import get_attr
@@ -50,21 +58,16 @@ class Routing:
                         min_extended_width=200,
                         destinations=[
                             NavigationRailDestination(
-                                icon=view.icon,
-                                label=t(view.title)
+                                icon=view.icon, label=t(view.title)
                             )
                             for view in self.views
                         ],
                         on_change=self.change_navigation,
                     ),
                     VerticalDivider(),
-                    Column(
-                        controls=view.controls,
-                        expand=True,
-                        scroll="auto"
-                    ),
+                    Column(controls=view.controls, expand=True, scroll="auto"),
                 ],
-                expand=True
+                expand=True,
             )
         ]
         await self.page.update_async()

@@ -9,14 +9,14 @@ TroveKey = "Glyph Trove"
 TroveInstallValue = "InstallLocation"
 
 
-def SanityCheck(Path):
-    ModsFolder = Path.joinpath("mods")
-    if not ModsFolder.exists():
+def sanity_check(path):
+    mods_folder = path.joinpath("mods")
+    if not mods_folder.exists():
         return False
     return True
 
 
-def GetKeys(key, path, look_for):
+def get_keys(key, path, look_for):
     i = 0
     while True:
         try:
@@ -28,25 +28,24 @@ def GetKeys(key, path, look_for):
         i += 1
 
 
-def SearchGlyphRegistry():
-    for Hive in Hives:
-        for Node in Nodes:
+def search_glyph_registry():
+    for hive in Hives:
+        for node in Nodes:
             try:
-                LookPath = "SOFTWARE\\" + Node + TrovePath
-                RegistryKeyPath = winreg.OpenKeyEx(Hive, LookPath)
-                Keys = GetKeys(RegistryKeyPath, LookPath, TroveKey)
-                for Key in Keys:
-                    yield winreg.OpenKeyEx(Hive, Key)
+                look_path = "SOFTWARE\\" + node + TrovePath
+                registry_key_path = winreg.OpenKeyEx(hive, look_path)
+                keys = get_keys(registry_key_path, look_path, TroveKey)
+                for Key in keys:
+                    yield winreg.OpenKeyEx(hive, Key)
             except WindowsError:
                 ...
 
 
-def GetTroveLocations():
-    for Key in SearchGlyphRegistry():
+def get_trove_locations():
+    for Key in search_glyph_registry():
         try:
-            GamePath = winreg.QueryValueEx(Key, TroveInstallValue)[
-                0]  # Extracts path out of value in Glyph keys
+            game_path = winreg.QueryValueEx(Key, TroveInstallValue)[0]
         except WindowsError:
             continue
-        if SanityCheck(Path(GamePath)):
-            yield [Path(GamePath).name.lower(), Path(GamePath)]
+        if sanity_check(Path(game_path)):
+            yield Path(game_path)

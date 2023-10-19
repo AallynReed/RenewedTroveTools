@@ -18,7 +18,7 @@ from flet import (
     BlendMode,
     Row,
     VerticalDivider,
-    MainAxisAlignment
+    MainAxisAlignment,
 )
 from pytz import UTC
 
@@ -55,10 +55,7 @@ class RowWidget(Container):
 class HomeController(Controller):
     def setup_controls(self):
         if not hasattr(self, "widgets"):
-            self.widgets = ResponsiveRow(
-                spacing=0,
-                vertical_alignment="start"
-            )
+            self.widgets = ResponsiveRow(spacing=0, vertical_alignment="start")
             self.daily_data = load(open("data/daily_buffs.json", encoding="utf-8"))
             self.weekly_data = load(open("data/weekly_buffs.json", encoding="utf-8"))
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
@@ -71,15 +68,9 @@ class HomeController(Controller):
                             message="\n".join(
                                 [
                                     "Normal",
-                                    *[
-                                        " \u2022 " + b
-                                        for b in v["normal_buffs"]
-                                    ],
+                                    *[" \u2022 " + b for b in v["normal_buffs"]],
                                     "Patreon",
-                                    *[
-                                        " \u2022 " + b
-                                        for b in v["premium_buffs"]
-                                    ],
+                                    *[" \u2022 " + b for b in v["premium_buffs"]],
                                 ]
                             ),
                             content=Stack(
@@ -88,7 +79,7 @@ class HomeController(Controller):
                                         color="black",
                                         color_blend_mode=BlendMode.SATURATION,
                                         src=v["banner"],
-                                        left=-125
+                                        left=-125,
                                     ),
                                     Container(
                                         gradient=LinearGradient(
@@ -107,14 +98,14 @@ class HomeController(Controller):
                                         color="#cccccc",
                                         left=10,
                                         top=3,
-                                        size=16
+                                        size=16,
                                     ),
                                     Text(
                                         v["name"],
                                         color="#cccccc",
                                         left=10,
                                         top=23,
-                                    )
+                                    ),
                                 ]
                             ),
                             border_radius=10,
@@ -124,13 +115,13 @@ class HomeController(Controller):
                                 BorderSide(width=2, color="#" + v["color"]),
                                 BorderSide(width=2, color="#" + v["color"]),
                                 BorderSide(width=2, color="#" + v["color"]),
-                                BorderSide(width=2, color="#" + v["color"])
+                                BorderSide(width=2, color="#" + v["color"]),
                             ),
                             prefer_below=False,
                             wait_duration=250,
                         )
                     ],
-                    col=12/7
+                    col=12 / 7,
                 )
                 for k, v in self.daily_data.items()
             ],
@@ -142,20 +133,14 @@ class HomeController(Controller):
                     controls=[
                         Tooltip(
                             message="\n".join(
-                                [
-                                    "Buffs",
-                                    *[
-                                        " \u2022 " + b
-                                        for b in v["buffs"]
-                                    ]
-                                ]
+                                ["Buffs", *[" \u2022 " + b for b in v["buffs"]]]
                             ),
                             content=Stack(
                                 controls=[
                                     Image(
                                         color="black",
                                         color_blend_mode=BlendMode.SATURATION,
-                                        src=v["banner"]
+                                        src=v["banner"],
                                     ),
                                     Container(
                                         gradient=LinearGradient(
@@ -175,7 +160,7 @@ class HomeController(Controller):
                                         size=16,
                                         left=10,
                                         top=3,
-                                    )
+                                    ),
                                 ]
                             ),
                             border_radius=10,
@@ -185,13 +170,13 @@ class HomeController(Controller):
                                 BorderSide(width=2, color="#" + v["color"]),
                                 BorderSide(width=2, color="#" + v["color"]),
                                 BorderSide(width=2, color="#" + v["color"]),
-                                BorderSide(width=2, color="#" + v["color"])
+                                BorderSide(width=2, color="#" + v["color"]),
                             ),
                             prefer_below=False,
-                            wait_duration=250
+                            wait_duration=250,
                         )
                     ],
-                    col={"xxl": 3}
+                    col={"xxl": 3},
                 )
                 for k, v in self.weekly_data.items()
             ],
@@ -205,7 +190,10 @@ class HomeController(Controller):
                             message=(
                                 "\n".join(
                                     [
-                                        "From " + start.strftime("%B %d, %Y") + " to " + end.strftime("%B %d, %Y")
+                                        "From "
+                                        + start.strftime("%B %d, %Y")
+                                        + " to "
+                                        + end.strftime("%B %d, %Y")
                                         for start, end in item.weeks
                                     ]
                                 )
@@ -214,7 +202,12 @@ class HomeController(Controller):
                                 data=item,
                                 content=Column(
                                     controls=[
-                                        Text(item.name + (" Ally" if item.ally else " Mount"), size=18, text_align="center"),
+                                        Text(
+                                            item.name
+                                            + (" Ally" if item.ally else " Mount"),
+                                            size=18,
+                                            text_align="center",
+                                        ),
                                         Row(
                                             controls=[
                                                 *(
@@ -224,19 +217,19 @@ class HomeController(Controller):
                                                         Image(
                                                             "assets/images/resources/{}.png".format(
                                                                 "currency_points"
-                                                                if item.currency == "cubits" else
-                                                                "currency_credits"
+                                                                if item.currency
+                                                                == "cubits"
+                                                                else "currency_credits"
                                                             ),
-                                                            width=24
+                                                            width=24,
                                                         ),
-                                                        Text(item.price)
-                                                    ] if item.currency is not None else
-                                                    [
-                                                        Text("Reward")
+                                                        Text(item.price),
                                                     ]
+                                                    if item.currency is not None
+                                                    else [Text("Reward")]
                                                 )
                                             ]
-                                        )
+                                        ),
                                     ]
                                 ),
                                 border_radius=5,
@@ -244,8 +237,8 @@ class HomeController(Controller):
                                     BorderSide(width=1, color="#cccccc"),
                                     BorderSide(width=1, color="#cccccc"),
                                     BorderSide(width=1, color="#cccccc"),
-                                    BorderSide(width=1, color="#cccccc")
-                                )
+                                    BorderSide(width=1, color="#cccccc"),
+                                ),
                             ),
                             border_radius=10,
                             bgcolor="#1E1E28",
@@ -254,34 +247,25 @@ class HomeController(Controller):
                                 BorderSide(width=2, color="#cccccc"),
                                 BorderSide(width=2, color="#cccccc"),
                                 BorderSide(width=2, color="#cccccc"),
-                                BorderSide(width=2, color="#cccccc")
+                                BorderSide(width=2, color="#cccccc"),
                             ),
                             prefer_below=False,
-                            wait_duration=250
+                            wait_duration=250,
                         )
                     ],
                     expand=True,
-                    col={"xxl": 4}
+                    col={"xxl": 4},
                 )
                 for item in cranny.get_items()
             ]
         )
         self.widgets.controls = [
+            Column(controls=[self.daily_widgets, self.weekly_widgets], col={"xxl": 12}),
             Column(
-                controls=[
-                    self.daily_widgets,
-                    self.weekly_widgets
-                ],
-                col={"xxl": 12}
-            ),
-            Column(
-                controls=[
-                    Text("Cranny Rotation", size=20),
-                    self.cranny_widgets
-                ],
+                controls=[Text("Cranny Rotation", size=20), self.cranny_widgets],
                 spacing=0,
-                col={"xxl": 4}
-            )
+                col={"xxl": 4},
+            ),
         ]
         tasks = [
             self.update_daily,
@@ -373,7 +357,7 @@ class HomeController(Controller):
                                 BorderSide(width=1, color="#ff0000"),
                                 BorderSide(width=1, color="#ff0000"),
                                 BorderSide(width=1, color="#ff0000"),
-                                BorderSide(width=1, color="#ff0000")
+                                BorderSide(width=1, color="#ff0000"),
                             )
                             break
                 await self.cranny_widgets.update_async()

@@ -26,7 +26,7 @@ from flet import (
     DataCell,
     Tabs,
     Tab,
-    Stack
+    Stack,
 )
 from i18n import t
 

@@ -26,7 +26,7 @@ class App:
             target=self.start,
             assets_dir="assets",
             view=WEB_BROWSER if self.web else FLET_APP,
-            port=13010
+            port=13010,
         )
 
     async def start(self, page):
@@ -43,15 +43,23 @@ class App:
     async def load_configurations(self):
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
         APPDATA = Path(os.environ.get("APPDATA"))
-        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(self.page.metadata.tech_name)
-        self.page.preferences = Preferences.load_from_json(app_data.joinpath("preferences.json"))
+        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+            self.page.metadata.tech_name
+        )
+        self.page.preferences = Preferences.load_from_json(
+            app_data.joinpath("preferences.json")
+        )
         self.page.theme_mode = self.page.preferences.theme
-        self.page.theme = Theme(color_scheme_seed=str(self.page.preferences.accent_color))
+        self.page.theme = Theme(
+            color_scheme_seed=str(self.page.preferences.accent_color)
+        )
 
     def setup_logging(self):
         self.page.logger = Logger("Trove Builds Core")
         APPDATA = Path(os.environ.get("APPDATA"))
-        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(self.page.metadata.tech_name)
+        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+            self.page.metadata.tech_name
+        )
         logs = app_data.joinpath("logs")
         logs.mkdir(parents=True, exist_ok=True)
         latest_log = logs.joinpath("latest.log")

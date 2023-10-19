@@ -13,7 +13,9 @@ class ConfigController(Controller):
                         Dropdown(
                             value=self.page.app_config.locale.value,
                             options=[
-                                dropdown.Option(key=loc.value, text=loc.name.replace("_", " "))
+                                dropdown.Option(
+                                    key=loc.value, text=loc.name.replace("_", " ")
+                                )
                                 for loc in Locale
                             ],
                             label="Language",
@@ -23,12 +25,14 @@ class ConfigController(Controller):
                 ),
                 Column(
                     controls=[
-                        Text("This application was developed by Sly#0511.\nIt's use is free and")
+                        Text(
+                            "This application was developed by Sly#0511.\nIt's use is free and"
+                        )
                     ]
-                )
+                ),
             ],
             expand=True,
-            spacing=400
+            spacing=400,
         )
 
     def setup_events(self):

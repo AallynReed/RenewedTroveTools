@@ -15,7 +15,7 @@ from flet import (
     TextButton,
     MainAxisAlignment,
     Icon,
-    Theme
+    Theme,
 )
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
@@ -26,7 +26,7 @@ from flet_core.icons import (
     HELP,
     DOWNLOAD,
     PALETTE,
-    SAVINGS
+    SAVINGS,
 )
 
 from models.preferences import AccentColor
@@ -151,8 +151,8 @@ class CustomAppBar(AppBar):
                                 ]
                             ),
                             on_click=self.go_url,
-                        )
-                    ]
+                        ),
+                    ],
                 ),
                 PopupMenuButton(
                     data="other-buttons",
@@ -234,7 +234,7 @@ class CustomAppBar(AppBar):
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
             self.page.snack_bar.open = True
-            self.page.snack_bar.duration = 1000 #60000
+            self.page.snack_bar.duration = 1000  # 60000
             await self.page.update_async()
 
     async def go_to_update_page(self, _):
@@ -273,8 +273,7 @@ class CustomAppBar(AppBar):
             "discord": "https://discord.gg/duuFEsFWk5",
             "github": "https://github.com/Sly0511/TroveBuilds",
             "paypal": "https://www.paypal.com/paypalme/waterin",
-            "kofi": "https://ko-fi.com/slydev"
-
+            "kofi": "https://ko-fi.com/slydev",
         }
         await self.page.launch_url_async(urls[event.control.data])
 
@@ -311,5 +310,3 @@ class CustomAppBar(AppBar):
         self.page.preferences.accent_color = color
         self.page.preferences.save()
         await self.page.update_async()
-
-

@@ -1,4 +1,14 @@
-from flet import UserControl, DataTable, DataColumn, DataRow, Column, Row, IconButton, TextField, Text
+from flet import (
+    UserControl,
+    DataTable,
+    DataColumn,
+    DataRow,
+    Column,
+    Row,
+    IconButton,
+    TextField,
+    Text,
+)
 from flet_core import icons
 
 from typing import Optional, Callable
@@ -6,13 +16,13 @@ from typing import Optional, Callable
 
 class PagedDataTable(UserControl):
     def __init__(
-            self,
-            is_async: bool,
-            columns: list[DataColumn],
-            page_size: int = 10,
-            single_select: bool = False,
-            on_selection_changed: Optional[Callable] = None,
-            **kwargs
+        self,
+        is_async: bool,
+        columns: list[DataColumn],
+        page_size: int = 10,
+        single_select: bool = False,
+        on_selection_changed: Optional[Callable] = None,
+        **kwargs,
     ):
         self.is_async = is_async
         self._page_size = page_size
@@ -30,11 +40,8 @@ class PagedDataTable(UserControl):
         self._text_indicator = TextField(
             value=str(self.current_page + 1),
             width=100,
-            on_submit=(
-                self.to_page
-                if not self.is_async else
-                self.to_page_async
-            ),
+            scale=0.75,
+            on_submit=(self.to_page if not self.is_async else self.to_page_async),
         )
         self.put_page(self.current_page)
         return Column(
@@ -46,34 +53,42 @@ class PagedDataTable(UserControl):
                             icons.FIRST_PAGE,
                             on_click=(
                                 self.to_first_page
-                                if not self.is_async else
-                                self.to_first_page_async)
+                                if not self.is_async
+                                else self.to_first_page_async
+                            ),
                         ),
                         IconButton(
                             icons.NAVIGATE_BEFORE,
                             on_click=(
                                 self.to_previous_page
-                                if not self.is_async else
-                                self.to_previous_page_async)
+                                if not self.is_async
+                                else self.to_previous_page_async
+                            ),
                         ),
                         self._text_indicator,
+                        Text(
+                            f"/ {self.page_count}",
+                            scale=0.75,
+                        ),
                         IconButton(
                             icons.NAVIGATE_NEXT,
                             on_click=(
                                 self.to_next_page
-                                if not self.is_async else
-                                self.to_next_page_async)
+                                if not self.is_async
+                                else self.to_next_page_async
+                            ),
                         ),
                         IconButton(
                             icons.LAST_PAGE,
                             on_click=(
                                 self.to_last_page
-                                if not self.is_async else
-                                self.to_last_page_async)
+                                if not self.is_async
+                                else self.to_last_page_async
+                            ),
                         ),
                     ],
                     alignment="SPACE_BETWEEN",
-                )
+                ),
             ],
             expand=True,
         )
@@ -152,7 +167,9 @@ class PagedDataTable(UserControl):
         return self.page_count - 1
 
     def get_page(self, page: int):
-        return self._rows[page * self.page_size: page * self.page_size + self.page_size]
+        return self._rows[
+            page * self.page_size : page * self.page_size + self.page_size
+        ]
 
     def put_page(self, page: int):
         self.table.rows = self.get_page(page)

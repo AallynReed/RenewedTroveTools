@@ -40,9 +40,7 @@ class StarChartController(Controller):
             self.star_details = Column(col={"xxl": 6.5})
             _id = self.page.params.get("id", None)
             if _id:
-                asyncio.create_task(
-                    self.start_with_build_id(_id)
-                )
+                asyncio.create_task(self.start_with_build_id(_id))
                 return
         self.map.controls.clear()
         self.star_buttons = Stack(
@@ -113,16 +111,16 @@ class StarChartController(Controller):
                     controls=[
                         Text("Abilities", size=22),
                         *(
-                                [Text(a) for a in self.star_chart.activated_abilities]
-                                or [Text("-")]
+                            [Text(a) for a in self.star_chart.activated_abilities]
+                            or [Text("-")]
                         ),
                         Text("Obtainables", size=22),
                         *(
-                                [
-                                    Text(f"{v}x  {k}")
-                                    for k, v in self.star_chart.activated_obtainables.items()
-                                ]
-                                or [Text("-")]
+                            [
+                                Text(f"{v}x  {k}")
+                                for k, v in self.star_chart.activated_obtainables.items()
+                            ]
+                            or [Text("-")]
                         ),
                         ResponsiveRow(
                             controls=[
@@ -138,20 +136,22 @@ class StarChartController(Controller):
                                     label="Find stats",
                                     on_change=self.change_selected_stat,
                                     width=250,
-                                    col={"xxl": 4}
+                                    col={"xxl": 4},
                                 ),
                                 TextField(
                                     hint_text="Insert build string",
                                     width=250,
                                     on_change=self.set_star_chart_build,
-                                    col={"xxl": 4}
+                                    col={"xxl": 4},
                                 ),
                                 ElevatedButton(
                                     "Copy build",
                                     width=250,
-                                    disabled=not bool(self.star_chart.activated_stars_count),
+                                    disabled=not bool(
+                                        self.star_chart.activated_stars_count
+                                    ),
                                     on_click=self.copy_star_chart_build,
-                                    col={"xxl": 4}
+                                    col={"xxl": 4},
                                 ),
                                 ResponsiveRow(
                                     controls=[
@@ -163,16 +163,32 @@ class StarChartController(Controller):
                                                         DataTable(
                                                             heading_row_height=0,
                                                             data_row_height=40,
-                                                            columns=[DataColumn(Text()), DataColumn(Text())],
+                                                            columns=[
+                                                                DataColumn(Text()),
+                                                                DataColumn(Text()),
+                                                            ],
                                                             rows=[
                                                                 DataRow(
                                                                     cells=[
-                                                                        DataCell(Text(k, size=13)),
                                                                         DataCell(
                                                                             Text(
-                                                                                str(v[0])
-                                                                                + (f"%" if v[1] else ""),
-                                                                                size=13
+                                                                                k,
+                                                                                size=13,
+                                                                            )
+                                                                        ),
+                                                                        DataCell(
+                                                                            Text(
+                                                                                str(
+                                                                                    v[0]
+                                                                                )
+                                                                                + (
+                                                                                    f"%"
+                                                                                    if v[
+                                                                                        1
+                                                                                    ]
+                                                                                    else ""
+                                                                                ),
+                                                                                size=13,
                                                                             )
                                                                         ),
                                                                     ]
@@ -189,10 +205,10 @@ class StarChartController(Controller):
                                         ),
                                         self.star_details,
                                     ]
-                                )
+                                ),
                             ],
-                            vertical_alignment="center"
-                        )
+                            vertical_alignment="center",
+                        ),
                     ],
                     col={"xxl": 6},
                 ),

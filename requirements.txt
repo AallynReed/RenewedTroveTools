@@ -13,3 +13,4 @@ humanize
 aiofiles
 aiofile
 toml
+black

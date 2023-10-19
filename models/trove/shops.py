@@ -24,8 +24,7 @@ class Cranny:
         now = datetime.now().astimezone(UTC)
         cranny_epoch = (now - self.first_cranny).total_seconds()
         crannies_passed, cranny_progress = divmod(
-            cranny_epoch,
-            self.cranny_lifetime.total_seconds()
+            cranny_epoch, self.cranny_lifetime.total_seconds()
         )
         start = self.first_cranny + timedelta(
             seconds=self.cranny_lifetime.total_seconds() * crannies_passed
@@ -35,10 +34,7 @@ class Cranny:
         weeks = []
         for i in range(self.cranny_lifetime_int):
             weeks.append(
-                [
-                    start + self.week_length * i,
-                    start + self.week_length * (i + 1)
-                ]
+                [start + self.week_length * i, start + self.week_length * (i + 1)]
             )
         return start, end, weeks, bool(ally_week)
 
@@ -67,11 +63,7 @@ class Cranny:
                     price *= 10
             items.append(
                 CrannyItem(
-                    name=name,
-                    weeks=weeks,
-                    price=price,
-                    ally=ally_week,
-                    currency=cur
+                    name=name, weeks=weeks, price=price, ally=ally_week, currency=cur
                 )
             )
         return items

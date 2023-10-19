@@ -33,13 +33,13 @@ class ModFile(BaseModel):
     size: int = Field(alias="fileid")
     hash: str = Field(default="")
 
-    @validator('created_at')
+    @validator("created_at")
     def parse_timestamp(cls, value):
         if isinstance(value, datetime):
             return value
         return datetime.utcfromtimestamp(value)
 
-    @validator('version')
+    @validator("version")
     def parse_version(cls, value, values):
         if values["is_config"]:
             return "config"
@@ -63,7 +63,9 @@ class ModFile(BaseModel):
 
     async def download(self):
         async with ClientSession() as session:
-            async with session.get(f"https://trovesaurus.com/client/downloadfile.php?fileid={self.file_id}") as response:
+            async with session.get(
+                f"https://trovesaurus.com/client/downloadfile.php?fileid={self.file_id}"
+            ) as response:
                 return await response.read()
 
 
@@ -87,7 +89,7 @@ class Mod(BaseModel):
     installed: bool = False
     installed_file: ModFile = None
 
-    @validator('created_at')
+    @validator("created_at")
     def parse_timestamp(cls, value):
         if isinstance(value, datetime):
             return value
