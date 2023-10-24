@@ -144,10 +144,8 @@ class ModsController(Controller):
     async def reload_mods_list(self):
         await self.selected_location.update_trovesaurus_data()
         for mod in self.selected_location:
-            trovesaurus_mod = next(
-                (tmod for tmod in self.trovesaurus_mods if mod.name == tmod.name), None
-            )
-            trovesaurus_file = None
+            trovesaurus_mod = mod.trovesaurus_data
+            trovesaurus_file = trovesaurus_mod.installed_file if trovesaurus_mod else None
             self.mod_list.controls.append(
                 ListTile(
                     on_click=self.select_tile,

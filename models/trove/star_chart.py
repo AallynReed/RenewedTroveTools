@@ -4,6 +4,7 @@ from enum import Enum
 from math import radians, sin, cos
 from typing import Optional
 
+import requests
 from pydantic import BaseModel
 from pydantic import Field
 
@@ -99,9 +100,10 @@ class StarChart(BaseModel):
 
     async def from_string(self, build_id):
         build_id = build_id.strip().split("-")[-1].strip()
-        build = await StarBuild.find_one(StarBuild.build == build_id)
-        if build is None:
+        raw_build = requests.get("https://kiwiapi.slynx.xyz/v1/star_chart/build/" + build_id)
+        if raw_build.status_code == 404:
             return False
+        build = StarBuild(**json.loads(raw_build.json()))
         self.build_id = build_id
         for star in self.get_stars():
             if star.path in build.paths:

@@ -6,7 +6,9 @@ from datetime import datetime
 from datetime import timedelta
 from pathlib import Path
 
-from flet import app, WEB_BROWSER, FLET_APP, Theme, SnackBar, Row, Icon, Text
+import requests
+from flet import app, WEB_BROWSER, FLET_APP, Theme, SnackBar, Row, Text, Column, Container, Icon, TextField, TextStyle, \
+    alignment
 
 from models import Metadata, Preferences
 from models.interface import CustomAppBar
@@ -16,17 +18,19 @@ from utils.logger import Logger
 from utils.routing import Routing
 from views import all_views, View404
 
+# This speeds up requests considerably
+requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 class App:
     def __init__(self, web=False):
         self.web = web
 
-    def run(self):
+    def run(self, port: int = 0):
         app(
             target=self.start,
             assets_dir="assets",
             view=WEB_BROWSER if self.web else FLET_APP,
-            port=13010,
+            port=port,
         )
 
     async def start(self, page):
@@ -35,10 +39,7 @@ class App:
         self.setup_logging()
         self.setup_localization()
         await self.setup_page()
-        await self.setup_appbar()
-        await self.gather_views()
-        await self.start_tasks()
-        await page.go_async("/")
+        await self.process_login()
 
     async def load_configurations(self):
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
@@ -86,6 +87,84 @@ class App:
         self.page.clock = Text(
             (datetime.utcnow() - timedelta(hours=11)).strftime("%a, %b %d\t\t%H:%M")
         )
+
+    async def process_login(self):
+        token = await self.page.client_storage.get_async("rnt-token")
+        self.page.user_data = await self.login(token)
+        if self.page.user_data is None:
+            await self.display_login_screen()
+        else:
+            await self.post_login()
+
+    async def login(self, token):
+        response = requests.get(
+            "https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token,
+            timeout=1
+        )
+        if response.status_code == 200:
+            await self.page.client_storage.set_async("rnt-token", token)
+            return response.json()
+        return None
+
+    async def display_login_screen(self):
+        self.token_input = TextField(
+            label="Insert token here",
+            text_align="center",
+            password=True,
+            can_reveal_password=True,
+            helper_style=TextStyle(color="red"),
+        )
+        await self.page.add_async(
+            Container(
+                Column(
+                    controls=[
+                        Text(value="Login", size=40, color="white"),
+                        self.token_input,
+                        Container(
+                            Row(
+                                controls=[
+                                    Icon("discord"),
+                                    Text(value="Login with Discord"),
+                                ],
+                                alignment="SPACE_BETWEEN",
+
+                            ),
+                            on_hover=self.button_hover,
+                            on_click=self.execute_login,
+                        )
+                    ],
+                    horizontal_alignment="center",
+                    width=450,
+                ),
+                expand=True,
+                alignment=alignment.center,
+                margin=self.page.height * 0.40,
+            )
+        )
+
+    async def button_hover(self, e):
+        if e.data == "true":
+            e.control.ink = True
+        else:
+            e.control.ink = False
+        await e.control.update_async()
+
+    async def execute_login(self, e):
+        if self.token_input.value:
+            self.page.user_data = await self.login(self.token_input.value)
+            if self.page.user_data is None:
+                self.token_input.helper_text = "Invalid token"
+                return await self.token_input.update_async()
+        else:
+            await self.page.launch_url_async("https://kiwiapi.slynx.xyz/v1/user/discord/login")
+            return
+        await self.post_login()
+
+    async def post_login(self):
+        await self.setup_appbar()
+        await self.gather_views()
+        await self.start_tasks()
+        await self.page.go_async("/")
 
     async def setup_appbar(self):
         self.page.appbar = CustomAppBar(

@@ -154,6 +154,16 @@ class CustomAppBar(AppBar):
                         ),
                     ],
                 ),
+                Row(
+                    controls=[
+                        Image(
+                            self.page.user_data["avatar_url"],
+                            width=40,
+                            border_radius=50
+                        ),
+                        Text(self.page.user_data["username"])
+                    ]
+                ),
                 PopupMenuButton(
                     data="other-buttons",
                     items=[
@@ -229,6 +239,7 @@ class CustomAppBar(AppBar):
         await self.page.update_async()
 
     async def check_for_update(self):
+        await asyncio.sleep(5)
         if (await check_update(self.page.metadata.version)) is not None:
             self.page.appbar.actions[0].visible = True
             self.page.snack_bar.content.value = "A new update is available"

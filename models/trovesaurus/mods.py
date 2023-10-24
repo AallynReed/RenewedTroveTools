@@ -89,6 +89,13 @@ class Mod(BaseModel):
     installed: bool = False
     installed_file: ModFile = None
 
+    def __contains__(self, item):
+        return item in self.hashes
+
+    @property
+    def hashes(self):
+        return [file.hash for file in self.file_objs]
+
     @validator("created_at")
     def parse_timestamp(cls, value):
         if isinstance(value, datetime):

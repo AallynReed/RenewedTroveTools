@@ -417,10 +417,6 @@ class TroveMod:
         self._tmod_hash = value
 
     @property
-    def hash(self):
-        return self.zip_hash or self.tmod_hash
-
-    @property
     def trovesaurus_data(self) -> Mod:
         return self._trovesaurus_data
 
@@ -432,6 +428,10 @@ class TroveMod:
 class TMod(TroveMod):
     def __str__(self):
         return f'<TMod "{self.name}">'
+
+    @property
+    def hash(self):
+        return self.tmod_hash
 
     @classmethod
     def read_bytes(cls, path: Path, data: bytes):
@@ -498,6 +498,10 @@ class ZMod(TroveMod):
     def __str__(self):
         return f'<ZMod "{self.name}">'
 
+    @property
+    def hash(self):
+        return self.zip_hash
+
     @classmethod
     def read_bytes(cls, path: Path, data: io.BytesIO):
         mod = cls()
@@ -539,17 +543,21 @@ class TroveModList:
         return self.count
 
     async def update_trovesaurus_data(self):
-        hashes_query = "#".join(self.all_hashes)
+        hashes_query = "%23".join(self.all_hashes)
         async with ClientSession() as session:
             async with session.get(
-                f"https://kiwiapi.slynx.xyz/mods/hashes?hashes={hashes_query}"
+                f"https://kiwiapi.slynx.xyz/v1/mods/hashes?hashes={hashes_query}"
             ) as response:
                 data = await response.json()
                 for mod in self:
-                    for k, v in data.keys():
-                        if mod.hash == k:
-                            print(v)
+                    for k, v in data.items():
+                        if mod.hash == k and v is not None:
                             mod.trovesaurus_data = Mod.parse_obj(v)
+                            mod.trovesaurus_data.installed = True
+                            for file in mod.trovesaurus_data.file_objs:
+                                if file.hash == mod.hash:
+                                    mod.trovesaurus_data.installed_file = file
+                                    break
                             break
 
     @property
