@@ -89,13 +89,9 @@ class StarChart(BaseModel):
 
     async def get_build(self):
         paths = [s.path for s in self.activated_stars]
-        if (
-            build := await StarBuild.find_one(
-                {"paths": {"$all": paths, "$size": len(paths)}}
-            )
-        ) is None:
-            build = StarBuild(paths=paths)
-            await build.save()
+        string_paths = "$".join(paths)
+        raw_build = requests.get("https://kiwiapi.slynx.xyz/v1/star_chart/build_paths?paths=" + string_paths)
+        build = StarBuild(**json.loads(raw_build.json()))
         return build.build
 
     async def from_string(self, build_id):
