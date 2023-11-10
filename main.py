@@ -18,8 +18,6 @@ from utils.logger import Logger
 from utils.routing import Routing
 from views import all_views, View404
 
-# This speeds up requests considerably
-requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 class App:
     def __init__(self, web=False):
@@ -97,10 +95,7 @@ class App:
             await self.post_login()
 
     async def login(self, token):
-        response = requests.get(
-            "https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token,
-            timeout=1
-        )
+        response = requests.get("https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token)
         if response.status_code == 200:
             await self.page.client_storage.set_async("rnt-token", token)
             return response.json()

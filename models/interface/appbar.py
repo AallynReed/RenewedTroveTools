@@ -239,14 +239,14 @@ class CustomAppBar(AppBar):
         await self.page.update_async()
 
     async def check_for_update(self):
-        await asyncio.sleep(5)
+        await asyncio.sleep(1)
         if (await check_update(self.page.metadata.version)) is not None:
             self.page.appbar.actions[0].visible = True
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
             self.page.snack_bar.open = True
             self.page.snack_bar.duration = 1000  # 60000
-            await self.page.update_async()
+            await self.page.snack_bar.update_async()
 
     async def go_to_update_page(self, _):
         await self.page.launch_url_async(await check_update(self.page.metadata.version))
