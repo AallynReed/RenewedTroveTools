@@ -53,7 +53,7 @@ setup(
             "app.py",
             target_name=f"{metadata.tech_name}.exe",
             icon=str(metadata.icon),
-            base=None,#"Win32GUI",
+            base="Win32GUI",
             copyright=f"{metadata.author} {metadata.copyright}",
             shortcut_name=metadata.name,
             shortcut_dir="DesktopFolder",

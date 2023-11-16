@@ -95,6 +95,8 @@ class App:
             await self.post_login()
 
     async def login(self, token):
+        if token is None:
+            return None
         response = requests.get("https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token)
         if response.status_code == 200:
             await self.page.client_storage.set_async("rnt-token", token)
