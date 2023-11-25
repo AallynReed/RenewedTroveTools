@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Optional
 
 from flet import ThemeMode
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 from models.config import Locale
+import asyncio
 
 
 class AccentColor(Enum):
@@ -41,7 +42,9 @@ class Directories(BaseModel):
 
 
 class Preferences(BaseModel):
+    _page = PrivateAttr()
     path: Path
+    web: bool = False
     locale: Locale = Locale.American_English
     theme: ThemeMode = Field(default=ThemeMode.DARK)
     accent_color: AccentColor = AccentColor.amber
@@ -52,27 +55,39 @@ class Preferences(BaseModel):
     dismissables: DismissableContent = Field(default_factory=DismissableContent)
 
     @classmethod
-    def load_from_json(cls, path: Path):
-        if not path.exists():
-            pref = cls(path=path)
-            with open(path, "w+") as f:
-                f.write(pref.json(indent=4))
-            return pref
+    async def load_from_web(cls, page):
         try:
-            data = loads(path.read_text())
-            pref = cls.parse_obj(data)
-            pref.save()
-            return pref
-        except Exception:
-            pref = cls(path=path)
-            with open(path, "w+") as f:
-                f.write(pref.json(indent=4))
-            return pref
+            pref_obj = await page.client_storage.get_async("preferences", None)
+            if not pref_obj:
+                raise Exception("Missing preferences on client")
+            pref = cls.parse_obj(pref_obj)
+            print("Loaded client preferences")
+        except:
+            pref = cls(path=Path("data/preferences.json"), web=True)
+        pref.bind_page(page)
+        pref.save()
+        return pref
 
     @classmethod
-    def default(cls):
-        return cls(path=Path("data/preferences.json"))
+    def load_from_json(cls, path: Path, page):
+        if not path.exists():
+            pref = cls(path=path)
+        else:
+            try:
+                data = loads(path.read_text())
+                pref = cls.parse_obj(data)
+            except Exception:
+                pref = cls(path=path)
+        pref.bind_page(page)
+        pref.save()
+        return pref
+
+    def bind_page(self, page):
+        self._page = page
 
     def save(self):
-        with open(self.path, "w+") as f:
-            f.write(self.json(indent=4))
+        if not self.web:
+            with open(self.path, "w+") as f:
+                f.write(self.json(indent=4))
+        else:
+            asyncio.create_task(self._page.client_storage.set_async("preferences", self.json()))

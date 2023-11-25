@@ -57,14 +57,14 @@ class App:
         self.page.user_data = None
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
         if self.page.web:
-            self.page.preferences = Preferences.default()
+            self.page.preferences = await Preferences.load_from_web(self.page)
         else:
             APPDATA = Path(os.environ.get("APPDATA"))
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
             self.page.preferences = Preferences.load_from_json(
-                app_data.joinpath("preferences.json")
+                app_data.joinpath("preferences.json"), self.page
             )
             self.page.theme_mode = self.page.preferences.theme
             self.page.theme = Theme(
