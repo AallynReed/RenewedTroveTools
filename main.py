@@ -57,7 +57,7 @@ class App:
         self.page.user_data = None
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
         if self.page.web:
-            self.page.preferences = Preferences()
+            self.page.preferences = Preferences.default()
         else:
             APPDATA = Path(os.environ.get("APPDATA"))
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
