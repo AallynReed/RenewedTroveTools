@@ -56,17 +56,20 @@ class App:
     async def load_configurations(self):
         self.page.user_data = None
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
-        APPDATA = Path(os.environ.get("APPDATA"))
-        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
-            self.page.metadata.tech_name
-        )
-        self.page.preferences = Preferences.load_from_json(
-            app_data.joinpath("preferences.json")
-        )
-        self.page.theme_mode = self.page.preferences.theme
-        self.page.theme = Theme(
-            color_scheme_seed=str(self.page.preferences.accent_color)
-        )
+        if self.page.web:
+            self.page.preferences = Preferences()
+        else:
+            APPDATA = Path(os.environ.get("APPDATA"))
+            app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+                self.page.metadata.tech_name
+            )
+            self.page.preferences = Preferences.load_from_json(
+                app_data.joinpath("preferences.json")
+            )
+            self.page.theme_mode = self.page.preferences.theme
+            self.page.theme = Theme(
+                color_scheme_seed=str(self.page.preferences.accent_color)
+            )
 
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")
