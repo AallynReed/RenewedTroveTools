@@ -93,10 +93,10 @@ def throttle(actual_handler, data={}, delay=0.5):
     async def wrapper(*args, **kwargs):
         """Simple filter for queries that shouldn't run."""
 
-        data["last_change"] = datetime.datetime.utcnow().timestamp()
+        data["last_change"] = datetime.datetime.now(datetime.UTC).timestamp()
         await asyncio.sleep(delay)
         if (
-            datetime.datetime.utcnow().timestamp() - data["last_change"]
+            datetime.datetime.now(datetime.UTC).timestamp() - data["last_change"]
             >= delay - delay * 0.1
         ):
             await actual_handler(*args, **kwargs)
@@ -119,10 +119,10 @@ def long_throttle(actual_handler, data={}, delay=1.5):
     async def wrapper(*args, **kwargs):
         """Simple filter for queries that shouldn't run."""
 
-        data["last_change"] = datetime.datetime.utcnow().timestamp()
+        data["last_change"] = datetime.datetime.now(datetime.UTC).timestamp()
         await asyncio.sleep(delay)
         if (
-            datetime.datetime.utcnow().timestamp() - data["last_change"]
+            datetime.datetime.now(datetime.UTC).timestamp() - data["last_change"]
             >= delay - delay * 0.1
         ):
             await actual_handler(*args, **kwargs)

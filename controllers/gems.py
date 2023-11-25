@@ -589,7 +589,7 @@ class GemSetController(Controller):
                             )
                             for stat, value in stats.items()
                         ],
-                        data_row_height=35,
+                        data_row_min_height=35,
                         heading_row_height=30,
                     )
                 ],

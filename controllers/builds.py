@@ -86,7 +86,7 @@ class GemBuildsController(Controller):
                 DataColumn(label=Text("Actions")),
             ],
             heading_row_height=40,
-            data_row_height=40,
+            data_row_min_height=40,
             bgcolor="#212223",
         )
         self.interface.controls = [
@@ -518,7 +518,7 @@ class GemBuildsController(Controller):
                 ),
             ],
             heading_row_height=15,
-            data_row_height=80,
+            data_row_min_height=80,
             col={"xxl": 4},
         )
         if not hasattr(self, "data_table"):

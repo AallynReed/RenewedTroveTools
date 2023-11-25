@@ -154,15 +154,19 @@ class CustomAppBar(AppBar):
                         ),
                     ],
                 ),
-                Row(
-                    controls=[
-                        Image(
-                            self.page.user_data["avatar_url"],
-                            width=40,
-                            border_radius=50
-                        ),
-                        Text(self.page.user_data["username"])
-                    ]
+                *(
+                    [
+                        Row(
+                            controls=[
+                                Image(
+                                    self.page.user_data["avatar_url"],
+                                    width=40,
+                                    border_radius=50
+                                ),
+                                Text(self.page.user_data["username"])
+                            ]
+                        )
+                    ] if self.page.user_data else []
                 ),
                 PopupMenuButton(
                     data="other-buttons",

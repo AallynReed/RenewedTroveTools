@@ -48,13 +48,13 @@ class ExtractorController(Controller):
         if self.trove_locations:
             directory = self.trove_locations[0]
             if self.locations.extract_from is None:
-                self.locations.extract_from = directory[1]
+                self.locations.extract_from = directory
             if self.locations.extract_to is None:
-                self.locations.extract_to = directory[1].joinpath("extracted")
+                self.locations.extract_to = directory.joinpath("extracted")
             if self.locations.changes_to is None:
-                self.locations.changes_to = directory[1].joinpath("changes")
+                self.locations.changes_to = directory.joinpath("changes")
             if self.locations.changes_from is None:
-                self.locations.changes_to = directory[1].joinpath("extracted")
+                self.locations.changes_to = directory.joinpath("extracted")
         self.extract_from = PathField(
             data="extract_from",
             label="Trove directory:",
@@ -252,7 +252,7 @@ class ExtractorController(Controller):
             ],
             column_spacing=15,
             heading_row_height=35,
-            data_row_height=25,
+            data_row_min_height=25,
             sort_column_index=2,
             visible=False,
         )
@@ -260,7 +260,7 @@ class ExtractorController(Controller):
             columns=[DataColumn(Text("Path")), DataColumn(Text("Size"))],
             column_spacing=15,
             heading_row_height=35,
-            data_row_height=25,
+            data_row_min_height=25,
             visible=False,
         )
         self.metrics = Column(

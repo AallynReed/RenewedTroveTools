@@ -4,6 +4,7 @@ import os
 import sys
 from datetime import datetime
 from datetime import timedelta
+from datetime import UTC
 from pathlib import Path
 
 import requests
@@ -33,13 +34,27 @@ class App:
 
     async def start(self, page):
         self.page = page
+        if page.web:
+            await self.start_web(page)
+        else:
+            await self.start_app(page)
+
+    async def start_app(self, page):
         await self.load_configurations()
         self.setup_logging()
         self.setup_localization()
         await self.setup_page()
         await self.process_login()
 
+    async def start_web(self, page):
+        await self.load_configurations()
+        self.setup_logging(True)
+        self.setup_localization()
+        await self.setup_page()
+        await self.post_login()
+
     async def load_configurations(self):
+        self.page.user_data = None
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
         APPDATA = Path(os.environ.get("APPDATA"))
         app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
@@ -53,21 +68,28 @@ class App:
             color_scheme_seed=str(self.page.preferences.accent_color)
         )
 
-    def setup_logging(self):
+    def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")
-        APPDATA = Path(os.environ.get("APPDATA"))
-        app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
-            self.page.metadata.tech_name
-        )
-        logs = app_data.joinpath("logs")
-        logs.mkdir(parents=True, exist_ok=True)
-        latest_log = logs.joinpath("latest.log")
-        latest_log.unlink(missing_ok=True)
-        dated_log = logs.joinpath(datetime.now().strftime("%Y-%m-%d %H-%M-%S.log"))
+        if not web:
+            APPDATA = Path(os.environ.get("APPDATA"))
+            app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+                self.page.metadata.tech_name
+            )
+            app_data.mkdir(parents=True, exist_ok=True)
+            logs = app_data.joinpath("logs")
+            logs.mkdir(parents=True, exist_ok=True)
+            latest_log = logs.joinpath("latest.log")
+            latest_log.unlink(missing_ok=True)
+            dated_log = logs.joinpath(datetime.now().strftime("%Y-%m-%d %H-%M-%S.log"))
         targets = (
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler(latest_log),
-            logging.FileHandler(dated_log),
+            *(
+                [
+                    logging.FileHandler(latest_log),
+                    logging.FileHandler(dated_log),
+                ] if not web
+                else []
+            )
         )
         logging.basicConfig(format="%(message)s", level=logging.INFO, handlers=targets)
 
@@ -83,7 +105,7 @@ class App:
         self.page.window_height = 950
         self.page.snack_bar = SnackBar(content=Text())
         self.page.clock = Text(
-            (datetime.utcnow() - timedelta(hours=11)).strftime("%a, %b %d\t\t%H:%M")
+            (datetime.now(UTC) - timedelta(hours=11)).strftime("%a, %b %d\t\t%H:%M")
         )
 
     async def process_login(self):
@@ -182,7 +204,7 @@ class App:
 
     @tasks.loop(seconds=60)
     async def update_clock(self):
-        self.page.clock.value = (datetime.utcnow() - timedelta(hours=11)).strftime(
+        self.page.clock.value = (datetime.now(UTC) - timedelta(hours=11)).strftime(
             "%a, %b %d\t\t%H:%M"
         )
         try:
@@ -192,7 +214,7 @@ class App:
 
     @update_clock.before_loop
     async def sync_clock(self):
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         await asyncio.sleep(60 - now.second)
 
 
