@@ -1,12 +1,14 @@
-import winreg
+
+import os
 from pathlib import Path
 
-
-Hives = [winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER]
-Nodes = ["WOW6432Node\\"]
-TrovePath = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-TroveKey = "Glyph Trove"
-TroveInstallValue = "InstallLocation"
+if os.name == 'nt':
+    import winreg
+    Hives = [winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER]
+    Nodes = ["WOW6432Node\\"]
+    TrovePath = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+    TroveKey = "Glyph Trove"
+    TroveInstallValue = "InstallLocation"
 
 
 def sanity_check(path):
