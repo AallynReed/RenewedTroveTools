@@ -81,7 +81,6 @@ class CustomAppBar(AppBar):
                 ),
                 PopupMenuButton(
                     icon=PALETTE,
-                    visible=not self.page.web,
                     items=[
                         PopupMenuItem(
                             data=color,
