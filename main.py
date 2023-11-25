@@ -200,6 +200,8 @@ class App:
         Routing(self.page, self.page.all_views, not_found=View404)
 
     async def start_tasks(self):
+        if self.update_clock.is_running():
+            self.update_clock.cancel()
         self.update_clock.start()
 
     async def restart_app(self):
