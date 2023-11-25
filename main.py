@@ -202,7 +202,10 @@ class App:
     async def start_tasks(self):
         if self.update_clock.is_running():
             self.update_clock.cancel()
-        self.update_clock.start()
+        try:
+            self.update_clock.start()
+        except RuntimeError:
+            ...
 
     async def restart_app(self):
         ...
