@@ -57,48 +57,13 @@ class Logger:
             "%Y-%m-%d %H:%M:%S",
             style="{",
         )
-        AppdataPath = Path(os.getenv("APPDATA"))
-        self.logs_folder = AppdataPath.joinpath("logs")
-        self.logs_folder.mkdir(exist_ok=True)
-        self.delete_logs()
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.DEBUG)
         self.logger.propagate = False
-        self.debug_handler = logging.handlers.RotatingFileHandler(
-            AppdataPath.joinpath(
-                timestamped_log.replace("{logger_name}", name).replace(
-                    "{logger_level}", "DEBUG"
-                )
-            ),
-            encoding="utf-8",
-            maxBytes=33554432,
-            backupCount=5,
-        )
-        self.debug_handler.setFormatter(formatter)
-        self.debug_handler.setLevel(logging.DEBUG)
-        self.logger.addHandler(self.debug_handler)
-        self.timestamped_handler = logging.handlers.RotatingFileHandler(
-            AppdataPath.joinpath(
-                timestamped_log.replace("{logger_name}", name).replace(
-                    "{logger_level}", "INFO"
-                )
-            ),
-            encoding="utf-8",
-            maxBytes=33554432,
-            backupCount=5,
-        )
-        self.timestamped_handler.setFormatter(formatter)
-        self.timestamped_handler.setLevel(logging.INFO)
-        self.logger.addHandler(self.timestamped_handler)
         self.stream_handler = logging.StreamHandler()
         self.stream_handler.setLevel(level)
         self.stream_handler.setFormatter(ColourFormatter())
         self.logger.addHandler(self.stream_handler)
-
-    def delete_logs(self):
-        for log in self.logs_folder.iterdir():
-            if log.stat().st_ctime < datetime.utcnow().timestamp() - 30:
-                log.unlink()
 
     def debug(self, message):
         self.logger.debug(message)
