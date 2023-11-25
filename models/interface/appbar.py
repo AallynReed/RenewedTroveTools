@@ -60,7 +60,8 @@ class CustomAppBar(AppBar):
             center_title=True,
             **kwargs,
         )
-        asyncio.create_task(self.check_for_update())
+        if self.page.web:
+            asyncio.create_task(self.check_for_update())
 
     def build_actions(self, kwargs):
         actions = []
