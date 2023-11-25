@@ -61,7 +61,6 @@ class Preferences(BaseModel):
             if not pref_obj:
                 raise Exception("Missing preferences on client")
             pref = cls.parse_obj(pref_obj)
-            print("Loaded client preferences")
         except:
             pref = cls(path=Path("data/preferences.json"), web=True)
         pref.bind_page(page)
@@ -90,4 +89,10 @@ class Preferences(BaseModel):
             with open(self.path, "w+") as f:
                 f.write(self.json(indent=4))
         else:
-            asyncio.create_task(self._page.client_storage.set_async("preferences", self.json()))
+            asyncio.create_task(self.save_web())
+
+    async def save_web(self):
+        try:
+            await self._page.client_storage.set_async("preferences", self.json())
+        except:
+            ...
