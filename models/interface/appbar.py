@@ -252,6 +252,7 @@ class CustomAppBar(AppBar):
             self.page.snack_bar.open = True
             self.page.snack_bar.duration = 1000  # 60000
             await self.page.snack_bar.update_async()
+            await self.page.appbar.update_async()
 
     async def go_to_update_page(self, _):
         await self.page.launch_url_async(await check_update(self.page.metadata.version))
