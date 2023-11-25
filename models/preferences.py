@@ -69,6 +69,10 @@ class Preferences(BaseModel):
                 f.write(pref.json(indent=4))
             return pref
 
+    @classmethod
+    def default(cls):
+        return cls(path=Path("data/preferences.json"))
+
     def save(self):
         with open(self.path, "w+") as f:
             f.write(self.json(indent=4))
