@@ -85,6 +85,7 @@ class Preferences(BaseModel):
         self._page = page
 
     def save(self):
+        self.path.parent.mkdir(exist_ok=True, parents=True)
         if not self.web:
             with open(self.path, "w+") as f:
                 f.write(self.json(indent=4))
