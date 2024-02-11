@@ -528,6 +528,8 @@ class TroveModList:
         self._mods = []
         self.installation_path = path
         self.list_path = path.joinpath("mods")
+        if self.installation_path.exists():
+            self.list_path.mkdir(parents=True, exist_ok=True)
         self._populate()
 
     def __str__(self):

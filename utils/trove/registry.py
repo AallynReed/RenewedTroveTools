@@ -12,8 +12,8 @@ if os.name == 'nt':
 
 
 def sanity_check(path):
-    mods_folder = path.joinpath("mods")
-    if not mods_folder.exists():
+    trove_executable = path.joinpath("Trove.exe")
+    if not trove_executable.exists():
         return False
     return True
 
