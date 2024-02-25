@@ -8,8 +8,21 @@ from datetime import UTC
 from pathlib import Path
 
 import requests
-from flet import app, WEB_BROWSER, FLET_APP, Theme, SnackBar, Row, Text, Column, Container, Icon, TextField, TextStyle, \
-    alignment
+from flet import (
+    app,
+    WEB_BROWSER,
+    FLET_APP,
+    Theme,
+    SnackBar,
+    Row,
+    Text,
+    Column,
+    Container,
+    Icon,
+    TextField,
+    TextStyle,
+    alignment,
+)
 
 from models import Metadata, Preferences
 from models.interface import CustomAppBar
@@ -90,9 +103,10 @@ class App:
                 [
                     logging.FileHandler(latest_log),
                     logging.FileHandler(dated_log),
-                ] if not web
+                ]
+                if not web
                 else []
-            )
+            ),
         )
         logging.basicConfig(format="%(message)s", level=logging.INFO, handlers=targets)
 
@@ -122,7 +136,9 @@ class App:
     async def login(self, token):
         if token is None:
             return None
-        response = requests.get("https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token)
+        response = requests.get(
+            "https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token
+        )
         if response.status_code == 200:
             await self.page.client_storage.set_async("rnt-token", token)
             return response.json()
@@ -149,11 +165,10 @@ class App:
                                     Text(value="Login with Discord"),
                                 ],
                                 alignment="SPACE_BETWEEN",
-
                             ),
                             on_hover=self.button_hover,
                             on_click=self.execute_login,
-                        )
+                        ),
                     ],
                     horizontal_alignment="center",
                     width=450,
@@ -178,7 +193,9 @@ class App:
                 self.token_input.helper_text = "Invalid token"
                 return await self.token_input.update_async()
         else:
-            await self.page.launch_url_async("https://kiwiapi.slynx.xyz/v1/user/discord/login")
+            await self.page.launch_url_async(
+                "https://kiwiapi.slynx.xyz/v1/user/discord/login"
+            )
             return
         await self.post_login()
 
@@ -186,7 +203,7 @@ class App:
         await self.setup_appbar()
         await self.gather_views()
         await self.start_tasks()
-        await self.page.go_async("/")
+        await self.page.go_async("/mods_manager")
 
     async def setup_appbar(self):
         self.page.appbar = CustomAppBar(
@@ -207,8 +224,7 @@ class App:
         except RuntimeError:
             ...
 
-    async def restart_app(self):
-        ...
+    async def restart_app(self): ...
 
     @tasks.loop(seconds=60)
     async def update_clock(self):

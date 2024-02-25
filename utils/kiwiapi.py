@@ -1,4 +1,3 @@
-import re
 from datetime import datetime, UTC
 from enum import Enum
 from typing import Union, Optional
@@ -39,11 +38,31 @@ class ModFile(BaseModel):
         return value
 
 
+class ModAuthorRoleColors(Enum):
+    null = "#6C757D"
+    modder = "#198754"
+    artist = "#0D6EFD"
+    gold = "#FFC107"
+    creator = "#328282"
+    streamer = "#800080"
+    admin = "#800000"
+
+
+class ModAuthorRole(Enum):
+    null = ""
+    modder = "Modder"
+    artist = "Artist"
+    gold = "Gold"
+    creator = "Creator"
+    streamer = "Streamer"
+    admin = "Admin"
+
+
 class ModAuthor(BaseModel):
     ID: Optional[int]
     Username: Optional[str]
     Avatar: str
-    Role: str
+    Role: ModAuthorRole
 
 
 class Mod(BaseModel):
@@ -81,3 +100,33 @@ class Mod(BaseModel):
     @property
     def url(self):
         return f"https://trovesaurus.com/mod={self.id}"
+
+
+class ModsEndpoint(Enum):
+    base: str = "/mods"
+    list: str = "/mods/list"
+    count: str = "/mods/count"
+
+
+class KiwiAPI:
+    base_url: str = "https://kiwiapi.slynx.xyz"
+    api_version: int = 1
+    api_url: str = f"{base_url}/v{api_version}"
+
+    async def get_mods_page_count(self, page_size: int = 8):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.count.value}"
+            ) as response:
+                count = await response.json()
+                pages = count.get("count") // page_size + 1
+        return pages
+
+    async def get_mods_list_chunk(self, page_size: int = 8, page: int = 0):
+        offset = page_size * page
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.list.value}?limit={page_size}&offset={offset}"
+            ) as response:
+                mods = await response.json()
+        return [Mod(**mod) for mod in mods]

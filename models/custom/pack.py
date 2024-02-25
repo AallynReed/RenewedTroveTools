@@ -1,5 +1,5 @@
 from binary_reader import BinaryReader
-from models.trove.mod import TroveMod, Property
+from models.trove.mod import TroveMod, ZMod, Property
 from utils.functions import get_attr, ReadLeb128, WriteLeb128, calculate_hash, chunks
 from pathlib import Path
 import zlib

@@ -18,16 +18,13 @@ from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get
 from ..trovesaurus.mods import Mod
 
 
-class NoFilesError(Exception):
-    ...
+class NoFilesError(Exception): ...
 
 
-class PropertyMalformedError(Exception):
-    ...
+class PropertyMalformedError(Exception): ...
 
 
-class MissingPropertyError(Exception):
-    ...
+class MissingPropertyError(Exception): ...
 
 
 class Property(BaseModel):
@@ -247,7 +244,10 @@ class TroveMod:
 
     @property
     def preview_path(self):
-        return self.get_property_value("previewPath").lower()
+        preview_path = self.get_property_value("previewPath")
+        if preview_path:
+            return preview_path.lower()
+        return preview_path
 
     @preview_path.setter
     def preview_path(self, value: Path):

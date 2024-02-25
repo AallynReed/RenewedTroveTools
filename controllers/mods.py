@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from aiohttp import ClientSession
 
 import flet_core.icons as icons
 from flet import (
@@ -29,529 +30,422 @@ from flet import (
     FilledButton,
     padding,
     TextField,
+    ExpansionPanelList,
+    ExpansionPanel,
+    Dropdown,
+    dropdown,
 )
 
 from models.interface import Controller
 from models.interface import PagedDataTable
 from models.interface import ScrollingFrame
-from models.trove.mod import TroveModList, TMod
+from models.trove.mod import TroveModList, TMod, ZMod
 from models.trovesaurus.mods import ModFileType
 
 # from utils.trove.directory import Cfg
 from utils.trove.registry import get_trove_locations
-from utils.trovesaurus import get_mods_list
+from utils.kiwiapi import KiwiAPI, ModAuthorRoleColors
 
 
 class ModsController(Controller):
     def setup_controls(self):
         if not hasattr(self, "main"):
-            self.locations = [TroveModList(path) for path in get_trove_locations()]
-            self.selected_location = self.locations[0]
-            self.selected_tab = 0
-            self.reloading = Row(controls=[ProgressRing(), Text("Loading...")])
-            self.main = Column(disabled=True)
-            self.main_controls = Container(
-                Row(
+            self.api = KiwiAPI()
+            self.memory = {
+                "trovesaurus": {
+                    "page": 0,
+                    "page_size": 8,
+                    "installation_path": None,
+                    "selected_tile": None,
+                    "selected_file": None,
+                }
+            }
+            self.main = ResponsiveRow(alignment=MainAxisAlignment.START)
+            self.loading = Column(controls=[ProgressRing(), Text("Loading...")])
+            self.mod_submenus = Tabs(visible=False)
+            self.mod_submenus.on_change = self.tab_loader
+            self.settings_tab = Tab(
+                tab_content=Row(
                     controls=[
-                        IconButton(
-                            icons.REFRESH,
-                            on_click=self.refresh_directories,
-                        ),
-                        *[
-                            TextButton(
-                                data=location,
-                                text=location.name,
-                                on_click=self.change_directory,
-                            )
-                            for location in self.locations
-                        ],
+                        Icon(icons.SETTINGS, size=24),
                     ]
                 ),
-                padding=Padding(0, 20, 0, 0),
             )
-            self.tabs = Tabs(
-                selected_index=self.selected_tab, on_change=self.tab_change
+            self.my_mods_tab = Tab(
+                tab_content=Row(
+                    controls=[
+                        Icon(icons.FOLDER, size=24),
+                        Text("My Mods"),
+                    ]
+                ),
             )
-            self.main.controls.append(self.main_controls)
-            self.main.controls.append(self.tabs)
-            self.main.controls.append(self.reloading)
-            # appdata = Path(os.getenv("APPDATA"))
-            # trove_appdata = appdata.joinpath("Trove")
-            # trove_cfg_path = trove_appdata.joinpath("Trove.cfg")
-            # self.trove_cfg = Cfg.from_file(trove_cfg_path)
-            return asyncio.create_task(self.post_setup(True))
-        asyncio.create_task(self.post_setup())
+            self.trovesaurus_tab = Tab(
+                tab_content=Row(
+                    controls=[
+                        Image(src="https://trovesaurus.com/favicon.ico"),
+                        Text("Trovesaurus"),
+                    ]
+                )
+            )
+            self.settings = Column()
+            self.my_mods = Column()
+            self.trovesaurus = Column()
+            self.settings_tab.content = self.settings
+            self.my_mods_tab.content = self.my_mods
+            self.trovesaurus_tab.content = self.trovesaurus
+            self.mod_submenus.tabs.append(self.settings_tab)
+            self.mod_submenus.tabs.append(self.my_mods_tab)
+            self.mod_submenus.tabs.append(self.trovesaurus_tab)
+            my_mods_index = self.mod_submenus.tabs.index(self.my_mods_tab)
+            trovesaurus_index = self.mod_submenus.tabs.index(self.trovesaurus_tab)
+            self.my_mods_tab.tab_content.controls.append(
+                IconButton(
+                    data=my_mods_index,
+                    icon=icons.REFRESH,
+                    on_click=self.reload_tab,
+                )
+            )
+            self.trovesaurus_tab.tab_content.controls.append(
+                IconButton(
+                    data=trovesaurus_index,
+                    icon=icons.REFRESH,
+                    on_click=self.reload_tab,
+                )
+            )
+            self.tab_map = {
+                0: self.load_settings,
+                1: self.load_my_mods,
+                2: self.load_trovesaurus_mods,
+            }
+            self.mod_submenus.selected_index = 2
+            self.main.controls.append(self.loading)
+            self.main.controls.append(self.mod_submenus)
+            asyncio.create_task(self.post_setup())
 
-    async def post_setup(self, boot=False):
-        if boot:
-            self.mod_list = ListView()
-            self.search_bar = TextField(
-                hint_text="Search", on_submit=self.search_mod, col=5, border_radius=30
-            )
-            self.browse_mods_list = PagedDataTable(
-                is_async=True,
-                page_size=10,
-                columns=[
-                    DataColumn(
-                        label=Text("Installed"),
-                    ),
-                    DataColumn(
-                        label=Text("Name"),
-                    ),
-                    DataColumn(
-                        label=Text("Author"),
-                    ),
-                    DataColumn(
-                        label=Text("Views"),
-                    ),
-                    DataColumn(
-                        label=Text("Downloads"),
-                    ),
-                    DataColumn(
-                        label=Text("Likes"),
-                    ),
-                ],
-                single_select=True,
-                on_selection_changed=self.selected_mod_changed,
-                col=9,
-            )
-            self.selected_mod_control = Column(alignment="center", col=3)
-            self.directories_tab = Tab(
-                text="Directories", content=Column(controls=[self.mod_list])
-            )
-            self.browse_mods = Tab(
-                text="Browse Mods",
-                content=ResponsiveRow(
-                    controls=[
-                        self.search_bar,
-                        self.browse_mods_list,
-                        self.selected_mod_control,
+    def setup_events(self): ...
+
+    async def post_setup(self):
+        self.loading.visible = False
+        self.mod_submenus.visible = True
+        await self.tab_loader()
+
+    async def tab_loader(self, event=None, index=None):
+        self.mod_folders = list(get_trove_locations())
+        if self.mod_folders:
+            if not self.memory["trovesaurus"]["installation_path"]:
+                self.memory["trovesaurus"]["installation_path"] = self.mod_folders[0]
+            else:
+                if (
+                    self.memory["trovesaurus"]["installation_path"]
+                    not in self.mod_folders
+                ):
+                    self.memory["trovesaurus"]["installation_path"] = self.mod_folders[
+                        0
                     ]
-                ),
-            )
-            self.directories_tab._reload = self.reload_mods_list
-            self.browse_mods._reload = self.reload_mods_store
-            self.tabs.tabs.append(self.directories_tab)
-            self.tabs.tabs.append(self.browse_mods)
-        await self.tabs.tabs[self.selected_tab]._reload()
-        for tab in self.tabs.tabs:
-            for control in tab.content.controls:
-                control.visible = True
-            self.reloading.visible = False
-        self.main.disabled = False
+        else:
+            self.memory["trovesaurus"]["installation_path"] = None
+        self.mod_folder_lists = {
+            folder: TroveModList(path=folder) for folder in self.mod_folders
+        }
+        for mod_list in self.mod_folder_lists.values():
+            await mod_list.update_trovesaurus_data()
+        if index is None:
+            if event is not None:
+                index = event.control.selected_index
+            else:
+                index = self.mod_submenus.selected_index
+        await self.tab_map[index]()
+
+    async def reload_tab(self, event):
+        await self.tab_loader(index=event.control.data)
+
+    async def load_settings(self):
+        if self.settings.data is None:
+            self.settings.controls.append(TextButton("Clear Cache"))
+            self.main.disabled = False
+            self.settings.data = True
         await self.main.update_async()
 
-    async def reload_mods_list(self):
-        await self.selected_location.update_trovesaurus_data()
-        for mod in self.selected_location:
-            trovesaurus_mod = mod.trovesaurus_data
-            trovesaurus_file = trovesaurus_mod.installed_file if trovesaurus_mod else None
-            self.mod_list.controls.append(
-                ListTile(
-                    on_click=self.select_tile,
-                    title=Row(
-                        controls=[
-                            Stack(
-                                controls=[
-                                    (
-                                        Image(
-                                            src_base64=mod.image,
-                                            height=60,
-                                            width=60,
-                                            fit="contain",
-                                        )
-                                    )
-                                ]
+    async def load_my_mods(self):
+        if self.my_mods.data is None:
+            self.my_mods.controls.append(ProgressRing())
+            self.my_mods.controls.append(Text("Loading..."))
+            self.my_mods.data = True
+        await self.main.update_async()
+
+    async def load_trovesaurus_mods(self):
+        self.trovesaurus.controls.clear()
+        self.memory["trovesaurus"]["selected_file"] = None
+        self.trovesaurus.controls.append(ProgressRing())
+        self.trovesaurus.controls.append(Text("Loading..."))
+        self.trovesaurus.data = True
+        await self.trovesaurus.update_async()
+        self.trovesaurus.controls.clear()
+        if not self.mod_folders:
+            self.trovesaurus.controls.append(Text("No Trove installation found"))
+            await self.main.update_async()
+            return
+        self.trovesaurus.controls.append(
+            Row(
+                controls=[
+                    TextButton(
+                        data=mod_list_path,
+                        content=Text(mod_list_path.name),
+                        disabled=mod_list_path
+                        == self.memory["trovesaurus"]["installation_path"],
+                        on_click=self.set_installation_path,
+                    )
+                    for mod_list_path in self.mod_folders
+                ]
+            )
+        )
+        self.mods_list = ExpansionPanelList(on_change=self.update_selected_tile)
+        self.cached_trovesaurus_mods = await self.api.get_mods_list_chunk(
+            self.memory["trovesaurus"]["page_size"],
+            self.memory["trovesaurus"]["page"],
+        )
+        for i, mod in enumerate(self.cached_trovesaurus_mods):
+            installed = False
+            ts_mod = None
+            mod_l = self.mod_folder_lists[
+                self.memory["trovesaurus"]["installation_path"]
+            ]
+            for ts_mod in mod_l.mods:
+                if ts_mod.trovesaurus_data.id == mod.id:
+                    installed = True
+                    break
+            selected_tile = self.memory["trovesaurus"]["selected_tile"]
+            self.mods_list.controls.append(
+                ExpansionPanel(
+                    ListTile(
+                        leading=Image(
+                            src=(
+                                mod.image_url
+                                or "https://trovesaurus.com/images/logos/Sage_64.png?1"
                             ),
-                            Row(
-                                controls=[
-                                    Column(
-                                        controls=[
-                                            Row(
-                                                controls=[
-                                                    Card(
-                                                        content=Container(
-                                                            Row(
-                                                                controls=[
-                                                                    Container(
-                                                                        Row(
-                                                                            controls=[
-                                                                                *(
-                                                                                    [
-                                                                                        Image(
-                                                                                            src="assets/icons/brands/trovesaurus.png",
-                                                                                            height=24,
-                                                                                            width=24,
-                                                                                        )
-                                                                                        if bool(
-                                                                                            trovesaurus_mod
-                                                                                        )
-                                                                                        else Icon(
-                                                                                            icons.FOLDER_ZIP_SHARP
-                                                                                        )
-                                                                                    ]
-                                                                                ),
-                                                                                Text(
-                                                                                    mod.name,
-                                                                                    weight="bold",
-                                                                                ),
-                                                                            ]
-                                                                        ),
-                                                                        url=(
-                                                                            "https://trovesaurus.com/mod="
-                                                                            + str(
-                                                                                trovesaurus_mod.id
-                                                                            )
-                                                                            if trovesaurus_mod
-                                                                            else None
-                                                                        ),
-                                                                    ),
-                                                                    Icon(
-                                                                        icons.WARNING_SHARP,
-                                                                        color=(
-                                                                            "red"
-                                                                            if mod.enabled
-                                                                            else "yellow"
-                                                                        ),
-                                                                        visible=mod.has_conflicts,
-                                                                        tooltip="Conflicts with: \n"
-                                                                        + "\n".join(
-                                                                            [
-                                                                                "\t"
-                                                                                + cmod.name
-                                                                                for cmod in mod.conflicts
-                                                                            ]
-                                                                        ),
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                            padding=Padding(5, 2, 5, 2),
-                                                        )
-                                                    ),
-                                                    Card(
-                                                        Container(
-                                                            Row(
-                                                                controls=[
-                                                                    *(
-                                                                        [
-                                                                            Text(
-                                                                                trovesaurus_file.version
-                                                                            )
-                                                                        ]
-                                                                        if trovesaurus_file
-                                                                        else []
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                            padding=Padding(5, 2, 5, 2),
-                                                        ),
-                                                        visible=bool(trovesaurus_file),
-                                                    ),
-                                                    Card(
-                                                        content=Container(
-                                                            Row(
-                                                                controls=[
-                                                                    Icon(
-                                                                        icons.PERSON_SHARP
-                                                                    ),
-                                                                    Text(mod.author),
-                                                                ]
-                                                            ),
-                                                            url=(
-                                                                "https://trovesaurus.com/user="
-                                                                + str(
-                                                                    trovesaurus_mod.user_id
-                                                                )
-                                                                if trovesaurus_mod
-                                                                else None
-                                                            ),
-                                                            padding=Padding(5, 2, 5, 2),
-                                                        )
-                                                    ),
-                                                ]
-                                            ),
-                                            Card(
-                                                Container(
+                            width=64,
+                            height=64,
+                        ),
+                        title=Row(
+                            controls=[
+                                TextButton(
+                                    content=Text(mod.name, color="#bbbbbb", size=18),
+                                    url=f"https://trovesaurus.com/mod={mod.id}",
+                                ),
+                                *(
+                                    [Icon(icons.CHECK, color="green")]
+                                    if installed
+                                    else []
+                                ),
+                            ]
+                        ),
+                        subtitle=Row(
+                            controls=[
+                                Row(
+                                    controls=[
+                                        *(
+                                            [
+                                                TextButton(
                                                     content=Row(
                                                         controls=[
-                                                            Icon(icons.NOTES_SHARP),
-                                                            Container(
-                                                                Text(
-                                                                    mod.notes,
-                                                                )
+                                                            Image(
+                                                                src=author.Avatar,
+                                                                width=24,
+                                                            ),
+                                                            Text(
+                                                                author.Username,
+                                                                color=ModAuthorRoleColors[
+                                                                    author.Role.name
+                                                                ].value,
                                                             ),
                                                         ]
                                                     ),
-                                                    visible=bool(mod.notes),
-                                                    padding=Padding(5, 2, 5, 2),
+                                                    url=f"https://trovesaurus.com/user={author.ID}",
                                                 )
-                                            ),
+                                                for author in mod.authors
+                                            ]
+                                            if [
+                                                author
+                                                for author in mod.authors
+                                                if author.ID
+                                            ]
+                                            else [
+                                                TextButton(
+                                                    content=Text(
+                                                        "No authors", color="red"
+                                                    ),
+                                                    disabled=True,
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                    ),
+                    Column(
+                        controls=[
+                            Text(mod.description) or Text("No description"),
+                            Row(
+                                controls=[
+                                    Row(
+                                        controls=[
+                                            Icon(icons.DOWNLOAD),
+                                            Text(f"{mod.downloads}"),
                                         ]
                                     ),
                                     Row(
                                         controls=[
-                                            Switch(
-                                                data=mod,
-                                                value=mod.enabled,
-                                                tooltip=(
-                                                    "Enable mod"
-                                                    if not mod.enabled
-                                                    else "Disable mod"
-                                                ),
-                                                disabled=mod.has_conflicts
-                                                and not mod.enabled,
-                                                on_change=self.toggle_mod,
-                                            ),
+                                            Icon(icons.FAVORITE),
+                                            Text(f"{mod.likes}"),
                                         ]
                                     ),
-                                ],
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                expand=True,
-                            ),
-                        ]
-                    ),
-                )
-            )
-            self.mod_list.controls.append(Divider())
-
-    async def reload_mods_store(self):
-        for mod in sorted(
-            self.trovesaurus_mods, key=lambda m: m.downloads, reverse=True
-        ):
-            if self.search_bar.value:
-                if (
-                    self.search_bar.value.lower()
-                    not in mod.name.lower() + mod.author.lower()
-                ):
-                    continue
-            await self.browse_mods_list.add_row_async(
-                DataRow(
-                    data=mod,
-                    cells=[
-                        DataCell(
-                            Icon(
-                                icons.DONE if mod.installed else icons.CLOSE,
-                                color="green" if mod.installed else "red",
-                            )
-                        ),
-                        DataCell(Text(mod.name)),
-                        DataCell(Text(mod.author)),
-                        DataCell(Text(f"{mod.views:,}")),
-                        DataCell(Text(f"{mod.downloads:,}")),
-                        DataCell(Text(f"{mod.likes:,}")),
-                    ],
-                )
-            )
-        await self.browse_mods_list.to_first_page_async(None)
-
-    def setup_events(self):
-        ...
-
-    async def refresh_directories(self, event):
-        self.main.disabled = True
-        for tab in self.tabs.tabs:
-            for control in tab.content.controls:
-                control.visible = False
-            self.reloading.visible = True
-        await self.main.update_async()
-        for location in self.locations:
-            location.refresh()
-        self.setup_controls()
-
-    async def change_directory(self, event):
-        if self.selected_location != event.control.data:
-            self.selected_location = event.control.data
-            self.setup_controls()
-
-    async def fix_bad_name(self, event):
-        mod = event.control.data
-        new_file_name = mod.path.parent.joinpath(mod.name + "".join(mod.path.suffixes))
-        mod.path.rename(new_file_name)
-        mod.path = new_file_name
-        event.control.disabled = True
-        await self.page.update_async()
-
-    async def select_tile(self, event):
-        event.control.selected = not event.control.selected
-        await self.page.update_async()
-
-    async def toggle_mod(self, event):
-        event.control.data.toggle()
-        self.setup_controls()
-
-    async def selected_mod_changed(self, e):
-        self.selected_mod = e.control.data
-        self.selected_mod_control.controls = [
-            Image(src=self.selected_mod.thumbnail_url, width=200, height=100),
-            Text(self.selected_mod.name, size=18, weight="bold"),
-            ResponsiveRow(
-                controls=[
-                    Row(
-                        controls=[
-                            Row(
-                                controls=[
-                                    Icon(icons.REMOVE_RED_EYE, size=13),
-                                    Text(f"{self.selected_mod.views:,}"),
                                 ]
                             ),
-                            Row(
-                                controls=[
-                                    Icon(icons.THUMB_UP, size=13),
-                                    Text(f"{self.selected_mod.likes:,}"),
-                                ]
-                            ),
-                            Row(
-                                controls=[
-                                    Icon(icons.DOWNLOAD, size=13),
-                                    Text(f"{self.selected_mod.downloads:,}"),
-                                ]
-                            ),
-                        ],
-                        alignment="center",
-                    ),
-                    *(
-                        [
-                            Card(
-                                Container(
-                                    Column(
-                                        controls=[
-                                            Text("Description:", size=16),
-                                            Column(
-                                                controls=[
-                                                    Text(
-                                                        self.selected_mod.clean_description
-                                                    )
-                                                ],
-                                                height=150,
-                                                scroll="auto",
-                                            ),
-                                        ]
-                                    ),
-                                    padding=padding.only(
-                                        top=5, left=10, right=15, bottom=5
-                                    ),
-                                )
-                            )
-                        ]
-                        if self.selected_mod.clean_description
-                        else []
-                    ),
-                    Card(
-                        Container(
                             ResponsiveRow(
                                 controls=[
-                                    Text("Versions:"),
-                                    ScrollingFrame(
-                                        Container(
-                                            Row(
-                                                controls=[
-                                                    FilledButton(
-                                                        icon=(
-                                                            icons.INSERT_DRIVE_FILE
-                                                            if file.type
-                                                            == ModFileType.TMOD
-                                                            else (
-                                                                icons.FOLDER_ZIP
-                                                                if file.type
-                                                                == ModFileType.ZIP
-                                                                else icons.SETTINGS_APPLICATIONS
-                                                            )
-                                                        ),
-                                                        data=file,
-                                                        disabled=self.selected_mod.installed_file
-                                                        == file,
-                                                        text=file.version,
-                                                        on_click=self.download_mod_file,
-                                                    )
-                                                    for file in filter(
-                                                        lambda m: m.type
-                                                        == ModFileType.TMOD,
-                                                        sorted(
-                                                            self.selected_mod.file_objs,
-                                                            key=lambda x: -x.file_id,
-                                                        ),
-                                                    )
-                                                ]
-                                            ),
-                                            padding=padding.only(bottom=15),
-                                        )
+                                    Dropdown(
+                                        data=[
+                                            (mod, file)
+                                            for file in mod.file_objs
+                                            if file.hash
+                                        ],
+                                        options=[
+                                            dropdown.Option(
+                                                key=file.hash,
+                                                text=file.version
+                                                + f" ({file.type.value})",
+                                                disabled=(
+                                                    True
+                                                    if ts_mod
+                                                    and ts_mod.hash == file.hash
+                                                    else False
+                                                ),
+                                            )
+                                            for file in mod.file_objs
+                                            if file.hash
+                                        ],
+                                        value=ts_mod.hash,
+                                        on_change=self.select_mod_file,
+                                        col=4,
                                     ),
-                                ]
+                                    IconButton(
+                                        data=i,
+                                        icon=icons.DOWNLOAD,
+                                        on_click=self.install_mod,
+                                        col=1,
+                                    ),
+                                ],
                             ),
-                            padding=padding.only(top=5, left=10, right=15),
-                        )
+                        ],
                     ),
-                    # *(
-                    #     [
-                    #         Card(
-                    #             Container(
-                    #                 Column(
-                    #                     controls=[
-                    #                         Text("Change Log:", size=16),
-                    #                         Column(
-                    #                             controls=[
-                    #                                 Text(self.selected_file.clean_changes)
-                    #                             ],
-                    #                             height=80,
-                    #                             scroll="auto"
-                    #                         )
-                    #                     ]
-                    #                 ),
-                    #                 padding=padding.only(top=5, left=10, right=15, bottom=5)
-                    #             )
-                    #         )
-                    #     ] if self.selected_file.clean_changes else []
-                    # ),
-                    # *(
-                    #     [
-                    #         Card(
-                    #             Container(
-                    #                 Column(
-                    #                     controls=[
-                    #                         Text("Replaces:", size=16),
-                    #                         Column(
-                    #                             controls=[
-                    #                                 Text(self.selected_file.clean_replacements)
-                    #                             ],
-                    #                             height=50,
-                    #                             scroll="auto"
-                    #                         )
-                    #                     ]
-                    #                 ),
-                    #                 padding=padding.only(top=5, left=10, right=15, bottom=5)
-                    #             )
-                    #         )
-                    #     ] if self.selected_file.clean_replacements else []
-                    # )
+                    expanded=i == selected_tile,
+                    can_tap_header=True,
+                )
+            )
+        self.trovesaurus.controls.append(self.mods_list)
+        page_count = await self.api.get_mods_page_count(
+            self.memory["trovesaurus"]["page_size"]
+        )
+        self.trovesaurus.controls.append(
+            Row(
+                controls=[
+                    IconButton(
+                        icon=icons.ARROW_LEFT,
+                        on_click=self.previous_trovesaurus_page,
+                    ),
+                    Row(
+                        controls=[
+                            Text(f"Page"),
+                            TextField(
+                                value=str(self.memory["trovesaurus"]["page"] + 1),
+                                on_submit=self.set_trovesaurus_page,
+                                width=80,
+                                height=48,
+                            ),
+                            Text(f"of {page_count}"),
+                        ]
+                    ),
+                    IconButton(
+                        icon=icons.ARROW_RIGHT,
+                        on_click=self.next_trovesaurus_page,
+                    ),
                 ]
-            ),
-        ]
-        await self.selected_mod_control.update_async()
-
-    async def tab_change(self, event):
-        self.main.disabled = True
-        for tab in self.tabs.tabs:
-            for control in tab.content.controls:
-                control.visible = False
-            self.reloading.visible = True
+            )
+        )
         await self.main.update_async()
-        self.selected_tab = event.control.selected_index
-        self.setup_controls()
 
-    async def search_mod(self, event):
-        self.main.disabled = True
-        for tab in self.tabs.tabs:
-            for control in tab.content.controls:
-                control.visible = False
-            self.reloading.visible = True
+    async def previous_trovesaurus_page(self, event):
+        self.memory["trovesaurus"]["page"] -= 1
+        page_size = self.memory["trovesaurus"]["page_size"]
+        count = await self.api.get_mods_page_count(page_size)
+        if self.memory["trovesaurus"]["page"] < 0:
+            self.memory["trovesaurus"]["page"] = count - 1
+        self.memory["trovesaurus"]["selected_tile"] = None
+        await self.load_trovesaurus_mods()
+
+    async def next_trovesaurus_page(self, event):
+        self.memory["trovesaurus"]["page"] += 1
+        page_size = self.memory["trovesaurus"]["page_size"]
+        count = await self.api.get_mods_page_count(page_size)
+        if self.memory["trovesaurus"]["page"] >= count:
+            self.memory["trovesaurus"]["page"] = 0
+        self.memory["trovesaurus"]["selected_tile"] = None
+        await self.load_trovesaurus_mods()
+
+    async def set_trovesaurus_page(self, event):
+        try:
+            page = int(event.control.value) - 1
+            page_size = self.memory["trovesaurus"]["page_size"]
+            if page < 0:
+                page = 0
+            count = await self.api.get_mods_page_count(page_size)
+            if page >= count:
+                page = count - 1
+            self.memory["trovesaurus"]["page"] = page
+            await self.load_trovesaurus_mods()
+        except ValueError:
+            pass
         await self.main.update_async()
-        self.setup_controls()
 
-    async def download_mod_file(self, event):
-        self.main.disabled = True
-        await self.page.update_async()
-        file = event.control.data
-        file_data = await file.download()
-        mod = TMod.read_bytes(Path(r"G:\Glyph\Games\Trove\Live\mods"), file_data)
-        print(mod.name)
-        self.setup_controls()
+    async def set_installation_path(self, event):
+        self.memory["trovesaurus"]["installation_path"] = event.control.data
+        await self.load_trovesaurus_mods()
+
+    async def update_selected_tile(self, event):
+        selected = int(event.data)
+        for i, tile in enumerate(self.mods_list.controls):
+            if i == selected:
+                if tile.expanded:
+                    self.memory["trovesaurus"]["selected_tile"] = i
+                else:
+                    self.memory["trovesaurus"]["selected_tile"] = None
+            else:
+                tile.expanded = False
+        await self.mods_list.update_async()
+
+    async def select_mod_file(self, event):
+        for mod, file in event.control.data:
+            if file.hash == event.control.value:
+                self.memory["trovesaurus"]["selected_file"] = (mod, file)
+                break
+
+    async def install_mod(self, _):
+        if self.memory["trovesaurus"]["selected_file"] is None:
+            return
+        mod_data, file_data = self.memory["trovesaurus"]["selected_file"]
+        url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file_data.file_id}"
+        async with ClientSession() as session:
+            async with session.get(url) as response:
+                data = await response.read()
+                try:
+                    mod = TMod().read_bytes(data)
+                    mod_name = mod.name
+                except:
+                    mod_name = mod_data.name
+                file_name = f"mods/{mod_name}.{file_data.type.value}"
+                file_path = self.memory["trovesaurus"]["installation_path"].joinpath(
+                    file_name
+                )
+                file_path.write_bytes(data)
+        await self.tab_loader(index=self.mod_submenus.selected_index)
