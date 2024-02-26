@@ -12,8 +12,4 @@ class ModsView(View):
     def __init__(self, page):
         ctrl = ModsController(page=page)
         page.appbar.leading.controls[0].name = self.icon
-        super().__init__(
-            route=self.route,
-            controls=[ctrl.main],
-            scroll="auto",
-        )
+        super().__init__(route=self.route, controls=[ctrl.main], scroll=None)

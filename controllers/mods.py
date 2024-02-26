@@ -1,6 +1,7 @@
 import asyncio
 from pathlib import Path
 from aiohttp import ClientSession
+from hashlib import md5
 
 import flet_core.icons as icons
 from flet import (
@@ -34,6 +35,7 @@ from flet import (
     ExpansionPanel,
     Dropdown,
     dropdown,
+    Tooltip,
 )
 
 from models.interface import Controller
@@ -45,6 +47,7 @@ from models.trovesaurus.mods import ModFileType
 # from utils.trove.directory import Cfg
 from utils.trove.registry import get_trove_locations
 from utils.kiwiapi import KiwiAPI, ModAuthorRoleColors
+from utils.functions import throttle
 
 
 class ModsController(Controller):
@@ -127,9 +130,10 @@ class ModsController(Controller):
     async def post_setup(self):
         self.loading.visible = False
         self.mod_submenus.visible = True
-        await self.tab_loader()
+        await self.tab_loader(boot=True)
 
-    async def tab_loader(self, event=None, index=None):
+    @throttle
+    async def tab_loader(self, event=None, index=None, boot=False):
         self.mod_folders = list(get_trove_locations())
         if self.mod_folders:
             if not self.memory["trovesaurus"]["installation_path"]:
@@ -154,33 +158,28 @@ class ModsController(Controller):
                 index = event.control.selected_index
             else:
                 index = self.mod_submenus.selected_index
-        await self.tab_map[index]()
+        await self.tab_map[index](boot=boot)
 
     async def reload_tab(self, event):
         await self.tab_loader(index=event.control.data)
 
-    async def load_settings(self):
+    async def load_settings(self, boot=False):
         if self.settings.data is None:
             self.settings.controls.append(TextButton("Clear Cache"))
             self.main.disabled = False
             self.settings.data = True
         await self.main.update_async()
 
-    async def load_my_mods(self):
+    async def load_my_mods(self, boot=False):
         if self.my_mods.data is None:
             self.my_mods.controls.append(ProgressRing())
             self.my_mods.controls.append(Text("Loading..."))
             self.my_mods.data = True
         await self.main.update_async()
 
-    async def load_trovesaurus_mods(self):
+    async def load_trovesaurus_mods(self, boot=False):
         self.trovesaurus.controls.clear()
         self.memory["trovesaurus"]["selected_file"] = None
-        self.trovesaurus.controls.append(ProgressRing())
-        self.trovesaurus.controls.append(Text("Loading..."))
-        self.trovesaurus.data = True
-        await self.trovesaurus.update_async()
-        self.trovesaurus.controls.clear()
         if not self.mod_folders:
             self.trovesaurus.controls.append(Text("No Trove installation found"))
             await self.main.update_async()
@@ -233,7 +232,12 @@ class ModsController(Controller):
                                     url=f"https://trovesaurus.com/mod={mod.id}",
                                 ),
                                 *(
-                                    [Icon(icons.CHECK, color="green")]
+                                    [
+                                        Tooltip(
+                                            message="Installed",
+                                            content=Icon(icons.CHECK, color="green"),
+                                        )
+                                    ]
                                     if installed
                                     else []
                                 ),
@@ -252,11 +256,18 @@ class ModsController(Controller):
                                                                 src=author.Avatar,
                                                                 width=24,
                                                             ),
-                                                            Text(
-                                                                author.Username,
-                                                                color=ModAuthorRoleColors[
-                                                                    author.Role.name
-                                                                ].value,
+                                                            Tooltip(
+                                                                message=(
+                                                                    author.Role.value
+                                                                    if author.Role.value
+                                                                    else "User"
+                                                                ),
+                                                                content=Text(
+                                                                    author.Username,
+                                                                    color=ModAuthorRoleColors[
+                                                                        author.Role.name
+                                                                    ].value,
+                                                                ),
                                                             ),
                                                         ]
                                                     ),
@@ -288,17 +299,23 @@ class ModsController(Controller):
                             Text(mod.description) or Text("No description"),
                             Row(
                                 controls=[
-                                    Row(
-                                        controls=[
-                                            Icon(icons.DOWNLOAD),
-                                            Text(f"{mod.downloads}"),
-                                        ]
+                                    Tooltip(
+                                        message="Downloads",
+                                        content=Row(
+                                            controls=[
+                                                Icon(icons.DOWNLOAD),
+                                                Text(f"{mod.downloads}"),
+                                            ]
+                                        ),
                                     ),
-                                    Row(
-                                        controls=[
-                                            Icon(icons.FAVORITE),
-                                            Text(f"{mod.likes}"),
-                                        ]
+                                    Tooltip(
+                                        message="Likes",
+                                        content=Row(
+                                            controls=[
+                                                Icon(icons.FAVORITE),
+                                                Text(f"{mod.likes}"),
+                                            ]
+                                        ),
                                     ),
                                 ]
                             ),
@@ -315,25 +332,38 @@ class ModsController(Controller):
                                                 key=file.hash,
                                                 text=file.version
                                                 + f" ({file.type.value})",
-                                                disabled=(
-                                                    True
-                                                    if ts_mod
-                                                    and ts_mod.hash == file.hash
-                                                    else False
-                                                ),
                                             )
                                             for file in mod.file_objs
                                             if file.hash
                                         ],
-                                        value=ts_mod.hash,
                                         on_change=self.select_mod_file,
                                         col=4,
                                     ),
                                     IconButton(
                                         data=i,
-                                        icon=icons.DOWNLOAD,
+                                        content=Row(
+                                            controls=[
+                                                Icon(icons.DOWNLOAD),
+                                                Text("Install"),
+                                            ],
+                                            alignment="center",
+                                        ),
+                                        height=64,
                                         on_click=self.install_mod,
                                         col=1,
+                                    ),
+                                    IconButton(
+                                        data=i,
+                                        content=Row(
+                                            controls=[
+                                                Icon(icons.ADD),
+                                                Text("Add to profile"),
+                                            ],
+                                            alignment="center",
+                                        ),
+                                        height=64,
+                                        on_click=...,
+                                        col=1.4,
                                     ),
                                 ],
                             ),
@@ -373,7 +403,12 @@ class ModsController(Controller):
                 ]
             )
         )
+        if not boot:
+            self.page.snack_bar.content = Text(f"Refreshed Trovesaurus")
+            self.page.snack_bar.bgcolor = "green"
+            self.page.snack_bar.open = True
         await self.main.update_async()
+        await self.page.snack_bar.update_async()
 
     async def previous_trovesaurus_page(self, event):
         self.memory["trovesaurus"]["page"] -= 1
@@ -382,7 +417,7 @@ class ModsController(Controller):
         if self.memory["trovesaurus"]["page"] < 0:
             self.memory["trovesaurus"]["page"] = count - 1
         self.memory["trovesaurus"]["selected_tile"] = None
-        await self.load_trovesaurus_mods()
+        await self.load_trovesaurus_mods(boot=True)
 
     async def next_trovesaurus_page(self, event):
         self.memory["trovesaurus"]["page"] += 1
@@ -391,7 +426,7 @@ class ModsController(Controller):
         if self.memory["trovesaurus"]["page"] >= count:
             self.memory["trovesaurus"]["page"] = 0
         self.memory["trovesaurus"]["selected_tile"] = None
-        await self.load_trovesaurus_mods()
+        await self.load_trovesaurus_mods(boot=True)
 
     async def set_trovesaurus_page(self, event):
         try:
@@ -427,25 +462,39 @@ class ModsController(Controller):
     async def select_mod_file(self, event):
         for mod, file in event.control.data:
             if file.hash == event.control.value:
-                self.memory["trovesaurus"]["selected_file"] = (mod, file)
+                self.memory["trovesaurus"]["selected_file"] = (
+                    mod,
+                    file,
+                    [f.hash for m, f in event.control.data],
+                )
                 break
 
     async def install_mod(self, _):
         if self.memory["trovesaurus"]["selected_file"] is None:
             return
-        mod_data, file_data = self.memory["trovesaurus"]["selected_file"]
+        mod_data, file_data, hashes = self.memory["trovesaurus"]["selected_file"]
+        installation_path = self.memory["trovesaurus"]["installation_path"].joinpath(
+            "mods"
+        )
+        for mod_file in installation_path.iterdir():
+            if mod_file.is_file():
+                hash = md5(mod_file.read_bytes()).hexdigest()
+                if hash in hashes:
+                    mod_file.unlink()
         url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file_data.file_id}"
         async with ClientSession() as session:
             async with session.get(url) as response:
                 data = await response.read()
                 try:
-                    mod = TMod().read_bytes(data)
+                    mod = TMod().read_bytes(Path(""), data)
                     mod_name = mod.name
                 except:
-                    mod_name = mod_data.name
-                file_name = f"mods/{mod_name}.{file_data.type.value}"
-                file_path = self.memory["trovesaurus"]["installation_path"].joinpath(
-                    file_name
-                )
+                    mod_name = mod_data.name.replace("/", "-")
+                file_name = r"{0}.{1}".format(mod_name, file_data.type.value)
+                file_path = installation_path.joinpath(file_name)
                 file_path.write_bytes(data)
         await self.tab_loader(index=self.mod_submenus.selected_index)
+        self.page.snack_bar.content = Text(f"Installed {mod_name}")
+        self.page.snack_bar.bgcolor = "green"
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
