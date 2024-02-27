@@ -2,6 +2,7 @@ import asyncio
 from pathlib import Path
 from aiohttp import ClientSession
 from hashlib import md5
+from time import time
 
 import flet_core.icons as icons
 from flet import (
@@ -15,6 +16,7 @@ from flet import (
     Icon,
     Image,
     Padding,
+    ButtonStyle,
     Text,
     Switch,
     MainAxisAlignment,
@@ -49,6 +51,12 @@ from models.trovesaurus.mods import ModFileType
 from utils.trove.registry import get_trove_locations
 from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
 from utils.functions import throttle
+
+# TODO: Allow custom directories for mods
+# TODO: add search bar to trovesaurus mods
+# TODO: add sorter/filter to trovesaurus mods
+# TODO: Folder shortcuts in my mods page
+# TODO: Add mod profiles functionality
 
 
 class ModsController(Controller):
@@ -158,19 +166,23 @@ class ModsController(Controller):
                 if trovesarus["installation_path"] not in self.mod_folders:
                     trovesarus["installation_path"] = self.mod_folders[0]
 
-    @throttle
-    async def tab_loader(self, event=None, index=None, boot=False):
-        self.check_memory()
-        if not self.mod_folders:
-            self.main.controls.clear()
-            self.main.controls.append(Text("No Trove installation found"))
-            await self.main.update_async()
-            return
+    async def refresh_mod_lists(self):
         self.mod_folder_lists = {
             folder: TroveModList(path=folder) for folder in self.mod_folders
         }
         for mod_list in self.mod_folder_lists.values():
             await mod_list.update_trovesaurus_data()
+
+    @throttle
+    async def tab_loader(self, event=None, index=None, boot=False):
+        if boot:
+            self.check_memory()
+            await self.refresh_mod_lists()
+        if not self.mod_folders:
+            self.main.controls.clear()
+            self.main.controls.append(Text("No Trove installation found"))
+            await self.main.update_async()
+            return
         if index is None:
             if event is not None:
                 index = event.control.selected_index
@@ -189,6 +201,8 @@ class ModsController(Controller):
         await self.main.update_async()
 
     async def load_my_mods(self, boot=False):
+        if not boot:
+            await self.refresh_mod_lists()
         self.my_mods.controls.clear()
         self.my_mods.controls.append(
             Row(
@@ -210,9 +224,7 @@ class ModsController(Controller):
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.main.update_async()
             return
-        my_mods_table = GridView(
-            runs_count=5,
-        )
+        my_mods_table = GridView(runs_count=5, adaptive=True)
         for mod in mod_list.mods:
             my_mods_table.controls.append(
                 Card(
@@ -220,9 +232,18 @@ class ModsController(Controller):
                         controls=[
                             Column(
                                 controls=[
-                                    Image(src_base64=mod.image, height=128),
+                                    *(
+                                        [
+                                            Image(
+                                                src=mod.trovesaurus_data.image_url
+                                                or "assets/images/construction.png",
+                                                height=128,
+                                            )
+                                        ]
+                                        if mod.trovesaurus_data
+                                        else [Image(src_base64=mod.image, height=128)]
+                                    ),
                                     Text(mod.name),
-                                    # Authors
                                     Row(
                                         alignment="center",
                                         controls=[
@@ -261,7 +282,17 @@ class ModsController(Controller):
                                                     for author in mod.trovesaurus_data.authors
                                                 ]
                                                 if mod.trovesaurus_data
-                                                else [Text(mod.author)]
+                                                else [
+                                                    Row(
+                                                        controls=[
+                                                            Icon(icons.PERSON),
+                                                            TextButton(
+                                                                mod.author,
+                                                                disabled=True,
+                                                            ),
+                                                        ]
+                                                    )
+                                                ]
                                             ),
                                         ],
                                     ),
@@ -306,16 +337,41 @@ class ModsController(Controller):
                             ),
                             *(
                                 [
-                                    IconButton(
-                                        content=Image(
-                                            src="https://trovesaurus.com/images/logos/Sage_64.png?1",
-                                            width=32,
-                                        ),
-                                        url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
+                                    Stack(
+                                        controls=[
+                                            FilledButton(
+                                                height=40,
+                                                content=Image(
+                                                    src="https://trovesaurus.com/images/logos/Sage_64.png?1",
+                                                    width=32,
+                                                    height=32,
+                                                ),
+                                                style=ButtonStyle(
+                                                    bgcolor="#2a5757", padding=0
+                                                ),
+                                                url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
+                                            ),
+                                        ],
+                                        top=5,
+                                        left=5,
                                     )
                                 ]
                                 if mod.trovesaurus_data
-                                else []
+                                else [
+                                    Stack(
+                                        controls=[
+                                            FilledButton(
+                                                height=40,
+                                                content=Icon(icons.SAVE),
+                                                style=ButtonStyle(
+                                                    bgcolor="primary", padding=0
+                                                ),
+                                            ),
+                                        ],
+                                        top=5,
+                                        left=5,
+                                    )
+                                ]
                             ),
                         ]
                     ),
@@ -327,12 +383,12 @@ class ModsController(Controller):
     async def toggle_mod(self, event):
         mod = event.control.data
         mod.toggle()
-        await self.tab_loader()
+        await self.load_my_mods()
 
     async def delete_mod(self, event):
         mod = event.control.data
         mod.mod_path.unlink()
-        await self.tab_loader()
+        await self.load_my_mods()
         self.page.snack_bar.content = Text(f"Uninstalled {mod.name}")
         self.page.snack_bar.bgcolor = "red"
         self.page.snack_bar.open = True
@@ -340,7 +396,7 @@ class ModsController(Controller):
 
     async def set_my_mods_installation_path(self, event):
         self.memory["my_mods"]["installation_path"] = event.control.data
-        await self.tab_loader()
+        await self.load_my_mods()
 
     # Trovesaurus Tab
 
