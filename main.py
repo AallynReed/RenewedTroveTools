@@ -146,11 +146,13 @@ class App:
 
     async def display_login_screen(self):
         self.token_input = TextField(
+            data="input",
             label="Insert token here",
             text_align="center",
             password=True,
             can_reveal_password=True,
             helper_style=TextStyle(color="red"),
+            on_change=self.execute_login,
         )
         await self.page.add_async(
             Container(
@@ -166,6 +168,7 @@ class App:
                                 ],
                                 alignment="SPACE_BETWEEN",
                             ),
+                            data="button",
                             on_hover=self.button_hover,
                             on_click=self.execute_login,
                         ),
