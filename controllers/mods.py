@@ -56,10 +56,8 @@ from utils.trove.registry import get_trove_locations
 from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
 from utils.functions import throttle, long_throttle
 
-# TODO: Allow custom directories for mods
 # TODO: add search bar to trovesaurus mods
 # TODO: add sorter/filter to trovesaurus mods
-# TODO: Folder shortcuts in my mods page
 # TODO: Add mod profiles functionality
 
 
@@ -125,7 +123,7 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 2
+            self.mod_submenus.selected_index = 1
             self.main.controls.append(self.loading)
             self.main.controls.append(self.mod_submenus)
             asyncio.create_task(self.post_setup())
@@ -193,11 +191,6 @@ class ModsController(Controller):
         if boot or event:
             self.check_memory()
             await self.refresh_mod_lists()
-        if not self.mod_folders:
-            self.main.controls.clear()
-            self.main.controls.append(Text("No Trove installation found"))
-            await self.main.update_async()
-            return
         if index is None:
             if event is not None:
                 index = event.control.selected_index
@@ -333,9 +326,13 @@ class ModsController(Controller):
         await self.load_settings()
 
     async def load_my_mods(self, boot=False):
+        self.my_mods.controls.clear()
+        if not self.mod_folders:
+            self.my_mods.controls.append(Text("No Trove installation found"))
+            await self.main.update_async()
+            return
         if not boot:
             await self.refresh_mod_lists()
-        self.my_mods.controls.clear()
         self.my_mods.controls.append(
             Row(
                 controls=[
@@ -549,6 +546,10 @@ class ModsController(Controller):
 
     async def load_trovesaurus_mods(self, boot=False):
         self.trovesaurus.controls.clear()
+        if not self.mod_folders:
+            self.trovesaurus.controls.append(Text("No Trove installation found"))
+            await self.main.update_async()
+            return
         self.memory["trovesaurus"]["selected_file"] = None
         if not self.mod_folders:
             self.trovesaurus.controls.append(Text("No Trove installation found"))
