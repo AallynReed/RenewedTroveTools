@@ -28,7 +28,7 @@ class ModFile(BaseModel):
     def parse_timestamp(cls, value):
         if isinstance(value, datetime):
             return value
-        return datetime.utcfromtimestamp(value)
+        return datetime.fromtimestamp(value, UTC)
 
     @validator("version")
     def parse_version(cls, value, values):

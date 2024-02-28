@@ -1,8 +1,10 @@
 import asyncio
+import os
 from pathlib import Path
 from aiohttp import ClientSession
 from hashlib import md5
 from time import time
+from copy import deepcopy
 
 import flet_core.icons as icons
 from flet import (
@@ -39,8 +41,10 @@ from flet import (
     dropdown,
     Tooltip,
     GridView,
+    FilePicker,
+    FilePickerFileType,
 )
-
+from json import loads
 from models.interface import Controller
 from models.interface import PagedDataTable
 from models.interface import ScrollingFrame
@@ -50,7 +54,7 @@ from models.trovesaurus.mods import ModFileType
 # from utils.trove.directory import Cfg
 from utils.trove.registry import get_trove_locations
 from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
-from utils.functions import throttle
+from utils.functions import throttle, long_throttle
 
 # TODO: Allow custom directories for mods
 # TODO: add search bar to trovesaurus mods
@@ -121,7 +125,7 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 1
+            self.mod_submenus.selected_index = 2
             self.main.controls.append(self.loading)
             self.main.controls.append(self.mod_submenus)
             asyncio.create_task(self.post_setup())
@@ -135,6 +139,10 @@ class ModsController(Controller):
 
     def setup_memory(self):
         self.memory = {
+            "settings": {
+                "picked_custom_dir_name": None,
+                "picked_custom_dir": None,
+            },
             "my_mods": {
                 "installation_path": None,
             },
@@ -144,11 +152,17 @@ class ModsController(Controller):
                 "installation_path": None,
                 "selected_tile": None,
                 "selected_file": None,
+                "search": None,
+                "sort_by": [],
             },
         }
 
     def check_memory(self):
-        self.mod_folders = list(get_trove_locations())
+        self.mod_folders = [
+            (mf.name, mf.joinpath("mods")) for mf in get_trove_locations()
+        ]
+        custom_mod_folders = self.page.preferences.mod_manager.custom_directories
+        self.mod_folders.extend(custom_mod_folders)
         my_mods = self.memory["my_mods"]
         trovesarus = self.memory["trovesaurus"]
         if not self.mod_folders:
@@ -156,26 +170,27 @@ class ModsController(Controller):
             trovesarus["installation_path"] = None
         else:
             if not my_mods["installation_path"]:
-                my_mods["installation_path"] = self.mod_folders[0]
+                my_mods["installation_path"] = self.mod_folders[0][1]
             else:
                 if my_mods["installation_path"] not in self.mod_folders:
-                    my_mods["installation_path"] = self.mod_folders[0]
+                    my_mods["installation_path"] = self.mod_folders[0][1]
             if not trovesarus["installation_path"]:
-                trovesarus["installation_path"] = self.mod_folders[0]
+                trovesarus["installation_path"] = self.mod_folders[0][1]
             else:
                 if trovesarus["installation_path"] not in self.mod_folders:
-                    trovesarus["installation_path"] = self.mod_folders[0]
+                    trovesarus["installation_path"] = self.mod_folders[0][1]
 
     async def refresh_mod_lists(self):
         self.mod_folder_lists = {
-            folder: TroveModList(path=folder) for folder in self.mod_folders
+            folder: (name, TroveModList(path=folder))
+            for name, folder in self.mod_folders
         }
-        for mod_list in self.mod_folder_lists.values():
+        for name, mod_list in self.mod_folder_lists.values():
             await mod_list.update_trovesaurus_data()
 
     @throttle
     async def tab_loader(self, event=None, index=None, boot=False):
-        if boot:
+        if boot or event:
             self.check_memory()
             await self.refresh_mod_lists()
         if not self.mod_folders:
@@ -194,11 +209,128 @@ class ModsController(Controller):
         await self.tab_loader(index=event.control.data)
 
     async def load_settings(self, boot=False):
-        if self.settings.data is None:
-            self.settings.controls.append(TextButton("Clear Cache"))
-            self.main.disabled = False
-            self.settings.data = True
+        self.settings.controls.clear()
+        custom_directories = self.page.preferences.mod_manager.custom_directories
+        picked_dir = self.memory["settings"]["picked_custom_dir"]
+        picked_name = self.memory["settings"]["picked_custom_dir_name"]
+        self.settings_custom_dir_name = TextField(
+            value=picked_name,
+            hint_text="Name",
+            on_change=self.settings_set_custom_dir_name,
+            autofocus=True,
+        )
+        self.settings_custom_dir_pick = FilePicker(
+            on_result=self.settings_set_custom_dir
+        )
+        self.settings_picked_dir = Text(
+            str(picked_dir) if picked_dir else "No picked directory"
+        )
+        self.settings.controls.append(
+            ResponsiveRow(
+                controls=[
+                    Card(
+                        content=Column(
+                            controls=[
+                                Text("Custom Directories"),
+                                Divider(),
+                                Row(
+                                    controls=[
+                                        self.settings_custom_dir_name,
+                                        self.settings_custom_dir_pick,
+                                        Row(
+                                            controls=[
+                                                IconButton(
+                                                    icon=icons.FOLDER,
+                                                    on_click=self.settings_pick_custom_dir,
+                                                ),
+                                                self.settings_picked_dir,
+                                            ]
+                                        ),
+                                        IconButton(
+                                            icon=icons.ADD,
+                                            on_click=self.settings_add_custom_directory,
+                                            disabled=not (picked_dir and picked_name),
+                                        ),
+                                    ]
+                                ),
+                                ListView(
+                                    controls=[
+                                        *(
+                                            [
+                                                ListTile(
+                                                    leading=Icon(icons.FOLDER),
+                                                    title=TextButton(
+                                                        data=mod_list_path,
+                                                        content=Row(
+                                                            controls=[
+                                                                Text(name),
+                                                                Text(mod_list_path),
+                                                                IconButton(
+                                                                    data=mod_list_path,
+                                                                    icon=icons.DELETE,
+                                                                    on_click=self.settings_delete_custom_directory,
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ),
+                                                )
+                                                for name, mod_list_path in custom_directories
+                                            ]
+                                            if custom_directories
+                                            else [
+                                                ListTile(
+                                                    leading=Icon(icons.FOLDER),
+                                                    title=Text("No custom directories"),
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                            ]
+                        )
+                    )
+                ]
+            )
+        )
         await self.main.update_async()
+
+    async def settings_pick_custom_dir(self, event):
+        await self.settings_custom_dir_pick.get_directory_path_async()
+
+    async def settings_set_custom_dir(self, event):
+        self.memory["settings"]["picked_custom_dir"] = Path(event.path)
+        await self.load_settings()
+
+    @long_throttle
+    async def settings_set_custom_dir_name(self, event):
+        self.memory["settings"]["picked_custom_dir_name"] = event.control.value or None
+        await self.load_settings()
+
+    async def settings_add_custom_directory(self, event):
+        custom_directories = self.page.preferences.mod_manager.custom_directories
+        picked_dir = self.memory["settings"]["picked_custom_dir"]
+        picked_name = self.memory["settings"]["picked_custom_dir_name"]
+        custom_dirs = [d for n, d in custom_directories]
+        if picked_dir not in custom_dirs:
+            custom_directories.append((picked_name, picked_dir))
+            self.page.preferences.mod_manager.custom_directories = custom_directories
+            self.page.preferences.save()
+        self.memory["settings"]["picked_custom_dir"] = None
+        self.memory["settings"]["picked_custom_dir_name"] = None
+        await self.load_settings()
+
+    async def settings_delete_custom_directory(self, event):
+        custom_directories = deepcopy(
+            self.page.preferences.mod_manager.custom_directories
+        )
+        for name, path in custom_directories:
+            if path == event.control.data:
+                self.page.preferences.mod_manager.custom_directories.remove(
+                    (name, path)
+                )
+                break
+        self.page.preferences.save()
+        await self.load_settings()
 
     async def load_my_mods(self, boot=False):
         if not boot:
@@ -207,19 +339,29 @@ class ModsController(Controller):
         self.my_mods.controls.append(
             Row(
                 controls=[
-                    TextButton(
-                        data=mod_list_path,
-                        content=Text(mod_list_path.name),
-                        disabled=mod_list_path
-                        == self.memory["my_mods"]["installation_path"],
-                        on_click=self.set_my_mods_installation_path,
+                    Row(
+                        controls=[
+                            IconButton(
+                                icon=icons.FOLDER,
+                                on_click=lambda e: os.startfile(
+                                    self.memory["my_mods"]["installation_path"]
+                                ),
+                            ),
+                            TextButton(
+                                data=mod_list_path,
+                                content=Text(name),
+                                disabled=mod_list_path
+                                == self.memory["my_mods"]["installation_path"],
+                                on_click=self.set_my_mods_installation_path,
+                            ),
+                        ]
                     )
-                    for mod_list_path in self.mod_folders
+                    for name, mod_list_path in self.mod_folders
                 ]
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
-        mod_list = self.mod_folder_lists[installation_path]
+        mod_list = self.mod_folder_lists[installation_path][1]
         if not mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.main.update_async()
@@ -236,12 +378,17 @@ class ModsController(Controller):
                                         [
                                             Image(
                                                 src=mod.trovesaurus_data.image_url
-                                                or "assets/images/construction.png",
+                                                or f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
                                                 height=128,
                                             )
                                         ]
                                         if mod.trovesaurus_data
-                                        else [Image(src_base64=mod.image, height=128)]
+                                        else [
+                                            Image(
+                                                src=f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                                                height=128,
+                                            )
+                                        ]
                                     ),
                                     Text(mod.name),
                                     Row(
@@ -410,14 +557,24 @@ class ModsController(Controller):
         self.trovesaurus.controls.append(
             Row(
                 controls=[
-                    TextButton(
-                        data=mod_list_path,
-                        content=Text(mod_list_path.name),
-                        disabled=mod_list_path
-                        == self.memory["trovesaurus"]["installation_path"],
-                        on_click=self.set_trovesaurus_installation_path,
+                    Row(
+                        controls=[
+                            IconButton(
+                                icon=icons.FOLDER,
+                                on_click=lambda e: os.startfile(
+                                    self.memory["trovesaurus"]["installation_path"]
+                                ),
+                            ),
+                            TextButton(
+                                data=mod_list_path,
+                                content=Text(name),
+                                disabled=mod_list_path
+                                == self.memory["trovesaurus"]["installation_path"],
+                                on_click=self.set_trovesaurus_installation_path,
+                            ),
+                        ]
                     )
-                    for mod_list_path in self.mod_folders
+                    for name, mod_list_path in self.mod_folders
                 ]
             )
         )
@@ -426,16 +583,16 @@ class ModsController(Controller):
             self.memory["trovesaurus"]["page_size"],
             self.memory["trovesaurus"]["page"],
         )
+        installation_path = self.memory["trovesaurus"]["installation_path"]
         for i, mod in enumerate(self.cached_trovesaurus_mods):
             installed = False
             ts_mod = None
-            mod_l = self.mod_folder_lists[
-                self.memory["trovesaurus"]["installation_path"]
-            ]
+            mod_l = self.mod_folder_lists[installation_path][1]
             for ts_mod in mod_l.mods:
-                if ts_mod.trovesaurus_data.id == mod.id:
-                    installed = True
-                    break
+                if ts_mod.trovesaurus_data:
+                    if ts_mod.trovesaurus_data.id == mod.id:
+                        installed = True
+                        break
             selected_tile = self.memory["trovesaurus"]["selected_tile"]
             self.mods_list.controls.append(
                 ExpansionPanel(
@@ -693,12 +850,11 @@ class ModsController(Controller):
                 break
 
     async def install_mod(self, _):
-        if self.memory["trovesaurus"]["selected_file"] is None:
+        selected_file = self.memory["trovesaurus"]["selected_file"]
+        if selected_file is None:
             return
-        mod_data, file_data, hashes = self.memory["trovesaurus"]["selected_file"]
-        installation_path = self.memory["trovesaurus"]["installation_path"].joinpath(
-            "mods"
-        )
+        mod_data, file_data, hashes = selected_file
+        installation_path = self.memory["trovesaurus"]["installation_path"]
         for mod_file in installation_path.iterdir():
             if mod_file.is_file():
                 hash = md5(mod_file.read_bytes()).hexdigest()

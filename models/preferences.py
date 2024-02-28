@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from flet import ThemeMode
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr, validator
 from models.config import Locale
 import asyncio
 
@@ -41,6 +41,15 @@ class Directories(BaseModel):
     changes_to: Optional[Path] = None
 
 
+class ModManagerPreferences(BaseModel):
+    page_size: int = 8
+    custom_directories: list[tuple[str, Path]] = Field(default_factory=list)
+
+    @validator("custom_directories")
+    def clean_custom_directories(cls, value):
+        return [(n, d) for n, d in value if d.exists()]
+
+
 class Preferences(BaseModel):
     _page = PrivateAttr()
     path: Path
@@ -53,6 +62,7 @@ class Preferences(BaseModel):
     changes_name_format: str = "%Y-%m-%d %H-%M-%S $dir"
     directories: Directories = Field(default_factory=Directories)
     dismissables: DismissableContent = Field(default_factory=DismissableContent)
+    mod_manager: ModManagerPreferences = Field(default_factory=ModManagerPreferences)
 
     @classmethod
     async def load_from_web(cls, page):
@@ -76,6 +86,7 @@ class Preferences(BaseModel):
                 data = loads(path.read_text())
                 pref = cls.parse_obj(data)
             except Exception:
+                print(f"Failed to load preferences from {path}")
                 pref = cls(path=path)
         pref.bind_page(page)
         pref.save()
