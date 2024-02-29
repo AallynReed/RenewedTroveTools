@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 
 flet_exe = Path(
-    r"C:\hostedtoolcache\windows\Python\3.12.2\x64\Lib\site-packages\flet\bin\flet\flet.exe"
+    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\flet\flet.exe"
 )
 
 subprocess.run(
