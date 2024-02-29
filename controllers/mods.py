@@ -216,7 +216,9 @@ class ModsController(Controller):
             on_result=self.settings_set_custom_dir
         )
         self.settings_picked_dir = Text(
-            str(picked_dir) if picked_dir else "No picked directory"
+            str(picked_dir)
+            if picked_dir
+            else "No picked directory (Pick your mods folder)"
         )
         self.settings.controls.append(
             ResponsiveRow(
