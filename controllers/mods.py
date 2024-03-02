@@ -37,12 +37,14 @@ from flet import (
     TextField,
     ExpansionPanelList,
     ExpansionPanel,
+    ExpansionTile,
     Dropdown,
     dropdown,
     Tooltip,
     GridView,
     FilePicker,
     FilePickerFileType,
+    ScrollMode,
 )
 from json import loads
 from models.interface import Controller
@@ -66,9 +68,9 @@ class ModsController(Controller):
         if not hasattr(self, "main"):
             self.api = KiwiAPI()
             self.setup_memory()
-            self.main = ResponsiveRow(alignment=MainAxisAlignment.START)
+            self.main = ResponsiveRow(alignment=MainAxisAlignment.START, expand=1)
             self.loading = Column(controls=[ProgressRing(), Text("Loading...")])
-            self.mod_submenus = Tabs(visible=False)
+            self.mod_submenus = Tabs(visible=False, expand=1)
             self.mod_submenus.on_change = self.tab_loader
             self.settings_tab = Tab(
                 tab_content=Row(
@@ -95,13 +97,13 @@ class ModsController(Controller):
             )
             self.settings = Column()
             self.my_mods = Column()
-            self.trovesaurus = Column()
-            self.settings_tab.content = self.settings
-            self.my_mods_tab.content = self.my_mods
-            self.trovesaurus_tab.content = self.trovesaurus
+            self.trovesaurus = Column(expand=1)
             self.mod_submenus.tabs.append(self.settings_tab)
             self.mod_submenus.tabs.append(self.my_mods_tab)
             self.mod_submenus.tabs.append(self.trovesaurus_tab)
+            self.settings_tab.content = self.settings
+            self.my_mods_tab.content = self.my_mods
+            self.trovesaurus_tab.content = self.trovesaurus
             my_mods_index = self.mod_submenus.tabs.index(self.my_mods_tab)
             trovesaurus_index = self.mod_submenus.tabs.index(self.trovesaurus_tab)
             self.my_mods_tab.tab_content.controls.append(
@@ -118,6 +120,11 @@ class ModsController(Controller):
                     on_click=self.reload_tab,
                 )
             )
+            self.tabs = {
+                0: self.settings,
+                1: self.my_mods,
+                2: self.trovesaurus,
+            }
             self.tab_map = {
                 0: self.load_settings,
                 1: self.load_my_mods,
@@ -150,8 +157,12 @@ class ModsController(Controller):
                 "installation_path": None,
                 "selected_tile": None,
                 "selected_file": None,
-                "search": None,
-                "sort_by": [],
+                "search": {
+                    "query": None,
+                    "type": None,
+                    "sub_type": None,
+                    "sort_by": [],
+                },
             },
         }
 
@@ -196,10 +207,15 @@ class ModsController(Controller):
                 index = event.control.selected_index
             else:
                 index = self.mod_submenus.selected_index
+        # self.main.controls.clear()
+        # self.main.controls.append(self.mod_submenus)
+        # self.main.controls.append(self.tabs[index])
         await self.tab_map[index](boot=boot or bool(event))
 
     async def reload_tab(self, event):
         await self.tab_loader(index=event.control.data)
+
+    # Settings Tab
 
     async def load_settings(self, boot=False):
         self.settings.controls.clear()
@@ -326,6 +342,8 @@ class ModsController(Controller):
                 break
         self.page.preferences.save()
         await self.load_settings()
+
+    # My Mods Tab
 
     async def load_my_mods(self, boot=False):
         self.my_mods.controls.clear()
@@ -523,7 +541,9 @@ class ModsController(Controller):
                     ),
                 )
             )
-        self.my_mods.controls.append(my_mods_table)
+        self.my_mods.controls.append(
+            Column(controls=[my_mods_table], scroll=ScrollMode.ADAPTIVE)
+        )
         await self.main.update_async()
 
     async def toggle_mod(self, event):
@@ -553,10 +573,6 @@ class ModsController(Controller):
             await self.main.update_async()
             return
         self.memory["trovesaurus"]["selected_file"] = None
-        if not self.mod_folders:
-            self.trovesaurus.controls.append(Text("No Trove installation found"))
-            await self.main.update_async()
-            return
         self.trovesaurus.controls.append(
             Row(
                 controls=[
@@ -578,10 +594,10 @@ class ModsController(Controller):
                         ]
                     )
                     for name, mod_list_path in self.mod_folders
-                ]
+                ],
             )
         )
-        self.mods_list = ExpansionPanelList(on_change=self.update_selected_tile)
+        self.mods_list = Column(scroll=ScrollMode.ADAPTIVE)
         self.cached_trovesaurus_mods = await self.api.get_mods_list_chunk(
             self.memory["trovesaurus"]["page_size"],
             self.memory["trovesaurus"]["page"],
@@ -596,164 +612,159 @@ class ModsController(Controller):
                     if ts_mod.trovesaurus_data.id == mod.id:
                         installed = True
                         break
-            selected_tile = self.memory["trovesaurus"]["selected_tile"]
             self.mods_list.controls.append(
-                ExpansionPanel(
-                    ListTile(
-                        leading=Image(
-                            src=(
-                                mod.image_url
-                                or "https://trovesaurus.com/images/logos/Sage_64.png?1"
-                            ),
-                            width=64,
-                            height=64,
+                ExpansionTile(
+                    leading=Image(
+                        src=(
+                            mod.image_url
+                            or "https://trovesaurus.com/images/logos/Sage_64.png?1"
                         ),
-                        title=Row(
-                            controls=[
-                                TextButton(
-                                    content=Text(mod.name, color="#bbbbbb", size=18),
-                                    url=f"https://trovesaurus.com/mod={mod.id}",
-                                ),
-                                *(
-                                    [
-                                        Tooltip(
-                                            message="Installed",
-                                            content=Icon(icons.CHECK, color="green"),
-                                        )
-                                    ]
-                                    if installed
-                                    else []
-                                ),
-                            ]
-                        ),
-                        subtitle=Row(
-                            controls=[
-                                Row(
-                                    controls=[
-                                        *(
-                                            [
-                                                TextButton(
-                                                    content=Row(
-                                                        controls=[
-                                                            Image(
-                                                                src=author.Avatar,
-                                                                width=24,
-                                                            ),
-                                                            Tooltip(
-                                                                message=(
-                                                                    author.Role.value
-                                                                    if author.Role.value
-                                                                    else "User"
-                                                                ),
-                                                                content=Text(
-                                                                    author.Username,
-                                                                    color=ModAuthorRoleColors[
-                                                                        author.Role.name
-                                                                    ].value,
-                                                                ),
-                                                            ),
-                                                        ]
-                                                    ),
-                                                    url=f"https://trovesaurus.com/user={author.ID}",
-                                                )
-                                                for author in mod.authors
-                                            ]
-                                            if [
-                                                author
-                                                for author in mod.authors
-                                                if author.ID
-                                            ]
-                                            else [
-                                                TextButton(
-                                                    content=Text(
-                                                        "No authors", color="red"
-                                                    ),
-                                                    disabled=True,
-                                                )
-                                            ]
-                                        )
-                                    ]
-                                )
-                            ]
-                        ),
+                        width=64,
+                        height=64,
                     ),
-                    Column(
+                    title=Row(
                         controls=[
-                            Text(mod.description) or Text("No description"),
+                            TextButton(
+                                content=Text(mod.name, color="#bbbbbb", size=18),
+                                url=f"https://trovesaurus.com/mod={mod.id}",
+                            ),
+                            *(
+                                [
+                                    Tooltip(
+                                        message="Installed",
+                                        content=Icon(icons.CHECK, color="green"),
+                                    )
+                                ]
+                                if installed
+                                else []
+                            ),
+                        ]
+                    ),
+                    subtitle=Row(
+                        controls=[
                             Row(
                                 controls=[
-                                    Tooltip(
-                                        message="Downloads",
-                                        content=Row(
-                                            controls=[
-                                                Icon(icons.DOWNLOAD),
-                                                Text(f"{mod.downloads}"),
-                                            ]
-                                        ),
-                                    ),
-                                    Tooltip(
-                                        message="Likes",
-                                        content=Row(
-                                            controls=[
-                                                Icon(icons.FAVORITE),
-                                                Text(f"{mod.likes}"),
-                                            ]
-                                        ),
-                                    ),
-                                ]
-                            ),
-                            ResponsiveRow(
-                                controls=[
-                                    Dropdown(
-                                        data=[
-                                            (mod, file)
-                                            for file in mod.file_objs
-                                            if file.hash
-                                        ],
-                                        options=[
-                                            dropdown.Option(
-                                                key=file.hash,
-                                                text=file.version
-                                                + f" ({file.type.value})",
+                                    *(
+                                        [
+                                            TextButton(
+                                                content=Row(
+                                                    controls=[
+                                                        Image(
+                                                            src=author.Avatar,
+                                                            width=24,
+                                                        ),
+                                                        Tooltip(
+                                                            message=(
+                                                                author.Role.value
+                                                                if author.Role.value
+                                                                else "User"
+                                                            ),
+                                                            content=Text(
+                                                                author.Username,
+                                                                color=ModAuthorRoleColors[
+                                                                    author.Role.name
+                                                                ].value,
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                                url=f"https://trovesaurus.com/user={author.ID}",
                                             )
-                                            for file in mod.file_objs
-                                            if file.hash
-                                        ],
-                                        on_change=self.select_mod_file,
-                                        col=4,
-                                    ),
-                                    IconButton(
-                                        data=i,
-                                        content=Row(
-                                            controls=[
-                                                Icon(icons.DOWNLOAD),
-                                                Text("Install"),
-                                            ],
-                                            alignment="center",
-                                        ),
-                                        height=64,
-                                        on_click=self.install_mod,
-                                        col=1,
-                                    ),
-                                    IconButton(
-                                        data=i,
-                                        content=Row(
-                                            controls=[
-                                                Icon(icons.ADD),
-                                                Text("Add to profile"),
-                                            ],
-                                            alignment="center",
-                                        ),
-                                        height=64,
-                                        on_click=...,
-                                        col=1.4,
-                                    ),
-                                ],
-                            ),
-                        ],
+                                            for author in mod.authors
+                                        ]
+                                        if [
+                                            author
+                                            for author in mod.authors
+                                            if author.ID
+                                        ]
+                                        else [
+                                            TextButton(
+                                                content=Text("No authors", color="red"),
+                                                disabled=True,
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                        ]
                     ),
-                    expanded=i == selected_tile,
-                    can_tap_header=True,
+                    controls=[
+                        Column(
+                            controls=[
+                                Text(mod.description) or Text("No description"),
+                                Row(
+                                    controls=[
+                                        Tooltip(
+                                            message="Downloads",
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.DOWNLOAD),
+                                                    Text(f"{mod.downloads}"),
+                                                ]
+                                            ),
+                                        ),
+                                        Tooltip(
+                                            message="Likes",
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.FAVORITE),
+                                                    Text(f"{mod.likes}"),
+                                                ]
+                                            ),
+                                        ),
+                                    ]
+                                ),
+                                ResponsiveRow(
+                                    controls=[
+                                        Dropdown(
+                                            data=[
+                                                (mod, file)
+                                                for file in mod.file_objs
+                                                if file.hash
+                                            ],
+                                            options=[
+                                                dropdown.Option(
+                                                    key=file.hash,
+                                                    text=file.version
+                                                    + f" ({file.type.value})",
+                                                )
+                                                for file in mod.file_objs
+                                                if file.hash
+                                            ],
+                                            on_change=self.select_mod_file,
+                                            col=4,
+                                        ),
+                                        IconButton(
+                                            data=i,
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.DOWNLOAD),
+                                                    Text("Install"),
+                                                ],
+                                                alignment="center",
+                                            ),
+                                            height=64,
+                                            on_click=self.install_mod,
+                                            col=1,
+                                        ),
+                                        IconButton(
+                                            data=i,
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.ADD),
+                                                    Text("Add to profile"),
+                                                ],
+                                                alignment="center",
+                                            ),
+                                            height=64,
+                                            on_click=...,
+                                            col=1.4,
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ],
                 )
             )
         self.trovesaurus.controls.append(self.mods_list)
@@ -783,7 +794,7 @@ class ModsController(Controller):
                         icon=icons.ARROW_RIGHT,
                         on_click=self.next_trovesaurus_page,
                     ),
-                ]
+                ],
             )
         )
         if not boot:

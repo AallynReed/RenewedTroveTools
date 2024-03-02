@@ -65,7 +65,7 @@ class Routing:
                         on_change=self.change_navigation,
                     ),
                     VerticalDivider(),
-                    Column(controls=view.controls, expand=True, scroll="auto"),
+                    Column(controls=view.controls, expand=True, scroll=None),
                 ],
                 expand=True,
             )

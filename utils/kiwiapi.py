@@ -4,6 +4,7 @@ from typing import Union, Optional
 
 from pydantic import BaseModel, Field, validator
 from aiohttp import ClientSession
+from urllib.parse import urlencode
 
 
 class ModFileType(Enum):
@@ -104,8 +105,9 @@ class Mod(BaseModel):
 
 class ModsEndpoint(Enum):
     base: str = "/mods"
-    list: str = "/mods/list"
-    count: str = "/mods/count"
+    list: str = "/mods/search"
+    types: str = "/mods/types"
+    sub_types: str = "/mods/sub_types"
 
 
 class KiwiAPI:
@@ -113,20 +115,69 @@ class KiwiAPI:
     api_version: int = 1
     api_url: str = f"{base_url}/v{api_version}"
 
-    async def get_mods_page_count(self, page_size: int = 8):
+    async def get_mods_page_count(
+        self,
+        page_size: int = 8,
+        query: str = None,
+        type: str = None,
+        sub_type: str = None,
+        sort_by: list[tuple[str, int]] = None,
+    ):
+        params = {"limit": page_size}
+        if query is not None:
+            params["search"] = query
+        if type is not None:
+            params["type"] = type
+        if sub_type is not None:
+            params["subtype"] = sub_type
+        if sort_by is not None:
+            ...
+        encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.count.value}"
+                f"{self.api_url}{ModsEndpoint.list.value}?{encoded_params}"
             ) as response:
-                count = await response.json()
-                pages = count.get("count") // page_size + 1
+                count = int(response.headers.get("count"))
+                pages = count // page_size + 1
         return pages
 
-    async def get_mods_list_chunk(self, page_size: int = 8, page: int = 0):
+    async def get_mods_list_chunk(
+        self,
+        page_size: int = 8,
+        page: int = 0,
+        query: str = None,
+        type: str = None,
+        sub_type: str = None,
+        sort_by: list[tuple[str, int]] = None,
+    ):
         offset = page_size * page
+        params = {"limit": page_size, "offset": offset}
+        if query is not None:
+            params["search"] = query
+        if type is not None:
+            params["type"] = type
+        if sub_type is not None:
+            params["subtype"] = sub_type
+        if sort_by is not None:
+            ...
+        encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.list.value}?limit={page_size}&offset={offset}"
+                f"{self.api_url}{ModsEndpoint.list.value}?{encoded_params}"
             ) as response:
                 mods = await response.json()
         return [Mod(**mod) for mod in mods]
+
+    async def get_mods_types(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.types.value}"
+            ) as response:
+                return await response.json()
+
+    async def get_mods_sub_types(self, type: str):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.sub_types.value}/{type}"
+            ) as response:
+                return await response.json()

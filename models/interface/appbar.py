@@ -27,6 +27,7 @@ from flet_core.icons import (
     DOWNLOAD,
     PALETTE,
     SAVINGS,
+    PERSON,
 )
 
 from models.preferences import AccentColor
@@ -160,13 +161,16 @@ class CustomAppBar(AppBar):
                             controls=[
                                 Image(
                                     self.page.user_data["avatar_url"],
+                                    error_content=Icon(PERSON),
                                     width=40,
-                                    border_radius=50
+                                    border_radius=50,
                                 ),
-                                Text(self.page.user_data["username"])
+                                Text(self.page.user_data["username"]),
                             ]
                         )
-                    ] if self.page.user_data else []
+                    ]
+                    if self.page.user_data
+                    else []
                 ),
                 PopupMenuButton(
                     data="other-buttons",

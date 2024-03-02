@@ -227,8 +227,6 @@ class App:
         except RuntimeError:
             ...
 
-    async def restart_app(self): ...
-
     @tasks.loop(seconds=60)
     async def update_clock(self):
         self.page.clock.value = (datetime.now(UTC) - timedelta(hours=11)).strftime(
