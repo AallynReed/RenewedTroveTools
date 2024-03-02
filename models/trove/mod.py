@@ -153,6 +153,8 @@ class TroveMod:
     def fix_name(self):
         suffixes = self.mod_path.suffixes
         new_mod_path = self.mod_path.with_name(self.name + "".join(suffixes))
+        if new_mod_path.exists():
+            return
         self.mod_path.rename(new_mod_path)
         self.mod_path = new_mod_path
 
