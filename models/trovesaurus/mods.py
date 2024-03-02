@@ -1,10 +1,8 @@
-import re
 from datetime import datetime, UTC
 from enum import Enum
 from typing import Union, Optional
 
 from pydantic import BaseModel, Field, validator
-from aiohttp import ClientSession
 
 
 class ModFileType(Enum):

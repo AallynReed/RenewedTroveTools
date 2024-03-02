@@ -1,3 +1,5 @@
+from typing import Optional, Callable
+
 from flet import (
     UserControl,
     DataTable,
@@ -10,8 +12,6 @@ from flet import (
     Text,
 )
 from flet_core import icons
-
-from typing import Optional, Callable
 
 
 class PagedDataTable(UserControl):

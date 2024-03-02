@@ -1,4 +1,4 @@
-from flet import View, Text, Column
+from flet import View, Column
 from flet_core.icons import TABLE_VIEW
 
 from controllers import GemBuildsController

@@ -1,7 +1,9 @@
-from cx_Freeze import setup, Executable
-from models.metadata import Metadata
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
+from cx_Freeze import setup, Executable
+
+from models.metadata import Metadata
 
 flet_exe = Path(
     r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\flet\flet.exe"

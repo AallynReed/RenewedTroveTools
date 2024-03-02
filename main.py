@@ -2,9 +2,9 @@ import asyncio
 import logging
 import os
 import sys
+from datetime import UTC
 from datetime import datetime
 from datetime import timedelta
-from datetime import UTC
 from pathlib import Path
 
 import requests

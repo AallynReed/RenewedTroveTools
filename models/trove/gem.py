@@ -36,7 +36,6 @@ from models.trove.gems import (
 )
 from utils.functions import split_boosts
 
-
 # This dictates the percentages stats can generate at.
 # This adds complexity in a way but system remains unchanged progression wise.
 GEM_COMPLEXITY = 40 * 40

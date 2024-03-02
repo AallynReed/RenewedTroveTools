@@ -1,7 +1,7 @@
+from json import load
 from pathlib import Path
 
 from pydantic import BaseModel
-from json import load
 
 
 class Metadata(BaseModel):

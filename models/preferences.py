@@ -1,3 +1,4 @@
+import asyncio
 from enum import Enum
 from json import loads
 from pathlib import Path
@@ -5,8 +6,8 @@ from typing import Optional
 
 from flet import ThemeMode
 from pydantic import BaseModel, Field, PrivateAttr, validator
+
 from models.config import Locale
-import asyncio
 
 
 class AccentColor(Enum):

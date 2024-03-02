@@ -1,14 +1,12 @@
 import asyncio
 import os
-from pathlib import Path
-from aiohttp import ClientSession
-from hashlib import md5
-from time import time
 from copy import deepcopy
+from hashlib import md5
+from pathlib import Path
 
 import flet_core.icons as icons
+from aiohttp import ClientSession
 from flet import (
-    Container,
     Column,
     Row,
     Tabs,
@@ -17,48 +15,35 @@ from flet import (
     IconButton,
     Icon,
     Image,
-    Padding,
     ButtonStyle,
     Text,
     Switch,
-    MainAxisAlignment,
     Divider,
     VerticalDivider,
     Stack,
     Card,
-    ProgressRing,
     ListView,
     ListTile,
-    DataColumn,
-    DataRow,
-    DataCell,
     ResponsiveRow,
     FilledButton,
     padding,
     TextField,
-    ExpansionPanelList,
-    ExpansionPanel,
     ExpansionTile,
     Dropdown,
     dropdown,
     Tooltip,
     GridView,
     FilePicker,
-    FilePickerFileType,
     ScrollMode,
 )
-from json import loads
-from models.interface import Controller
-from models.interface import PagedDataTable
-from models.interface import ScrollingFrame
-from models.trove.mod import TroveModList, TMod, ZMod
-from models.trovesaurus.mods import ModFileType
-from models.interface.inputs import NumberField
 
-# from utils.trove.directory import Cfg
-from utils.trove.registry import get_trove_locations
-from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
+from models.interface import Controller
+from models.interface.inputs import NumberField
+from models.trove.mod import TroveModList, TMod
 from utils.functions import throttle, long_throttle
+from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
+from utils.trove.registry import get_trove_locations
+
 
 # TODO: add search bar to trovesaurus mods
 # TODO: add sorter/filter to trovesaurus mods

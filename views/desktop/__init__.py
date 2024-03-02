@@ -1,2 +1,2 @@
-from .mods import ModsView
 from .extractor import ExtractorView
+from .mods import ModsView

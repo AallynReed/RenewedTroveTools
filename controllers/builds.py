@@ -31,6 +31,7 @@ from flet import (
 from flet_core.icons import COPY, CALCULATE
 
 from models.interface import Controller
+from models.interface import ScrollingFrame, AutoNumberField
 from models.trove.builds import (
     TroveClass,
     Class,
@@ -40,9 +41,8 @@ from models.trove.builds import (
     DamageType,
     AbilityType,
 )
-from models.interface import ScrollingFrame, AutoNumberField
-from utils.functions import get_attr, chunks
 from models.trove.star_chart import get_star_chart
+from utils.functions import get_attr, chunks
 
 
 class GemBuildsController(Controller):

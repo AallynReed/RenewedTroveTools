@@ -1,9 +1,6 @@
 import logging
 import logging.handlers
-import os
 from datetime import datetime
-
-from pathlib import Path
 
 timestamped_log = "logs/{logger_level}_{logger_name}_" + datetime.utcnow().strftime(
     "%Y-%m-%d_%H-%M-%S-%f.log"

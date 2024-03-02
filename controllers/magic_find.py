@@ -2,8 +2,8 @@ import json
 
 from flet import ResponsiveRow, Column, Switch, Card, Text, TextField, Row
 
-from models.interface import Controller
 from models.interface import AutoNumberField, NumberField
+from models.interface import Controller
 from models.trove.star_chart import get_star_chart
 
 

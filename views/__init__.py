@@ -1,6 +1,6 @@
 from views.desktop import *
-from views.web import *
 from views.hybrid import *
+from views.web import *
 
 
 def all_views(web_mode=False):
