@@ -238,10 +238,12 @@ class GemController(Controller):
                                                     [
                                                         BorderSide(
                                                             2,
-                                                            "transparent"
-                                                            if stat
-                                                            != self.selected_stat
-                                                            else "green",
+                                                            (
+                                                                "transparent"
+                                                                if stat
+                                                                != self.selected_stat
+                                                                else "green"
+                                                            ),
                                                         )
                                                     ]
                                                     * 4
@@ -431,8 +433,7 @@ class GemController(Controller):
         )
         asyncio.create_task(self.page.update_async())
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     async def select_stat(self, event):
         if self.selected_stat == event.control.data:

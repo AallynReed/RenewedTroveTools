@@ -276,8 +276,7 @@ class HomeController(Controller):
             if not task.is_running():
                 task.start()
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     @tasks.loop(seconds=1)
     async def update_clock(self):

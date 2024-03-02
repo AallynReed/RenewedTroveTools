@@ -316,8 +316,7 @@ class ExtractorController(Controller):
             ),
         ]
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     @long_throttle
     async def set_changes_format(self, event):
@@ -606,9 +605,9 @@ class ExtractorController(Controller):
                                             1
                                         ].value = f"[{round(i / total_files * 100, 1)}%] | Elapsed: {round(elapsed):>3}s | Estimated {remaining:>3}s remaining\r"
                                         progress = new_progress
-                                        self.directory_progress.controls[
-                                            1
-                                        ].value = new_progress
+                                        self.directory_progress.controls[1].value = (
+                                            new_progress
+                                        )
                                         await self.directory_progress.update_async()
                                     if (
                                         await file.compare(
@@ -935,12 +934,12 @@ class ExtractorController(Controller):
                 archive_relative_path = file.archive.path.relative_to(
                     self.locations.extract_from
                 )
-                self.hashes[
-                    str(index_relative_path)
-                ] = await file.archive.index.content_hash
-                self.hashes[
-                    str(archive_relative_path)
-                ] = await file.archive.content_hash
+                self.hashes[str(index_relative_path)] = (
+                    await file.archive.index.content_hash
+                )
+                self.hashes[str(archive_relative_path)] = (
+                    await file.archive.content_hash
+                )
             wrote = sum([f.size for f in changes])
             saved = (
                 sum(

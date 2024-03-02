@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
 
-if os.name == 'nt':
+if os.name == "nt":
     import winreg
+
     Hives = [winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER]
     Nodes = ["WOW6432Node\\"]
     TrovePath = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\"

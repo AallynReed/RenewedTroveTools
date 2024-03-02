@@ -35,8 +35,7 @@ class ConfigController(Controller):
             spacing=400,
         )
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     async def on_language_change(self, event):
         lang = Locale(event.control.value)

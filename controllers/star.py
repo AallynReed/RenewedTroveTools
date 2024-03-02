@@ -93,9 +93,11 @@ class StarChartController(Controller):
                                     paint=Paint(
                                         stroke_width=2,
                                         style=PaintingStyle.STROKE,
-                                        color="#aabbcc"
-                                        if not star.unlocked
-                                        else "#ffd400",
+                                        color=(
+                                            "#aabbcc"
+                                            if not star.unlocked
+                                            else "#ffd400"
+                                        ),
                                     ),
                                 )
                                 for star in self.star_chart.get_stars()
@@ -215,8 +217,7 @@ class StarChartController(Controller):
             ]
         )
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     async def change_lock_status(self, event):
         staged_lock = event.control.data.stage_lock(self.star_chart)

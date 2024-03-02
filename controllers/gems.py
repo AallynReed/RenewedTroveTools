@@ -231,27 +231,35 @@ class GemSetController(Controller):
                                     border=Border(
                                         BorderSide(
                                             2,
-                                            color="transparent"
-                                            if self.selected_gem != gem
-                                            else "green",
+                                            color=(
+                                                "transparent"
+                                                if self.selected_gem != gem
+                                                else "green"
+                                            ),
                                         ),
                                         BorderSide(
                                             2,
-                                            color="transparent"
-                                            if self.selected_gem != gem
-                                            else "green",
+                                            color=(
+                                                "transparent"
+                                                if self.selected_gem != gem
+                                                else "green"
+                                            ),
                                         ),
                                         BorderSide(
                                             2,
-                                            color="transparent"
-                                            if self.selected_gem != gem
-                                            else "green",
+                                            color=(
+                                                "transparent"
+                                                if self.selected_gem != gem
+                                                else "green"
+                                            ),
                                         ),
                                         BorderSide(
                                             4 if self.selected_gem != gem else 2,
-                                            color="#" + gem.color.value
-                                            if self.selected_gem != gem
-                                            else "green",
+                                            color=(
+                                                "#" + gem.color.value
+                                                if self.selected_gem != gem
+                                                else "green"
+                                            ),
                                         ),
                                     ),
                                     border_radius=1,
@@ -549,8 +557,7 @@ class GemSetController(Controller):
         event.control.content.border = None
         await self.page.update_async()
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     def calculate_gem_report(self):
         self.gem_report.controls.clear()

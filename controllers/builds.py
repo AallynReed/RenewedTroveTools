@@ -322,12 +322,16 @@ class GemBuildsController(Controller):
                                     options=[
                                         dropdown.Option(key=b[0], text=b[1])
                                         for b in [
-                                            (["none", "none"])
-                                            if self.star_chart.build_id
-                                            else ([]),
-                                            ([self.star_chart.build_id, "Custom"])
-                                            if self.star_chart.build_id
-                                            else ([]),
+                                            (
+                                                (["none", "none"])
+                                                if self.star_chart.build_id
+                                                else ([])
+                                            ),
+                                            (
+                                                ([self.star_chart.build_id, "Custom"])
+                                                if self.star_chart.build_id
+                                                else ([])
+                                            ),
                                             *preset_builds,
                                         ]
                                         if b
@@ -656,9 +660,11 @@ class GemBuildsController(Controller):
                                 )
                             ),
                         ],
-                        color="#156b16"
-                        if build_data == self.selected_build
-                        else ("#313233" if rank % 2 else "#414243"),
+                        color=(
+                            "#156b16"
+                            if build_data == self.selected_build
+                            else ("#313233" if rank % 2 else "#414243")
+                        ),
                     )
                 )
         self.abilities.rows.clear()
@@ -720,8 +726,7 @@ class GemBuildsController(Controller):
             )
         self.features.controls.append(self.abilities_table)
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     def calculate_results(self):
         if self.config.build_type in [BuildType.health]:

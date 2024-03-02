@@ -163,8 +163,7 @@ class MagicFindController(Controller):
             self.results,
         ]
 
-    def setup_events(self):
-        ...
+    def setup_events(self): ...
 
     async def switch_stat(self, event):
         self.control_values[event.control.data] = event.control.value
