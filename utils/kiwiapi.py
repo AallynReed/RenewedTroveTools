@@ -121,17 +121,14 @@ class KiwiAPI:
         query: str = None,
         type: str = None,
         sub_type: str = None,
-        sort_by: list[tuple[str, int]] = None,
     ):
         params = {"limit": page_size}
         if query is not None:
-            params["search"] = query
+            params["query"] = query
         if type is not None:
             params["type"] = type
         if sub_type is not None:
-            params["subtype"] = sub_type
-        if sort_by is not None:
-            ...
+            params["sub_type"] = sub_type
         encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
@@ -153,11 +150,11 @@ class KiwiAPI:
         offset = page_size * page
         params = {"limit": page_size, "offset": offset}
         if query is not None:
-            params["search"] = query
+            params["query"] = query
         if type is not None:
             params["type"] = type
         if sub_type is not None:
-            params["subtype"] = sub_type
+            params["sub_type"] = sub_type
         if sort_by is not None:
             ...
         encoded_params = urlencode(params)
@@ -168,14 +165,14 @@ class KiwiAPI:
                 mods = await response.json()
         return [Mod(**mod) for mod in mods]
 
-    async def get_mods_types(self):
+    async def get_mod_types(self):
         async with ClientSession() as session:
             async with session.get(
                 f"{self.api_url}{ModsEndpoint.types.value}"
             ) as response:
                 return await response.json()
 
-    async def get_mods_sub_types(self, type: str):
+    async def get_mod_sub_types(self, type: str):
         async with ClientSession() as session:
             async with session.get(
                 f"{self.api_url}{ModsEndpoint.sub_types.value}/{type}"

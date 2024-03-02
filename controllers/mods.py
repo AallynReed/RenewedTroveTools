@@ -23,6 +23,7 @@ from flet import (
     Switch,
     MainAxisAlignment,
     Divider,
+    VerticalDivider,
     Stack,
     Card,
     ProgressRing,
@@ -52,6 +53,7 @@ from models.interface import PagedDataTable
 from models.interface import ScrollingFrame
 from models.trove.mod import TroveModList, TMod, ZMod
 from models.trovesaurus.mods import ModFileType
+from models.interface.inputs import NumberField
 
 # from utils.trove.directory import Cfg
 from utils.trove.registry import get_trove_locations
@@ -68,9 +70,8 @@ class ModsController(Controller):
         if not hasattr(self, "main"):
             self.api = KiwiAPI()
             self.setup_memory()
-            self.main = ResponsiveRow(alignment=MainAxisAlignment.START, expand=1)
-            self.loading = Column(controls=[ProgressRing(), Text("Loading...")])
-            self.mod_submenus = Tabs(visible=False, expand=1)
+            self.main = Column(expand=True)
+            self.mod_submenus = Tabs()
             self.mod_submenus.on_change = self.tab_loader
             self.settings_tab = Tab(
                 tab_content=Row(
@@ -95,15 +96,15 @@ class ModsController(Controller):
                     ]
                 )
             )
-            self.settings = Column()
-            self.my_mods = Column()
-            self.trovesaurus = Column(expand=1)
+            self.settings = Column(expand=True)
+            self.my_mods = Column(expand=True)
+            self.trovesaurus = Column(expand=True)
             self.mod_submenus.tabs.append(self.settings_tab)
             self.mod_submenus.tabs.append(self.my_mods_tab)
             self.mod_submenus.tabs.append(self.trovesaurus_tab)
-            self.settings_tab.content = self.settings
-            self.my_mods_tab.content = self.my_mods
-            self.trovesaurus_tab.content = self.trovesaurus
+            # self.settings_tab.content = self.settings
+            # self.my_mods_tab.content = self.my_mods
+            # self.trovesaurus_tab.content = self.trovesaurus
             my_mods_index = self.mod_submenus.tabs.index(self.my_mods_tab)
             trovesaurus_index = self.mod_submenus.tabs.index(self.trovesaurus_tab)
             self.my_mods_tab.tab_content.controls.append(
@@ -130,16 +131,13 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 1
-            self.main.controls.append(self.loading)
-            self.main.controls.append(self.mod_submenus)
+            self.mod_submenus.selected_index = 2
+            # self.main.controls.append(self.mod_submenus)
             asyncio.create_task(self.post_setup())
 
     def setup_events(self): ...
 
     async def post_setup(self):
-        self.loading.visible = False
-        self.mod_submenus.visible = True
         await self.tab_loader(boot=True)
 
     def setup_memory(self):
@@ -153,7 +151,7 @@ class ModsController(Controller):
             },
             "trovesaurus": {
                 "page": 0,
-                "page_size": 8,
+                "page_size": self.page.preferences.mod_manager.page_size,
                 "installation_path": None,
                 "selected_tile": None,
                 "selected_file": None,
@@ -207,9 +205,9 @@ class ModsController(Controller):
                 index = event.control.selected_index
             else:
                 index = self.mod_submenus.selected_index
-        # self.main.controls.clear()
-        # self.main.controls.append(self.mod_submenus)
-        # self.main.controls.append(self.tabs[index])
+        self.main.controls.clear()
+        self.main.controls.append(self.mod_submenus)
+        self.main.controls.append(self.tabs[index])
         await self.tab_map[index](boot=boot or bool(event))
 
     async def reload_tab(self, event):
@@ -374,7 +372,7 @@ class ModsController(Controller):
                         ]
                     )
                     for name, mod_list_path in self.mod_folders
-                ]
+                ],
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
@@ -542,7 +540,7 @@ class ModsController(Controller):
                 )
             )
         self.my_mods.controls.append(
-            Column(controls=[my_mods_table], scroll=ScrollMode.ADAPTIVE)
+            Column(controls=[my_mods_table], expand=True, scroll=ScrollMode.ADAPTIVE)
         )
         await self.main.update_async()
 
@@ -597,10 +595,59 @@ class ModsController(Controller):
                 ],
             )
         )
-        self.mods_list = Column(scroll=ScrollMode.ADAPTIVE)
+        self.trovesaurus_search_bar = TextField(
+            value=self.memory["trovesaurus"]["search"]["query"],
+            hint_text="Search",
+            on_submit=self.trovesaurus_search_bar_submit,
+            height=48,
+            content_padding=padding.symmetric(0, 20),
+        )
+        mod_types = await self.api.get_mod_types()
+        mod_sub_types = await self.api.get_mod_sub_types(
+            str(self.memory["trovesaurus"]["search"]["type"])
+        )
+        self.trovesaurus.controls.append(
+            # Search bar
+            Row(
+                controls=[
+                    self.trovesaurus_search_bar,
+                    IconButton(
+                        icon=icons.SEARCH,
+                        on_click=self.trovesaurus_search_bar_submit,
+                    ),
+                    VerticalDivider(visible=True),
+                    Text("Type:"),
+                    Dropdown(
+                        value=self.memory["trovesaurus"]["search"]["type"],
+                        options=[dropdown.Option(key=None, text="All")]
+                        + [dropdown.Option(key=t, text=t) for t in mod_types],
+                        width=200,
+                        height=48,
+                        content_padding=padding.symmetric(0),
+                        on_change=self.set_trovesaurus_search_type,
+                    ),
+                    VerticalDivider(visible=True),
+                    Text("Subtype:"),
+                    Dropdown(
+                        value=self.memory["trovesaurus"]["search"]["sub_type"],
+                        options=[dropdown.Option(key=None, text="All")]
+                        + [dropdown.Option(key=t, text=t) for t in mod_sub_types],
+                        on_change=self.set_trovesaurus_search_sub_type,
+                        width=200,
+                        height=48,
+                        content_padding=padding.symmetric(0),
+                        disabled=not bool(mod_sub_types),
+                    ),
+                ]
+            )
+        )
+        self.mods_list = Column(scroll=ScrollMode.ADAPTIVE, expand=True)
         self.cached_trovesaurus_mods = await self.api.get_mods_list_chunk(
             self.memory["trovesaurus"]["page_size"],
             self.memory["trovesaurus"]["page"],
+            self.memory["trovesaurus"]["search"]["query"],
+            self.memory["trovesaurus"]["search"]["type"],
+            self.memory["trovesaurus"]["search"]["sub_type"],
         )
         installation_path = self.memory["trovesaurus"]["installation_path"]
         for i, mod in enumerate(self.cached_trovesaurus_mods):
@@ -769,7 +816,10 @@ class ModsController(Controller):
             )
         self.trovesaurus.controls.append(self.mods_list)
         page_count = await self.api.get_mods_page_count(
-            self.memory["trovesaurus"]["page_size"]
+            self.memory["trovesaurus"]["page_size"],
+            self.memory["trovesaurus"]["search"]["query"],
+            self.memory["trovesaurus"]["search"]["type"],
+            self.memory["trovesaurus"]["search"]["sub_type"],
         )
         self.trovesaurus.controls.append(
             Row(
@@ -777,6 +827,7 @@ class ModsController(Controller):
                     IconButton(
                         icon=icons.ARROW_LEFT,
                         on_click=self.previous_trovesaurus_page,
+                        disabled=page_count <= 1,
                     ),
                     Row(
                         controls=[
@@ -786,6 +837,8 @@ class ModsController(Controller):
                                 on_submit=self.set_trovesaurus_page,
                                 width=80,
                                 height=48,
+                                content_padding=padding.symmetric(0, 30),
+                                disabled=page_count <= 1,
                             ),
                             Text(f"of {page_count}"),
                         ]
@@ -793,6 +846,17 @@ class ModsController(Controller):
                     IconButton(
                         icon=icons.ARROW_RIGHT,
                         on_click=self.next_trovesaurus_page,
+                        disabled=page_count <= 1,
+                    ),
+                    VerticalDivider(visible=True),
+                    Text("Mods per page:"),
+                    NumberField(
+                        value=self.memory["trovesaurus"]["page_size"],
+                        hint_text="Mods per page",
+                        on_submit=self.set_trovesaurus_page_size,
+                        width=80,
+                        height=48,
+                        content_padding=padding.symmetric(0, 30),
                     ),
                 ],
             )
@@ -803,6 +867,33 @@ class ModsController(Controller):
             self.page.snack_bar.open = True
         await self.main.update_async()
         await self.page.snack_bar.update_async()
+
+    async def set_trovesaurus_search_type(self, event):
+        selected_type = event.control.value
+        if selected_type is not None:
+            sub_types = await self.api.get_mod_sub_types(selected_type)
+            if not sub_types:
+                self.memory["trovesaurus"]["search"]["sub_type"] = None
+        else:
+            self.memory["trovesaurus"]["search"]["sub_type"] = None
+        self.memory["trovesaurus"]["search"]["type"] = selected_type
+        await self.load_trovesaurus_mods(boot=True)
+
+    async def set_trovesaurus_search_sub_type(self, event):
+        self.memory["trovesaurus"]["search"]["sub_type"] = event.control.value
+        await self.load_trovesaurus_mods(boot=True)
+
+    async def trovesaurus_search_bar_submit(self, event):
+        query = self.trovesaurus_search_bar.value
+        self.memory["trovesaurus"]["search"]["query"] = query or None
+        self.memory["trovesaurus"]["page"] = 0
+        await self.load_trovesaurus_mods(boot=True)
+
+    async def set_trovesaurus_page_size(self, event):
+        self.page.preferences.mod_manager.page_size = int(event.control.value)
+        self.memory["trovesaurus"]["page_size"] = int(event.control.value)
+        self.page.preferences.save()
+        await self.load_trovesaurus_mods(boot=True)
 
     async def previous_trovesaurus_page(self, event):
         self.memory["trovesaurus"]["page"] -= 1
