@@ -131,13 +131,14 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 2
-            # self.main.controls.append(self.mod_submenus)
+            self.mod_submenus.selected_index = 1
             asyncio.create_task(self.post_setup())
 
     def setup_events(self): ...
 
     async def post_setup(self):
+        self.main.controls.append(self.mod_submenus)
+        await self.main.update_async()
         await self.tab_loader(boot=True)
 
     def setup_memory(self):
