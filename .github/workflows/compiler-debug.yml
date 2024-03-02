@@ -1,0 +1,44 @@
+name: Compile code
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    name: Compile Code
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.8'
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Compile code into MSI package
+        run: python compile-debug.py bdist_msi
+
+      - name: Move Files
+        run: |
+          $env:RELEASE_NAME="${{ github.event.release.name }}"
+          $env:NEW_FILE_NAME="RenewedTroveTools-${{ github.event.release.name }}-win64-debug.msi"
+          ls
+          ls dist
+          Move-Item "dist/RenewedTroveTools-${{ github.event.release.name }}-win64.msi" ".\RenewedTroveTools-${{ github.event.release.name }}-win64-debug.msi"
+          ls
+          ls dist
+
+      - name: Upload file to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: "RenewedTroveTools-${{ github.event.release.name }}-win64-debug.msi"
+          asset_name: "RenewedTroveTools-${{ github.event.release.name }}-win64-debug.msi"
+          asset_content_type: application/x-msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMPILER }}

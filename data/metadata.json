@@ -4,9 +4,9 @@
     "name": "Renewed Trove Tools",
     "tech_name": "RenewedTroveTools",
     "short_name": "RTT",
-    "version": "2024.3.3",
+    "version": "2024.3.4",
     "description": "",
     "icon": "assets/favicon.ico",
-    "copyright": "2024-present",
+    "copyright": "2023-present",
     "app_id": "{5d4bc772-0426-4791-9198-90f78292ba8d}"
 }
