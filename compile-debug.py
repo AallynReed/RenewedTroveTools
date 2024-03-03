@@ -5,27 +5,39 @@ from cx_Freeze import setup, Executable
 
 from models.metadata import Metadata
 
-flet_exe = Path(
-    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\flet\flet.exe"
-)
-
-subprocess.run(
-    r'.\resedit.exe --update-resource-ico "{0}" IDI_ICON1 "assets/favicon.ico"'.format(
-        flet_exe
-    )
-)
-
-flet_exe = Path(
-    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\fletd.exe"
-)
-
-subprocess.run(
-    r'.\resedit.exe --update-resource-ico "{0}" IDI_ICON1 "assets/favicon.ico"'.format(
-        flet_exe
-    )
-)
-
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
+
+executables = [
+    r"venv\Lib\site-packages\flet\bin\flet\flet.exe",
+    r"venv\Lib\site-packages\flet\bin\fletd.exe",
+]
+
+editor = r".\resedit.exe"
+
+instructions = [
+    ("--set-version-string", "CompanyName", "Sly"),
+    ("--set-version-string", "FileDescription", metadata.name),
+    ("--set-version-string", "ProductName", metadata.name),
+    ("--set-version-string", "OriginalFilename", f"{metadata.tech_name}-{metadata.version}.exe"),
+    ("--set-version-string", "LegalCopyright", metadata.copyright),
+    ("--set-version-string", "CompanyName", "Sly"),
+    ("--set-version-string", "InternalName", metadata.tech_name),
+    ("--set-file-version", metadata.version, ""),
+    ("--set-product-version", metadata.version, ""),
+    ("--set-icon", "assets/x256.ico", ""),
+]
+
+for executable in executables:
+    for option, key, value in instructions:
+        command = [
+            editor,
+            executable,
+            option,
+            f"\"{key}\"",
+        ]
+        if value:
+            command.append(f"\"{value}\"")
+        subprocess.run(" ".join(command))
 
 build_exe_options = {
     "excludes": [
