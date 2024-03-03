@@ -40,8 +40,7 @@ from flet import (
 from models.interface import Controller
 from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
-from utils.functions import throttle, long_throttle
-from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
+from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
 from utils.trove.registry import get_trove_locations
 
 
@@ -372,15 +371,23 @@ class ModsController(Controller):
                                     *(
                                         [
                                             Image(
-                                                src=mod.trovesaurus_data.image_url
-                                                or f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                                                src=self.api.get_resized_image_url(
+                                                    (
+                                                        mod.trovesaurus_data.image_thumbnail_url or
+                                                        f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                                                    ),
+                                                    ImageSize.MEDIUM
+                                                ),
                                                 height=128,
                                             )
                                         ]
                                         if mod.trovesaurus_data
                                         else [
                                             Image(
-                                                src=f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                                                src=self.api.get_resized_image_url(
+                                                    f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                                                    ImageSize.MEDIUM
+                                                ),
                                                 height=128,
                                             )
                                         ]
@@ -403,7 +410,10 @@ class ModsController(Controller):
                                                                     content=Row(
                                                                         controls=[
                                                                             Image(
-                                                                                src=author.Avatar,
+                                                                                src=self.api.get_resized_image_url(
+                                                                                    author.avatar_url,
+                                                                                    ImageSize.MINI
+                                                                                ),
                                                                                 width=24,
                                                                             ),
                                                                             Text(
@@ -645,7 +655,7 @@ class ModsController(Controller):
                 ExpansionTile(
                     leading=Image(
                         src=(
-                            mod.image_url
+                            self.api.get_resized_image_url(mod.image_thumbnail_url, ImageSize.SMALL)
                             or "https://trovesaurus.com/images/logos/Sage_64.png?1"
                         ),
                         width=64,
@@ -679,7 +689,10 @@ class ModsController(Controller):
                                                 content=Row(
                                                     controls=[
                                                         Image(
-                                                            src=author.Avatar,
+                                                            src=self.api.get_resized_image_url(
+                                                                author.avatar_url,
+                                                                ImageSize.MINI
+                                                            ),
                                                             width=24,
                                                         ),
                                                         Tooltip(

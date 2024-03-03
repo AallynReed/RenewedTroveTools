@@ -6,7 +6,6 @@ from datetime import UTC
 from datetime import datetime
 from datetime import timedelta
 from pathlib import Path
-from utils.lag_monitor import StackMonitor
 
 import requests
 from flet import (
@@ -29,6 +28,7 @@ from flet import (
 from models import Metadata, Preferences
 from models.interface import CustomAppBar
 from utils import tasks
+from utils.lag_monitor import StackMonitor
 from utils.localization import LocalizationManager
 from utils.logger import Logger
 from utils.routing import Routing
@@ -183,7 +183,7 @@ class App:
                             ),
                             data="button",
                             on_hover=self.button_hover,
-                            on_click=self.execute_login,
+                            on_click=self.execute_login_discord,
                         ),
                         Container(
                             Row(
@@ -195,8 +195,7 @@ class App:
                             ),
                             data="button",
                             on_hover=self.button_hover,
-                            on_click=self.execute_login,
-                            visible=False,
+                            on_click=self.execute_login_trovesaurus,
                         ),
                     ],
                     horizontal_alignment="center",
@@ -217,18 +216,23 @@ class App:
         await e.control.update_async()
 
     async def execute_login(self, e):
-        if self.token_input.value:
-            self.page.user_data = await self.login(self.token_input.value)
+        if self.token_input.value.strip():
+            self.page.user_data = await self.login(self.token_input.value.strip())
             if self.page.user_data is None:
                 self.token_input.helper_text = "Invalid pass key"
                 return await self.token_input.update_async()
-        else:
-            await self.page.launch_url_async(
-                "https://kiwiapi.slynx.xyz/v1/user/discord/login"
-            )
-            return
         self.page.controls.clear()
         await self.post_login()
+
+    async def execute_login_discord(self, e):
+        await self.page.launch_url_async(
+            "https://kiwiapi.slynx.xyz/v1/user/discord/login"
+        )
+
+    async def execute_login_trovesaurus(self, e):
+        await self.page.launch_url_async(
+            "https://trovesaurus.com/profile"
+        )
 
     async def execute_logout(self, e):
         await self.page.client_storage.remove_async("rnt-token")

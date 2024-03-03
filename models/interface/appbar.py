@@ -46,6 +46,9 @@ async def check_update(current_version):
             except IndexError:
                 return None
             if current_version != version.get("name"):
+                for asset in version.get("assets"):
+                    if "debug" not in asset.get("name"):
+                        return asset.get("browser_download_url")
                 return version.get("html_url")
     return None
 

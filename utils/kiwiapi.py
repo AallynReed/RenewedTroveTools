@@ -65,6 +65,12 @@ class ModAuthor(BaseModel):
     Avatar: str
     Role: ModAuthorRole
 
+    @property
+    def avatar_url(self):
+        if self.Avatar.startswith("//"):
+            return f"https:{self.Avatar}"
+        return self.Avatar.replace("http:", "https:")
+
 
 class Mod(BaseModel):
     id: int
@@ -102,12 +108,27 @@ class Mod(BaseModel):
     def url(self):
         return f"https://trovesaurus.com/mod={self.id}"
 
+    @property
+    def image_thumbnail_url(self):
+        return self.image_url.replace("_l.", "_t.")
+
+
+class ImageSize(Enum):
+    MINI = 24
+    TINY = 32
+    SMALL = 64
+    MEDIUM = 128
+    LARGE = 256
+    HUGE = 512
+    MAX = 1024
+
 
 class ModsEndpoint(Enum):
     base: str = "/mods"
     list: str = "/mods/search"
     types: str = "/mods/types"
     sub_types: str = "/mods/sub_types"
+    image_resize: str = "/image/resize"
 
 
 class KiwiAPI:
@@ -178,3 +199,6 @@ class KiwiAPI:
                 f"{self.api_url}{ModsEndpoint.sub_types.value}/{type}"
             ) as response:
                 return await response.json()
+
+    def get_resized_image_url(self, url: str, size: ImageSize):
+        return self.api_url + ModsEndpoint.image_resize.value + f"?url={url}&size={size.name}"
