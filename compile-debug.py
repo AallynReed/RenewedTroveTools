@@ -8,8 +8,8 @@ from models.metadata import Metadata
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
 
 executables = [
-    r"venv\Lib\site-packages\flet\bin\flet\flet.exe",
-    r"venv\Lib\site-packages\flet\bin\fletd.exe",
+    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\flet\flet.exe",
+    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\fletd.exe",
 ]
 
 editor = r".\resedit.exe"
