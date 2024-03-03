@@ -111,7 +111,7 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 2
+            self.mod_submenus.selected_index = 1
             asyncio.create_task(self.post_setup())
 
     def setup_events(self): ...
