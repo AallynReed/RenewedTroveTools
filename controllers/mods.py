@@ -373,7 +373,7 @@ class ModsController(Controller):
                                             Image(
                                                 src=self.api.get_resized_image_url(
                                                     (
-                                                        mod.trovesaurus_data.image_thumbnail_url or
+                                                        mod.trovesaurus_data.image_url or
                                                         f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
                                                     ),
                                                     ImageSize.MEDIUM
