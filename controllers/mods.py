@@ -361,6 +361,7 @@ class ModsController(Controller):
         installation_path = self.memory["my_mods"]["installation_path"]
         mod_list = TroveModList(path=installation_path)
         await mod_list.update_trovesaurus_data()
+        mod_list.calculate_conflicts()
         if not mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.unlock_ui()
@@ -465,6 +466,9 @@ class ModsController(Controller):
                                                     Switch(
                                                         data=mod,
                                                         value=mod.enabled,
+                                                        disabled=(
+                                                            not mod.enabled and mod.has_conflicts
+                                                        ),
                                                         on_change=self.toggle_mod,
                                                     ),
                                                 ]
@@ -529,6 +533,44 @@ class ModsController(Controller):
                                         left=5,
                                     )
                                 ]
+                            ),
+                            *(
+                                [
+                                    Stack(
+                                        controls=[
+                                            Tooltip(
+                                                message="\n".join(
+                                                    [conflict.name for conflict in mod.conflicts]
+                                                ),
+                                                content=IconButton(
+                                                    icons.WARNING,
+                                                ),
+                                            )
+                                        ],
+                                        top=5,
+                                        right=5,
+                                    )
+                                ]
+                                if mod.has_conflicts
+                                else []
+                            ),
+                            *(
+                                [
+                                    Stack(
+                                        controls=[
+                                            Tooltip(
+                                                message="Update available",
+                                                content=IconButton(
+                                                    icons.DOWNLOAD,
+                                                ),
+                                            )
+                                        ],
+                                        top=5,
+                                        right=5+48,
+                                    )
+                                ]
+                                if mod.has_update
+                                else []
                             ),
                         ]
                     ),

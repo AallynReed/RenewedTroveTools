@@ -180,6 +180,7 @@ class TroveMod:
                         break
                 if mod in self.file_conflicts:
                     break
+        self.file_conflicts = list(set(self.file_conflicts))
 
     @property
     def conflicts(self):
@@ -430,6 +431,15 @@ class TroveMod:
     def trovesaurus_data(self, value: Mod):
         self._trovesaurus_data = value
 
+    @property
+    def has_update(self):
+        if self.trovesaurus_data is not None:
+            files = [f for f in self.trovesaurus_data.file_objs if not f.is_config]
+            files.sort(key=lambda f: -f.file_id)
+            if files:
+                return files[0].hash != self.trovesaurus_data.installed_file.hash
+        return False
+
 
 class TMod(TroveMod):
     def __str__(self):
@@ -567,6 +577,10 @@ class TroveModList:
                                     mod.trovesaurus_data.installed_file = file
                                     break
                             break
+
+    def calculate_conflicts(self):
+        for mod in self:
+            mod.check_conflicts(self.enabled)
 
     @property
     def all_hashes(self):
