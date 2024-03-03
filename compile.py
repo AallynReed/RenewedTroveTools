@@ -15,6 +15,16 @@ subprocess.run(
     )
 )
 
+flet_exe = Path(
+    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\fletd.exe"
+)
+
+subprocess.run(
+    r'.\resedit.exe --update-resource-ico "{0}" IDI_ICON1 "assets/favicon.ico"'.format(
+        flet_exe
+    )
+)
+
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
 
 build_exe_options = {

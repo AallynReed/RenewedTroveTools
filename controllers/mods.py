@@ -655,7 +655,7 @@ class ModsController(Controller):
                 ExpansionTile(
                     leading=Image(
                         src=(
-                            self.api.get_resized_image_url(mod.image_thumbnail_url, ImageSize.SMALL)
+                            self.api.get_resized_image_url(mod.image_url, ImageSize.SMALL)
                             or "https://trovesaurus.com/images/logos/Sage_64.png?1"
                         ),
                         width=64,
