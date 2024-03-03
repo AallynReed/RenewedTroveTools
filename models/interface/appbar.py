@@ -155,22 +155,26 @@ class CustomAppBar(AppBar):
                         ),
                     ],
                 ),
-                *(
-                    [
-                        Row(
-                            controls=[
-                                Image(
-                                    self.page.user_data["avatar_url"],
-                                    error_content=Icon(PERSON),
-                                    width=40,
-                                    border_radius=50,
-                                ),
-                                Text(self.page.user_data["username"]),
-                            ]
-                        )
-                    ]
-                    if self.page.user_data
-                    else []
+                PopupMenuButton(
+                    data="user-buttons",
+                    content=Row(
+                                controls=[
+                                    Image(
+                                        self.page.user_data["avatar_url"],
+                                        error_content=Icon(PERSON),
+                                        width=40,
+                                        border_radius=50,
+                                    ),
+                                    Text(self.page.user_data["username"]),
+                                ]
+                            ),
+                    items=[
+                        PopupMenuItem(
+                            data="logout",
+                            text="Logout",
+                            on_click=self.page.RTT.execute_logout,
+                        ),
+                    ],
                 ),
                 PopupMenuButton(
                     data="other-buttons",

@@ -181,96 +181,12 @@ class HomeController(Controller):
                 for k, v in self.weekly_data.items()
             ],
         )
-        cranny = Cranny()
-        self.cranny_widgets = ResponsiveRow(
-            controls=[
-                Widget(
-                    controls=[
-                        Tooltip(
-                            message=(
-                                "\n".join(
-                                    [
-                                        "From "
-                                        + start.strftime("%B %d, %Y")
-                                        + " to "
-                                        + end.strftime("%B %d, %Y")
-                                        for start, end in item.weeks
-                                    ]
-                                )
-                            ),
-                            content=Container(
-                                data=item,
-                                content=Column(
-                                    controls=[
-                                        Text(
-                                            item.name
-                                            + (" Ally" if item.ally else " Mount"),
-                                            size=18,
-                                            text_align="center",
-                                        ),
-                                        Row(
-                                            controls=[
-                                                *(
-                                                    [
-                                                        Text("Price"),
-                                                        VerticalDivider(),
-                                                        Image(
-                                                            "assets/images/resources/{}.png".format(
-                                                                "currency_points"
-                                                                if item.currency
-                                                                == "cubits"
-                                                                else "currency_credits"
-                                                            ),
-                                                            width=24,
-                                                        ),
-                                                        Text(item.price),
-                                                    ]
-                                                    if item.currency is not None
-                                                    else [Text("Reward")]
-                                                )
-                                            ]
-                                        ),
-                                    ]
-                                ),
-                                border_radius=5,
-                                border=Border(
-                                    BorderSide(width=1, color="#cccccc"),
-                                    BorderSide(width=1, color="#cccccc"),
-                                    BorderSide(width=1, color="#cccccc"),
-                                    BorderSide(width=1, color="#cccccc"),
-                                ),
-                            ),
-                            border_radius=10,
-                            bgcolor="#1E1E28",
-                            text_style=TextStyle(color="#cccccc"),
-                            border=Border(
-                                BorderSide(width=2, color="#cccccc"),
-                                BorderSide(width=2, color="#cccccc"),
-                                BorderSide(width=2, color="#cccccc"),
-                                BorderSide(width=2, color="#cccccc"),
-                            ),
-                            prefer_below=False,
-                            wait_duration=250,
-                        )
-                    ],
-                    expand=True,
-                    col={"xxl": 4},
-                )
-                for item in cranny.get_items()
-            ]
-        )
         self.widgets.controls = [
             Column(controls=[self.daily_widgets, self.weekly_widgets], col={"xxl": 12}),
-            Column(
-                controls=[Text("Cranny Rotation", size=20), self.cranny_widgets],
-                spacing=0,
-                col={"xxl": 4},
-            ),
         ]
         tasks = [
             self.update_daily,
             self.update_weekly,
-            self.update_cranny,
         ]
         for task in tasks:
             if not task.is_running():
@@ -332,34 +248,6 @@ class HomeController(Controller):
                         stack.controls[0].color = "black"
                         stack.controls[0].color_blend_mode = BlendMode.SATURATION
                 await self.weekly_widgets.update_async()
-            except AssertionError:
-                await asyncio.sleep(1)
-                continue
-            except Exception as e:
-                print(e)
-            await asyncio.sleep(3)
-            break
-
-    @tasks.loop(seconds=60)
-    async def update_cranny(self):
-        while True:
-            try:
-                now = datetime.utcnow().astimezone(UTC) - timedelta(hours=11)
-                start, end, _, _ = Cranny().current_cranny_timeline()
-                for control in self.cranny_widgets.controls:
-                    card = control.content.controls[0].content
-                    card.border = None
-                    item = card.data
-                    for start, end in item.weeks:
-                        if start < now < end:
-                            card.border = Border(
-                                BorderSide(width=1, color="#ff0000"),
-                                BorderSide(width=1, color="#ff0000"),
-                                BorderSide(width=1, color="#ff0000"),
-                                BorderSide(width=1, color="#ff0000"),
-                            )
-                            break
-                await self.cranny_widgets.update_async()
             except AssertionError:
                 await asyncio.sleep(1)
                 continue

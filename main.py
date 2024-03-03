@@ -6,10 +6,11 @@ from datetime import UTC
 from datetime import datetime
 from datetime import timedelta
 from pathlib import Path
+from utils.lag_monitor import StackMonitor
 
 import requests
 from flet import (
-    app,
+    app_async,
     WEB_BROWSER,
     FLET_APP,
     Theme,
@@ -22,6 +23,7 @@ from flet import (
     TextField,
     TextStyle,
     alignment,
+    Image
 )
 
 from models import Metadata, Preferences
@@ -38,15 +40,22 @@ class App:
         self.web = web
 
     def run(self, port: int = 0):
-        app(
-            target=self.start,
-            assets_dir="assets",
-            view=WEB_BROWSER if self.web else FLET_APP,
-            port=port,
+        loop = asyncio.get_event_loop()
+        stack_monitor = StackMonitor(loop=loop)
+        stack_monitor.start()
+        loop.run_until_complete(
+            app_async(
+                target=self.start,
+                assets_dir="assets",
+                view=WEB_BROWSER if self.web else FLET_APP,
+                port=port,
+            )
         )
+
 
     async def start(self, page):
         self.page = page
+        self.page.RTT = self
         if page.web:
             await self.start_web(page)
         else:
@@ -57,6 +66,7 @@ class App:
         self.setup_logging()
         self.setup_localization()
         await self.setup_page()
+        await self.gather_views()
         await self.process_login()
 
     async def start_web(self, page):
@@ -64,6 +74,7 @@ class App:
         self.setup_logging(True)
         self.setup_localization()
         await self.setup_page()
+        await self.gather_views()
         await self.post_login()
 
     async def load_configurations(self):
@@ -137,7 +148,7 @@ class App:
         if token is None:
             return None
         response = requests.get(
-            "https://kiwiapi.slynx.xyz/v1/user/discord/get?token=" + token
+            "https://kiwiapi.slynx.xyz/v1/user/discord/get?pass_key=" + token
         )
         if response.status_code == 200:
             await self.page.client_storage.set_async("rnt-token", token)
@@ -145,16 +156,18 @@ class App:
         return None
 
     async def display_login_screen(self):
+        self.page.appbar = None
+        self.page.controls.clear()
         self.token_input = TextField(
             data="input",
-            label="Insert token here",
+            label="Insert pass key here",
             text_align="center",
             password=True,
             can_reveal_password=True,
             helper_style=TextStyle(color="red"),
             on_change=self.execute_login,
         )
-        await self.page.add_async(
+        self.page.controls.append(
             Container(
                 Column(
                     controls=[
@@ -164,13 +177,26 @@ class App:
                             Row(
                                 controls=[
                                     Icon("discord"),
-                                    Text(value="Login with Discord"),
+                                    Text(value="Get pass key with Discord"),
                                 ],
                                 alignment="SPACE_BETWEEN",
                             ),
                             data="button",
                             on_hover=self.button_hover,
                             on_click=self.execute_login,
+                        ),
+                        Container(
+                            Row(
+                                controls=[
+                                    Image(src="https://trovesaurus.com/images/favicon.png", width=24),
+                                    Text(value="Get pass key with Trovesaurus"),
+                                ],
+                                alignment="SPACE_BETWEEN",
+                            ),
+                            data="button",
+                            on_hover=self.button_hover,
+                            on_click=self.execute_login,
+                            visible=False,
                         ),
                     ],
                     horizontal_alignment="center",
@@ -181,6 +207,7 @@ class App:
                 margin=self.page.height * 0.40,
             )
         )
+        await self.page.update_async()
 
     async def button_hover(self, e):
         if e.data == "true":
@@ -193,18 +220,23 @@ class App:
         if self.token_input.value:
             self.page.user_data = await self.login(self.token_input.value)
             if self.page.user_data is None:
-                self.token_input.helper_text = "Invalid token"
+                self.token_input.helper_text = "Invalid pass key"
                 return await self.token_input.update_async()
         else:
             await self.page.launch_url_async(
                 "https://kiwiapi.slynx.xyz/v1/user/discord/login"
             )
             return
+        self.page.controls.clear()
         await self.post_login()
+
+    async def execute_logout(self, e):
+        await self.page.client_storage.remove_async("rnt-token")
+        await self.stop_tasks()
+        await self.process_login()
 
     async def post_login(self):
         await self.setup_appbar()
-        await self.gather_views()
         await self.start_tasks()
         await self.page.go_async("/mods_manager")
 
@@ -227,6 +259,10 @@ class App:
         except RuntimeError:
             ...
 
+    async def stop_tasks(self):
+        if self.update_clock.is_running():
+            self.update_clock.cancel()
+
     @tasks.loop(seconds=60)
     async def update_clock(self):
         self.page.clock.value = (datetime.now(UTC) - timedelta(hours=11)).strftime(
@@ -241,7 +277,6 @@ class App:
     async def sync_clock(self):
         now = datetime.now(UTC)
         await asyncio.sleep(60 - now.second)
-
 
 if __name__ == "__main__":
     APP = App()

@@ -45,8 +45,7 @@ from utils.kiwiapi import KiwiAPI, ModAuthorRole, ModAuthorRoleColors
 from utils.trove.registry import get_trove_locations
 
 
-# TODO: add search bar to trovesaurus mods
-# TODO: add sorter/filter to trovesaurus mods
+# TODO: add sorter to trovesaurus mods
 # TODO: Add mod profiles functionality
 
 
@@ -87,9 +86,6 @@ class ModsController(Controller):
             self.mod_submenus.tabs.append(self.settings_tab)
             self.mod_submenus.tabs.append(self.my_mods_tab)
             self.mod_submenus.tabs.append(self.trovesaurus_tab)
-            # self.settings_tab.content = self.settings
-            # self.my_mods_tab.content = self.my_mods
-            # self.trovesaurus_tab.content = self.trovesaurus
             my_mods_index = self.mod_submenus.tabs.index(self.my_mods_tab)
             trovesaurus_index = self.mod_submenus.tabs.index(self.trovesaurus_tab)
             self.my_mods_tab.tab_content.controls.append(
@@ -116,14 +112,14 @@ class ModsController(Controller):
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
             }
-            self.mod_submenus.selected_index = 1
+            self.mod_submenus.selected_index = 2
             asyncio.create_task(self.post_setup())
 
     def setup_events(self): ...
 
     async def post_setup(self):
         self.main.controls.append(self.mod_submenus)
-        await self.main.update_async()
+        await self.unlock_ui()
         await self.tab_loader(boot=True)
 
     def setup_memory(self):
@@ -173,19 +169,9 @@ class ModsController(Controller):
                 if trovesarus["installation_path"] not in self.mod_folders:
                     trovesarus["installation_path"] = self.mod_folders[0][1]
 
-    async def refresh_mod_lists(self):
-        self.mod_folder_lists = {
-            folder: (name, TroveModList(path=folder))
-            for name, folder in self.mod_folders
-        }
-        for name, mod_list in self.mod_folder_lists.values():
-            await mod_list.update_trovesaurus_data()
-
-    @throttle
     async def tab_loader(self, event=None, index=None, boot=False):
         if boot or event:
             self.check_memory()
-            await self.refresh_mod_lists()
         if index is None:
             if event is not None:
                 index = event.control.selected_index
@@ -199,9 +185,18 @@ class ModsController(Controller):
     async def reload_tab(self, event):
         await self.tab_loader(index=event.control.data)
 
+    async def lock_ui(self):
+        self.main.disabled = True
+        await self.main.update_async()
+
+    async def unlock_ui(self):
+        self.main.disabled = False
+        await self.main.update_async()
+
     # Settings Tab
 
     async def load_settings(self, boot=False):
+        await self.lock_ui()
         self.settings.controls.clear()
         custom_directories = self.page.preferences.mod_manager.custom_directories
         picked_dir = self.memory["settings"]["picked_custom_dir"]
@@ -287,7 +282,7 @@ class ModsController(Controller):
                 ]
             )
         )
-        await self.main.update_async()
+        await self.unlock_ui()
 
     async def settings_pick_custom_dir(self, event):
         await self.settings_custom_dir_pick.get_directory_path_async()
@@ -296,7 +291,6 @@ class ModsController(Controller):
         self.memory["settings"]["picked_custom_dir"] = Path(event.path)
         await self.load_settings()
 
-    @long_throttle
     async def settings_set_custom_dir_name(self, event):
         self.memory["settings"]["picked_custom_dir_name"] = event.control.value or None
         await self.load_settings()
@@ -330,13 +324,12 @@ class ModsController(Controller):
     # My Mods Tab
 
     async def load_my_mods(self, boot=False):
+        await self.lock_ui()
         self.my_mods.controls.clear()
         if not self.mod_folders:
             self.my_mods.controls.append(Text("No Trove installation found"))
-            await self.main.update_async()
+            await self.unlock_ui()
             return
-        if not boot:
-            await self.refresh_mod_lists()
         self.my_mods.controls.append(
             Row(
                 controls=[
@@ -362,10 +355,11 @@ class ModsController(Controller):
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
-        mod_list = self.mod_folder_lists[installation_path][1]
+        mod_list = TroveModList(path=installation_path)
+        await mod_list.update_trovesaurus_data()
         if not mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
-            await self.main.update_async()
+            await self.unlock_ui()
             return
         my_mods_table = GridView(runs_count=5, adaptive=True)
         for mod in mod_list.mods:
@@ -528,7 +522,7 @@ class ModsController(Controller):
         self.my_mods.controls.append(
             Column(controls=[my_mods_table], expand=True, scroll=ScrollMode.ADAPTIVE)
         )
-        await self.main.update_async()
+        await self.unlock_ui()
 
     async def toggle_mod(self, event):
         mod = event.control.data
@@ -551,10 +545,11 @@ class ModsController(Controller):
     # Trovesaurus Tab
 
     async def load_trovesaurus_mods(self, boot=False):
+        await self.lock_ui()
         self.trovesaurus.controls.clear()
         if not self.mod_folders:
             self.trovesaurus.controls.append(Text("No Trove installation found"))
-            await self.main.update_async()
+            await self.unlock_ui()
             return
         self.memory["trovesaurus"]["selected_file"] = None
         self.trovesaurus.controls.append(
@@ -609,11 +604,11 @@ class ModsController(Controller):
                         + [dropdown.Option(key=t, text=t) for t in mod_types],
                         width=200,
                         height=48,
-                        content_padding=padding.symmetric(0),
+                        content_padding=padding.symmetric(4),
                         on_change=self.set_trovesaurus_search_type,
                     ),
                     VerticalDivider(visible=True),
-                    Text("Subtype:"),
+                    Text("Class:"),
                     Dropdown(
                         value=self.memory["trovesaurus"]["search"]["sub_type"],
                         options=[dropdown.Option(key=None, text="All")]
@@ -621,7 +616,7 @@ class ModsController(Controller):
                         on_change=self.set_trovesaurus_search_sub_type,
                         width=200,
                         height=48,
-                        content_padding=padding.symmetric(0),
+                        content_padding=padding.symmetric(4),
                         disabled=not bool(mod_sub_types),
                     ),
                 ]
@@ -636,10 +631,11 @@ class ModsController(Controller):
             self.memory["trovesaurus"]["search"]["sub_type"],
         )
         installation_path = self.memory["trovesaurus"]["installation_path"]
+        mod_l = TroveModList(path=installation_path)
+        await mod_l.update_trovesaurus_data()
         for i, mod in enumerate(self.cached_trovesaurus_mods):
             installed = False
             ts_mod = None
-            mod_l = self.mod_folder_lists[installation_path][1]
             for ts_mod in mod_l.mods:
                 if ts_mod.trovesaurus_data:
                     if ts_mod.trovesaurus_data.id == mod.id:
@@ -851,8 +847,7 @@ class ModsController(Controller):
             self.page.snack_bar.content = Text(f"Refreshed Trovesaurus")
             self.page.snack_bar.bgcolor = "green"
             self.page.snack_bar.open = True
-        await self.main.update_async()
-        await self.page.snack_bar.update_async()
+        await self.unlock_ui()
 
     async def set_trovesaurus_search_type(self, event):
         selected_type = event.control.value
@@ -876,8 +871,13 @@ class ModsController(Controller):
         await self.load_trovesaurus_mods(boot=True)
 
     async def set_trovesaurus_page_size(self, event):
-        self.page.preferences.mod_manager.page_size = int(event.control.value)
-        self.memory["trovesaurus"]["page_size"] = int(event.control.value)
+        page_size = int(event.control.value)
+        if page_size > 25:
+            page_size = 25
+        if page_size < 5:
+            page_size = 5
+        self.page.preferences.mod_manager.page_size = page_size
+        self.memory["trovesaurus"]["page_size"] = page_size
         self.page.preferences.save()
         await self.load_trovesaurus_mods(boot=True)
 
@@ -912,7 +912,6 @@ class ModsController(Controller):
             await self.load_trovesaurus_mods()
         except ValueError:
             pass
-        await self.main.update_async()
 
     async def set_trovesaurus_installation_path(self, event):
         self.memory["trovesaurus"]["installation_path"] = event.control.data

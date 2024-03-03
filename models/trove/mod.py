@@ -16,6 +16,10 @@ from toml import dumps
 
 from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
 from ..trovesaurus.mods import Mod
+from utils.logger import Logger
+
+
+ModParserLogger = Logger("Mod Parser")
 
 
 class NoFilesError(Exception): ...
@@ -457,7 +461,7 @@ class TMod(TroveMod):
         try:
             file_stream = BinaryReader(bytearray(decompressor.decompress(file_stream)))
         except:
-            print("Failed to decompile mod, trying manual decompression: " + str(path))
+            ModParserLogger.debug("Failed to decompile mod, trying manual decompression: " + str(path))
             file_stream = BinaryReader(bytearray(mod.manual_decompression(file_stream)))
         while data.pos() < header_size:
             name_size = data.read_uint8()
