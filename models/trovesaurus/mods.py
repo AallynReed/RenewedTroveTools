@@ -43,6 +43,12 @@ class ModAuthor(BaseModel):
     Avatar: str
     Role: str
 
+    @property
+    def avatar_url(self):
+        if self.Avatar.startswith("//"):
+            return f"https:{self.Avatar}"
+        return self.Avatar.replace("http:", "https:")
+
 
 class Mod(BaseModel):
     id: int

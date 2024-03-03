@@ -326,7 +326,12 @@ class ModsController(Controller):
         await self.lock_ui()
         self.my_mods.controls.clear()
         if not self.mod_folders:
-            self.my_mods.controls.append(Text("No Trove installation found"))
+            self.my_mods.controls.append(
+                Text(
+                    "No Trove installation found" \
+                    "\nTry running program as administrator or go to settings and add the directory manually."
+                )
+            )
             await self.unlock_ui()
             return
         self.my_mods.controls.append(
@@ -558,7 +563,12 @@ class ModsController(Controller):
         await self.lock_ui()
         self.trovesaurus.controls.clear()
         if not self.mod_folders:
-            self.trovesaurus.controls.append(Text("No Trove installation found"))
+            self.trovesaurus.controls.append(
+                Text(
+                    "No Trove installation found"\
+                    "\nTry running program as administrator or go to settings and add the directory manually."
+                )
+            )
             await self.unlock_ui()
             return
         self.memory["trovesaurus"]["selected_file"] = None
