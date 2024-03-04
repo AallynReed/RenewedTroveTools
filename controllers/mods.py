@@ -570,6 +570,8 @@ class ModsController(Controller):
                                                 message="Update available",
                                                 content=IconButton(
                                                     icons.DOWNLOAD,
+                                                    data=mod,
+                                                    on_click=self.update_my_mods_mod,
                                                 ),
                                             )
                                         ],
@@ -588,6 +590,11 @@ class ModsController(Controller):
             Column(controls=[my_mods_table], expand=True, scroll=ScrollMode.ADAPTIVE)
         )
         await self.unlock_ui()
+
+    async def update_my_mods_mod(self, event):
+        mod = event.control.data
+        await mod.update()
+        await self.load_my_mods()
 
     async def toggle_mod(self, event):
         mod = event.control.data

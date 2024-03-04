@@ -440,6 +440,18 @@ class TroveMod:
                 return files[0].hash != self.trovesaurus_data.installed_file.hash
         return False
 
+    async def update(self):
+        if self.trovesaurus_data is not None:
+            files = [f for f in self.trovesaurus_data.file_objs if not f.is_config]
+            files.sort(key=lambda f: -f.file_id)
+            if files:
+                file = files[0]
+                url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file.file_id}"
+                async with ClientSession() as session:
+                    async with session.get(url) as response:
+                        data = await response.read()
+                        self.mod_path.write_bytes(data)
+
 
 class TMod(TroveMod):
     def __str__(self):
