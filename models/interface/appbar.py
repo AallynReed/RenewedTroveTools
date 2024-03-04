@@ -316,8 +316,8 @@ class CustomAppBar(AppBar):
 
     async def go_url(self, event):
         urls = {
-            "discord": "https://discord.gg/duuFEsFWk5",
-            "github": "https://github.com/Sly0511/TroveBuilds",
+            "discord": "https://discord.gg/MbByECEc5k",
+            "github": "https://github.com/Sly0511/RenewedTroveTools",
             "paypal": "https://www.paypal.com/paypalme/waterin",
             "kofi": "https://ko-fi.com/slydev",
         }
