@@ -10,6 +10,7 @@ from flet import (
     Column,
     Row,
     Tabs,
+    Chip,
     Tab,
     TextButton,
     IconButton,
@@ -34,7 +35,7 @@ from flet import (
     Tooltip,
     GridView,
     FilePicker,
-    ScrollMode,
+    ScrollMode
 )
 
 from models.interface import Controller
@@ -44,7 +45,6 @@ from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
 from utils.trove.registry import get_trove_locations
 
 
-# TODO: add sorter to trovesaurus mods
 # TODO: Add mod profiles functionality
 
 
@@ -140,7 +140,12 @@ class ModsController(Controller):
                     "query": None,
                     "type": None,
                     "sub_type": None,
-                    "sort_by": [],
+                    "sort_by": [
+                        ("downloads", "desc"),
+                        ("likes", "desc"),
+                        ("views", "desc"),
+                        ("name", "asc"),
+                    ],
                 },
             },
         }
@@ -649,6 +654,7 @@ class ModsController(Controller):
         mod_sub_types = await self.api.get_mod_sub_types(
             str(self.memory["trovesaurus"]["search"]["type"])
         )
+        sort_by = self.memory["trovesaurus"]["search"]["sort_by"]
         self.trovesaurus.controls.append(
             # Search bar
             Row(
@@ -681,6 +687,45 @@ class ModsController(Controller):
                         content_padding=padding.symmetric(4),
                         disabled=not bool(mod_sub_types),
                     ),
+                    Row(
+                        controls=[
+                            Chip(
+                                data=sorter,
+                                label=Row(
+                                    controls=[
+                                        (
+                                            Icon(icons.ARROW_UPWARD, color="green")
+                                            if order == "asc"
+                                            else Icon(icons.ARROW_DOWNWARD, color="red")
+                                        ),
+                                        # IconButton(
+                                        #     data=((sorter, order), i - 1),
+                                        #     icon=icons.ARROW_LEFT,
+                                        #     icon_color="secondary",
+                                        #     width=16,
+                                        #     visible=i != 0,
+                                        #     on_click=self.set_trovesaurus_sorter_reorder,
+                                        # ),
+                                        Text(
+                                            sorter.capitalize(),
+                                        ),
+                                        # IconButton(
+                                        #     data=((sorter, order), i + 1),
+                                        #     icon=icons.ARROW_RIGHT,
+                                        #     icon_color="secondary",
+                                        #     width=16,
+                                        #     visible=i != len(sort_by) - 1,
+                                        #     on_click=self.set_trovesaurus_sorter_reorder,
+                                        # ),
+                                    ],
+                                    alignment="center",
+                                    run_spacing=4
+                                ),
+                                on_click=self.set_trovesaurus_sorter_switch,
+                            )
+                            for i, (sorter, order) in enumerate(sort_by)
+                        ]
+                    )
                 ]
             )
         )
@@ -691,6 +736,7 @@ class ModsController(Controller):
             self.memory["trovesaurus"]["search"]["query"],
             self.memory["trovesaurus"]["search"]["type"],
             self.memory["trovesaurus"]["search"]["sub_type"],
+            self.memory["trovesaurus"]["search"]["sort_by"],
         )
         installation_path = self.memory["trovesaurus"]["installation_path"]
         mod_l = TroveModList(path=installation_path)
@@ -913,6 +959,30 @@ class ModsController(Controller):
             self.page.snack_bar.bgcolor = "green"
             self.page.snack_bar.open = True
         await self.unlock_ui()
+
+    async def set_trovesaurus_sorter_reorder(self, event):
+        pill, direction = event.control.data
+        sort_by = self.memory["trovesaurus"]["search"]["sort_by"]
+        index = sort_by.index(pill)
+        sort_by.pop(index)
+        new_order = []
+        for i, p in enumerate(sort_by):
+            if i == direction:
+                new_order.append(pill)
+            new_order.append(p)
+        self.memory["trovesaurus"]["search"]["sort_by"] = new_order
+        await self.load_trovesaurus_mods(boot=True)
+
+    async def set_trovesaurus_sorter_switch(self, event):
+        sorter = event.control.data
+        new_order = []
+        for s, o in self.memory["trovesaurus"]["search"]["sort_by"]:
+            if s == sorter:
+                new_order.append((s, "asc" if o == "desc" else "desc"))
+            else:
+                new_order.append((s, o))
+        self.memory["trovesaurus"]["search"]["sort_by"] = new_order
+        await self.load_trovesaurus_mods(boot=True)
 
     async def set_trovesaurus_search_type(self, event):
         selected_type = event.control.value

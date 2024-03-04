@@ -166,7 +166,7 @@ class KiwiAPI:
         query: str = None,
         type: str = None,
         sub_type: str = None,
-        sort_by: list[tuple[str, int]] = None,
+        sort_by: list[tuple[str, str]] = None,
     ):
         offset = page_size * page
         params = {"limit": page_size, "offset": offset}
@@ -177,7 +177,8 @@ class KiwiAPI:
         if sub_type is not None:
             params["sub_type"] = sub_type
         if sort_by is not None:
-            ...
+            sort_by_string = ",".join([f"{field}:{order}" for field, order in sort_by])
+            params["sort_by"] = sort_by_string
         encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
