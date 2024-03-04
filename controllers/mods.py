@@ -481,6 +481,7 @@ class ModsController(Controller):
                                                     data=mod,
                                                     content=Icon(icons.ADD),
                                                     on_click=...,
+                                                    disabled=True
                                                 ),
                                             ),
                                             Tooltip(
@@ -909,6 +910,7 @@ class ModsController(Controller):
                                             height=64,
                                             on_click=...,
                                             col=1.4,
+                                            disabled=True
                                         ),
                                     ],
                                 ),
