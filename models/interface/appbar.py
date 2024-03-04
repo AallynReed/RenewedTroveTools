@@ -16,6 +16,7 @@ from flet import (
     MainAxisAlignment,
     Icon,
     Theme,
+    ButtonStyle
 )
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
@@ -158,26 +159,44 @@ class CustomAppBar(AppBar):
                         ),
                     ],
                 ),
-                PopupMenuButton(
-                    data="user-buttons",
-                    content=Row(
-                                controls=[
-                                    Image(
-                                        self.page.user_data["avatar_url"],
-                                        error_content=Icon(PERSON),
-                                        width=40,
-                                        border_radius=50,
-                                    ),
-                                    Text(self.page.user_data["username"]),
-                                ]
+                *(
+                    [
+                        PopupMenuButton(
+                            data="user-buttons",
+                            content=Row(
+                                controls=(
+                                    [
+                                        Image(
+                                            self.page.user_data["avatar_url"],
+                                            error_content=Icon(PERSON),
+                                            width=40,
+                                            border_radius=50,
+                                        ),
+                                        Text(self.page.user_data["username"]),
+                                    ] if self.page.user_data is not None
+                                    else [
+                                        TextButton(
+                                            icon=PERSON,
+                                            text="Login",
+                                            style=ButtonStyle(color="secondary"),
+                                            on_click=self.page.RTT.display_login_screen,
+                                        )
+                                    ]
+                                )
                             ),
-                    items=[
-                        PopupMenuItem(
-                            data="logout",
-                            text="Logout",
-                            on_click=self.page.RTT.execute_logout,
+                            items=(
+                                [
+                                    PopupMenuItem(
+                                        data="logout",
+                                        text="Logout",
+                                        on_click=self.page.RTT.execute_logout,
+                                    ),
+                                ] if self.page.user_data is not None
+                                else []
+                            ),
                         ),
-                    ],
+                    ] if not self.page.web
+                    else []
                 ),
                 PopupMenuButton(
                     data="other-buttons",
