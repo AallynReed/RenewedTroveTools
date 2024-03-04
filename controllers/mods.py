@@ -471,9 +471,6 @@ class ModsController(Controller):
                                                     Switch(
                                                         data=mod,
                                                         value=mod.enabled,
-                                                        disabled=(
-                                                            not mod.enabled and mod.has_conflicts
-                                                        ),
                                                         on_change=self.toggle_mod,
                                                     ),
                                                 ]
@@ -549,7 +546,13 @@ class ModsController(Controller):
                                                 ),
                                                 content=IconButton(
                                                     icons.WARNING,
+                                                    icon_color=(
+                                                        "red"
+                                                        if bool([c for c in mod.conflicts if c.enabled]) and mod.enabled
+                                                        else "yellow"
+                                                    )
                                                 ),
+
                                             )
                                         ],
                                         top=5,
