@@ -44,6 +44,8 @@ def search_glyph_registry():
 
 
 def get_trove_locations():
+    if os.name != "nt":
+        return []
     for Key in search_glyph_registry():
         try:
             game_path = winreg.QueryValueEx(Key, TroveInstallValue)[0]

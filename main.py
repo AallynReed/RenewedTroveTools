@@ -81,7 +81,10 @@ class App:
         if self.page.web:
             self.page.preferences = await Preferences.load_from_web(self.page)
         else:
-            APPDATA = Path(os.environ.get("APPDATA"))
+            try:
+                APPDATA = Path(os.environ.get("APPDATA"))
+            except TypeError:
+                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
@@ -96,7 +99,10 @@ class App:
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")
         if not web:
-            APPDATA = Path(os.environ.get("APPDATA"))
+            try:
+                APPDATA = Path(os.environ.get("APPDATA"))
+            except TypeError:
+                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
