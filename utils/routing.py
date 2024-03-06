@@ -30,6 +30,8 @@ class Routing:
         self.page.on_route_change = self.handle_route_change_async
 
     async def handle_route_change_async(self, event):
+        if event is None:
+            return
         view = self.get_view(event)
         await self.change_view_async(view)
 
