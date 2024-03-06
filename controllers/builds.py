@@ -301,17 +301,6 @@ class GemBuildsController(Controller):
                     Card(
                         content=Column(
                             controls=[
-                                # Column(
-                                #     controls=[
-                                #         Text("Crystal 5 (WIP)"),
-                                #         Switch(
-                                #             label="",
-                                #             value=self.config.crystal_5,
-                                #             on_change=self.toggle_crystal_5,
-                                #             disabled=True
-                                #         )
-                                #     ]
-                                # ),
                                 Dropdown(
                                     value=(
                                         "custom"
@@ -830,8 +819,6 @@ class GemBuildsController(Controller):
         # Berserker battler stats
         if self.config.berserker_battler:
             third += 750
-        # Crystal 5 (will implement later)
-        ...
         builder = self.generate_combinations(
             farm=self.config.build_type in [BuildType.farm]
         )
@@ -991,10 +978,6 @@ class GemBuildsController(Controller):
 
     async def toggle_subclass_active(self, _):
         self.config.subclass_active = not self.config.subclass_active
-        await self.update_builds()
-
-    async def toggle_crystal_5(self, _):
-        self.config.crystal_5 = not self.config.crystal_5
         await self.update_builds()
 
     async def set_food(self, event):
