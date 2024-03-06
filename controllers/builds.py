@@ -759,7 +759,7 @@ class GemBuildsController(Controller):
             self.selected_class.stats, name=StatName("Critical Damage")
         ).value
         if not self.config.no_face:
-            first += 4719
+            first += 6435
         # Dragon stats
         first += self.sum_file_values(f"{damage_type.name}/dragons_damage")
         first += self.sum_file_values(f"dragons_damage")
