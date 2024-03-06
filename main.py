@@ -84,7 +84,7 @@ class App:
             try:
                 APPDATA = Path(os.environ.get("APPDATA"))
             except TypeError:
-                APPDATA = Path("/".join(str(Path().absolute()).split("/")[0:3])+"/.steam/Steam/steamapps/common")
+                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
@@ -102,7 +102,7 @@ class App:
             try:
                 APPDATA = Path(os.environ.get("APPDATA"))
             except TypeError:
-                APPDATA = Path("/".join(str(Path().absolute()).split("/")[0:3])+"/.steam/Steam/steamapps/common")
+                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
