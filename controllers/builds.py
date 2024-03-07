@@ -1,5 +1,5 @@
+import asyncio
 import itertools
-from json import load
 
 from flet import (
     Text,
@@ -48,20 +48,27 @@ from utils.functions import get_attr, chunks
 class GemBuildsController(Controller):
     def setup_controls(self):
         if not hasattr(self, "classes"):
-            self.star_chart = get_star_chart()
+            self.interface = ResponsiveRow(vertical_alignment="START")
+        asyncio.create_task(self.setup())
+
+    async def setup(self):
+        if not hasattr(self, "classes"):
+            self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
             self.star_chart_abilities = []
             self.selected_build = None
             self.build_page = 0
             self.max_pages = 0
             self.classes = {}
-            for trove_class in load(open("data/classes.json")):
+            self.files = self.page.data_files
+            for trove_class in self.files["classes.json"]:
                 self.classes[trove_class["name"]] = TroveClass(**trove_class)
-            self.foods = load(open("data/builds/food.json"))
-            self.allies = load(open("data/builds/ally.json"))
+            self.foods = self.files["builds/food.json"]
+            self.allies = self.files["builds/ally.json"]
             self.config = BuildConfig()
             self.character_data = ResponsiveRow()
             self.features = ResponsiveRow()
-            self.interface = ResponsiveRow(vertical_alignment="START")
+        self.interface.disabled = True
+        await self.page.update_async()
         self.selected_class = self.classes.get(self.config.character.value, None)
         self.selected_subclass = self.classes.get(self.config.subclass.value, None)
         preset_builds = [
@@ -124,12 +131,6 @@ class GemBuildsController(Controller):
                                                     == self.config.character.name,
                                                 )
                                                 for c in Class
-                                                if not self.config.subclass
-                                                or (
-                                                    self.config.subclass
-                                                    and c.name
-                                                    != self.config.subclass.name
-                                                )
                                             ],
                                             text_size=14,
                                             height=58,
@@ -148,8 +149,6 @@ class GemBuildsController(Controller):
                                                         == self.config.subclass.name,
                                                     )
                                                     for c in Class
-                                                    if c.name
-                                                    != self.config.character.name
                                                 ],
                                                 text_size=14,
                                                 height=58,
@@ -481,6 +480,7 @@ class GemBuildsController(Controller):
                 label="Insert Gem Build ID",
                 on_change=self.set_build_string,
                 col={"xs": 6, "xxl": 2},
+                visible=False,
             ),
             Container(
                 content=Row(controls=[Icon(COPY), Text("Copy Gem Build")]),
@@ -489,6 +489,7 @@ class GemBuildsController(Controller):
                 padding=15,
                 border_radius=10,
                 col={"xs": 6, "xxl": 2},
+                visible=False
             ),
         ]
         self.abilities = DataTable(
@@ -714,6 +715,8 @@ class GemBuildsController(Controller):
                 ]
             )
         self.features.controls.append(self.abilities_table)
+        self.interface.disabled = False
+        await self.page.update_async()
 
     def setup_events(self): ...
 
@@ -872,7 +875,7 @@ class GemBuildsController(Controller):
             yield build_stats
 
     def sum_file_values(self, path):
-        data = load(open(f"data/builds/{path}.json"))
+        data = self.files[f"builds/{path}.json"]
         return sum(data.values())
 
     def calculate_gem_stats(self, config: BuildConfig, build):
@@ -882,7 +885,7 @@ class GemBuildsController(Controller):
         cosmic_first = 0
         cosmic_second = 0
         if not hasattr(self, "gem_stats"):
-            self.gem_stats = load(open(f"data/gems/crystal.json"))
+            self.gem_stats = self.page.data_files["gems/crystal.json"]
         if config.build_type == BuildType.health:
             first_lesser = self.gem_stats["Lesser"]["Maximum Health"]
             first_empowered = self.gem_stats["Empowered"]["Maximum Health"]
@@ -943,7 +946,10 @@ class GemBuildsController(Controller):
 
     async def set_class(self, event):
         self.selected_build = None
+        old_class = self.config.character
         self.config.character = Class[event.control.value]
+        if self.config.character == self.config.subclass:
+            self.config.subclass = old_class
         self.selected_class = self.classes.get(self.config.character.value, None)
         damage_type = (
             StatName.magic_damage
@@ -957,7 +963,10 @@ class GemBuildsController(Controller):
         await self.update_builds()
 
     async def set_subclass(self, event):
+        old_subclass = self.config.subclass
         self.config.subclass = Class[event.control.value]
+        if self.config.character == self.config.subclass:
+            self.config.character = old_subclass
         await self.update_builds()
 
     async def set_build_type(self, event):
@@ -1065,7 +1074,7 @@ class GemBuildsController(Controller):
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value.strip().split("-")[-1].strip()
-        self.star_chart = get_star_chart()
+        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
         if build_id == "none":
             self.config.star_chart = None
             self.star_chart_abilities = []
@@ -1083,10 +1092,4 @@ class GemBuildsController(Controller):
         await self.update_builds()
 
     async def update_builds(self):
-        for control in self.page.controls:
-            control.disabled = True
-        await self.page.update_async()
-        self.setup_controls()
-        for control in self.page.controls:
-            control.disabled = False
-        await self.page.update_async()
+        await self.setup()

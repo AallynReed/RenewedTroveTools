@@ -5,9 +5,11 @@ import sys
 from datetime import UTC
 from datetime import datetime
 from datetime import timedelta
+from json import load
 from pathlib import Path
 
 import requests
+from aiohttp import ClientSession
 from flet import (
     app_async,
     WEB_BROWSER,
@@ -61,6 +63,7 @@ class App:
 
     async def start_app(self, page):
         await self.load_configurations()
+        await self.load_constants()
         self.setup_logging()
         self.setup_localization()
         await self.setup_page()
@@ -69,6 +72,7 @@ class App:
 
     async def start_web(self, page):
         await self.load_configurations()
+        await self.load_constants()
         self.setup_logging(True)
         self.setup_localization()
         await self.setup_page()
@@ -95,6 +99,23 @@ class App:
             self.page.theme = Theme(
                 color_scheme_seed=str(self.page.preferences.accent_color)
             )
+
+    async def load_constants(self):
+        async with ClientSession() as session:
+            async with session.get("https://kiwiapi.slynx.xyz/v1/stats/files") as response:
+                if response.status != 200:
+                    data_path = Path("data")
+                    files = [str(x.relative_to(data_path)) for x in data_path.rglob('*') if x.is_file()]
+                    self.page.data_files = {
+                        path.replace("\\", "/"): load(open(data_path.joinpath(path), encoding="utf-8"))
+                        for path in files
+                    }
+                    return
+                files = await response.json()
+                self.page.data_files = {
+                    path: await (await session.get(f"https://kiwiapi.slynx.xyz/v1/stats/file/{path}")).json()
+                    for path in files
+                }
 
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")

@@ -448,8 +448,8 @@ def rotate_branch(star, origin, angle, distance):
         del child["Rotation"]
 
 
-def get_star_chart(star_string=None):
-    star_chart = json.load(open("data/star_chart.json"))
+def get_star_chart(file_data, star_string=None):
+    star_chart = file_data
     obj_star_chart = StarChart()
     origin = 330, 370
     point_distance = 60

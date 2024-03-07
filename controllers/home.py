@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime, timedelta
-from json import load
 
 from flet import (
     Text,
@@ -17,13 +16,11 @@ from flet import (
     BorderSide,
     BlendMode,
     Row,
-    VerticalDivider,
     MainAxisAlignment,
 )
 from pytz import UTC
 
 from models.interface import Controller
-from models.trove.shops import Cranny
 from utils import tasks
 
 
@@ -56,8 +53,8 @@ class HomeController(Controller):
     def setup_controls(self):
         if not hasattr(self, "widgets"):
             self.widgets = ResponsiveRow(spacing=0, vertical_alignment="start")
-            self.daily_data = load(open("data/daily_buffs.json", encoding="utf-8"))
-            self.weekly_data = load(open("data/weekly_buffs.json", encoding="utf-8"))
+            self.daily_data = self.page.data_files["daily_buffs.json"]
+            self.weekly_data = self.page.data_files["weekly_buffs.json"]
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
         self.daily_widgets = ResponsiveRow(
             controls=[

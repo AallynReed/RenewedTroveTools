@@ -35,7 +35,7 @@ class StarChartController(Controller):
     def setup_controls(self):
         if not hasattr(self, "map"):
             self.selected_stat = None
-            self.star_chart = get_star_chart()
+            self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
             self.map = ResponsiveRow()
             self.star_details = Column(col={"xxl": 6.5})
             _id = self.page.params.get("id", None)
@@ -235,7 +235,7 @@ class StarChartController(Controller):
         self.page.snack_bar.bgcolor = "green"
 
     async def reset_chart(self, _):
-        self.star_chart = get_star_chart()
+        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
         self.setup_controls()
         await self.page.update_async()
 
@@ -369,7 +369,7 @@ class StarChartController(Controller):
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value
-        self.star_chart = get_star_chart()
+        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
         if await self.star_chart.from_string(build_id):
             event.control.value = None
             self.page.snack_bar.content.value = f"Loaded build with id SC-{build_id}"
