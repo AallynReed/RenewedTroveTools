@@ -15,9 +15,8 @@ from pydantic import BaseModel
 from toml import dumps
 
 from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
-from ..trovesaurus.mods import Mod
 from utils.logger import Logger
-
+from ..trovesaurus.mods import Mod
 
 ModParserLogger = Logger("Mod Parser")
 
@@ -113,6 +112,7 @@ class TroveMod:
     mod_path: Path
     version: int = 1
     properties: list[Property]
+    _content_files: list[str]
     files: list[TroveModFile]
     _zip_hash: str = None
     _tmod_hash: str = None
@@ -125,6 +125,7 @@ class TroveMod:
 
     def __init__(self):
         self.properties = []
+        self._content_files = []
         self.files = []
         self.name_conflicts = []
         self.file_conflicts = []
@@ -134,6 +135,16 @@ class TroveMod:
 
     def __repr__(self):
         return str(self)
+
+    @property
+    def content_files(self):
+        if not self._content_files:
+            self._content_files = [f.trove_path for f in self.files if f.trove_path != self.preview_path]
+        return self._content_files
+
+    @content_files.setter
+    def content_files(self, value: list[TroveModFile]):
+        self._content_files = value
 
     @property
     def cwd(self):
@@ -162,24 +173,22 @@ class TroveMod:
         self.mod_path.rename(new_mod_path)
         self.mod_path = new_mod_path
 
-    def check_conflicts(self, mods: list[TroveMod]):
-        self.conflicts.clear()
+    def check_conflicts(self, mods: list[TroveMod], force=False):
+        if force:
+            self.conflicts.clear()
         for mod in mods:
             if mod == self:
                 continue
             if mod.name == self.name:
                 self.name_conflicts.append(mod)
-            for file in self.files:
-                if file.trove_path == self.preview_path:
-                    continue
-                for other_file in mod.files:
-                    if other_file.trove_path == mod.preview_path:
-                        continue
-                    if file.trove_path == other_file.trove_path:
-                        self.file_conflicts.append(mod)
-                        break
-                if mod in self.file_conflicts:
-                    break
+            if mod in self.file_conflicts:
+                continue
+            self_files = set(self.content_files)
+            mod_files = set(mod.content_files)
+            if self_files & mod_files:
+                self.file_conflicts.append(mod)
+                if self not in mod.file_conflicts:
+                    mod.file_conflicts.append(self)
         self.file_conflicts = list(set(self.file_conflicts))
 
     @property
@@ -590,10 +599,6 @@ class TroveModList:
                                     break
                             break
 
-    def calculate_conflicts(self):
-        for mod in self:
-            mod.check_conflicts(self.enabled)
-
     @property
     def all_hashes(self):
         return [mod.hash for mod in self.mods]
@@ -620,9 +625,13 @@ class TroveModList:
         return len(self.enabled) + len(self.disabled)
 
     def refresh(self):
-        self._populate()
+        self._populate(True)
 
-    def _populate(self):
+    def _calculate_conflicts(self, force=False):
+        for mod in self.mods:
+            mod.check_conflicts(self.mods, force)
+
+    def _populate(self, force=False):
         self.enabled.clear()
         self.disabled.clear()
         self._populate_tmod_enabled()
@@ -630,8 +639,7 @@ class TroveModList:
         self._populate_zip_enabled()
         self._populate_zip_disabled()
         self.sort_by_name()
-        for mod in self.mods:
-            mod.check_conflicts(self.mods)
+        self._calculate_conflicts(force)
 
     def _populate_tmod_enabled(self):
         for file in self.list_path.glob("*.tmod"):

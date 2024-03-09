@@ -22,4 +22,4 @@ class Metadata(BaseModel):
 
     @property
     def app_name(self):
-        return f"{self.name} - v{self.version}"
+        return f"{self.name} BETA - v{self.version}"
