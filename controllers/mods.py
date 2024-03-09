@@ -184,6 +184,7 @@ class ModsController(Controller):
     async def lock_ui(self):
         self.main.disabled = True
         await self.main.update_async()
+        await asyncio.sleep(0.1)
 
     async def unlock_ui(self):
         self.main.disabled = False
@@ -321,7 +322,6 @@ class ModsController(Controller):
 
     async def load_my_mods(self, boot=False):
         await self.lock_ui()
-        await asyncio.sleep(0.1)
         self.my_mods.controls.clear()
         if not self.mod_folders:
             self.my_mods.controls.append(
