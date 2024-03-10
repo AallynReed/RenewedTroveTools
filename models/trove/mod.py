@@ -560,8 +560,6 @@ class TroveModList:
     _mods: list[TroveMod]
 
     def __init__(self, path: Path):
-        self.enabled = []
-        self.disabled = []
         self._mods = []
         self.installation_path = path
         self.list_path = path
@@ -609,10 +607,15 @@ class TroveModList:
 
     @property
     def mods(self):
-        if len(self._mods) != self.count:
-            self._mods = self.enabled + self.disabled
-            self._mods.sort(key=lambda mod: mod.name)
         return self._mods
+
+    @property
+    def enabled(self):
+        return [mod for mod in self.mods if mod.enabled]
+
+    @property
+    def disabled(self):
+        return [mod for mod in self.mods if not mod.enabled]
 
     def sort_by_name(self):
         self._mods.sort(key=lambda mod: mod.name)
@@ -623,7 +626,7 @@ class TroveModList:
 
     @property
     def count(self):
-        return len(self.enabled) + len(self.disabled)
+        return len(self.mods)
 
     def refresh(self):
         self._populate(True)
@@ -633,8 +636,7 @@ class TroveModList:
             mod.check_conflicts(self.mods, force)
 
     def _populate(self, force=False):
-        self.enabled.clear()
-        self.disabled.clear()
+        self._mods.clear()
         self._populate_tmod_enabled()
         self._populate_tmod_disabled()
         self._populate_zip_enabled()
@@ -648,7 +650,7 @@ class TroveModList:
             mod = TMod.read_bytes(file, file_data)
             if mod.has_wrong_name:
                 mod.fix_name()
-            self.enabled.append(mod)
+            self._mods.append(mod)
 
     def _populate_tmod_disabled(self):
         for file in self.list_path.glob("*.tmod.disabled"):
@@ -657,17 +659,17 @@ class TroveModList:
             if mod.has_wrong_name:
                 mod.fix_name()
             mod.enabled = False
-            self.disabled.append(mod)
+            self._mods.append(mod)
 
     def _populate_zip_enabled(self):
         for file in self.list_path.glob("*.zip"):
             file_data = file.read_bytes()
             mod = ZMod.read_bytes(file, BytesIO(file_data))
-            self.enabled.append(mod)
+            self._mods.append(mod)
 
     def _populate_zip_disabled(self):
         for file in self.list_path.glob("*.zip.disabled"):
             file_data = file.read_bytes()
             mod = ZMod.read_bytes(file, BytesIO(file_data))
             mod.enabled = False
-            self.disabled.append(mod)
+            self._mods.append(mod)

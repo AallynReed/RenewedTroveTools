@@ -71,37 +71,33 @@ class ModsController(Controller):
                     ]
                 )
             )
+            self.mod_profiles_tab = Tab(
+                tab_content=Row(
+                    controls=[
+                        Icon(icons.PERSON, size=24, color="red" if not self.page.user_data else "default"),
+                        Text("Mod Profiles", color="red" if not self.page.user_data else "default"),
+                    ]
+                )
+            )
             self.settings = Column(expand=True)
             self.my_mods = Column(expand=True)
             self.trovesaurus = Column(expand=True)
+            self.mod_profiles = Column(expand=True)
             self.mod_submenus.tabs.append(self.settings_tab)
             self.mod_submenus.tabs.append(self.my_mods_tab)
             self.mod_submenus.tabs.append(self.trovesaurus_tab)
-            my_mods_index = self.mod_submenus.tabs.index(self.my_mods_tab)
-            trovesaurus_index = self.mod_submenus.tabs.index(self.trovesaurus_tab)
-            self.my_mods_tab.tab_content.controls.append(
-                IconButton(
-                    data=my_mods_index,
-                    icon=icons.REFRESH,
-                    on_click=self.reload_tab,
-                )
-            )
-            self.trovesaurus_tab.tab_content.controls.append(
-                IconButton(
-                    data=trovesaurus_index,
-                    icon=icons.REFRESH,
-                    on_click=self.reload_tab,
-                )
-            )
+            self.mod_submenus.tabs.append(self.mod_profiles_tab)
             self.tabs = {
                 0: self.settings,
                 1: self.my_mods,
                 2: self.trovesaurus,
+                3: self.mod_profiles,
             }
             self.tab_map = {
                 0: self.load_settings,
                 1: self.load_my_mods,
                 2: self.load_trovesaurus_mods,
+                3: self.load_mod_profiles,
             }
             self.mod_submenus.selected_index = 1
             asyncio.create_task(self.post_setup())
@@ -109,7 +105,17 @@ class ModsController(Controller):
     def setup_events(self): ...
 
     async def post_setup(self):
-        self.main.controls.append(self.mod_submenus)
+        self.main.controls.append(
+            Row(
+                controls=[
+                    IconButton(
+                        icons.REFRESH,
+                        on_click=self.reload_tab
+                    ),
+                    self.mod_submenus
+                ]
+            )
+        )
         await self.unlock_ui()
         await self.tab_loader(boot=True)
 
@@ -174,12 +180,22 @@ class ModsController(Controller):
             else:
                 index = self.mod_submenus.selected_index
         self.main.controls.clear()
-        self.main.controls.append(self.mod_submenus)
+        self.main.controls.append(
+            Row(
+                controls=[
+                    IconButton(
+                        icons.REFRESH,
+                        on_click=self.reload_tab
+                    ),
+                    self.mod_submenus
+                ]
+            )
+        )
         self.main.controls.append(self.tabs[index])
         await self.tab_map[index](boot=boot or bool(event))
 
     async def reload_tab(self, event):
-        await self.tab_loader(index=event.control.data)
+        await self.tab_loader(index=self.mod_submenus.selected_index)
 
     async def lock_ui(self):
         self.main.disabled = True
@@ -382,10 +398,12 @@ class ModsController(Controller):
         )
         enabled_count = len(self.my_mod_list.enabled)
         disabled_count = len(self.my_mod_list.disabled)
+        self.enabled_counter = Text(f"Enabled ({enabled_count})")
+        self.disabled_counter = Text(f"Disabled ({disabled_count})")
         my_mods_list.controls.append(
             Column(
                 controls=[
-                    Text(f"Enabled ({enabled_count})"),
+                    self.enabled_counter,
                     self.enabled_mods_list,
                 ],
                 expand=True,
@@ -395,7 +413,7 @@ class ModsController(Controller):
         my_mods_list.controls.append(
             Column(
                 controls=[
-                    Text(f"Disabled ({disabled_count})"),
+                    self.disabled_counter,
                     self.disabled_mods_list,
                 ],
                 expand=True,
@@ -405,148 +423,9 @@ class ModsController(Controller):
         self.my_mod_tiles = []
         for mod in self.my_mod_list.mods:
             mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
-            mod_tile = ListTile(
-                on_click=self.toggle_mod,
-                data=mod,
-                expand=True
-            )
-            if mod.trovesaurus_data:
-                mod_frame_tile = mod_frame.controls[0]
-                # mod_tile.leading = Image(
-                #     src=self.api.get_resized_image_url(
-                #         (
-                #             mod.trovesaurus_data.image_url or
-                #             f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
-                #         ),
-                #         ImageSize.MEDIUM
-                #     ),
-                #     height=128,
-                # )
-                mod_tile.title = Row(
-                    controls=[
-                        TextButton(
-                            content=Text(mod.name),
-                            url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
-                        ),
-                        *(
-                            [
-                                Tooltip(
-                                    data="update",
-                                    message="Update available",
-                                    content=IconButton(
-                                        icons.DOWNLOAD,
-                                        data=mod,
-                                        on_click=self.update_my_mods_mod,
-                                    ),
-                                )
-                            ]
-                            if mod.has_update
-                            else []
-                        ),
-                    ]
-                )
-                mod_tile.subtitle = Row(
-                    controls=[
-                        *(
-                            [
-                                Tooltip(
-                                    message=(
-                                        author.Role
-                                        if author.Role
-                                        else "User"
-                                    ),
-                                    content=TextButton(
-                                        content=Row(
-                                            controls=[
-                                                Image(
-                                                    src=self.api.get_resized_image_url(
-                                                        author.avatar_url,
-                                                        ImageSize.MINI
-                                                    ),
-                                                    width=24,
-                                                ),
-                                                Text(
-                                                    author.Username,
-                                                    color=ModAuthorRoleColors[
-                                                        ModAuthorRole(
-                                                            author.Role
-                                                        ).name
-                                                    ].value,
-                                                ),
-                                            ]
-                                        ),
-                                        url=f"https://trovesaurus.com/user={author.ID}",
-                                    )
-                                )
-                                for author in mod.trovesaurus_data.authors
-                            ]
-                        )
-                    ]
-                )
-            else:
-                mod_frame_tile = mod_frame.controls[1]
-                # mod_tile.leading = Image(
-                #     src=self.api.get_resized_image_url(
-                #         f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
-                #         ImageSize.MEDIUM
-                #     ),
-                #     height=128,
-                # )
-                mod_tile.title = Row(
-                    controls=[
-                        Text(mod.name)
-                    ]
-                )
-                mod_tile.subtitle = Row(
-                    controls=[
-                        Icon(icons.PERSON),
-                        TextButton(
-                            mod.author,
-                            disabled=True,
-                        ),
-                    ]
-                )
-            if mod.has_conflicts:
-                mod_tile.title.controls.append(
-                    Tooltip(
-                        data="conflicts",
-                        message="\n".join(
-                            [conflict.name for conflict in mod.conflicts]
-                        ),
-                        content=IconButton(
-                            icons.WARNING,
-                            icon_color=(
-                                "red"
-                                if bool([c for c in mod.conflicts if c.enabled]) and mod.enabled
-                                else "yellow"
-                            )
-                        ),
-
-                    )
-                )
-            mt = Row(
-                data=mod,
-                controls=[
-                    mod_tile,
-                    Tooltip(
-                        message="Uninstall",
-                        content=IconButton(
-                            icons.DELETE,
-                            on_click=self.delete_mod,
-                            data=mod
-                        )
-                    ),
-                    Tooltip(
-                        message="Enable" if not mod.enabled else "Disable",
-                        content=IconButton(
-                            icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT,
-                            on_click=self.toggle_mod,
-                            data=mod
-                        )
-                    ),
-                ],
-                expand=True
-            )
+            mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
+            mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
+            mt = self.get_mod_tile(mod_frame, mod_frame_tile, mod)
             mod_frame_tile.controls.append(mt)
             if not mod.enabled:
                 mt.controls.reverse()
@@ -554,10 +433,177 @@ class ModsController(Controller):
         self.my_mods.controls.append(my_mods_list)
         await self.unlock_ui()
 
+    def get_mod_tile(self, mod_frame, mod_frame_tile, mod):
+        mod_tile = ListTile(
+            on_click=self.toggle_mod,
+            data=mod,
+            expand=True
+        )
+        if mod.trovesaurus_data:
+            # mod_tile.leading = Image(
+            #     src=self.api.get_resized_image_url(
+            #         (
+            #             mod.trovesaurus_data.image_url or
+            #             f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+            #         ),
+            #         ImageSize.MEDIUM
+            #     ),
+            #     height=128,
+            # )
+            mod_tile.title = Row(
+                controls=[
+                    TextButton(
+                        content=Text(mod.name),
+                        url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
+                    ),
+                    *(
+                        [
+                            Tooltip(
+                                data="update",
+                                message="Update available",
+                                content=IconButton(
+                                    icons.DOWNLOAD,
+                                    data=mod,
+                                    on_click=self.update_my_mods_mod,
+                                ),
+                            )
+                        ]
+                        if mod.has_update
+                        else []
+                    ),
+                ]
+            )
+            mod_tile.subtitle = Row(
+                controls=[
+                    *(
+                        [
+                            Tooltip(
+                                message=(
+                                    author.Role
+                                    if author.Role
+                                    else "User"
+                                ),
+                                content=TextButton(
+                                    content=Row(
+                                        controls=[
+                                            Image(
+                                                src=self.api.get_resized_image_url(
+                                                    author.avatar_url,
+                                                    ImageSize.MINI
+                                                ),
+                                                width=24,
+                                            ),
+                                            Text(
+                                                author.Username,
+                                                color=ModAuthorRoleColors[
+                                                    ModAuthorRole(
+                                                        author.Role
+                                                    ).name
+                                                ].value,
+                                            ),
+                                        ]
+                                    ),
+                                    url=f"https://trovesaurus.com/user={author.ID}",
+                                )
+                            )
+                            for author in mod.trovesaurus_data.authors
+                        ]
+                    )
+                ]
+            )
+        else:
+            # mod_tile.leading = Image(
+            #     src=self.api.get_resized_image_url(
+            #         f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+            #         ImageSize.MEDIUM
+            #     ),
+            #     height=128,
+            # )
+            mod_tile.title = Row(
+                controls=[
+                    Text(mod.name)
+                ]
+            )
+            mod_tile.subtitle = Row(
+                controls=[
+                    Icon(icons.PERSON),
+                    TextButton(
+                        mod.author,
+                        disabled=True,
+                    ),
+                ]
+            )
+        if mod.has_conflicts:
+            mod_tile.title.controls.append(
+                Tooltip(
+                    data="conflicts",
+                    message="\n".join(
+                        [conflict.name for conflict in mod.conflicts]
+                    ),
+                    content=IconButton(
+                        icons.WARNING,
+                        icon_color=(
+                            "red"
+                            if bool([c for c in mod.conflicts if c.enabled]) and mod.enabled
+                            else "yellow"
+                        )
+                    ),
+
+                )
+            )
+        return Row(
+            data=mod,
+            controls=[
+                mod_tile,
+                Tooltip(
+                    message="Uninstall",
+                    content=IconButton(
+                        icons.DELETE,
+                        on_click=self.delete_mod,
+                        data=mod
+                    )
+                ),
+                Tooltip(
+                    message="Enable" if not mod.enabled else "Disable",
+                    content=IconButton(
+                        icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT,
+                        on_click=self.toggle_mod,
+                        data=mod
+                    )
+                ),
+            ],
+            expand=True
+        )
+
     async def update_my_mods_mod(self, event):
+        await self.lock_ui()
         mod = event.control.data
         await mod.update()
-        await self.load_my_mods()
+        installation_path = self.memory["my_mods"]["installation_path"]
+        self.my_mod_list = TroveModList(path=installation_path)
+        await self.my_mod_list.update_trovesaurus_data()
+        for tile in self.my_mod_tiles:
+            if tile.data == mod:
+                self.my_mod_tiles.remove(tile)
+                mod_frame = self.enabled_mods_list if tile.data.enabled else self.disabled_mods_list
+                mod_frame_tile_index = 0 if tile.data.trovesaurus_data else 1
+                mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
+                mod_frame_tile.controls.remove(tile)
+        for mod_frame_tile in self.enabled_mods_list.controls + self.disabled_mods_list.controls:
+            mod_frame_tile.controls.clear()
+        for mod in self.my_mod_list.mods:
+            mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
+            mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
+            tile = self.get_mod_tile(mod_frame, mod_frame_tile, mod)
+            if not mod.enabled:
+                tile.controls.reverse()
+            self.my_mod_tiles.append(tile)
+            mod_frame_tile.controls.append(tile)
+            mod_frame_tile.controls.sort(
+                key=lambda x: self.my_mod_list.mods.index(x.data)
+            )
+        await self.unlock_ui()
 
     async def toggle_mod(self, event):
         mod = event.control.data
@@ -572,6 +618,8 @@ class ModsController(Controller):
         end.controls[mod_frame_tile_index].controls.sort(
             key=lambda x: self.my_mod_list.mods.index(x.data)
         )
+        self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
+        self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
         self.page.snack_bar.content = Text(f"{mod.name} {'enabled' if mod.enabled else 'disabled'}")
         self.page.snack_bar.bgcolor = "green"
         self.page.snack_bar.open = True
@@ -605,7 +653,16 @@ class ModsController(Controller):
     async def delete_mod(self, event):
         mod = event.control.data
         mod.mod_path.unlink()
-        await self.load_my_mods()
+        tile = next((t for t in self.my_mod_tiles if t.data == mod))
+        mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
+        mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+        mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
+        mod_frame_tile.controls.remove(tile)
+        self.my_mod_tiles.remove(tile)
+        self.my_mod_list.mods.remove(mod)
+        self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
+        self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
+        await self.unlock_ui()
         self.page.snack_bar.content = Text(f"Uninstalled {mod.name}")
         self.page.snack_bar.bgcolor = "red"
         self.page.snack_bar.open = True
@@ -1114,3 +1171,11 @@ class ModsController(Controller):
         self.page.snack_bar.bgcolor = "green"
         self.page.snack_bar.open = True
         await self.page.snack_bar.update_async()
+
+    # Mod Profiles Tab
+
+    async def load_mod_profiles(self, boot=False):
+        await self.lock_ui()
+        self.mod_profiles.controls.clear()
+        self.mod_profiles.controls.append(Text("Mod Profiles"))
+        await self.unlock_ui()
