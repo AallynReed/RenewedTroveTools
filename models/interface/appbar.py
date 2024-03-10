@@ -11,6 +11,7 @@ from flet import (
     PopupMenuButton,
     PopupMenuItem,
     Divider,
+    Column,
     Row,
     Text,
     Container,
@@ -289,9 +290,25 @@ class CustomAppBar(AppBar):
             await self.page.snack_bar.update_async()
             await self.page.appbar.update_async()
 
-    async def go_to_update_page(self, _):
+    async def go_to_update_page(self, event):
         update_url, is_windows = await check_update(self.page.metadata.version)
         if is_windows:
+            self.page.controls = [
+                Column(
+                    controls=[
+                        Text(
+                            "Downloading update, please wait...",
+                            text_align="center",
+                            size=40
+                        )
+                    ],
+                    alignment="center",
+                    horizontal_alignment="center",
+                    expand=True
+                ),
+            ]
+            event.control.disabled = True
+            await self.page.update_async()
             async with ClientSession() as session:
                 async with session.get(update_url) as response:
                     if response.status == 200:
