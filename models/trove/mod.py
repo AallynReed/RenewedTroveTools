@@ -139,7 +139,9 @@ class TroveMod:
     @property
     def content_files(self):
         if not self._content_files:
-            self._content_files = [f.trove_path for f in self.files if f.trove_path != self.preview_path]
+            self._content_files = [
+                f.trove_path for f in self.files if f.trove_path != self.preview_path
+            ]
         return self._content_files
 
     @content_files.setter
@@ -492,7 +494,9 @@ class TMod(TroveMod):
         try:
             file_stream = BinaryReader(bytearray(decompressor.decompress(file_stream)))
         except:
-            ModParserLogger.debug("Failed to decompile mod, trying manual decompression: " + str(path))
+            ModParserLogger.debug(
+                "Failed to decompile mod, trying manual decompression: " + str(path)
+            )
             file_stream = BinaryReader(bytearray(mod.manual_decompression(file_stream)))
         while data.pos() < header_size:
             name_size = data.read_uint8()

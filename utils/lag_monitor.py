@@ -8,7 +8,9 @@ import traceback
 
 class StackMonitor(threading.Thread):
     def __init__(self, loop, block_threshold=1, check_freq=2):
-        super().__init__(name=f'{type(self).__name__}-{threading._counter()}', daemon=True)
+        super().__init__(
+            name=f"{type(self).__name__}-{threading._counter()}", daemon=True
+        )
 
         self.loop = loop
         self._do_run = threading.Event()
@@ -39,9 +41,11 @@ class StackMonitor(threading.Thread):
             frame = sys._current_frames()[self.loop._thread_id]
             stack = traceback.format_stack(frame)
 
-            if stack == self.last_stack and \
-               frame is self._last_frame and \
-               frame.f_lasti == self._last_frame.f_lasti:
+            if (
+                stack == self.last_stack
+                and frame is self._last_frame
+                and frame.f_lasti == self._last_frame.f_lasti
+            ):
 
                 self.still_blocked = True
                 print("Still blocked...")
@@ -50,7 +54,7 @@ class StackMonitor(threading.Thread):
                 self.still_blocked = False
 
             print(f"Future took longer than {self.block_threshold}s to return")
-            print(''.join(stack))
+            print("".join(stack))
 
             self.last_stack = stack
             self._last_frame = frame

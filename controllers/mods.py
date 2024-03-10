@@ -74,8 +74,15 @@ class ModsController(Controller):
             self.mod_profiles_tab = Tab(
                 tab_content=Row(
                     controls=[
-                        Icon(icons.PERSON, size=24, color="red" if not self.page.user_data else "default"),
-                        Text("Mod Profiles", color="red" if not self.page.user_data else "default"),
+                        Icon(
+                            icons.PERSON,
+                            size=24,
+                            color="red" if not self.page.user_data else "default",
+                        ),
+                        Text(
+                            "Mod Profiles",
+                            color="red" if not self.page.user_data else "default",
+                        ),
                     ]
                 )
             )
@@ -108,11 +115,8 @@ class ModsController(Controller):
         self.main.controls.append(
             Row(
                 controls=[
-                    IconButton(
-                        icons.REFRESH,
-                        on_click=self.reload_tab
-                    ),
-                    self.mod_submenus
+                    IconButton(icons.REFRESH, on_click=self.reload_tab),
+                    self.mod_submenus,
                 ]
             )
         )
@@ -183,11 +187,8 @@ class ModsController(Controller):
         self.main.controls.append(
             Row(
                 controls=[
-                    IconButton(
-                        icons.REFRESH,
-                        on_click=self.reload_tab
-                    ),
-                    self.mod_submenus
+                    IconButton(icons.REFRESH, on_click=self.reload_tab),
+                    self.mod_submenus,
                 ]
             )
         )
@@ -342,7 +343,7 @@ class ModsController(Controller):
         if not self.mod_folders:
             self.my_mods.controls.append(
                 Text(
-                    "No Trove installation found" \
+                    "No Trove installation found"
                     "\nTry running program as administrator or go to settings and add the directory manually."
                 )
             )
@@ -407,7 +408,7 @@ class ModsController(Controller):
                     self.enabled_mods_list,
                 ],
                 expand=True,
-                col=6
+                col=6,
             )
         )
         my_mods_list.controls.append(
@@ -417,12 +418,14 @@ class ModsController(Controller):
                     self.disabled_mods_list,
                 ],
                 expand=True,
-                col=6
+                col=6,
             )
         )
         self.my_mod_tiles = []
         for mod in self.my_mod_list.mods:
-            mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            mod_frame = (
+                self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            )
             mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
             mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
             mt = self.get_mod_tile(mod_frame, mod_frame_tile, mod)
@@ -434,11 +437,7 @@ class ModsController(Controller):
         await self.release_ui()
 
     def get_mod_tile(self, mod_frame, mod_frame_tile, mod):
-        mod_tile = ListTile(
-            on_click=self.toggle_mod,
-            data=mod,
-            expand=True
-        )
+        mod_tile = ListTile(on_click=self.toggle_mod, data=mod, expand=True)
         if mod.trovesaurus_data:
             # mod_tile.leading = Image(
             #     src=self.api.get_resized_image_url(
@@ -478,33 +477,26 @@ class ModsController(Controller):
                     *(
                         [
                             Tooltip(
-                                message=(
-                                    author.Role
-                                    if author.Role
-                                    else "User"
-                                ),
+                                message=(author.Role if author.Role else "User"),
                                 content=TextButton(
                                     content=Row(
                                         controls=[
                                             Image(
                                                 src=self.api.get_resized_image_url(
-                                                    author.avatar_url,
-                                                    ImageSize.MINI
+                                                    author.avatar_url, ImageSize.MINI
                                                 ),
                                                 width=24,
                                             ),
                                             Text(
                                                 author.Username,
                                                 color=ModAuthorRoleColors[
-                                                    ModAuthorRole(
-                                                        author.Role
-                                                    ).name
+                                                    ModAuthorRole(author.Role).name
                                                 ].value,
                                             ),
                                         ]
                                     ),
                                     url=f"https://trovesaurus.com/user={author.ID}",
-                                )
+                                ),
                             )
                             for author in mod.trovesaurus_data.authors
                         ]
@@ -519,11 +511,7 @@ class ModsController(Controller):
             #     ),
             #     height=128,
             # )
-            mod_tile.title = Row(
-                controls=[
-                    Text(mod.name)
-                ]
-            )
+            mod_tile.title = Row(controls=[Text(mod.name)])
             mod_tile.subtitle = Row(
                 controls=[
                     Icon(icons.PERSON),
@@ -537,18 +525,16 @@ class ModsController(Controller):
             mod_tile.title.controls.append(
                 Tooltip(
                     data="conflicts",
-                    message="\n".join(
-                        [conflict.name for conflict in mod.conflicts]
-                    ),
+                    message="\n".join([conflict.name for conflict in mod.conflicts]),
                     content=IconButton(
                         icons.WARNING,
                         icon_color=(
                             "red"
-                            if bool([c for c in mod.conflicts if c.enabled]) and mod.enabled
+                            if bool([c for c in mod.conflicts if c.enabled])
+                            and mod.enabled
                             else "yellow"
-                        )
+                        ),
                     ),
-
                 )
             )
         return Row(
@@ -558,21 +544,19 @@ class ModsController(Controller):
                 Tooltip(
                     message="Uninstall",
                     content=IconButton(
-                        icons.DELETE,
-                        on_click=self.delete_mod,
-                        data=mod
-                    )
+                        icons.DELETE, on_click=self.delete_mod, data=mod
+                    ),
                 ),
                 Tooltip(
                     message="Enable" if not mod.enabled else "Disable",
                     content=IconButton(
                         icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT,
                         on_click=self.toggle_mod,
-                        data=mod
-                    )
+                        data=mod,
+                    ),
                 ),
             ],
-            expand=True
+            expand=True,
         )
 
     async def update_my_mods_mod(self, event):
@@ -585,14 +569,22 @@ class ModsController(Controller):
         for tile in self.my_mod_tiles:
             if tile.data == mod:
                 self.my_mod_tiles.remove(tile)
-                mod_frame = self.enabled_mods_list if tile.data.enabled else self.disabled_mods_list
+                mod_frame = (
+                    self.enabled_mods_list
+                    if tile.data.enabled
+                    else self.disabled_mods_list
+                )
                 mod_frame_tile_index = 0 if tile.data.trovesaurus_data else 1
                 mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
                 mod_frame_tile.controls.remove(tile)
-        for mod_frame_tile in self.enabled_mods_list.controls + self.disabled_mods_list.controls:
+        for mod_frame_tile in (
+            self.enabled_mods_list.controls + self.disabled_mods_list.controls
+        ):
             mod_frame_tile.controls.clear()
         for mod in self.my_mod_list.mods:
-            mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            mod_frame = (
+                self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            )
             mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
             mod_frame_tile = mod_frame.controls[mod_frame_tile_index]
             tile = self.get_mod_tile(mod_frame, mod_frame_tile, mod)
@@ -620,7 +612,9 @@ class ModsController(Controller):
         )
         self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
         self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
-        self.page.snack_bar.content = Text(f"{mod.name} {'enabled' if mod.enabled else 'disabled'}")
+        self.page.snack_bar.content = Text(
+            f"{mod.name} {'enabled' if mod.enabled else 'disabled'}"
+        )
         self.page.snack_bar.bgcolor = "green"
         self.page.snack_bar.open = True
         await self.page.snack_bar.update_async()
@@ -680,7 +674,7 @@ class ModsController(Controller):
         if not self.mod_folders:
             self.trovesaurus.controls.append(
                 Text(
-                    "No Trove installation found"\
+                    "No Trove installation found"
                     "\nTry running program as administrator or go to settings and add the directory manually."
                 )
             )
@@ -787,13 +781,13 @@ class ModsController(Controller):
                                         # ),
                                     ],
                                     alignment="center",
-                                    run_spacing=4
+                                    run_spacing=4,
                                 ),
                                 on_click=self.set_trovesaurus_sorter_switch,
                             )
                             for i, (sorter, order) in enumerate(sort_by)
                         ]
-                    )
+                    ),
                 ]
             )
         )
@@ -821,7 +815,9 @@ class ModsController(Controller):
                 ExpansionTile(
                     leading=Image(
                         src=(
-                            self.api.get_resized_image_url(mod.image_url, ImageSize.SMALL)
+                            self.api.get_resized_image_url(
+                                mod.image_url, ImageSize.SMALL
+                            )
                             or "https://trovesaurus.com/images/logos/Sage_64.png?1"
                         ),
                         width=64,
@@ -857,7 +853,7 @@ class ModsController(Controller):
                                                         Image(
                                                             src=self.api.get_resized_image_url(
                                                                 author.avatar_url,
-                                                                ImageSize.MINI
+                                                                ImageSize.MINI,
                                                             ),
                                                             width=24,
                                                         ),
@@ -967,7 +963,7 @@ class ModsController(Controller):
                                             height=64,
                                             on_click=...,
                                             col=1.4,
-                                            disabled=True
+                                            disabled=True,
                                         ),
                                     ],
                                 ),

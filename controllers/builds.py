@@ -489,7 +489,7 @@ class GemBuildsController(Controller):
                 padding=15,
                 border_radius=10,
                 col={"xs": 6, "xxl": 2},
-                visible=False
+                visible=False,
             ),
         ]
         self.abilities = DataTable(

@@ -25,7 +25,7 @@ from flet import (
     TextStyle,
     alignment,
     Image,
-    Chip
+    Chip,
 )
 
 from models import Metadata, Preferences
@@ -51,7 +51,6 @@ class App:
                 port=port,
             )
         )
-
 
     async def start(self, page):
         self.page = page
@@ -88,7 +87,7 @@ class App:
             try:
                 APPDATA = Path(os.environ.get("APPDATA"))
             except TypeError:
-                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
+                APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
@@ -102,18 +101,30 @@ class App:
 
     async def load_constants(self):
         async with ClientSession() as session:
-            async with session.get("https://kiwiapi.slynx.xyz/v1/stats/files") as response:
+            async with session.get(
+                "https://kiwiapi.slynx.xyz/v1/stats/files"
+            ) as response:
                 if response.status != 200:
                     data_path = Path("data")
-                    files = [str(x.relative_to(data_path)) for x in data_path.rglob('*') if x.is_file()]
+                    files = [
+                        str(x.relative_to(data_path))
+                        for x in data_path.rglob("*")
+                        if x.is_file()
+                    ]
                     self.page.data_files = {
-                        path.replace("\\", "/"): load(open(data_path.joinpath(path), encoding="utf-8"))
+                        path.replace("\\", "/"): load(
+                            open(data_path.joinpath(path), encoding="utf-8")
+                        )
                         for path in files
                     }
                     return
                 files = await response.json()
                 self.page.data_files = {
-                    path: await (await session.get(f"https://kiwiapi.slynx.xyz/v1/stats/file/{path}")).json()
+                    path: await (
+                        await session.get(
+                            f"https://kiwiapi.slynx.xyz/v1/stats/file/{path}"
+                        )
+                    ).json()
                     for path in files
                 }
 
@@ -123,7 +134,7 @@ class App:
             try:
                 APPDATA = Path(os.environ.get("APPDATA"))
             except TypeError:
-                APPDATA = Path(os.getenv("HOME")+"/.steam/Steam/steamapps/common")
+                APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
             app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
@@ -188,7 +199,7 @@ class App:
             can_reveal_password=True,
             helper_style=TextStyle(color="red"),
             on_change=self.execute_login,
-            content_padding=10
+            content_padding=10,
         )
         self.page.controls.append(
             Container(
@@ -205,17 +216,20 @@ class App:
                                     on_click=self.execute_login_discord,
                                 ),
                                 Chip(
-                                    leading=Image(src="https://trovesaurus.com/images/logos/Sage_64.png?1", width=24),
+                                    leading=Image(
+                                        src="https://trovesaurus.com/images/logos/Sage_64.png?1",
+                                        width=24,
+                                    ),
                                     label=Text("Trovesaurus"),
                                     on_click=self.execute_login_trovesaurus,
-                                )
+                                ),
                             ]
                         ),
                         Chip(
                             leading=Icon("ARROW_BACK"),
                             label=Text("Go back"),
                             on_click=self.cancel_login,
-                        )
+                        ),
                     ],
                     horizontal_alignment="center",
                     width=450,
@@ -258,9 +272,7 @@ class App:
         )
 
     async def execute_login_trovesaurus(self, e):
-        await self.page.launch_url_async(
-            "https://trovesaurus.com/profile"
-        )
+        await self.page.launch_url_async("https://trovesaurus.com/profile")
 
     async def execute_logout(self, e):
         await self.page.client_storage.remove_async("rnt-token")
@@ -309,6 +321,7 @@ class App:
     async def sync_clock(self):
         now = datetime.now(UTC)
         await asyncio.sleep(60 - now.second)
+
 
 if __name__ == "__main__":
     APP = App()

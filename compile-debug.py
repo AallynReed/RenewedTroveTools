@@ -18,7 +18,11 @@ instructions = [
     ("--set-version-string", "CompanyName", "Sly"),
     ("--set-version-string", "FileDescription", metadata.name),
     ("--set-version-string", "ProductName", metadata.name),
-    ("--set-version-string", "OriginalFilename", f"{metadata.tech_name}-{metadata.version}.exe"),
+    (
+        "--set-version-string",
+        "OriginalFilename",
+        f"{metadata.tech_name}-{metadata.version}.exe",
+    ),
     ("--set-version-string", "LegalCopyright", metadata.copyright),
     ("--set-version-string", "CompanyName", "Sly"),
     ("--set-version-string", "InternalName", metadata.tech_name),
@@ -33,10 +37,10 @@ for executable in executables:
             editor,
             executable,
             option,
-            f"\"{key}\"",
+            f'"{key}"',
         ]
         if value:
-            command.append(f"\"{value}\"")
+            command.append(f'"{value}"')
         subprocess.run(" ".join(command))
 
 build_exe_options = {

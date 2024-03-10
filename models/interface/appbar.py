@@ -21,7 +21,7 @@ from flet import (
     MainAxisAlignment,
     Icon,
     Theme,
-    ButtonStyle
+    ButtonStyle,
 )
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
@@ -180,7 +180,8 @@ class CustomAppBar(AppBar):
                                             border_radius=50,
                                         ),
                                         Text(self.page.user_data["username"]),
-                                    ] if self.page.user_data is not None
+                                    ]
+                                    if self.page.user_data is not None
                                     else [
                                         TextButton(
                                             icon=PERSON,
@@ -198,11 +199,13 @@ class CustomAppBar(AppBar):
                                         text="Logout",
                                         on_click=self.page.RTT.execute_logout,
                                     ),
-                                ] if self.page.user_data is not None
+                                ]
+                                if self.page.user_data is not None
                                 else []
                             ),
                         ),
-                    ] if not self.page.web
+                    ]
+                    if not self.page.web
                     else []
                 ),
                 PopupMenuButton(
@@ -299,12 +302,12 @@ class CustomAppBar(AppBar):
                         Text(
                             "Downloading update, please wait...",
                             text_align="center",
-                            size=40
+                            size=40,
                         )
                     ],
                     alignment="center",
                     horizontal_alignment="center",
-                    expand=True
+                    expand=True,
                 ),
             ]
             event.control.disabled = True
@@ -330,7 +333,7 @@ class CustomAppBar(AppBar):
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
-                            shell=True
+                            shell=True,
                         )
                         await self.page.window_close_async()
         else:

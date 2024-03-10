@@ -202,4 +202,8 @@ class KiwiAPI:
                 return await response.json()
 
     def get_resized_image_url(self, url: str, size: ImageSize):
-        return self.api_url + ModsEndpoint.image_resize.value + f"?url={url}&size={size.name}"
+        return (
+            self.api_url
+            + ModsEndpoint.image_resize.value
+            + f"?url={url}&size={size.name}"
+        )
