@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from pathlib import Path
 
 from cx_Freeze import setup, Executable
@@ -7,10 +8,12 @@ from models.metadata import Metadata
 
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
 
-executables = [
-    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\flet\flet.exe",
-    r"C:\hostedtoolcache\windows\Python\3.11.8\x64\Lib\site-packages\flet\bin\fletd.exe",
-]
+python_path = Path(sys.executable).parent.parent
+flet_path = python_path.joinpath("Lib", "site-packages", "flet")
+
+if not flet_path.exists():
+    print(f"Could not find flet at {flet_path}")
+    quit()
 
 editor = r".\resedit.exe"
 
@@ -31,17 +34,18 @@ instructions = [
     ("--set-icon", "assets/x256.ico", ""),
 ]
 
-for executable in executables:
+for executable in flet_path.rglob("*.exe"):
     for option, key, value in instructions:
         command = [
             editor,
-            executable,
+            str(executable),
             option,
             f'"{key}"',
         ]
         if value:
             command.append(f'"{value}"')
         subprocess.run(" ".join(command))
+    print(f"Updated {executable} resources.")
 
 build_exe_options = {
     "excludes": [
