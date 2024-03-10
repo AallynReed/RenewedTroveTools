@@ -22,6 +22,7 @@ from flet import (
     Icon,
     Theme,
     ButtonStyle,
+    TextField
 )
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
@@ -34,6 +35,7 @@ from flet_core.icons import (
     PALETTE,
     SAVINGS,
     PERSON,
+    FEEDBACK
 )
 
 from models.preferences import AccentColor
@@ -84,6 +86,11 @@ class CustomAppBar(AppBar):
                     on_click=self.go_to_update_page,
                     visible=False,
                     tooltip="A newer version is available.",
+                ),
+                IconButton(
+                    icon=FEEDBACK,
+                    on_click=self.feedback_modal,
+                    tooltip="Send feedback",
                 ),
                 IconButton(
                     data="theme_switcher",
@@ -289,9 +296,44 @@ class CustomAppBar(AppBar):
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
             self.page.snack_bar.open = True
-            self.page.snack_bar.duration = 1000  # 60000
+            self.page.snack_bar.duration = 1000
             await self.page.snack_bar.update_async()
             await self.page.appbar.update_async()
+
+    async def feedback_modal(self, event):
+        self.feedback_text = TextField(
+            width=800,
+            expand=True,
+            multiline=True,
+            max_lines=10,
+            min_lines=5,
+        )
+        self.dlg = AlertDialog(
+            modal=True,
+            title=Text("Feedback"),
+            actions=[
+                TextButton("Close", on_click=self.close_dlg),
+                TextButton("Send", on_click=self.send_feedback),
+            ],
+            actions_alignment=MainAxisAlignment.END,
+            content=self.feedback_text,
+        )
+        self.page.dialog = self.dlg
+        self.dlg.open = True
+        await self.page.update_async()
+
+    async def send_feedback(self, event):
+        async with ClientSession() as session:
+            headers = {
+                "message": self.feedback_text.value,
+            }
+            await session.post(
+                "https://kiwiapi.slynx.xyz/v1/misc/feedback",
+                headers=headers,
+            )
+        self.dlg.open = False
+        await self.page.update_async()
+
 
     async def go_to_update_page(self, event):
         update_url, is_windows = await check_update(self.page.metadata.version)
