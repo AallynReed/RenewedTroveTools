@@ -116,7 +116,7 @@ class ModsController(Controller):
                 ]
             )
         )
-        await self.unlock_ui()
+        await self.release_ui()
         await self.tab_loader(boot=True)
 
     def setup_memory(self):
@@ -202,7 +202,7 @@ class ModsController(Controller):
         await self.main.update_async()
         await asyncio.sleep(0.1)
 
-    async def unlock_ui(self):
+    async def release_ui(self):
         self.main.disabled = False
         await self.main.update_async()
 
@@ -295,7 +295,7 @@ class ModsController(Controller):
                 ]
             )
         )
-        await self.unlock_ui()
+        await self.release_ui()
 
     async def settings_pick_custom_dir(self, event):
         await self.settings_custom_dir_pick.get_directory_path_async()
@@ -346,7 +346,7 @@ class ModsController(Controller):
                     "\nTry running program as administrator or go to settings and add the directory manually."
                 )
             )
-            await self.unlock_ui()
+            await self.release_ui()
             return
         self.my_mods.controls.append(
             Row(
@@ -377,7 +377,7 @@ class ModsController(Controller):
         await self.my_mod_list.update_trovesaurus_data()
         if not self.my_mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
-            await self.unlock_ui()
+            await self.release_ui()
             return
         my_mods_list = ResponsiveRow(expand=True)
         self.enabled_mods_list = Column(
@@ -431,7 +431,7 @@ class ModsController(Controller):
                 mt.controls.reverse()
             self.my_mod_tiles.append(mt)
         self.my_mods.controls.append(my_mods_list)
-        await self.unlock_ui()
+        await self.release_ui()
 
     def get_mod_tile(self, mod_frame, mod_frame_tile, mod):
         mod_tile = ListTile(
@@ -603,7 +603,7 @@ class ModsController(Controller):
             mod_frame_tile.controls.sort(
                 key=lambda x: self.my_mod_list.mods.index(x.data)
             )
-        await self.unlock_ui()
+        await self.release_ui()
 
     async def toggle_mod(self, event):
         mod = event.control.data
@@ -624,7 +624,7 @@ class ModsController(Controller):
         self.page.snack_bar.bgcolor = "green"
         self.page.snack_bar.open = True
         await self.page.snack_bar.update_async()
-        return await self.unlock_ui()
+        return await self.release_ui()
 
     async def update_mod_tile_ui(self, mod, move=False):
         if move:
@@ -662,7 +662,7 @@ class ModsController(Controller):
         self.my_mod_list.mods.remove(mod)
         self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
         self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
-        await self.unlock_ui()
+        await self.release_ui()
         self.page.snack_bar.content = Text(f"Uninstalled {mod.name}")
         self.page.snack_bar.bgcolor = "red"
         self.page.snack_bar.open = True
@@ -684,7 +684,7 @@ class ModsController(Controller):
                     "\nTry running program as administrator or go to settings and add the directory manually."
                 )
             )
-            await self.unlock_ui()
+            await self.release_ui()
             return
         self.memory["trovesaurus"]["selected_file"] = None
         self.trovesaurus.controls.append(
@@ -1027,7 +1027,7 @@ class ModsController(Controller):
             self.page.snack_bar.content = Text(f"Refreshed Trovesaurus")
             self.page.snack_bar.bgcolor = "green"
             self.page.snack_bar.open = True
-        await self.unlock_ui()
+        await self.release_ui()
 
     async def set_trovesaurus_sorter_reorder(self, event):
         pill, direction = event.control.data
@@ -1177,5 +1177,11 @@ class ModsController(Controller):
     async def load_mod_profiles(self, boot=False):
         await self.lock_ui()
         self.mod_profiles.controls.clear()
+        if not self.page.user_data:
+            self.mod_profiles.controls.append(
+                Text("You need to be logged in to use this feature")
+            )
+            await self.release_ui()
+            return
         self.mod_profiles.controls.append(Text("Mod Profiles"))
-        await self.unlock_ui()
+        await self.release_ui()

@@ -48,6 +48,7 @@ build_exe_options = {
         ("assets/", "assets/"),
         ("locales/", "locales/"),
         ("data/", "data/"),
+        ("update.bat", "update.bat"),
         ("README.md", "README.md"),
         ("LICENSE", "LICENSE"),
     ],
@@ -56,9 +57,10 @@ build_exe_options = {
 }
 
 bdist_msi_options = {
+    "initial_target_dir": f"[ProgramFiles64Folder]{metadata.tech_name}",
     "target_name": metadata.tech_name,
     "upgrade_code": metadata.app_id,
-    "add_to_path": False,
+    "add_to_path": True,
     "install_icon": str(metadata.icon),
     "all_users": True,
 }
@@ -72,6 +74,9 @@ setup(
     url=f"https://github.com/Sly0511/{metadata.tech_name}",
     description=metadata.description,
     options=options,
+    license="MIT",
+    license_file="LICENSE",
+    keywords="trove,glyph,mods,calculators,utilities,flutter,python",
     executables=[
         Executable(
             "app.py",

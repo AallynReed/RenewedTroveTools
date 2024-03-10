@@ -1,4 +1,8 @@
 import asyncio
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 from aiohttp import ClientSession
 from flet import (
@@ -47,11 +51,13 @@ async def check_update(current_version):
             except IndexError:
                 return None
             if current_version != version.get("name"):
-                for asset in version.get("assets"):
-                    if "debug" not in asset.get("name"):
-                        return asset.get("browser_download_url")
-                return version.get("html_url")
-    return None
+                if os.name == "nt":
+                    for asset in version.get("assets"):
+                        if "debug" not in asset.get("name"):
+                            return asset.get("browser_download_url"), os.name == "nt"
+                else:
+                    return version.get("html_url"), os.name == "nt"
+    return None, os.name == "nt"
 
 
 class CustomAppBar(AppBar):
@@ -274,7 +280,7 @@ class CustomAppBar(AppBar):
 
     async def check_for_update(self):
         await asyncio.sleep(1)
-        if (await check_update(self.page.metadata.version)) is not None:
+        if (await check_update(self.page.metadata.version))[0] is not None:
             self.page.appbar.actions[0].visible = True
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
@@ -284,7 +290,34 @@ class CustomAppBar(AppBar):
             await self.page.appbar.update_async()
 
     async def go_to_update_page(self, _):
-        await self.page.launch_url_async(await check_update(self.page.metadata.version))
+        update_url, is_windows = await check_update(self.page.metadata.version)
+        if is_windows:
+            async with ClientSession() as session:
+                async with session.get(update_url) as response:
+                    if response.status == 200:
+                        exe_path = Path(sys.executable)
+                        exe_location = exe_path.parent
+                        appdata = Path(os.getenv("APPDATA"))
+                        rtt_path = appdata.joinpath("Trove/sly.dev").joinpath(
+                            self.page.metadata.tech_name
+                        )
+                        update_file = rtt_path / "update.msi"
+                        update_file.write_bytes(await response.read())
+                        subprocess.Popen(
+                            [
+                                "update.bat",
+                                str(exe_location),
+                                str(update_file),
+                                str(exe_path),
+                            ],
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            shell=True
+                        )
+                        await self.page.window_close_async()
+        else:
+            await self.page.launch_url_async(update_url)
 
     async def change_theme(self, _):
         self.page.theme_mode = "light" if self.page.theme_mode == "dark" else "dark"
