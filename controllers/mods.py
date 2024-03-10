@@ -886,23 +886,60 @@ class ModsController(Controller):
                         width=64,
                         height=64,
                     ),
-                    title=Row(
+                    title=ResponsiveRow(
                         controls=[
-                            TextButton(
-                                content=Text(mod.name, color="#bbbbbb", size=18),
-                                url=f"https://trovesaurus.com/mod={mod.id}",
-                            ),
-                            *(
-                                [
-                                    Tooltip(
-                                        message="Installed",
-                                        content=Icon(icons.CHECK, color="green"),
+                            Row(
+                                alignment="start",
+                                controls=[
+                                    TextButton(
+                                        content=Text(mod.name, color="#bbbbbb", size=18),
+                                        url=f"https://trovesaurus.com/mod={mod.id}",
+                                    ),
+                                    *(
+                                        [
+                                            Tooltip(
+                                                message="Installed",
+                                                content=Icon(icons.CHECK, color="green"),
+                                            )
+                                        ]
+                                        if installed
+                                        else []
                                     )
-                                ]
-                                if installed
-                                else []
+                                ],
+                                col=6
                             ),
-                        ]
+                            Row(
+                                controls=[
+                                    Tooltip(
+                                        message="Downloads",
+                                        content=TextButton(
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.DOWNLOAD, color="primary"),
+                                                    Text(f"{mod.downloads}"),
+                                                ]
+                                            )
+                                        ),
+                                    ),
+                                    Tooltip(
+                                        message="Likes",
+                                        content=TextButton(
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.FAVORITE, color="pink"),
+                                                    Text(f"{mod.likes}"),
+                                                ]
+                                            )
+                                        ),
+                                    ),
+
+                                ],
+                                alignment="end",
+                                col=6
+                            )
+                        ],
+                        alignment="SPACE_BETWEEN",
+                        expand=True,
                     ),
                     subtitle=Row(
                         controls=[
@@ -959,28 +996,6 @@ class ModsController(Controller):
                         Column(
                             controls=[
                                 Text(mod.description) or Text("No description"),
-                                Row(
-                                    controls=[
-                                        Tooltip(
-                                            message="Downloads",
-                                            content=Row(
-                                                controls=[
-                                                    Icon(icons.DOWNLOAD),
-                                                    Text(f"{mod.downloads}"),
-                                                ]
-                                            ),
-                                        ),
-                                        Tooltip(
-                                            message="Likes",
-                                            content=Row(
-                                                controls=[
-                                                    Icon(icons.FAVORITE),
-                                                    Text(f"{mod.likes}"),
-                                                ]
-                                            ),
-                                        ),
-                                    ]
-                                ),
                                 ResponsiveRow(
                                     controls=[
                                         Dropdown(
