@@ -611,6 +611,7 @@ class TroveModList:
     def mods(self):
         if len(self._mods) != self.count:
             self._mods = self.enabled + self.disabled
+            self._mods.sort(key=lambda mod: mod.name)
         return self._mods
 
     def sort_by_name(self):

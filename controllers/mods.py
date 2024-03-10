@@ -357,14 +357,14 @@ class ModsController(Controller):
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
-        mod_list = TroveModList(path=installation_path)
-        await mod_list.update_trovesaurus_data()
-        if not mod_list.mods:
+        self.my_mod_list = TroveModList(path=installation_path)
+        await self.my_mod_list.update_trovesaurus_data()
+        if not self.my_mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.unlock_ui()
             return
         my_mods_list = ResponsiveRow(expand=True)
-        enabled_mods_list = Column(
+        self.enabled_mods_list = Column(
             controls=[
                 ExpansionTile(title=Text("Trovesaurus")),
                 ExpansionTile(title=Text("Local")),
@@ -372,7 +372,7 @@ class ModsController(Controller):
             scroll=ScrollMode.ADAPTIVE,
             expand=True,
         )
-        disabled_mods_list = Column(
+        self.disabled_mods_list = Column(
             controls=[
                 ExpansionTile(title=Text("Trovesaurus")),
                 ExpansionTile(title=Text("Local")),
@@ -380,13 +380,13 @@ class ModsController(Controller):
             scroll=ScrollMode.ADAPTIVE,
             expand=True,
         )
-        enabled_count = len(mod_list.enabled)
-        disabled_count = len(mod_list.disabled)
+        enabled_count = len(self.my_mod_list.enabled)
+        disabled_count = len(self.my_mod_list.disabled)
         my_mods_list.controls.append(
             Column(
                 controls=[
                     Text(f"Enabled ({enabled_count})"),
-                    enabled_mods_list,
+                    self.enabled_mods_list,
                 ],
                 expand=True,
                 col=6
@@ -396,14 +396,15 @@ class ModsController(Controller):
             Column(
                 controls=[
                     Text(f"Disabled ({disabled_count})"),
-                    disabled_mods_list,
+                    self.disabled_mods_list,
                 ],
                 expand=True,
                 col=6
             )
         )
-        for mod in mod_list.mods:
-            mod_frame = enabled_mods_list if mod.enabled else disabled_mods_list
+        self.my_mod_tiles = []
+        for mod in self.my_mod_list.mods:
+            mod_frame = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
             mod_tile = ListTile(
                 on_click=self.toggle_mod,
                 data=mod,
@@ -430,6 +431,7 @@ class ModsController(Controller):
                         *(
                             [
                                 Tooltip(
+                                    data="update",
                                     message="Update available",
                                     content=IconButton(
                                         icons.DOWNLOAD,
@@ -507,6 +509,7 @@ class ModsController(Controller):
             if mod.has_conflicts:
                 mod_tile.title.controls.append(
                     Tooltip(
+                        data="conflicts",
                         message="\n".join(
                             [conflict.name for conflict in mod.conflicts]
                         ),
@@ -521,32 +524,33 @@ class ModsController(Controller):
 
                     )
                 )
-            mod_frame_tile.controls.append(
-                Row(
-                    controls=[
-                        mod_tile,
-                        Tooltip(
-                            message="Uninstall",
-                            content=IconButton(
-                                icons.DELETE,
-                                on_click=self.delete_mod,
-                                data=mod
-                            )
-                        ),
-                        Tooltip(
-                            message="Enable" if not mod.enabled else "Disable",
-                            content=IconButton(
-                                icons.ARROW_LEFT if not mod.enabled else icons.ARROW_RIGHT,
-                                on_click=self.toggle_mod,
-                                data=mod
-                            )
-                        ),
-                    ],
-                    expand=True
-                )
+            mt = Row(
+                data=mod,
+                controls=[
+                    mod_tile,
+                    Tooltip(
+                        message="Uninstall",
+                        content=IconButton(
+                            icons.DELETE,
+                            on_click=self.delete_mod,
+                            data=mod
+                        )
+                    ),
+                    Tooltip(
+                        message="Enable" if not mod.enabled else "Disable",
+                        content=IconButton(
+                            icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT,
+                            on_click=self.toggle_mod,
+                            data=mod
+                        )
+                    ),
+                ],
+                expand=True
             )
+            mod_frame_tile.controls.append(mt)
             if not mod.enabled:
-                mod_frame_tile.controls[0].controls.reverse()
+                mt.controls.reverse()
+            self.my_mod_tiles.append(mt)
         self.my_mods.controls.append(my_mods_list)
         await self.unlock_ui()
 
@@ -558,7 +562,45 @@ class ModsController(Controller):
     async def toggle_mod(self, event):
         mod = event.control.data
         mod.toggle()
-        await self.load_my_mods()
+        for m in mod.file_conflicts:
+            m.check_conflicts(self.my_mod_list.mods, True)
+            await self.update_mod_tile_ui(m)
+        mod.check_conflicts(self.my_mod_list.mods, True)
+        await self.update_mod_tile_ui(mod, True)
+        mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
+        end = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+        end.controls[mod_frame_tile_index].controls.sort(
+            key=lambda x: self.my_mod_list.mods.index(x.data)
+        )
+        self.page.snack_bar.content = Text(f"{mod.name} {'enabled' if mod.enabled else 'disabled'}")
+        self.page.snack_bar.bgcolor = "green"
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
+        return await self.unlock_ui()
+
+    async def update_mod_tile_ui(self, mod, move=False):
+        if move:
+            tile_index = -1 if mod.enabled else 0
+        else:
+            tile_index = 0 if mod.enabled else -1
+        tile = next((t for t in self.my_mod_tiles if t.data == mod))
+        for c in tile.controls[tile_index].title.controls:
+            if c.data == "conflicts":
+                c.content.icon_color = (
+                    "red"
+                    if bool([c for c in mod.conflicts if c.enabled]) and mod.enabled
+                    else "yellow"
+                )
+        if move:
+            mod_frame_tile_index = 0 if mod.trovesaurus_data else 1
+            icon_index = 0 if mod.enabled else -1
+            icon = icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT
+            start = self.disabled_mods_list if mod.enabled else self.enabled_mods_list
+            end = self.enabled_mods_list if mod.enabled else self.disabled_mods_list
+            start.controls[mod_frame_tile_index].controls.remove(tile)
+            end.controls[mod_frame_tile_index].controls.append(tile)
+            tile.controls[icon_index].content.icon = icon
+            tile.controls.reverse()
 
     async def delete_mod(self, event):
         mod = event.control.data
