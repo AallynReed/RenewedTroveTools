@@ -370,7 +370,6 @@ class CustomAppBar(AppBar):
                                 "update.bat",
                                 str(exe_location),
                                 str(update_file),
-                                str(exe_path),
                             ],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
