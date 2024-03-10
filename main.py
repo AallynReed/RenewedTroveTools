@@ -282,7 +282,7 @@ class App:
     async def post_login(self):
         await self.setup_appbar()
         await self.start_tasks()
-        await self.page.go_async("/")
+        await self.page.go_async("/mods_manager")
 
     async def setup_appbar(self):
         self.page.appbar = CustomAppBar(
