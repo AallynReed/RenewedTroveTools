@@ -4,4 +4,3 @@ taskkill /im flet.exe /F
 msiexec /i %2 /qb+! TARGETDIR=%1
 del /q %2
 start %3
-pause
