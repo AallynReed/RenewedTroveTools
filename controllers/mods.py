@@ -80,7 +80,7 @@ class ModsController(Controller):
                             color="red" if not self.page.user_data else "default",
                         ),
                         Text(
-                            "Mod Profiles",
+                            "Mod Profiles (Not working yet)",
                             color="red" if not self.page.user_data else "default",
                         ),
                     ]
