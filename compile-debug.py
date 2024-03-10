@@ -13,7 +13,10 @@ flet_path = python_path.joinpath("Lib", "site-packages", "flet")
 
 if not flet_path.exists():
     print(f"Could not find flet at {flet_path}")
-    quit()
+    flet_path = python_path.joinpath("x64", "Lib", "site-packages", "flet")
+    if not flet_path.exists():
+        print(f"Could not find flet at {flet_path}")
+        quit()
 
 editor = r".\resedit.exe"
 
