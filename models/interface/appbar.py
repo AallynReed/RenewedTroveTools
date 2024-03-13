@@ -68,7 +68,6 @@ class CustomAppBar(AppBar):
         self.page = page
         actions = self.build_actions(kwargs)
         super().__init__(
-            leading_width=40,
             bgcolor=SURFACE_VARIANT,
             actions=actions,
             center_title=True,

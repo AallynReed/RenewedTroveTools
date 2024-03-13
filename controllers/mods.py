@@ -389,18 +389,11 @@ class ModsController(Controller):
                                 src="https://trovesaurus.com/images/logos/Sage_64.png?1",
                                 width=24,
                             ),
-                            Text("Trovesaurus")
+                            Text("Trovesaurus"),
                         ]
                     )
                 ),
-                ExpansionTile(
-                    title=Row(
-                        controls=[
-                            Icon(icons.FOLDER),
-                            Text("Local")
-                        ]
-                    )
-                ),
+                ExpansionTile(title=Row(controls=[Icon(icons.FOLDER), Text("Local")])),
             ],
             1: [
                 ExpansionTile(
@@ -410,19 +403,12 @@ class ModsController(Controller):
                                 src="https://trovesaurus.com/images/logos/Sage_64.png?1",
                                 width=24,
                             ),
-                            Text("Trovesaurus")
+                            Text("Trovesaurus"),
                         ]
                     )
                 ),
-                ExpansionTile(
-                    title=Row(
-                        controls=[
-                            Icon(icons.FOLDER),
-                            Text("Local")
-                        ]
-                    )
-                ),
-            ]
+                ExpansionTile(title=Row(controls=[Icon(icons.FOLDER), Text("Local")])),
+            ],
         }
         my_mods_list = ResponsiveRow(expand=True)
         self.enabled_mods_list = Column(
@@ -474,35 +460,38 @@ class ModsController(Controller):
                     Row(
                         controls=[
                             Icon(icons.CHECK, color="green"),
-                            self.enabled_counter
+                            self.enabled_counter,
                         ]
                     ),
                     self.enabled_mods_list,
                 ],
                 expand=True,
                 col=5.8,
-
             )
         )
-        my_mods_list.controls.append(Row(controls=[VerticalDivider()], expand=True, col=0.4))
+        my_mods_list.controls.append(
+            Row(controls=[VerticalDivider()], expand=True, col=0.4)
+        )
         my_mods_list.controls.append(
             Column(
                 controls=[
                     Row(
                         controls=[
                             Icon(icons.CANCEL, color="red"),
-                            self.disabled_counter
+                            self.disabled_counter,
                         ]
                     ),
                     self.disabled_mods_list,
                 ],
                 expand=True,
-                col=5.8
+                col=5.8,
             )
         )
         self.my_mod_tiles = []
         for mod in self.my_mod_list.mods:
-            mod_frame = self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            mod_frame = (
+                self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            )
             mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
             mt = self.get_mod_tile(mod)
             mod_frame_tile.controls.append(mt)
@@ -648,7 +637,9 @@ class ModsController(Controller):
         for mod_frame_tile in self.my_mods_list_maps[0] + self.my_mods_list_maps[1]:
             mod_frame_tile.controls.clear()
         for mod in self.my_mod_list.mods:
-            mod_frame = self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            mod_frame = (
+                self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            )
             mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
             tile = self.get_mod_tile(mod)
             if not mod.enabled:
@@ -668,11 +659,11 @@ class ModsController(Controller):
             await self.update_mod_tile_ui(m)
         mod.check_conflicts(self.my_mod_list.mods, True)
         await self.update_mod_tile_ui(mod, True)
-        mod_frame = self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
-        mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
-        mod_frame_tile.controls.sort(
-            key=lambda x: self.my_mod_list.mods.index(x.data)
+        mod_frame = (
+            self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
         )
+        mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
+        mod_frame_tile.controls.sort(key=lambda x: self.my_mod_list.mods.index(x.data))
         self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
         self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
         self.page.snack_bar.content = Text(
@@ -699,8 +690,12 @@ class ModsController(Controller):
         if move:
             icon_index = 0 if mod.enabled else -1
             icon = icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT
-            start = self.my_mods_list_maps[1] if mod.enabled else self.my_mods_list_maps[0]
-            end = self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            start = (
+                self.my_mods_list_maps[1] if mod.enabled else self.my_mods_list_maps[0]
+            )
+            end = (
+                self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+            )
             start_mod_frame_tile = start[0] if mod.trovesaurus_data else start[1]
             end_mod_frame_tile = end[0] if mod.trovesaurus_data else end[1]
             start_mod_frame_tile.controls.remove(tile)
@@ -712,7 +707,9 @@ class ModsController(Controller):
         mod = event.control.data
         mod.mod_path.unlink()
         tile = next((t for t in self.my_mod_tiles if t.data == mod))
-        mod_frame = self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+        mod_frame = (
+            self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
+        )
         mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
         mod_frame_tile.controls.remove(tile)
         self.my_mod_tiles.remove(tile)
@@ -892,21 +889,25 @@ class ModsController(Controller):
                                 alignment="start",
                                 controls=[
                                     TextButton(
-                                        content=Text(mod.name, color="#bbbbbb", size=18),
+                                        content=Text(
+                                            mod.name, color="#bbbbbb", size=18
+                                        ),
                                         url=f"https://trovesaurus.com/mod={mod.id}",
                                     ),
                                     *(
                                         [
                                             Tooltip(
                                                 message="Installed",
-                                                content=Icon(icons.CHECK, color="green"),
+                                                content=Icon(
+                                                    icons.CHECK, color="green"
+                                                ),
                                             )
                                         ]
                                         if installed
                                         else []
-                                    )
+                                    ),
                                 ],
-                                col=6
+                                col=6,
                             ),
                             Row(
                                 controls=[
@@ -915,7 +916,9 @@ class ModsController(Controller):
                                         content=TextButton(
                                             content=Row(
                                                 controls=[
-                                                    Icon(icons.DOWNLOAD, color="primary"),
+                                                    Icon(
+                                                        icons.DOWNLOAD, color="primary"
+                                                    ),
                                                     Text(f"{mod.downloads}"),
                                                 ]
                                             )
@@ -932,11 +935,10 @@ class ModsController(Controller):
                                             )
                                         ),
                                     ),
-
                                 ],
                                 alignment="end",
-                                col=6
-                            )
+                                col=6,
+                            ),
                         ],
                         alignment="SPACE_BETWEEN",
                         expand=True,

@@ -1,4 +1,4 @@
-from flet import View, Column
+from flet import View, Column, ScrollMode
 from flet_core.icons import TABLE_VIEW
 
 from controllers import GemBuildsController
@@ -14,5 +14,13 @@ class GemBuildsView(View):
         page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
-            controls=[Column(controls=[ctrl.interface])],
+            controls=[
+                Column(
+                    controls=[
+                        ctrl.interface
+                    ],
+                    expand=True,
+                    scroll=ScrollMode.ADAPTIVE
+                )
+            ],
         )
