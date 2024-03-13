@@ -76,7 +76,7 @@ class App:
         self.setup_localization()
         await self.setup_page()
         await self.gather_views()
-        await self.post_login()
+        await self.post_login(route=self.page.route)
 
     async def load_configurations(self):
         self.page.user_data = None
@@ -279,10 +279,10 @@ class App:
         await self.stop_tasks()
         await self.process_login()
 
-    async def post_login(self):
+    async def post_login(self, route=None):
         await self.setup_appbar()
         await self.start_tasks()
-        await self.page.go_async("/")
+        await self.page.go_async(route or "/")
 
     async def setup_appbar(self):
         self.page.appbar = CustomAppBar(
