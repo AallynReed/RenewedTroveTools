@@ -381,7 +381,7 @@ class ModsController(Controller):
             await self.release_ui()
             return
         self.my_mods_list_maps = {
-            0: [
+            i: [
                 ExpansionTile(
                     title=Row(
                         controls=[
@@ -391,24 +391,20 @@ class ModsController(Controller):
                             ),
                             Text("Trovesaurus"),
                         ]
-                    )
+                    ),
+                    tile_padding=padding.symmetric(0, 10),
                 ),
-                ExpansionTile(title=Row(controls=[Icon(icons.FOLDER), Text("Local")])),
-            ],
-            1: [
                 ExpansionTile(
                     title=Row(
                         controls=[
-                            Image(
-                                src="https://trovesaurus.com/images/logos/Sage_64.png?1",
-                                width=24,
-                            ),
-                            Text("Trovesaurus"),
+                            Icon(icons.FOLDER),
+                            Text("Local")
                         ]
-                    )
+                    ),
+                    tile_padding=padding.symmetric(0, 10),
                 ),
-                ExpansionTile(title=Row(controls=[Icon(icons.FOLDER), Text("Local")])),
-            ],
+            ]
+            for i in range(2)
         }
         my_mods_list = ResponsiveRow(expand=True)
         self.enabled_mods_list = Column(
@@ -420,6 +416,7 @@ class ModsController(Controller):
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
+                Divider(),
                 Column(
                     controls=[
                         self.my_mods_list_maps[0][1],
@@ -440,6 +437,7 @@ class ModsController(Controller):
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
+                Divider(),
                 Column(
                     controls=[
                         self.my_mods_list_maps[1][1],
@@ -502,7 +500,12 @@ class ModsController(Controller):
         await self.release_ui()
 
     def get_mod_tile(self, mod):
-        mod_tile = ListTile(on_click=self.toggle_mod, data=mod, expand=True)
+        mod_tile = ListTile(
+            data=mod,
+            content_padding=padding.symmetric(0, 10),
+            on_click=self.toggle_mod,
+            expand=True,
+        )
         if mod.trovesaurus_data:
             # mod_tile.leading = Image(
             #     src=self.api.get_resized_image_url(

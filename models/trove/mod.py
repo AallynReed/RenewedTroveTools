@@ -23,13 +23,16 @@ from ..trovesaurus.mods import Mod
 ModParserLogger = Logger("Mod Parser")
 
 
-class NoFilesError(Exception): ...
+class NoFilesError(Exception):
+    ...
 
 
-class PropertyMalformedError(Exception): ...
+class PropertyMalformedError(Exception):
+    ...
 
 
-class MissingPropertyError(Exception): ...
+class MissingPropertyError(Exception):
+    ...
 
 
 class Property(BaseModel):
@@ -114,7 +117,7 @@ class TroveMod:
     mod_path: Path
     version: int = 1
     properties: list[Property]
-    _content_files: list[str]
+    _content_files: list[TroveModFile]
     files: list[TroveModFile]
     _zip_hash: str = None
     _tmod_hash: str = None
@@ -142,7 +145,7 @@ class TroveMod:
     def content_files(self):
         if not self._content_files:
             self._content_files = [
-                f.trove_path for f in self.files if f.trove_path != self.preview_path
+                f for f in self.files if f.trove_path != self.preview_path
             ]
         return self._content_files
 
@@ -421,6 +424,10 @@ class TroveMod:
         self._tmod_content = value
 
     @property
+    def hash(self):
+        return ""
+
+    @property
     def zip_hash(self):
         if self._zip_hash is None:
             self.zip_hash = md5(self.compile_zip_mod()).hexdigest()
@@ -522,7 +529,8 @@ class TMod(TroveMod):
             mod.files.append(file)
         return mod
 
-    def manual_decompression(self, data: bytes):
+    @staticmethod
+    def manual_decompression(data: bytes):
         data = BinaryReader(bytearray(data[7:-5]))
         data_chunks = data.size() // (32768 + 5)
         output = BinaryReader(bytearray())
@@ -532,7 +540,8 @@ class TMod(TroveMod):
         output.extend(bytearray(data.read_bytes(data.size() - data.pos())))
         return output.buffer()
 
-    def manual_compression(self, data: bytes):
+    @staticmethod
+    def manual_compression(data: bytes):
         output = BinaryReader(bytearray())
         output.write_bytes(b"\x78\x01\x00\x00\x80\xFF\x7F")
         data_chunks = chunks(data, 32768)
@@ -563,7 +572,7 @@ class TMod(TroveMod):
                 configs.append(f'[{file_name}]')
             config_file.write_text("\n".join(configs))
         else:
-            regex = re.compile(r"^\[(.*?\.swf)\]$")
+            regex = re.compile(r"^\[(.*?\.swf)]$")
             current = config_file.read_text()
             configs = regex.findall(current)
             missing = []
