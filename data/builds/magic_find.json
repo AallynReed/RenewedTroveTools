@@ -15,19 +15,19 @@
         "name": "Hat",
         "type": "switch",
         "percentage": false,
-        "value": 260
+        "value": 325
     },
     {
         "name": "Weapon",
         "type": "switch",
         "percentage": false,
-        "value": 260
+        "value": 325
     },
     {
         "name": "Face",
         "type": "switch",
         "percentage": false,
-        "value": 260
+        "value": 325
     },
     {
         "name": "Ring",
