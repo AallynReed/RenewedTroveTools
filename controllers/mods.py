@@ -581,7 +581,11 @@ class ModsController(Controller):
             #     ),
             #     height=128,
             # )
-            mod_tile.title = Row(controls=[Text(mod.name)])
+            mod_tile.title = Row(
+                controls=[
+                    Text(mod.name)
+                ]
+            )
             mod_tile.subtitle = Row(
                 controls=[
                     Icon(icons.PERSON),

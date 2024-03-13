@@ -117,7 +117,7 @@ class TroveMod:
     mod_path: Path
     version: int = 1
     properties: list[Property]
-    _content_files: list[TroveModFile]
+    _content_files: list[str]
     files: list[TroveModFile]
     _zip_hash: str = None
     _tmod_hash: str = None
@@ -145,7 +145,7 @@ class TroveMod:
     def content_files(self):
         if not self._content_files:
             self._content_files = [
-                f for f in self.files if f.trove_path != self.preview_path
+                f.trove_path for f in self.files if f.trove_path != self.preview_path
             ]
         return self._content_files
 
