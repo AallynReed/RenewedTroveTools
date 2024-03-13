@@ -13,6 +13,8 @@ from aiohttp import ClientSession
 from binary_reader import BinaryReader
 from pydantic import BaseModel
 from toml import dumps
+import re
+import os
 
 from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
 from utils.logger import Logger
@@ -155,6 +157,10 @@ class TroveMod:
     @property
     def has_wrong_name(self):
         return self.mod_path.stem != self.name
+
+    @property
+    def is_ui_mod(self):
+        return False
 
     def toggle(self):
         self.enabled = not self.enabled
@@ -463,6 +469,9 @@ class TroveMod:
                         data = await response.read()
                         self.mod_path.write_bytes(data)
 
+    def ensure_config(self):
+        pass
+
 
 class TMod(TroveMod):
     def __str__(self):
@@ -533,6 +542,38 @@ class TMod(TroveMod):
                 output.write_bytes(b"\x00\x00\x80\xFF\x7F")
         output.write_bytes(b"\x00\x00\x00\xFF\xFF")
         return output.buffer()
+
+    @property
+    def is_ui_mod(self):
+        for file in self.files:
+            if file.trove_path.endswith(".swf"):
+                return True
+
+    def ensure_config(self):
+        if os.name != "nt":
+            return
+        mods_cfgs_path = Path(os.getenv("APPDATA")).joinpath("Trove", "ModCfgs")
+        mods_cfgs_path.mkdir(parents=True, exist_ok=True)
+        config_file = mods_cfgs_path.joinpath(f"{self.name}.cfg")
+        swf_files = [file.trove_path.split("/")[-1] for file in self.files if file.trove_path.endswith(".swf")]
+        if not config_file.exists():
+            configs = []
+            for file in swf_files:
+                file_name = file
+                configs.append(f'[{file_name}]')
+            config_file.write_text("\n".join(configs))
+        else:
+            regex = re.compile(r"^\[(.*?\.swf)\]$")
+            current = config_file.read_text()
+            configs = regex.findall(current)
+            missing = []
+            for file in swf_files:
+                if file not in configs:
+                    missing.append(file)
+            if missing:
+                missing_text = "\n\n".join([f"[{file}]" for file in missing])
+                current += "\n\n" + missing_text
+                config_file.write_text(current)
 
 
 class ZMod(TroveMod):
@@ -639,6 +680,11 @@ class TroveModList:
         for mod in self.mods:
             mod.check_conflicts(self.mods, force)
 
+    def _ensure_mod_configs(self):
+        for mod in self.mods:
+            if mod.is_ui_mod:
+                mod.ensure_config()
+
     def _populate(self, force=False):
         self._mods.clear()
         self._populate_tmod_enabled()
@@ -647,6 +693,7 @@ class TroveModList:
         self._populate_zip_disabled()
         self.sort_by_name()
         self._calculate_conflicts(force)
+        self._ensure_mod_configs()
 
     def _populate_tmod_enabled(self):
         for file in self.list_path.glob("*.tmod"):
