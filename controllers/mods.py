@@ -459,7 +459,8 @@ class ModsController(Controller):
                         controls=[
                             Icon(icons.CHECK, color="green"),
                             self.enabled_counter,
-                        ]
+                        ],
+                        alignment="center",
                     ),
                     self.enabled_mods_list,
                 ],
@@ -477,7 +478,8 @@ class ModsController(Controller):
                         controls=[
                             Icon(icons.CANCEL, color="red"),
                             self.disabled_counter,
-                        ]
+                        ],
+                        alignment="center",
                     ),
                     self.disabled_mods_list,
                 ],
