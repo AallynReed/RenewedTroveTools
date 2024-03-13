@@ -287,7 +287,13 @@ class App:
     async def setup_appbar(self):
         self.page.appbar = CustomAppBar(
             page=self.page,
-            leading=Row(controls=[Icon("Star"), self.page.clock]),
+            title=Text(self.page.metadata.app_name),
+            leading=Row(
+                controls=[
+                    Icon("Star"),
+                    self.page.clock,
+                ],
+            ),
         )
 
     async def gather_views(self):
