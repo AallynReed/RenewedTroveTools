@@ -142,7 +142,10 @@ class App:
             logs = app_data.joinpath("logs")
             logs.mkdir(parents=True, exist_ok=True)
             latest_log = logs.joinpath("latest.log")
-            latest_log.unlink(missing_ok=True)
+            try:
+                latest_log.unlink(missing_ok=True)
+            except PermissionError:
+                asyncio.create_task(self.page.window_close_async())
             dated_log = logs.joinpath(datetime.now().strftime("%Y-%m-%d %H-%M-%S.log"))
         targets = (
             logging.StreamHandler(sys.stdout),
