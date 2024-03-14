@@ -395,12 +395,7 @@ class ModsController(Controller):
                     tile_padding=padding.symmetric(0, 10),
                 ),
                 ExpansionTile(
-                    title=Row(
-                        controls=[
-                            Icon(icons.FOLDER),
-                            Text("Local")
-                        ]
-                    ),
+                    title=Row(controls=[Icon(icons.FOLDER), Text("Local")]),
                     tile_padding=padding.symmetric(0, 10),
                 ),
             ]
@@ -581,11 +576,7 @@ class ModsController(Controller):
             #     ),
             #     height=128,
             # )
-            mod_tile.title = Row(
-                controls=[
-                    Text(mod.name)
-                ]
-            )
+            mod_tile.title = Row(controls=[Text(mod.name)])
             mod_tile.subtitle = Row(
                 controls=[
                     Icon(icons.PERSON),

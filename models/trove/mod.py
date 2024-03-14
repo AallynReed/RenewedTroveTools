@@ -168,17 +168,17 @@ class TroveMod:
     def toggle(self):
         self.enabled = not self.enabled
         if self.enabled:
-            new_name = self.mod_path.name.partition(".")[0] + ".tmod"
+            new_name = self.mod_path.name.split(".tmod.disabled")[0] + ".tmod"
             new_path = self.cwd.joinpath(new_name)
         else:
-            new_name = self.mod_path.name.partition(".")[0] + ".tmod.disabled"
+            new_name = self.mod_path.name.split(".tmod")[0] + ".tmod.disabled"
             new_path = self.cwd.joinpath(new_name)
         self.mod_path.rename(new_path)
         self.mod_path = new_path
 
     def fix_name(self):
-        suffixes = self.mod_path.suffixes
-        new_mod_path = self.mod_path.with_name(self.name + "".join(suffixes))
+        extension = ".tmod" if self.enabled else ".tmod.disabled"
+        new_mod_path = self.mod_path.with_name(self.name + extension)
         if new_mod_path.exists():
             return
         self.mod_path.rename(new_mod_path)
