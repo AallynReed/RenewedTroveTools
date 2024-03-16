@@ -45,6 +45,9 @@ class Directories(BaseModel):
 class ModManagerPreferences(BaseModel):
     page_size: int = 8
     custom_directories: list[tuple[str, Path]] = Field(default_factory=list)
+    show_previews: bool = False
+    auto_fix_mod_names: bool = True
+    auto_generate_and_fix_cfg: bool = True
 
     @validator("custom_directories")
     def clean_custom_directories(cls, value):
