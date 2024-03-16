@@ -1,5 +1,5 @@
 from flet import View, Column, Row
-from flet_core.icons import TABLE_VIEW
+from flet_core.icons import LOGIN
 
 from controllers import LoginController
 
@@ -7,7 +7,7 @@ from controllers import LoginController
 class LoginView(View):
     route = "/login"
     title = "Login"
-    icon = TABLE_VIEW
+    icon = LOGIN
     has_tab = False
 
     def __init__(self, page):

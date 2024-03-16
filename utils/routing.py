@@ -30,6 +30,13 @@ class Routing:
     async def handle_route_change_async(self, event):
         if event is None:
             return
+        routes = [v.route for v in self.views]
+        if self.page.route not in routes:
+            await self.page.go_async("/404")
+            return
+        self.current_views = [
+            v for v in self.views if v.route == self.page.route or v.has_tab
+        ]
         view = self.get_view(event)
         await self.change_view_async(view)
 
@@ -41,26 +48,23 @@ class Routing:
             for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
         }
         self.page.params = params
-        view = get_attr(self.views, route=url.path)
-        if view is None:
-            view = get_attr(self.views, route="/404")
+        view = get_attr(self.current_views, route=url.path)
         self.page.appbar.leading.controls[0].name = view.icon
         return view(self.page)
 
     async def change_view_async(self, view: Type[View]):
-        current_views = [v for v in self.views if v.route == view.route or v.has_tab]
         self.page.controls = [
             Row(
                 controls=[
                     NavigationRail(
-                        selected_index=current_views.index(view.__class__),
+                        selected_index=self.current_views.index(view.__class__),
                         label_type=NavigationRailLabelType.ALL,
                         extended=False,
                         min_width=100,
                         min_extended_width=200,
                         destinations=[
                             NavigationRailDestination(icon=v.icon, label=t(v.title))
-                            for v in current_views
+                            for v in self.current_views
                         ],
                         on_change=self.change_navigation,
                     ),
@@ -70,8 +74,9 @@ class Routing:
                 expand=True,
             )
         ]
+        print(self.page.controls[0].controls[0].destinations)
         await self.page.update_async()
 
     async def change_navigation(self, event):
-        route = self.views[event.control.selected_index].route
+        route = self.current_views[event.control.selected_index].route
         await self.page.go_async(route)
