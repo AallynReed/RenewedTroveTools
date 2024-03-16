@@ -8,10 +8,10 @@ class ExtractorView(View):
     route = "/file_extractor"
     title = "File Extractor"
     icon = UNARCHIVE
+    has_tab = True
 
     def __init__(self, page):
         ctrl = ExtractorController(page=page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
             controls=[ctrl.main],

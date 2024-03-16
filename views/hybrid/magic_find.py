@@ -8,10 +8,10 @@ class MagicFindView(View):
     route = "/magic_find"
     title = "Magic Find"
     icon = MENU_BOOK_SHARP
+    has_tab = True
 
     def __init__(self, page):
         ctrl = MagicFindController(page=page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
             controls=[ctrl.interface],

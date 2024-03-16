@@ -22,11 +22,9 @@ class Routing:
         self,
         page: Page,
         views: list[Type[View]],
-        not_found: Type[View] = None,
     ):
         self.page = page
         self.views = views
-        self.not_found = not_found
         self.page.on_route_change = self.handle_route_change_async
 
     async def handle_route_change_async(self, event):
@@ -45,24 +43,24 @@ class Routing:
         self.page.params = params
         view = get_attr(self.views, route=url.path)
         if view is None:
-            view = self.not_found
+            view = get_attr(self.views, route="/404")
+        self.page.appbar.leading.controls[0].name = view.icon
         return view(self.page)
 
     async def change_view_async(self, view: Type[View]):
+        current_views = [v for v in self.views if v.route == view.route or v.has_tab]
         self.page.controls = [
             Row(
                 controls=[
                     NavigationRail(
-                        selected_index=self.views.index(view.__class__),
+                        selected_index=current_views.index(view.__class__),
                         label_type=NavigationRailLabelType.ALL,
                         extended=False,
                         min_width=100,
                         min_extended_width=200,
                         destinations=[
-                            NavigationRailDestination(
-                                icon=view.icon, label=t(view.title)
-                            )
-                            for view in self.views
+                            NavigationRailDestination(icon=v.icon, label=t(v.title))
+                            for v in current_views
                         ],
                         on_change=self.change_navigation,
                     ),

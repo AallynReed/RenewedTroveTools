@@ -8,10 +8,10 @@ class MasteryView(View):
     route = "/mastery"
     title = "Mastery"
     icon = MENU_BOOK_SHARP
+    has_tab = True
 
     def __init__(self, page):
         ctrl = MasteryController(page=page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
             controls=[

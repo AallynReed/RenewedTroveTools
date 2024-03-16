@@ -8,10 +8,10 @@ class StarView(View):
     route = "/star_chart"
     title = "Star Chart"
     icon = STARS_SHARP
+    has_tab = True
 
     def __init__(self, page):
         ctrl = StarChartController(page=page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             self.route,
             controls=[

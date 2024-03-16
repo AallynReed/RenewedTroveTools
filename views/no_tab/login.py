@@ -8,10 +8,10 @@ class LoginView(View):
     route = "/login"
     title = "Login"
     icon = TABLE_VIEW
+    has_tab = False
 
     def __init__(self, page):
         ctrl = LoginController(page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
             controls=[

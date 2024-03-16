@@ -27,7 +27,7 @@ from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
 from utils.routing import Routing
-from views import all_views, View404
+from views import all_views
 
 
 class App:
@@ -230,7 +230,7 @@ class App:
     async def gather_views(self):
         self.page.all_views = []
         self.page.all_views.extend(all_views(self.page.web))
-        Routing(self.page, self.page.all_views, not_found=View404)
+        Routing(self.page, self.page.all_views)
 
     async def start_tasks(self):
         if self.update_clock.is_running():

@@ -8,10 +8,10 @@ class GemSetView(View):
     route = "/gem_calculator"
     title = "tabs.0"
     icon = DIAMOND_SHARP
+    has_tab = True
 
     def __init__(self, page):
         ctrl = GemSetController(page=page)
-        page.appbar.leading.controls[0].name = self.icon
         super().__init__(
             route=self.route,
             controls=[
