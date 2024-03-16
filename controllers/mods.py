@@ -31,6 +31,8 @@ from flet import (
     Tooltip,
     FilePicker,
     ScrollMode,
+    ButtonStyle,
+    Switch
 )
 
 from models.interface import Controller
@@ -235,6 +237,44 @@ class ModsController(Controller):
                     Card(
                         content=Column(
                             controls=[
+                                Text("Settings"),
+                                Divider(),
+                                Row(
+                                    controls=[
+                                        Text("Show Previews"),
+                                        Switch(
+                                            value=self.page.preferences.mod_manager.show_previews,
+                                            on_change=self.settings_toggle_show_previews,
+                                            tooltip="Show mod image previews",
+                                        ),
+                                    ]
+                                ),
+                                Row(
+                                    controls=[
+                                        Text("Auto Fix Mod Names"),
+                                        Switch(
+                                            value=self.page.preferences.mod_manager.auto_fix_mod_names,
+                                            on_change=self.settings_toggle_auto_fix_mod_names,
+                                            tooltip="Automatically fix mod names on directory reading",
+                                        ),
+                                    ]
+                                ),
+                                Row(
+                                    controls=[
+                                        Text("Auto Generate and Fix CFG files for UI mods"),
+                                        Switch(
+                                            value=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+                                            on_change=self.settings_toggle_auto_generate_and_fix_cfg,
+                                            tooltip="Automatically generate and fix cfg files for UI mods",
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        )
+                    ),
+                    Card(
+                        content=Column(
+                            controls=[
                                 Text("Custom Directories"),
                                 Divider(),
                                 Row(
@@ -292,11 +332,23 @@ class ModsController(Controller):
                                 ),
                             ]
                         )
-                    )
+                    ),
                 ]
             )
         )
         await self.release_ui()
+
+    async def settings_toggle_show_previews(self, event):
+        self.page.preferences.mod_manager.show_previews = event.control.value
+        self.page.preferences.save()
+
+    async def settings_toggle_auto_fix_mod_names(self, event):
+        self.page.preferences.mod_manager.auto_fix_mod_names = event.control.value
+        self.page.preferences.save()
+
+    async def settings_toggle_auto_generate_and_fix_cfg(self, event):
+        self.page.preferences.mod_manager.auto_generate_and_fix_cfg = event.control.value
+        self.page.preferences.save()
 
     async def settings_pick_custom_dir(self, event):
         await self.settings_custom_dir_pick.get_directory_path_async()
@@ -374,7 +426,11 @@ class ModsController(Controller):
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
-        self.my_mod_list = TroveModList(path=installation_path)
+        self.my_mod_list = TroveModList(
+            path=installation_path,
+            fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
+            fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+        )
         await self.my_mod_list.update_trovesaurus_data()
         if not self.my_mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
@@ -393,10 +449,12 @@ class ModsController(Controller):
                         ]
                     ),
                     tile_padding=padding.symmetric(0, 10),
+                    initially_expanded=True,
                 ),
                 ExpansionTile(
                     title=Row(controls=[Icon(icons.FOLDER), Text("Local")]),
                     tile_padding=padding.symmetric(0, 10),
+                    initially_expanded=True,
                 ),
             ]
             for i in range(2)
@@ -499,25 +557,32 @@ class ModsController(Controller):
     def get_mod_tile(self, mod):
         mod_tile = ListTile(
             data=mod,
-            content_padding=padding.symmetric(0, 10),
+            content_padding=padding.symmetric(0, 5),
             on_click=self.toggle_mod,
             expand=True,
         )
         if mod.trovesaurus_data:
-            # mod_tile.leading = Image(
-            #     src=self.api.get_resized_image_url(
-            #         (
-            #             mod.trovesaurus_data.image_url or
-            #             f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
-            #         ),
-            #         ImageSize.MEDIUM
-            #     ),
-            #     height=128,
-            # )
+            if self.page.preferences.mod_manager.show_previews:
+                mod_tile.leading = Image(
+                    src=self.api.get_resized_image_url(
+                        (
+                            mod.trovesaurus_data.image_url or
+                            f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                        ),
+                        ImageSize.MEDIUM
+                    ),
+                    height=128,
+                )
             mod_tile.title = Row(
                 controls=[
                     TextButton(
-                        content=Text(mod.name),
+                        content=Text(
+                            mod.name
+                        ),
+                        height=28,
+                        style=ButtonStyle(
+                            padding=padding.symmetric(4, 4),
+                        ),
                         url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
                     ),
                     *(
@@ -528,6 +593,8 @@ class ModsController(Controller):
                                 content=IconButton(
                                     icons.DOWNLOAD,
                                     data=mod,
+                                    icon_size=12,
+                                    width=12,
                                     on_click=self.update_my_mods_mod,
                                 ),
                             )
@@ -560,6 +627,10 @@ class ModsController(Controller):
                                             ),
                                         ]
                                     ),
+                                    height=28,
+                                    style=ButtonStyle(
+                                        padding=padding.symmetric(4, 4),
+                                    ),
                                     url=f"https://trovesaurus.com/user={author.ID}",
                                 ),
                             )
@@ -569,13 +640,14 @@ class ModsController(Controller):
                 ]
             )
         else:
-            # mod_tile.leading = Image(
-            #     src=self.api.get_resized_image_url(
-            #         f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
-            #         ImageSize.MEDIUM
-            #     ),
-            #     height=128,
-            # )
+            if self.page.preferences.mod_manager.show_previews:
+                mod_tile.leading = Image(
+                    src=self.api.get_resized_image_url(
+                        f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                        ImageSize.MEDIUM
+                    ),
+                    height=128,
+                )
             mod_tile.title = Row(controls=[Text(mod.name)])
             mod_tile.subtitle = Row(
                 controls=[
@@ -629,7 +701,11 @@ class ModsController(Controller):
         mod = event.control.data
         await mod.update()
         installation_path = self.memory["my_mods"]["installation_path"]
-        self.my_mod_list = TroveModList(path=installation_path)
+        self.my_mod_list = TroveModList(
+            path=installation_path,
+            fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
+            fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+        )
         await self.my_mod_list.update_trovesaurus_data()
         for tile in self.my_mod_tiles:
             if tile.data == mod:
@@ -861,7 +937,11 @@ class ModsController(Controller):
             self.memory["trovesaurus"]["search"]["sort_by"],
         )
         installation_path = self.memory["trovesaurus"]["installation_path"]
-        mod_l = TroveModList(path=installation_path)
+        mod_l = TroveModList(
+            path=installation_path,
+            fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
+            fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+        )
         await mod_l.update_trovesaurus_data()
         for i, mod in enumerate(self.cached_trovesaurus_mods):
             installed = False

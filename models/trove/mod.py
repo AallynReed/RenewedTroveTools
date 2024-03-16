@@ -614,13 +614,13 @@ class TroveModList:
     disabled: list[TroveMod]
     _mods: list[TroveMod]
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, **kwargs):
         self._mods = []
         self.installation_path = path
         self.list_path = path
         if self.installation_path.exists():
             self.list_path.mkdir(parents=True, exist_ok=True)
-        self._populate()
+        self._populate(**kwargs)
 
     def __str__(self):
         return f'<TroveModList "{self.list_path}" count={self.count}>'
@@ -695,29 +695,31 @@ class TroveModList:
             if mod.is_ui_mod:
                 mod.ensure_config()
 
-    def _populate(self, force=False):
+    def _populate(self, force=False, fix_names=True, fix_configs=True):
         self._mods.clear()
-        self._populate_tmod_enabled()
-        self._populate_tmod_disabled()
+        self._populate_tmod_enabled(fix_names)
+        self._populate_tmod_disabled(fix_names)
         self._populate_zip_enabled()
         self._populate_zip_disabled()
         self.sort_by_name()
         self._calculate_conflicts(force)
-        self._ensure_mod_configs()
+        if fix_configs:
+            print("Ensuring mod configs")
+            self._ensure_mod_configs()
 
-    def _populate_tmod_enabled(self):
+    def _populate_tmod_enabled(self, fix_names=True):
         for file in self.list_path.glob("*.tmod"):
             file_data = file.read_bytes()
             mod = TMod.read_bytes(file, file_data)
-            if mod.has_wrong_name:
+            if mod.has_wrong_name and fix_names:
                 mod.fix_name()
             self._mods.append(mod)
 
-    def _populate_tmod_disabled(self):
+    def _populate_tmod_disabled(self, fix_names=True):
         for file in self.list_path.glob("*.tmod.disabled"):
             file_data = file.read_bytes()
             mod = TMod.read_bytes(file, file_data)
-            if mod.has_wrong_name:
+            if mod.has_wrong_name and fix_names:
                 mod.fix_name()
             mod.enabled = False
             self._mods.append(mod)
