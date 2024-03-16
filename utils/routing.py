@@ -74,7 +74,6 @@ class Routing:
                 expand=True,
             )
         ]
-        print(self.page.controls[0].controls[0].destinations)
         await self.page.update_async()
 
     async def change_navigation(self, event):
