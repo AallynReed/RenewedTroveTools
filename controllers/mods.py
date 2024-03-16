@@ -7,6 +7,7 @@ from pathlib import Path
 import flet_core.icons as icons
 from aiohttp import ClientSession
 from flet import (
+    AlertDialog,
     Column,
     Row,
     Tabs,
@@ -32,7 +33,8 @@ from flet import (
     FilePicker,
     ScrollMode,
     ButtonStyle,
-    Switch
+    Switch,
+    ImageFit,
 )
 
 from models.interface import Controller
@@ -446,7 +448,7 @@ class ModsController(Controller):
                                 width=24,
                             ),
                             Text("Trovesaurus"),
-                        ]
+                        ],
                     ),
                     tile_padding=padding.symmetric(0, 10),
                     initially_expanded=True,
@@ -466,6 +468,7 @@ class ModsController(Controller):
                     controls=[
                         self.my_mods_list_maps[0][0],
                     ],
+                    spacing=0,
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
@@ -474,10 +477,12 @@ class ModsController(Controller):
                     controls=[
                         self.my_mods_list_maps[0][1],
                     ],
+                    spacing=0,
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
             ],
+            spacing=0,
             alignment="start",
             expand=True,
         )
@@ -490,7 +495,7 @@ class ModsController(Controller):
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
-                Divider(),
+                Divider(height=1),
                 Column(
                     controls=[
                         self.my_mods_list_maps[1][1],
@@ -518,11 +523,11 @@ class ModsController(Controller):
                     self.enabled_mods_list,
                 ],
                 expand=True,
-                col=5.8,
+                col=5.9,
             )
         )
         my_mods_list.controls.append(
-            Row(controls=[VerticalDivider()], expand=True, col=0.4)
+            Row(controls=[VerticalDivider()], expand=True, col=0.2)
         )
         my_mods_list.controls.append(
             Column(
@@ -537,7 +542,7 @@ class ModsController(Controller):
                     self.disabled_mods_list,
                 ],
                 expand=True,
-                col=5.8,
+                col=5.9,
             )
         )
         self.my_mod_tiles = []
@@ -563,15 +568,26 @@ class ModsController(Controller):
         )
         if mod.trovesaurus_data:
             if self.page.preferences.mod_manager.show_previews:
-                mod_tile.leading = Image(
-                    src=self.api.get_resized_image_url(
-                        (
-                            mod.trovesaurus_data.image_url or
-                            f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                mod_tile.leading = IconButton(
+                    data=mod,
+                    content=Image(
+                        src=self.api.get_resized_image_url(
+                            (
+                                    mod.trovesaurus_data.image_url or
+                                    f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                            ),
+                            ImageSize.SMALL
                         ),
-                        ImageSize.MEDIUM
+                        fit=ImageFit.FIT_HEIGHT,
+                        expand=True,
                     ),
-                    height=128,
+                    tooltip="Click to preview image",
+                    style=ButtonStyle(
+                        padding=padding.symmetric(0, 0),
+                    ),
+                    on_click=self.go_to_image_preview,
+                    width=64,
+                    expand=True,
                 )
             mod_tile.title = Row(
                 controls=[
@@ -641,12 +657,23 @@ class ModsController(Controller):
             )
         else:
             if self.page.preferences.mod_manager.show_previews:
-                mod_tile.leading = Image(
-                    src=self.api.get_resized_image_url(
-                        f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
-                        ImageSize.MEDIUM
+                mod_tile.leading = IconButton(
+                    data=mod,
+                    content=Image(
+                        src=self.api.get_resized_image_url(
+                            f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                            ImageSize.SMALL
+                        ),
+                        fit=ImageFit.FIT_HEIGHT,
+                        expand=True,
                     ),
-                    height=128,
+                    tooltip="Click to preview image",
+                    style=ButtonStyle(
+                        padding=padding.symmetric(0, 0),
+                    ),
+                    on_click=self.go_to_image_preview,
+                    width=64,
+                    expand=True,
                 )
             mod_tile.title = Row(controls=[Text(mod.name)])
             mod_tile.subtitle = Row(
@@ -696,9 +723,37 @@ class ModsController(Controller):
             expand=True,
         )
 
-    async def update_my_mods_mod(self, event):
-        await self.lock_ui()
+    async def go_to_image_preview(self, event):
         mod = event.control.data
+        self.dialog = AlertDialog(
+            modal=True,
+            actions=[
+                TextButton("Close", on_click=self.close_dialog)
+            ],
+            content=Image(
+                src=self.api.get_resized_image_url(
+                    (
+                        f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                    ),
+                    ImageSize.MAX
+                ),
+                fit=ImageFit.FIT_WIDTH,
+                expand=True,
+            ),
+        )
+        self.page.dialog = self.dialog
+        self.dialog.open = True
+        await self.page.update_async()
+
+    async def close_dialog(self, _):
+        self.dialog.open = False
+        await self.page.update_async()
+
+    async def update_my_mods_mod(self, event=None, mod=None):
+        await self.lock_ui()
+        mod = event.control.data or mod
+        if not mod:
+            return await self.release_ui()
         await mod.update()
         installation_path = self.memory["my_mods"]["installation_path"]
         self.my_mod_list = TroveModList(
