@@ -41,6 +41,7 @@ from flet_core.icons import (
 from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.localization import Locale
+from utils.tasks import loop
 
 
 async def check_update(current_version):
@@ -73,8 +74,13 @@ class CustomAppBar(AppBar):
             center_title=True,
             **kwargs,
         )
+        self.i = 0
         if not page.web:
-            asyncio.create_task(self.check_for_update())
+            self.check_updates.start()
+
+    @loop(seconds=120)
+    async def check_updates(self):
+        await self.check_for_update()
 
     def build_actions(self, kwargs):
         actions = []
@@ -332,7 +338,6 @@ class CustomAppBar(AppBar):
             )
         self.dlg.open = False
         await self.page.update_async()
-
 
     async def go_to_update_page(self, event):
         update_url, is_windows = await check_update(self.page.metadata.version)

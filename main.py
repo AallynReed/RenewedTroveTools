@@ -288,6 +288,9 @@ class App:
         await self.page.go_async(route or "/")
 
     async def setup_appbar(self):
+        if self.page.appbar:
+            if self.page.appbar.check_updates.is_running():
+                self.page.appbar.check_updates.cancel()
         self.page.appbar = CustomAppBar(
             page=self.page,
             title=Text(self.page.metadata.app_name),

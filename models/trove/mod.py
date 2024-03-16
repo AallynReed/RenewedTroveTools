@@ -704,7 +704,6 @@ class TroveModList:
         self.sort_by_name()
         self._calculate_conflicts(force)
         if fix_configs:
-            print("Ensuring mod configs")
             self._ensure_mod_configs()
 
     def _populate_tmod_enabled(self, fix_names=True):
