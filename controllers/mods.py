@@ -263,7 +263,9 @@ class ModsController(Controller):
                                 ),
                                 Row(
                                     controls=[
-                                        Text("Auto Generate and Fix CFG files for UI mods"),
+                                        Text(
+                                            "Auto Generate and Fix CFG files for UI mods"
+                                        ),
                                         Switch(
                                             value=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
                                             on_change=self.settings_toggle_auto_generate_and_fix_cfg,
@@ -349,7 +351,9 @@ class ModsController(Controller):
         self.page.preferences.save()
 
     async def settings_toggle_auto_generate_and_fix_cfg(self, event):
-        self.page.preferences.mod_manager.auto_generate_and_fix_cfg = event.control.value
+        self.page.preferences.mod_manager.auto_generate_and_fix_cfg = (
+            event.control.value
+        )
         self.page.preferences.save()
 
     async def settings_pick_custom_dir(self, event):
@@ -573,10 +577,10 @@ class ModsController(Controller):
                     content=Image(
                         src=self.api.get_resized_image_url(
                             (
-                                    mod.trovesaurus_data.image_url or
-                                    f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                                mod.trovesaurus_data.image_url
+                                or f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
                             ),
-                            ImageSize.SMALL
+                            ImageSize.SMALL,
                         ),
                         fit=ImageFit.FIT_HEIGHT,
                         expand=True,
@@ -592,9 +596,7 @@ class ModsController(Controller):
             mod_tile.title = Row(
                 controls=[
                     TextButton(
-                        content=Text(
-                            mod.name
-                        ),
+                        content=Text(mod.name),
                         height=28,
                         style=ButtonStyle(
                             padding=padding.symmetric(4, 4),
@@ -662,7 +664,7 @@ class ModsController(Controller):
                     content=Image(
                         src=self.api.get_resized_image_url(
                             f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
-                            ImageSize.SMALL
+                            ImageSize.SMALL,
                         ),
                         fit=ImageFit.FIT_HEIGHT,
                         expand=True,
@@ -727,15 +729,11 @@ class ModsController(Controller):
         mod = event.control.data
         self.dialog = AlertDialog(
             modal=True,
-            actions=[
-                TextButton("Close", on_click=self.close_dialog)
-            ],
+            actions=[TextButton("Close", on_click=self.close_dialog)],
             content=Image(
                 src=self.api.get_resized_image_url(
-                    (
-                        f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
-                    ),
-                    ImageSize.MAX
+                    (f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"),
+                    ImageSize.MAX,
                 ),
                 fit=ImageFit.FIT_WIDTH,
                 expand=True,

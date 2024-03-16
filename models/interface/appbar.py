@@ -145,12 +145,13 @@ class CustomAppBar(AppBar):
                         )
                         for loc in Locale
                     ],
-                    disabled=True,
+                    visible=False,
                     tooltip="Change language (Broken)",
                 ),
                 PopupMenuButton(
                     data="donate-buttons",
                     icon=SAVINGS,
+                    tooltip="Donate",
                     items=[
                         PopupMenuItem(
                             data="paypal",

@@ -4,6 +4,7 @@ from .extractor import ExtractorController
 from .gem import GemController
 from .gems import GemSetController
 from .home import HomeController
+from .login import LoginController
 from .magic_find import MagicFindController
 from .mastery import MasteryController
 from .mods import ModsController

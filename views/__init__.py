@@ -1,6 +1,7 @@
 from views.desktop import *
 from views.hybrid import *
 from views.web import *
+from views.no_tab import *
 
 
 def all_views(web_mode=False):
@@ -15,4 +16,5 @@ def all_views(web_mode=False):
     views.append(GemSetView)
     views.append(MasteryView)
     views.append(MagicFindView)
+    views.append(LoginView)
     return views

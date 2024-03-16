@@ -18,14 +18,7 @@ from flet import (
     SnackBar,
     Row,
     Text,
-    Column,
-    Container,
     Icon,
-    TextField,
-    TextStyle,
-    alignment,
-    Image,
-    Chip,
 )
 
 from models import Metadata, Preferences
@@ -191,58 +184,8 @@ class App:
             return response.json()
         return None
 
-    async def display_login_screen(self, e=None):
-        self.page.appbar = None
-        self.page.controls.clear()
-        self.token_input = TextField(
-            data="input",
-            label="Insert pass key here",
-            text_align="center",
-            password=True,
-            can_reveal_password=True,
-            helper_style=TextStyle(color="red"),
-            on_change=self.execute_login,
-            content_padding=10,
-        )
-        self.page.controls.append(
-            Container(
-                Column(
-                    controls=[
-                        Text(value="Login", size=40, color="white"),
-                        self.token_input,
-                        Text("Get pass key from:"),
-                        Row(
-                            controls=[
-                                Chip(
-                                    leading=Icon("discord"),
-                                    label=Text("Discord"),
-                                    on_click=self.execute_login_discord,
-                                ),
-                                Chip(
-                                    leading=Image(
-                                        src="https://trovesaurus.com/images/logos/Sage_64.png?1",
-                                        width=24,
-                                    ),
-                                    label=Text("Trovesaurus"),
-                                    on_click=self.execute_login_trovesaurus,
-                                ),
-                            ]
-                        ),
-                        Chip(
-                            leading=Icon("ARROW_BACK"),
-                            label=Text("Go back"),
-                            on_click=self.cancel_login,
-                        ),
-                    ],
-                    horizontal_alignment="center",
-                    width=450,
-                    height=500,
-                ),
-                expand=True,
-                alignment=alignment.center,
-            )
-        )
-        await self.page.update_async()
+    async def display_login_screen(self, _):
+        await self.page.go_async("/login")
 
     async def button_hover(self, e):
         if e.data == "true":
@@ -250,24 +193,6 @@ class App:
         else:
             e.control.ink = False
         await e.control.update_async()
-
-    async def cancel_login(self, e):
-        await self.gather_views()
-        await self.setup_appbar()
-        await self.page.go_async("/")
-
-    async def execute_login(self, e):
-        if self.token_input.value.strip():
-            self.page.user_data = await self.login(self.token_input.value.strip())
-            if self.page.user_data is None:
-                self.token_input.helper_text = "Invalid pass key"
-                return await self.token_input.update_async()
-            else:
-                await self.gather_views()
-                await self.setup_appbar()
-                await self.page.go_async("/")
-        else:
-            return
 
     async def execute_login_discord(self, e):
         await self.page.launch_url_async(
