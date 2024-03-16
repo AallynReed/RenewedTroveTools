@@ -10,11 +10,11 @@ def all_views(web_mode=False):
     if not web_mode:
         views.append(ModsView)
         views.append(ExtractorView)
+        views.append(LoginView)
     views.append(StarView)
     views.append(GemBuildsView)
     views.append(GemView)
     views.append(GemSetView)
     views.append(MasteryView)
     views.append(MagicFindView)
-    views.append(LoginView)
     return views
