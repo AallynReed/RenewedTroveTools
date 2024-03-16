@@ -159,7 +159,8 @@ class TroveMod:
 
     @property
     def has_wrong_name(self):
-        return self.mod_path.stem != self.name
+        stem = str(self.mod_path).split(".tmod")[0]
+        return stem != self.name
 
     @property
     def is_ui_mod(self):
