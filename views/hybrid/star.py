@@ -15,10 +15,6 @@ class StarView(View):
         super().__init__(
             self.route,
             controls=[
-                Column(
-                    controls=[ctrl.map],
-                    expand=True,
-                    scroll=ScrollMode.ADAPTIVE
-                )
+                Column(controls=[ctrl.map], expand=True, scroll=ScrollMode.ADAPTIVE)
             ],
         )

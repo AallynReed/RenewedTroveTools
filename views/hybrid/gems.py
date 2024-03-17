@@ -16,13 +16,9 @@ class GemSetView(View):
             route=self.route,
             controls=[
                 Column(
-                    controls=[
-                        ctrl.gem_report,
-                        ctrl.general_controls,
-                        ctrl.gem_altar
-                    ],
+                    controls=[ctrl.gem_report, ctrl.general_controls, ctrl.gem_altar],
                     expand=True,
-                    scroll=ScrollMode.ADAPTIVE
+                    scroll=ScrollMode.ADAPTIVE,
                 )
             ],
         )

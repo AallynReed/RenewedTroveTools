@@ -18,9 +18,7 @@ class LoginView(View):
                 Column(
                     controls=[
                         Row(
-                            controls=[
-                                ctrl.main
-                            ],
+                            controls=[ctrl.main],
                             alignment="center",
                         )
                     ],

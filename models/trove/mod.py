@@ -23,16 +23,13 @@ from ..trovesaurus.mods import Mod
 ModParserLogger = Logger("Mod Parser")
 
 
-class NoFilesError(Exception):
-    ...
+class NoFilesError(Exception): ...
 
 
-class PropertyMalformedError(Exception):
-    ...
+class PropertyMalformedError(Exception): ...
 
 
-class MissingPropertyError(Exception):
-    ...
+class MissingPropertyError(Exception): ...
 
 
 class Property(BaseModel):
@@ -565,12 +562,16 @@ class TMod(TroveMod):
         mods_cfgs_path = Path(os.getenv("APPDATA")).joinpath("Trove", "ModCfgs")
         mods_cfgs_path.mkdir(parents=True, exist_ok=True)
         config_file = mods_cfgs_path.joinpath(f"{self.name}.cfg")
-        swf_files = [file.trove_path.split("/")[-1] for file in self.files if file.trove_path.endswith(".swf")]
+        swf_files = [
+            file.trove_path.split("/")[-1]
+            for file in self.files
+            if file.trove_path.endswith(".swf")
+        ]
         if not config_file.exists():
             configs = []
             for file in swf_files:
                 file_name = file
-                configs.append(f'[{file_name}]')
+                configs.append(f"[{file_name}]")
             config_file.write_text("\n".join(configs))
         else:
             regex = re.compile(r"^\[(.*?\.swf)]$")

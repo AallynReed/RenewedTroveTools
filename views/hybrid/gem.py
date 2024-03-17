@@ -20,7 +20,7 @@ class GemView(View):
                         ctrl.header_row,
                     ],
                     expand=True,
-                    scroll=ScrollMode.ADAPTIVE
+                    scroll=ScrollMode.ADAPTIVE,
                 )
             ],
         )

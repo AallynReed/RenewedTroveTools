@@ -22,7 +22,7 @@ from flet import (
     Icon,
     Theme,
     ButtonStyle,
-    TextField
+    TextField,
 )
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
@@ -35,7 +35,7 @@ from flet_core.icons import (
     PALETTE,
     SAVINGS,
     PERSON,
-    FEEDBACK
+    FEEDBACK,
 )
 
 from models.preferences import AccentColor

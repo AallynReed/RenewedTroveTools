@@ -16,11 +16,7 @@ class GemBuildsView(View):
             route=self.route,
             controls=[
                 Column(
-                    controls=[
-                        ctrl.interface
-                    ],
-                    expand=True,
-                    scroll=ScrollMode.ADAPTIVE
+                    controls=[ctrl.interface], expand=True, scroll=ScrollMode.ADAPTIVE
                 )
             ],
         )
