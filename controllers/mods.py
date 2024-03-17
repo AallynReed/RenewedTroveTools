@@ -41,7 +41,7 @@ from models.interface import Controller
 from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
 from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
-from utils.trove.registry import get_trove_locations
+from utils.trove.registry import get_trove_locations, TroveGamePath
 
 
 class ModsController(Controller):
@@ -157,11 +157,15 @@ class ModsController(Controller):
         }
 
     def check_memory(self):
-        self.mod_folders = [
-            (mf.name, mf.joinpath("mods")) for mf in get_trove_locations()
-        ]
+        self.mod_folders = list(get_trove_locations())
         custom_mod_folders = self.page.preferences.mod_manager.custom_directories
-        self.mod_folders.extend(custom_mod_folders)
+        for name, path in custom_mod_folders:
+            self.mod_folders.append(
+                TroveGamePath(
+                    path=Path(path),
+                    name=name,
+                )
+            )
         my_mods = self.memory["my_mods"]
         trovesarus = self.memory["trovesaurus"]
         if not self.mod_folders:
@@ -169,15 +173,15 @@ class ModsController(Controller):
             trovesarus["installation_path"] = None
         else:
             if not my_mods["installation_path"]:
-                my_mods["installation_path"] = self.mod_folders[0][1]
+                my_mods["installation_path"] = self.mod_folders[0]
             else:
                 if my_mods["installation_path"] not in self.mod_folders:
-                    my_mods["installation_path"] = self.mod_folders[0][1]
+                    my_mods["installation_path"] = self.mod_folders[0]
             if not trovesarus["installation_path"]:
-                trovesarus["installation_path"] = self.mod_folders[0][1]
+                trovesarus["installation_path"] = self.mod_folders[0]
             else:
                 if trovesarus["installation_path"] not in self.mod_folders:
-                    trovesarus["installation_path"] = self.mod_folders[0][1]
+                    trovesarus["installation_path"] = self.mod_folders[0]
 
     async def tab_loader(self, event=None, index=None, boot=False):
         if boot or event:
@@ -410,24 +414,15 @@ class ModsController(Controller):
         self.my_mods.controls.append(
             Row(
                 controls=[
-                    Row(
-                        controls=[
-                            IconButton(
-                                icon=icons.FOLDER,
-                                on_click=lambda e: os.startfile(
-                                    self.memory["my_mods"]["installation_path"]
-                                ),
-                            ),
-                            TextButton(
-                                data=mod_list_path,
-                                content=Text(name),
-                                disabled=mod_list_path
-                                == self.memory["my_mods"]["installation_path"],
-                                on_click=self.set_my_mods_installation_path,
-                            ),
-                        ]
+                    Chip(
+                        data=mod_list,
+                        leading=Image(src=mod_list.icon, width=24),
+                        label=Text(mod_list.clean_name),
+                        disabled=mod_list
+                        == self.memory["my_mods"]["installation_path"],
+                        on_click=self.set_my_mods_installation_path,
                     )
-                    for name, mod_list_path in self.mod_folders
+                    for mod_list in self.mod_folders
                 ],
             )
         )
@@ -873,24 +868,15 @@ class ModsController(Controller):
         self.trovesaurus.controls.append(
             Row(
                 controls=[
-                    Row(
-                        controls=[
-                            IconButton(
-                                icon=icons.FOLDER,
-                                on_click=lambda e: os.startfile(
-                                    self.memory["trovesaurus"]["installation_path"]
-                                ),
-                            ),
-                            TextButton(
-                                data=mod_list_path,
-                                content=Text(name),
-                                disabled=mod_list_path
-                                == self.memory["trovesaurus"]["installation_path"],
-                                on_click=self.set_trovesaurus_installation_path,
-                            ),
-                        ]
+                    Chip(
+                        data=mod_list,
+                        leading=Image(src=mod_list.icon, width=24),
+                        label=Text(mod_list.clean_name),
+                        disabled=mod_list
+                        == self.memory["trovesaurus"]["installation_path"],
+                        on_click=self.set_trovesaurus_installation_path,
                     )
-                    for name, mod_list_path in self.mod_folders
+                    for mod_list in self.mod_folders
                 ],
             )
         )
@@ -1358,7 +1344,7 @@ class ModsController(Controller):
             return
         mod_data, file_data, hashes = selected_file
         installation_path = self.memory["trovesaurus"]["installation_path"]
-        for mod_file in installation_path.iterdir():
+        for mod_file in installation_path.mods_path.iterdir():
             if mod_file.is_file():
                 hash = md5(mod_file.read_bytes()).hexdigest()
                 if hash in hashes:
@@ -1373,7 +1359,7 @@ class ModsController(Controller):
                 except:
                     mod_name = mod_data.name.replace("/", "-")
                 file_name = r"{0}.{1}".format(mod_name, file_data.type.value)
-                file_path = installation_path.joinpath(file_name)
+                file_path = installation_path.mods_path.joinpath(file_name)
                 file_path.write_bytes(data)
         await self.tab_loader(index=self.mod_submenus.selected_index)
         self.page.snack_bar.content = Text(f"Installed {mod_name}")

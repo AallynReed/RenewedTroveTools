@@ -19,6 +19,9 @@ import os
 from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
 from utils.logger import Logger
 from ..trovesaurus.mods import Mod
+from utils.trove.registry import TroveGamePath
+from itertools import chain
+
 
 ModParserLogger = Logger("Mod Parser")
 
@@ -615,16 +618,13 @@ class TroveModList:
     disabled: list[TroveMod]
     _mods: list[TroveMod]
 
-    def __init__(self, path: Path, **kwargs):
+    def __init__(self, path: TroveGamePath, **kwargs):
         self._mods = []
-        self.installation_path = path
-        self.list_path = path
-        if self.installation_path.exists():
-            self.list_path.mkdir(parents=True, exist_ok=True)
+        self.trove_path = path
         self._populate(**kwargs)
 
     def __str__(self):
-        return f'<TroveModList "{self.list_path}" count={self.count}>'
+        return f'<TroveModList "{self.trove_path.name}" count={self.count}>'
 
     def __repr__(self):
         return str(self)
@@ -659,7 +659,7 @@ class TroveModList:
 
     @property
     def name(self):
-        return self.installation_path.name
+        return self.trove_path.name
 
     @property
     def mods(self):
@@ -708,7 +708,7 @@ class TroveModList:
             self._ensure_mod_configs()
 
     def _populate_tmod_enabled(self, fix_names=True):
-        for file in self.list_path.glob("*.tmod"):
+        for file in self.trove_path.enabled_tmods:
             file_data = file.read_bytes()
             mod = TMod.read_bytes(file, file_data)
             if mod.has_wrong_name and fix_names:
@@ -716,7 +716,7 @@ class TroveModList:
             self._mods.append(mod)
 
     def _populate_tmod_disabled(self, fix_names=True):
-        for file in self.list_path.glob("*.tmod.disabled"):
+        for file in self.trove_path.disabled_tmods:
             file_data = file.read_bytes()
             mod = TMod.read_bytes(file, file_data)
             if mod.has_wrong_name and fix_names:
@@ -725,13 +725,13 @@ class TroveModList:
             self._mods.append(mod)
 
     def _populate_zip_enabled(self):
-        for file in self.list_path.glob("*.zip"):
+        for file in self.trove_path.enabled_zips:
             file_data = file.read_bytes()
             mod = ZMod.read_bytes(file, BytesIO(file_data))
             self._mods.append(mod)
 
     def _populate_zip_disabled(self):
-        for file in self.list_path.glob("*.zip.disabled"):
+        for file in self.trove_path.disabled_zips:
             file_data = file.read_bytes()
             mod = ZMod.read_bytes(file, BytesIO(file_data))
             mod.enabled = False

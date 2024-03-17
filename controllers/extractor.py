@@ -48,13 +48,13 @@ class ExtractorController(Controller):
         if self.trove_locations:
             directory = self.trove_locations[0]
             if self.locations.extract_from is None:
-                self.locations.extract_from = directory
+                self.locations.extract_from = directory.path
             if self.locations.extract_to is None:
-                self.locations.extract_to = directory.joinpath("extracted")
+                self.locations.extract_to = directory.path.joinpath("extracted")
             if self.locations.changes_to is None:
-                self.locations.changes_to = directory.joinpath("changes")
+                self.locations.changes_to = directory.path.joinpath("changes")
             if self.locations.changes_from is None:
-                self.locations.changes_from = directory.joinpath("extracted")
+                self.locations.changes_from = directory.path.joinpath("extracted")
         self.extract_from = PathField(
             data="extract_from",
             label="Trove directory:",
@@ -127,13 +127,11 @@ class ExtractorController(Controller):
         self.directory_dropdown = Dropdown(
             value=(
                 self.locations.extract_from
-                if self.locations.extract_from in self.trove_locations
+                if self.locations.extract_from in [g.path for g in self.trove_locations]
                 else "none"
             ),
             options=[
-                dropdown.Option(
-                    key=location, text=f"{location.name} - {str(location.name)}"
-                )
+                dropdown.Option(key=location, text=location.name)
                 for location in self.trove_locations
             ]
             + [dropdown.Option(key="none", text="Custom", disabled=True)],
