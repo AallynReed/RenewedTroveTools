@@ -54,7 +54,7 @@ class ExtractorController(Controller):
             if self.locations.changes_to is None:
                 self.locations.changes_to = directory.joinpath("changes")
             if self.locations.changes_from is None:
-                self.locations.changes_to = directory.joinpath("extracted")
+                self.locations.changes_from = directory.joinpath("extracted")
         self.extract_from = PathField(
             data="extract_from",
             label="Trove directory:",
