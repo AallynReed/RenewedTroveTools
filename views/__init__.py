@@ -9,6 +9,7 @@ def all_views(web_mode=False):
     views.append(HomeView)
     if not web_mode:
         views.append(ModsView)
+        views.append(ModdersView)
         views.append(ExtractorView)
         views.append(LoginView)
     views.append(StarView)
