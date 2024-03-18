@@ -1,6 +1,8 @@
 import asyncio
 import itertools
+import json
 
+from aiohttp import ClientSession
 from flet import (
     Text,
     ResponsiveRow,
@@ -480,7 +482,7 @@ class GemBuildsController(Controller):
                 label="Insert Gem Build ID",
                 on_change=self.set_build_string,
                 col={"xs": 6, "xxl": 2},
-                visible=False,
+                visible=True,
             ),
             Container(
                 content=Row(controls=[Icon(COPY), Text("Copy Gem Build")]),
@@ -489,7 +491,7 @@ class GemBuildsController(Controller):
                 padding=15,
                 border_radius=10,
                 col={"xs": 6, "xxl": 2},
-                visible=False,
+                visible=True,
             ),
         ]
         self.abilities = DataTable(
@@ -1015,23 +1017,34 @@ class GemBuildsController(Controller):
 
     async def set_build_string(self, event):
         build_id = event.control.value.strip().split("-")[-1].strip()
-        if build := await BuildConfig.find_one(BuildConfig.build_id == build_id):
-            self.config = build
-            await self.update_builds()
+        async with ClientSession() as session:
+            async with session.get(
+                f"https://kiwiapi.slynx.xyz/v1/gem_builds/build/{build_id}"
+            ) as response:
+                if response.status != 200:
+                    self.page.snack_bar.content.value = "Invalid build ID"
+                    self.page.snack_bar.open = True
+                    await self.page.update_async()
+                    return
+                data = await response.json()
+                self.config = BuildConfig(**json.loads(data)["config"])
+                await self.update_builds()
 
     async def copy_build_string(self, _):
-        current = None
-        async for build in BuildConfig.find({}):
-            if self.config == build:
-                current = build
-        if not current:
-            await self.config.save()
-        await self.page.set_clipboard_async("GB-" + self.config.build_id)
-        self.page.snack_bar.content.value = (
-            f"Copied build GB-{self.config.build_id} to clipboard"
-        )
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        async with ClientSession() as session:
+            async with session.get(
+                "https://kiwiapi.slynx.xyz/v1/gem_builds/build_config",
+                headers={"config": self.config.json()},
+            ) as response:
+                data = await response.json()
+                build_id = json.loads(data)["build"]
+                await self.page.set_clipboard_async("GB-" + build_id)
+                self.page.snack_bar.content.value = (
+                    f"Copied build GB-{build_id} to clipboard"
+                )
+                self.page.snack_bar.bgcolor = "green"
+                self.page.snack_bar.open = True
+                await self.page.update_async()
 
     async def select_build(self, event):
         if self.selected_build == event.control.data:

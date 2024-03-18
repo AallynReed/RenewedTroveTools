@@ -125,7 +125,6 @@ class Food(Enum):
 
 
 class BuildConfig(BaseModel):
-    build_id: str = Field(default_factory=random_id)
     build_type: BuildType = BuildType.light
     character: Class = Class.bard
     subclass: Class = Class.boomeranger
@@ -137,28 +136,11 @@ class BuildConfig(BaseModel):
     light: int = 0
     subclass_active: bool = False
     star_chart: Optional[str] = None
-    # Prediction based
-    cosmic_primordial: bool = False
-    crystal_5: bool = False
 
     def __eq__(self, other):
         if not isinstance(other, BuildConfig):
             return False
-        keys = [
-            "build_type",
-            "character",
-            "subclass",
-            "food",
-            "ally",
-            "berserker_battler",
-            "critical_damage_count",
-            "no_face",
-            "light",
-            "subclass_active",
-            "star_chart",
-            "cosmic_primordial",
-            "crystal_5",
-        ]
+        keys = self.__fields__.keys()
         for key in keys:
             if getattr(self, key) != getattr(other, key):
                 return False
