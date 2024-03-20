@@ -269,14 +269,16 @@ class CustomAppBar(AppBar):
                             text="Report a bug",
                             on_click=self.go_url,
                         ),
-                        PopupMenuItem(
-                            icon=PEST_CONTROL,
-                            text=(
-                                "Switch to debug version"
-                                if not self.page.metadata.dev
-                                else "Switch to release version"
-                            ),
-                            on_click=self.switch_debug,
+                        *(
+                            PopupMenuItem(
+                                icon=PEST_CONTROL,
+                                text=(
+                                    "Switch to debug version"
+                                    if not self.page.metadata.dev
+                                    else "Switch to release version"
+                                ),
+                                on_click=self.switch_debug,
+                            ) if not self.page.web else []
                         ),
                         PopupMenuItem(
                             icon=HELP, text="About", on_click=self.open_about
