@@ -7,6 +7,8 @@ from cx_Freeze import setup, Executable
 from models.metadata import Metadata
 
 metadata = Metadata.load_from_file(Path("data/metadata.json"))
+metadata.dev = True
+metadata.save_to_file(Path("data/metadata.json"))
 
 python_path = Path(sys.executable).parent.parent
 flet_path = python_path.joinpath("Lib", "site-packages", "flet")

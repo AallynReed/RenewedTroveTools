@@ -36,6 +36,7 @@ from flet_core.icons import (
     SAVINGS,
     PERSON,
     FEEDBACK,
+    PEST_CONTROL
 )
 
 from models.preferences import AccentColor
@@ -44,7 +45,7 @@ from utils.localization import Locale
 from utils.tasks import loop
 
 
-async def check_update(current_version):
+async def check_update(current_version, debug=False, force=False):
     async with ClientSession() as session:
         async with session.get(
             "https://api.github.com/repos/Sly0511/RenewedTroveTools/releases"
@@ -54,10 +55,13 @@ async def check_update(current_version):
                 version = version_data[0]
             except IndexError:
                 return None
-            if current_version != version.get("name"):
+            if current_version != version.get("name") or force:
                 if os.name == "nt":
                     for asset in version.get("assets"):
-                        if "debug" not in asset.get("name"):
+                        print(asset.get("name"))
+                        if "debug" not in asset.get("name") and not debug:
+                            return asset.get("browser_download_url"), os.name == "nt"
+                        elif "debug" in asset.get("name") and debug:
                             return asset.get("browser_download_url"), os.name == "nt"
                 else:
                     return version.get("html_url"), os.name == "nt"
@@ -266,6 +270,11 @@ class CustomAppBar(AppBar):
                             on_click=self.go_url,
                         ),
                         PopupMenuItem(
+                            icon=PEST_CONTROL,
+                            text="Switch to debug version",
+                            on_click=self.switch_debug,
+                        ),
+                        PopupMenuItem(
                             icon=HELP, text="About", on_click=self.open_about
                         ),
                     ],
@@ -297,7 +306,7 @@ class CustomAppBar(AppBar):
 
     async def check_for_update(self):
         await asyncio.sleep(1)
-        if (await check_update(self.page.metadata.version))[0] is not None:
+        if (await check_update(self.page.metadata.version, self.page.metadata.dev))[0] is not None:
             self.page.appbar.actions[0].visible = True
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
@@ -340,8 +349,14 @@ class CustomAppBar(AppBar):
         self.dlg.open = False
         await self.page.update_async()
 
-    async def go_to_update_page(self, event):
-        update_url, is_windows = await check_update(self.page.metadata.version)
+    async def switch_debug(self, event):
+        await self.go_to_update_page(event, True)
+
+    async def go_to_update_page(self, event, invert=False):
+        dev = self.page.metadata.dev
+        if invert:
+            dev = not dev
+        update_url, is_windows = await check_update(self.page.metadata.version, dev, True)
         if is_windows:
             self.page.controls = [
                 Column(
