@@ -636,10 +636,10 @@ class TroveModList:
         return self.count
 
     async def update_trovesaurus_data(self):
-        hashes_query = "%23".join(self.all_hashes)
         async with ClientSession() as session:
             async with session.get(
-                f"https://kiwiapi.slynx.xyz/v1/mods/hashes?hashes={hashes_query}"
+                f"https://kiwiapi.slynx.xyz/v1/mods/hashes",
+                json={"hashes": self.all_hashes},
             ) as response:
                 data = await response.json()
                 for mod in self:

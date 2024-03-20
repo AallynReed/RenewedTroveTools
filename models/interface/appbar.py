@@ -349,12 +349,12 @@ class CustomAppBar(AppBar):
 
     async def send_feedback(self, event):
         async with ClientSession() as session:
-            headers = {
+            data = {
                 "message": self.feedback_text.value,
             }
             await session.post(
                 "https://kiwiapi.slynx.xyz/v1/misc/feedback",
-                headers=headers,
+                json=data,
             )
         self.dlg.open = False
         await self.page.update_async()
