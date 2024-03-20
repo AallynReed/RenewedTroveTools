@@ -36,7 +36,7 @@ from flet_core.icons import (
     SAVINGS,
     PERSON,
     FEEDBACK,
-    PEST_CONTROL
+    PEST_CONTROL,
 )
 
 from models.preferences import AccentColor
@@ -271,7 +271,11 @@ class CustomAppBar(AppBar):
                         ),
                         PopupMenuItem(
                             icon=PEST_CONTROL,
-                            text="Switch to debug version",
+                            text=(
+                                "Switch to debug version"
+                                if not self.page.metadata.dev
+                                else "Switch to release version"
+                            ),
                             on_click=self.switch_debug,
                         ),
                         PopupMenuItem(
@@ -306,7 +310,9 @@ class CustomAppBar(AppBar):
 
     async def check_for_update(self):
         await asyncio.sleep(1)
-        if (await check_update(self.page.metadata.version, self.page.metadata.dev))[0] is not None:
+        if (await check_update(self.page.metadata.version, self.page.metadata.dev))[
+            0
+        ] is not None:
             self.page.appbar.actions[0].visible = True
             self.page.snack_bar.content.value = "A new update is available"
             self.page.snack_bar.bgcolor = "yellow"
@@ -356,7 +362,9 @@ class CustomAppBar(AppBar):
         dev = self.page.metadata.dev
         if invert:
             dev = not dev
-        update_url, is_windows = await check_update(self.page.metadata.version, dev, True)
+        update_url, is_windows = await check_update(
+            self.page.metadata.version, dev, True
+        )
         if is_windows:
             self.page.controls = [
                 Column(
