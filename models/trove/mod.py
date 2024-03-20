@@ -698,6 +698,7 @@ class TroveModList:
 
     def _populate(self, force=False, fix_names=True, fix_configs=True):
         self._mods.clear()
+        self._ensure_correct_extensions()
         self._populate_tmod_enabled(fix_names)
         self._populate_tmod_disabled(fix_names)
         self._populate_zip_enabled()
@@ -706,6 +707,20 @@ class TroveModList:
         self._calculate_conflicts(force)
         if fix_configs:
             self._ensure_mod_configs()
+
+    def _ensure_correct_extensions(self):
+        for file in self.trove_path.enabled_tmods:
+            if zipfile.is_zipfile(file):
+                file.rename(file.with_suffix(".zip"))
+        for file in self.trove_path.disabled_tmods:
+            if zipfile.is_zipfile(file):
+                file.rename(file.with_suffix("").with_suffix(".zip.disabled"))
+        for file in self.trove_path.enabled_zips:
+            if not zipfile.is_zipfile(file):
+                file.rename(file.with_suffix(".tmod"))
+        for file in self.trove_path.disabled_zips:
+            if not zipfile.is_zipfile(file):
+                file.rename(file.with_suffix("").with_suffix(".tmod.disabled"))
 
     def _populate_tmod_enabled(self, fix_names=True):
         for file in self.trove_path.enabled_tmods:
