@@ -278,7 +278,9 @@ class CustomAppBar(AppBar):
                                     else "Switch to release version"
                                 ),
                                 on_click=self.switch_debug,
-                            ) if not self.page.web else []
+                            )
+                            if not self.page.web
+                            else []
                         ),
                         PopupMenuItem(
                             icon=HELP, text="About", on_click=self.open_about
