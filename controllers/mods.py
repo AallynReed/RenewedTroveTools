@@ -967,6 +967,14 @@ class ModsController(Controller):
             )
         )
         self.mods_list = Column(scroll=ScrollMode.ADAPTIVE, expand=True)
+        page_count = await self.api.get_mods_page_count(
+            self.memory["trovesaurus"]["page_size"],
+            self.memory["trovesaurus"]["search"]["query"],
+            self.memory["trovesaurus"]["search"]["type"],
+            self.memory["trovesaurus"]["search"]["sub_type"],
+        )
+        if self.memory["trovesaurus"]["page"] >= page_count:
+            self.memory["trovesaurus"]["page"] = 0
         self.cached_trovesaurus_mods = await self.api.get_mods_list_chunk(
             self.memory["trovesaurus"]["page_size"],
             self.memory["trovesaurus"]["page"],
@@ -1172,12 +1180,6 @@ class ModsController(Controller):
                 )
             )
         self.trovesaurus.controls.append(self.mods_list)
-        page_count = await self.api.get_mods_page_count(
-            self.memory["trovesaurus"]["page_size"],
-            self.memory["trovesaurus"]["search"]["query"],
-            self.memory["trovesaurus"]["search"]["type"],
-            self.memory["trovesaurus"]["search"]["sub_type"],
-        )
         self.trovesaurus.controls.append(
             Row(
                 controls=[
@@ -1250,12 +1252,15 @@ class ModsController(Controller):
 
     async def set_trovesaurus_search_type(self, event):
         selected_type = event.control.value
+        if selected_type == "All":
+            selected_type = None
         if selected_type is not None:
             sub_types = await self.api.get_mod_sub_types(selected_type)
             if not sub_types:
                 self.memory["trovesaurus"]["search"]["sub_type"] = None
         else:
             self.memory["trovesaurus"]["search"]["sub_type"] = None
+
         self.memory["trovesaurus"]["search"]["type"] = selected_type
         await self.load_trovesaurus_mods(boot=True)
 
@@ -1282,8 +1287,12 @@ class ModsController(Controller):
 
     async def previous_trovesaurus_page(self, event):
         self.memory["trovesaurus"]["page"] -= 1
-        page_size = self.memory["trovesaurus"]["page_size"]
-        count = await self.api.get_mods_page_count(page_size)
+        count = await self.api.get_mods_page_count(
+            self.memory["trovesaurus"]["page_size"],
+            self.memory["trovesaurus"]["search"]["query"],
+            self.memory["trovesaurus"]["search"]["type"],
+            self.memory["trovesaurus"]["search"]["sub_type"],
+        )
         if self.memory["trovesaurus"]["page"] < 0:
             self.memory["trovesaurus"]["page"] = count - 1
         self.memory["trovesaurus"]["selected_tile"] = None
@@ -1291,8 +1300,12 @@ class ModsController(Controller):
 
     async def next_trovesaurus_page(self, event):
         self.memory["trovesaurus"]["page"] += 1
-        page_size = self.memory["trovesaurus"]["page_size"]
-        count = await self.api.get_mods_page_count(page_size)
+        count = await self.api.get_mods_page_count(
+            self.memory["trovesaurus"]["page_size"],
+            self.memory["trovesaurus"]["search"]["query"],
+            self.memory["trovesaurus"]["search"]["type"],
+            self.memory["trovesaurus"]["search"]["sub_type"],
+        )
         if self.memory["trovesaurus"]["page"] >= count:
             self.memory["trovesaurus"]["page"] = 0
         self.memory["trovesaurus"]["selected_tile"] = None
@@ -1301,10 +1314,14 @@ class ModsController(Controller):
     async def set_trovesaurus_page(self, event):
         try:
             page = int(event.control.value) - 1
-            page_size = self.memory["trovesaurus"]["page_size"]
             if page < 0:
                 page = 0
-            count = await self.api.get_mods_page_count(page_size)
+            count = await self.api.get_mods_page_count(
+                self.memory["trovesaurus"]["page_size"],
+                self.memory["trovesaurus"]["search"]["query"],
+                self.memory["trovesaurus"]["search"]["type"],
+                self.memory["trovesaurus"]["search"]["sub_type"],
+            )
             if page >= count:
                 page = count - 1
             self.memory["trovesaurus"]["page"] = page
