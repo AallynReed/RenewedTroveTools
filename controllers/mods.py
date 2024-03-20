@@ -909,7 +909,7 @@ class ModsController(Controller):
                         + [dropdown.Option(key=t, text=t) for t in mod_types],
                         width=200,
                         height=48,
-                        content_padding=padding.symmetric(4),
+                        content_padding=padding.symmetric(4, 4),
                         on_change=self.set_trovesaurus_search_type,
                     ),
                     VerticalDivider(visible=True),
@@ -921,7 +921,7 @@ class ModsController(Controller):
                         on_change=self.set_trovesaurus_search_sub_type,
                         width=200,
                         height=48,
-                        content_padding=padding.symmetric(4),
+                        content_padding=padding.symmetric(4, 4),
                         disabled=not bool(mod_sub_types),
                     ),
                     Row(
