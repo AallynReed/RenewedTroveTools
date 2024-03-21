@@ -38,7 +38,7 @@ from flet_core.icons import (
     PERSON,
     FEEDBACK,
     PEST_CONTROL,
-    HISTORY_EDU
+    HISTORY_EDU,
 )
 
 from models.preferences import AccentColor
@@ -328,8 +328,8 @@ class CustomAppBar(AppBar):
             ) as response:
                 data = await response.json()
                 for version, version_data in sorted(
-                        data.items(),
-                        key=lambda x: -datetime.fromisoformat(x[1]["time"]).timestamp(),
+                    data.items(),
+                    key=lambda x: -datetime.fromisoformat(x[1]["time"]).timestamp(),
                 ):
                     content.controls.append(
                         Column(
@@ -341,12 +341,13 @@ class CustomAppBar(AppBar):
                                 *(
                                     [
                                         Text(
-                                            " " * 5 + f"{change['author']} - {change['message']}",
+                                            " " * 5
+                                            + f"{change['author']} - {change['message']}",
                                             size=15,
                                         )
                                         for change in version_data["commits"]
                                     ]
-                                )
+                                ),
                             ],
                         )
                     )
@@ -362,7 +363,6 @@ class CustomAppBar(AppBar):
         self.page.dialog = self.dlg
         self.dlg.open = True
         await self.page.update_async()
-
 
     async def check_for_update(self):
         await asyncio.sleep(1)
