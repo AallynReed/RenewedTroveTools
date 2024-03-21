@@ -149,7 +149,6 @@ class ModsController(Controller):
                     "sort_by": [
                         ("downloads", "desc"),
                         ("likes", "desc"),
-                        ("views", "desc"),
                         ("name", "asc"),
                     ],
                 },
