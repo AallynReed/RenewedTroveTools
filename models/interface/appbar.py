@@ -24,6 +24,7 @@ from flet import (
     ButtonStyle,
     TextField,
 )
+from datetime import datetime
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
     LIGHT_MODE,
@@ -37,6 +38,7 @@ from flet_core.icons import (
     PERSON,
     FEEDBACK,
     PEST_CONTROL,
+    HISTORY_EDU
 )
 
 from models.preferences import AccentColor
@@ -58,7 +60,6 @@ async def check_update(current_version, debug=False, force=False):
             if current_version != version.get("name") or force:
                 if os.name == "nt":
                     for asset in version.get("assets"):
-                        print(asset.get("name"))
                         if "debug" not in asset.get("name") and not debug:
                             return asset.get("browser_download_url"), os.name == "nt"
                         elif "debug" in asset.get("name") and debug:
@@ -95,6 +96,11 @@ class CustomAppBar(AppBar):
                     on_click=self.go_to_update_page,
                     visible=False,
                     tooltip="A newer version is available.",
+                ),
+                IconButton(
+                    icon=HISTORY_EDU,
+                    on_click=self.display_changelog,
+                    tooltip="Changelog",
                 ),
                 IconButton(
                     icon=FEEDBACK,
@@ -313,6 +319,50 @@ class CustomAppBar(AppBar):
                         )
 
         await self.page.update_async()
+
+    async def display_changelog(self, event):
+        content = Column(expand=True, scroll=True)
+        async with ClientSession() as session:
+            async with session.get(
+                "https://kiwiapi.slynx.xyz/v1/misc/change_log"
+            ) as response:
+                data = await response.json()
+                for version, version_data in sorted(
+                        data.items(),
+                        key=lambda x: -datetime.fromisoformat(x[1]["time"]).timestamp(),
+                ):
+                    content.controls.append(
+                        Column(
+                            controls=[
+                                Text(
+                                    f"Version {version}",
+                                    size=20,
+                                ),
+                                *(
+                                    [
+                                        Text(
+                                            " " * 5 + f"{change['author']} - {change['message']}",
+                                            size=15,
+                                        )
+                                        for change in version_data["commits"]
+                                    ]
+                                )
+                            ],
+                        )
+                    )
+        self.dlg = AlertDialog(
+            modal=True,
+            title=Text("Changelog"),
+            actions=[
+                TextButton("Close", on_click=self.close_dlg),
+            ],
+            actions_alignment=MainAxisAlignment.END,
+            content=content,
+        )
+        self.page.dialog = self.dlg
+        self.dlg.open = True
+        await self.page.update_async()
+
 
     async def check_for_update(self):
         await asyncio.sleep(1)
