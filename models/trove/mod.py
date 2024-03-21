@@ -20,7 +20,6 @@ from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get
 from utils.logger import Logger
 from ..trovesaurus.mods import Mod
 from utils.trove.registry import TroveGamePath
-from itertools import chain
 
 
 ModParserLogger = Logger("Mod Parser")
@@ -734,9 +733,9 @@ class TroveModList:
         for file in self.trove_path.disabled_tmods:
             file_data = file.read_bytes()
             mod = TMod.read_bytes(file, file_data)
+            mod.enabled = False
             if mod.has_wrong_name and fix_names:
                 mod.fix_name()
-            mod.enabled = False
             self._mods.append(mod)
 
     def _populate_zip_enabled(self):
