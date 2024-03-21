@@ -1045,7 +1045,7 @@ class ModsController(Controller):
                                                     Icon(
                                                         icons.DOWNLOAD, color="primary"
                                                     ),
-                                                    Text(f"{mod.downloads}"),
+                                                    Text(f"{mod.downloads:,}"),
                                                 ]
                                             )
                                         ),
@@ -1056,7 +1056,7 @@ class ModsController(Controller):
                                             content=Row(
                                                 controls=[
                                                     Icon(icons.FAVORITE, color="pink"),
-                                                    Text(f"{mod.likes}"),
+                                                    Text(f"{mod.likes:,}"),
                                                 ]
                                             )
                                         ),
