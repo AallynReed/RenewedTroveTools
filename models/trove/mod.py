@@ -167,11 +167,12 @@ class TroveMod:
 
     def toggle(self):
         self.enabled = not self.enabled
+        extension = ".tmod" if isinstance(self, TMod) else ".zip"
         if self.enabled:
-            new_name = self.mod_path.name.split(".tmod.disabled")[0] + ".tmod"
+            new_name = self.mod_path.name.split(f"{extension}.disabled")[0] + extension
             new_path = self.cwd.joinpath(new_name)
         else:
-            new_name = self.mod_path.name.split(".tmod")[0] + ".tmod.disabled"
+            new_name = self.mod_path.name.split(extension)[0] + f"{extension}.disabled"
             new_path = self.cwd.joinpath(new_name)
         self.mod_path.rename(new_path)
         self.mod_path = new_path
