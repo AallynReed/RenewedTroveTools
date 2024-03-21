@@ -98,6 +98,16 @@ class GemBuildsController(Controller):
             data_row_min_height=40,
             bgcolor="#212223",
         )
+        format_tooltip = "Build format:\n  "
+        if self.selected_class.damage_type == DamageType.magic:
+            format_tooltip += "MD/CD/MD/CD"
+        else:
+            format_tooltip += "PD/CD/PD/CD"
+        if self.config.build_type not in [BuildType.light]:
+            if self.selected_class.damage_type == DamageType.magic:
+                format_tooltip += " + MD/CD/LT/MD/CD/LT"
+            else:
+                format_tooltip += " + PD/CD/LT/PD/CD/LT"
         self.interface.controls = [
             Column(
                 controls=[
@@ -595,7 +605,7 @@ class GemBuildsController(Controller):
                         cells=[
                             DataCell(content=Text(f"{rank}")),
                             DataCell(
-                                content=Text(f"{build_text}"),
+                                content=Text(f"{build_text}", tooltip=format_tooltip),
                                 on_tap=self.copy_to_clipboard,
                             ),
                             DataCell(content=Text(f"{third:,}")),
