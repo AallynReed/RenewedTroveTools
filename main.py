@@ -158,7 +158,7 @@ class App:
         self.page.logger.info("Updated localization strings")
 
     async def setup_page(self):
-        self.page.title = self.page.metadata.app_name
+        self.page.title = self.page.metadata.name
         self.page.window_min_width = 1630
         self.page.window_min_height = 950
         self.page.window_width = 1630
