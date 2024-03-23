@@ -2,9 +2,7 @@ import asyncio
 import logging
 import os
 import sys
-from datetime import UTC
 from datetime import datetime
-from datetime import timedelta
 from json import load
 from pathlib import Path
 
@@ -27,6 +25,7 @@ from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
 from utils.routing import Routing
+from utils.trove.server_time import ServerTime
 from views import all_views
 
 
@@ -73,6 +72,7 @@ class App:
 
     async def load_configurations(self):
         self.page.user_data = None
+        self.page.trove_time = ServerTime()
         self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
         if self.page.web:
             self.page.preferences = await Preferences.load_from_web(self.page)
@@ -164,9 +164,7 @@ class App:
         self.page.window_width = 1630
         self.page.window_height = 950
         self.page.snack_bar = SnackBar(content=Text())
-        self.page.clock = Text(
-            (datetime.now(UTC) - timedelta(hours=11)).strftime("%a, %b %d\t\t%H:%M")
-        )
+        self.page.clock = Text(str(self.page.trove_time))
 
     async def process_login(self):
         token = await self.page.client_storage.get_async("rnt-token")
@@ -246,9 +244,7 @@ class App:
 
     @tasks.loop(seconds=60)
     async def update_clock(self):
-        self.page.clock.value = (datetime.now(UTC) - timedelta(hours=11)).strftime(
-            "%a, %b %d\t\t%H:%M"
-        )
+        self.page.clock.value = str(self.page.trove_time)
         try:
             await self.page.clock.update_async()
         except Exception:
@@ -256,7 +252,7 @@ class App:
 
     @update_clock.before_loop
     async def sync_clock(self):
-        now = datetime.now(UTC)
+        now = datetime.now()
         await asyncio.sleep(60 - now.second)
 
 
