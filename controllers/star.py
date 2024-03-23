@@ -38,10 +38,12 @@ class StarChartController(Controller):
             self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
             self.map = ResponsiveRow()
             self.star_details = Column(col={"xxl": 6.5})
-            _id = self.page.params.get("id", None)
-            if _id:
-                asyncio.create_task(self.start_with_build_id(_id))
-                return
+            if self.page.params:
+                _id = self.page.params.get("id", None)
+                self.page.params.clear()
+                if _id:
+                    asyncio.create_task(self.start_with_build_id(_id))
+                    return
         self.map.controls.clear()
         self.star_buttons = Stack(
             controls=[

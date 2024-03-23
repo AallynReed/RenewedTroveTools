@@ -148,12 +148,12 @@ class App:
         if data:
             uri = urlparse(data[0])
             if uri.scheme == "rtt":
-                await self.page.go_async(uri.path)
-                self.page.params = {
+                params = {
                     k: v
                     for kv in uri.query.split("&")
                     for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
                 }
+                await self.page.go_async(uri.path, **params)
 
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")

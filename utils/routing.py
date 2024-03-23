@@ -31,7 +31,7 @@ class Routing:
         if event is None:
             return
         routes = [v.route for v in self.views]
-        if self.page.route not in routes:
+        if self.page.route.split("?")[0] not in routes:
             await self.page.go_async("/404")
             return
         self.current_views = [
@@ -42,12 +42,11 @@ class Routing:
 
     def get_view(self, event):
         url = urlparse("https://trovetools.slynx.xyz" + event.route, scheme="https")
-        params = {
+        self.page.params = {
             k: v
             for kv in url.query.split("&")
             for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
         }
-        self.page.params = params
         view = get_attr(self.current_views, route=url.path)
         self.page.appbar.leading.controls[0].name = view.icon
         return view(self.page)
