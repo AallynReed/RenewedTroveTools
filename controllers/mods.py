@@ -111,6 +111,12 @@ class ModsController(Controller):
                 3: self.load_mod_profiles,
             }
             self.mod_submenus.selected_index = 1
+            if self.page.params:
+                mod_id = self.page.params.get("mod_id")
+                if mod_id:
+                    self.memory["trovesaurus"]["search"]["query"] = mod_id
+                    self.mod_submenus.selected_index = 2
+                    self.page.params.clear()
             asyncio.create_task(self.post_setup())
 
     def setup_events(self): ...
