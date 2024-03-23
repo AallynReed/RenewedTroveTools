@@ -1,10 +1,14 @@
 import asyncio
+import json
 import logging
 import os
+import re
+import socket
 import sys
 from datetime import datetime
 from json import load
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 from aiohttp import ClientSession
@@ -24,6 +28,7 @@ from models.interface import CustomAppBar
 from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
+from utils.protocol import set_protocol
 from utils.routing import Routing
 from utils.trove.server_time import ServerTime
 from views import all_views
@@ -53,8 +58,10 @@ class App:
             await self.start_app(page)
 
     async def start_app(self, page):
+        set_protocol()
         await self.load_configurations()
         await self.load_constants()
+        await self.setup_protocol_socket()
         self.setup_logging()
         self.setup_localization()
         await self.setup_page()
@@ -121,6 +128,33 @@ class App:
                     for path in files
                 }
 
+    async def setup_protocol_socket(self):
+        arguments = sys.argv[1:]
+        try:
+            self.page.protocol_socket = await asyncio.start_server(
+                self.protocol_handler, "127.0.0.1", 13010
+            )
+            asyncio.create_task(self.page.protocol_socket.serve_forever())
+        except OSError:
+            if arguments:
+                server = socket.create_connection(("127.0.0.1", 13010))
+                server.sendall(json.dumps(arguments).encode())
+            await self.page.window_close_async()
+            raise SystemExit()
+
+    async def protocol_handler(self, reader, _):
+        raw_data = await reader.read(2048)
+        data = json.loads(raw_data.decode())
+        if data:
+            uri = urlparse(data[0])
+            if uri.scheme == "rtt":
+                await self.page.go_async(uri.path)
+                self.page.params = {
+                    k: v
+                    for kv in uri.query.split("&")
+                    for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
+                }
+
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")
         if not web:
@@ -135,10 +169,7 @@ class App:
             logs = app_data.joinpath("logs")
             logs.mkdir(parents=True, exist_ok=True)
             latest_log = logs.joinpath("latest.log")
-            try:
-                latest_log.unlink(missing_ok=True)
-            except PermissionError:
-                asyncio.create_task(self.page.window_close_async())
+            latest_log.unlink(missing_ok=True)
             dated_log = logs.joinpath(datetime.now().strftime("%Y-%m-%d %H-%M-%S.log"))
         targets = (
             logging.StreamHandler(sys.stdout),
