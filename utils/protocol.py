@@ -4,13 +4,12 @@ from pathlib import Path
 
 
 def set_protocol():
+    if not getattr(sys, "frozen", False):
+        return
     if os.name == "nt":
         import winreg
-
         executable = Path(sys.executable)
         executable_path = executable.parent
-        if executable.name == "python.exe":
-            return
         protocol = "rtt"
         protocol_path = r"SOFTWARE\Classes\{0}".format(protocol)
         command = r'cmd.exe /c start "" /D "{0}" "{1}" "%1"'.format(

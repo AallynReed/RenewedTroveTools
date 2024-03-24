@@ -59,6 +59,7 @@ class App:
 
     async def start_app(self, page):
         set_protocol()
+        self.setup_folders()
         await self.load_configurations()
         await self.load_constants()
         await self.setup_protocol_socket()
@@ -69,6 +70,7 @@ class App:
         await self.process_login()
 
     async def start_web(self, page):
+        self.setup_folders()
         await self.load_configurations()
         await self.load_constants()
         self.setup_logging(True)
@@ -77,22 +79,36 @@ class App:
         await self.gather_views()
         await self.post_login(route=self.page.route)
 
-    async def load_configurations(self):
-        self.page.user_data = None
-        self.page.trove_time = ServerTime()
-        self.page.metadata = Metadata.load_from_file(Path("data/metadata.json"))
-        if self.page.web:
-            self.page.preferences = await Preferences.load_from_web(self.page)
+    def setup_folders(self):
+        self.compiled = getattr(sys, "frozen", False)
+        if self.compiled:
+            self.app_path = Path(sys.executable).parent
         else:
+            self.app_path = Path(__file__).parent
+        self.page.metadata = Metadata.load_from_file(
+            self.app_path.joinpath("data/metadata.json")
+        )
+        if not self.page.web:
             try:
                 APPDATA = Path(os.environ.get("APPDATA"))
             except TypeError:
+                # Patch for Linux support
                 APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
-            app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+            self.app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
                 self.page.metadata.tech_name
             )
+            self.logs_folder = self.app_data.joinpath("logs")
+            self.logs_folder.mkdir(parents=True, exist_ok=True)
+        self.app_data.mkdir(parents=True, exist_ok=True)
+
+    async def load_configurations(self):
+        self.page.user_data = None
+        self.page.trove_time = ServerTime()
+        if self.page.web:
+            self.page.preferences = await Preferences.load_from_web(self.page)
+        else:
             self.page.preferences = Preferences.load_from_json(
-                app_data.joinpath("preferences.json"), self.page
+                self.app_data.joinpath("preferences.json"), self.page
             )
             self.page.theme_mode = self.page.preferences.theme
             self.page.theme = Theme(
