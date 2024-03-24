@@ -1,6 +1,5 @@
 import asyncio
 import json
-import logging
 import os
 import re
 import socket
@@ -174,31 +173,8 @@ class App:
     def setup_logging(self, web=False):
         self.page.logger = Logger("Trove Builds Core")
         if not web:
-            try:
-                APPDATA = Path(os.environ.get("APPDATA"))
-            except TypeError:
-                APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
-            app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
-                self.page.metadata.tech_name
-            )
-            app_data.mkdir(parents=True, exist_ok=True)
-            logs = app_data.joinpath("logs")
-            logs.mkdir(parents=True, exist_ok=True)
-            latest_log = logs.joinpath("latest.log")
-            latest_log.unlink(missing_ok=True)
-            dated_log = logs.joinpath(datetime.now().strftime("%Y-%m-%d %H-%M-%S.log"))
-        targets = (
-            logging.StreamHandler(sys.stdout),
-            *(
-                [
-                    logging.FileHandler(latest_log),
-                    logging.FileHandler(dated_log),
-                ]
-                if not web
-                else []
-            ),
-        )
-        logging.basicConfig(format="%(message)s", level=logging.INFO, handlers=targets)
+            for file in self.logs_folder.glob("*.log"):
+                file.unlink()
 
     def setup_localization(self):
         LocalizationManager(self.page).update_all_translations()
