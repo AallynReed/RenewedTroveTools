@@ -10,12 +10,9 @@ def set_protocol():
         import winreg
 
         executable = Path(sys.executable)
-        executable_path = executable.parent
         protocol = "rtt"
         protocol_path = r"SOFTWARE\Classes\{0}".format(protocol)
-        command = r'"{0}" "%1"'.format(
-            executable
-        )
+        command = r'"{0}" "%1"'.format(executable)
         with winreg.CreateKey(winreg.HKEY_CURRENT_USER, protocol_path) as key:
             winreg.SetValue(key, None, winreg.REG_SZ, "")
             winreg.SetValueEx(key, "URL Protocol", 0, winreg.REG_SZ, "")
