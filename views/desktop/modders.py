@@ -6,7 +6,7 @@ from controllers import ModdersController
 
 class ModdersView(View):
     route = "/modders"
-    title = "Modder Tools"
+    title = "Modder Tools (WIP)"
     icon = CONSTRUCTION
     has_tab = True
 

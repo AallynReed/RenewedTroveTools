@@ -54,6 +54,10 @@ class ModManagerPreferences(BaseModel):
         return [(n, d) for n, d in value if d.exists()]
 
 
+class ModdersToolsPreferences(BaseModel):
+    project_path: Optional[Path] = None
+
+
 class Preferences(BaseModel):
     _page = PrivateAttr()
     path: Path
@@ -67,6 +71,9 @@ class Preferences(BaseModel):
     directories: Directories = Field(default_factory=Directories)
     dismissables: DismissableContent = Field(default_factory=DismissableContent)
     mod_manager: ModManagerPreferences = Field(default_factory=ModManagerPreferences)
+    modders_tools: ModdersToolsPreferences = Field(
+        default_factory=ModdersToolsPreferences
+    )
 
     @classmethod
     async def load_from_web(cls, page):
