@@ -205,20 +205,35 @@ def WriteLeb128(value):
     return bytes(result)
 
 
-def calculate_hash(data):
-    hash_value = 0x811C9DC5
-    prime = 0x1000193
+def calculate_hash(data, _):
+    hash_val = 2166136261
+    size = 16777619
     length = len(data)
 
-    for i in range(0, length & ~3, 4):
-        chunk = int.from_bytes(data[i : i + 4], byteorder="little", signed=True)
-        hash_value ^= chunk
-        hash_value *= prime
+    if length >= 0 and (length & 0xFFFFFFFC) != 0:
+        chunks = (((length & 0xFFFFFFFC) - 1) >> 2) + 1
+        while chunks:
+            chunk = int.from_bytes(data[:4], byteorder='little', signed=False)
+            data = data[4:]
+            hash_val = size * (hash_val ^ chunk)
+            chunks -= 1
 
+    v1 = 0
     remainder = length & 3
-    if remainder > 0:
-        part = int.from_bytes(data[-remainder:], byteorder="little", signed=True)
-        hash_value ^= part
-        hash_value *= prime
+    if remainder == 1:
+        hash_val = size * (hash_val ^ (v1 | data[0]))
+    elif remainder == 2:
+        v3 = data[0]
+        v1 = (v3 | v1) << 8
+        hash_val = size * (hash_val ^ (v1 | data[1]))
+    elif remainder == 3:
+        v2 = data[0]
+        v1 = v2 << 8
+        v3 = data[1]
+        v1 = (v3 | v1) << 8
+        hash_val = size * (hash_val ^ (v1 | data[2]))
 
-    return hash_value & 0xFFFFFFFF
+    return hash_val & 0xFFFFFFFF
+
+
+
