@@ -31,7 +31,7 @@ class TPack:
             pack.write_bytes(WriteLeb128(0))
             pack.write_bytes(WriteLeb128(offset))
             pack.write_bytes(WriteLeb128(len(mod_data)))
-            pack.write_bytes(WriteLeb128(calculate_hash(mod_data)))
+            pack.write_bytes(WriteLeb128(calculate_hash(mod_data, len(mod_data))))
             offset += len(mod_data)
             file_stream.write_bytes(mod_data)
         pack.seek(0)

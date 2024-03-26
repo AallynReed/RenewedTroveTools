@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import ctypes
 import datetime
 import random
 import time
@@ -11,6 +12,13 @@ from typing import Callable, Generic, Literal, TypeVar, Union, overload
 
 from aiohttp import ClientSession
 from binary_reader import BinaryReader
+
+from .path import BasePath
+
+dll = ctypes.CDLL(BasePath.joinpath("trove.dll").as_posix())
+calculate_hash = dll.calculate_hash
+calculate_hash.restype = ctypes.c_uint32
+calculate_hash.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
 
 
 def random_id(k=8):
@@ -203,37 +211,3 @@ def WriteLeb128(value):
     result.append(value & 0x7F)
 
     return bytes(result)
-
-
-def calculate_hash(data, _):
-    hash_val = 2166136261
-    size = 16777619
-    length = len(data)
-
-    if length >= 0 and (length & 0xFFFFFFFC) != 0:
-        chunks = (((length & 0xFFFFFFFC) - 1) >> 2) + 1
-        while chunks:
-            chunk = int.from_bytes(data[:4], byteorder='little', signed=False)
-            data = data[4:]
-            hash_val = size * (hash_val ^ chunk)
-            chunks -= 1
-
-    v1 = 0
-    remainder = length & 3
-    if remainder == 1:
-        hash_val = size * (hash_val ^ (v1 | data[0]))
-    elif remainder == 2:
-        v3 = data[0]
-        v1 = (v3 | v1) << 8
-        hash_val = size * (hash_val ^ (v1 | data[1]))
-    elif remainder == 3:
-        v2 = data[0]
-        v1 = v2 << 8
-        v3 = data[1]
-        v1 = (v3 | v1) << 8
-        hash_val = size * (hash_val ^ (v1 | data[2]))
-
-    return hash_val & 0xFFFFFFFF
-
-
-

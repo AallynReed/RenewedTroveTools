@@ -64,6 +64,7 @@ build_exe_options = {
         ("update.bat", "update.bat"),
         ("README.md", "README.md"),
         ("LICENSE", "LICENSE"),
+        ("trove.dll", "trove.dll"),
     ],
     "optimize": 2,
     "include_msvcr": True,

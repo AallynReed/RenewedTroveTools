@@ -90,7 +90,9 @@ class TroveModFile:
     @property
     def checksum(self):
         if self._checksum is None:
-            self._checksum = calculate_hash(self.padded_data)
+            self._checksum = calculate_hash(
+                bytes(self.content.buffer()), len(self.content.buffer())
+            )
         return self._checksum
 
     @property
