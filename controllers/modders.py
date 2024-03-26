@@ -146,7 +146,9 @@ class ModdersController(Controller):
             ]
         )
         self.extract.controls.append(directories)
-        self.tmod_text_field = TextField(label="TMod File", icon=icons.FOLDER, read_only=True, expand=True)
+        self.tmod_text_field = TextField(
+            label="TMod File", icon=icons.FOLDER, read_only=True, expand=True
+        )
         self.extract.controls.append(
             Row(
                 controls=[
@@ -177,9 +179,17 @@ class ModdersController(Controller):
         self.extract.controls.append(
             Row(
                 controls=[
-                    ElevatedButton("Clear", icon=icons.CLEAR, on_click=self.clear_extract),
-                    ElevatedButton("Extract TMod", icon=icons.BUILD, on_click=self.extract_tmod),
-                    ElevatedButton("Extract overrides", icon=icons.DETAILS, on_click=self.extract_overrides),
+                    ElevatedButton(
+                        "Clear", icon=icons.CLEAR, on_click=self.clear_extract
+                    ),
+                    ElevatedButton(
+                        "Extract TMod", icon=icons.BUILD, on_click=self.extract_tmod
+                    ),
+                    ElevatedButton(
+                        "Extract overrides",
+                        icon=icons.DETAILS,
+                        on_click=self.extract_overrides,
+                    ),
                 ]
             )
         )
@@ -275,7 +285,9 @@ class ModdersController(Controller):
         game_path = self.memory["extract"]["installation_path"].path
         for file in tmod.files:
             trove_path = Path(file.trove_path)
-            file_path = game_path.joinpath(trove_path.parent.joinpath("override").joinpath(trove_path.name))
+            file_path = game_path.joinpath(
+                trove_path.parent.joinpath("override").joinpath(trove_path.name)
+            )
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_bytes(file.data)
         self.page.snack_bar.content = Text("TMod overrides extracted")
