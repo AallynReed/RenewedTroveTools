@@ -394,7 +394,7 @@ class TroveMod:
         for chunk in chunked_file_stream:
             file_stream.extend(bytearray(compressor.compress(chunk)))
         file_stream.extend(bytearray(compressor.flush(zlib.Z_SYNC_FLUSH)))
-        for i, file in enumerate(reversed(self.files), 1):
+        for i, file in enumerate(self.files, 1):
             files_list_stream.extend(bytearray(file.header_format))
         header_stream.write_uint64(0)
         header_stream.write_uint16(self.version)
