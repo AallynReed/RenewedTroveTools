@@ -332,9 +332,12 @@ class ModdersController(Controller):
                                 on_click=self.clear_config,
                             ),
                             ElevatedButton(
-                                "Build TMod",
-                                icon=icons.BUILD,
-                                on_click=self.build_tmod,
+                                "Steam upload",
+                                icon=icons.COPY,
+                                on_click=self.steam_upload_command,
+                            ),
+                            ElevatedButton(
+                                "Build TMod", icon=icons.BUILD, on_click=self.build_tmod
                             ),
                         ],
                         alignment=MainAxisAlignment.CENTER,
@@ -610,6 +613,21 @@ class ModdersController(Controller):
                 )
         if not boot:
             await self.files_list.update_async()
+
+    async def steam_upload_command(self, event):
+        command = '/workshop upload title="{}" changes=""'
+        if not self.memory["compile"]["mod_data"].title:
+            self.page.snack_bar.content = Text("Mod title is required")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
+        command = command.format(self.memory["compile"]["mod_data"].title)
+        self.page.snack_bar.content = Text("Copied command to clipboard")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.set_clipboard_async(command)
+        await self.page.snack_bar.update_async()
 
     async def build_tmod(self, event):
         mod = TMod()
