@@ -47,7 +47,7 @@ class ModdersController(Controller):
             self.setup_memory()
             self.api = KiwiAPI()
             self.main = Column(expand=True)
-            self.tabs = Tabs(selected_index=2, on_change=self.load_tab)
+            self.tabs = Tabs(selected_index=1, on_change=self.load_tab)
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab("Extract TMod")
             self.compile_tab = Tab("Build TMod")
@@ -79,19 +79,33 @@ class ModdersController(Controller):
         pass
 
     def setup_memory(self):
-        self.memory = {"compile": {"installation_path": None, "mod_data": ModYaml()}}
+        self.memory = {
+            "extract": {
+                "installation_path": None,
+                "tmod_file": None,
+                "output_path": None,
+            },
+            "compile": {"installation_path": None, "mod_data": ModYaml()},
+        }
 
     def check_memory(self):
         self.mod_folders = list(get_trove_locations())
+        extract = self.memory["extract"]
         compile = self.memory["compile"]
         if not self.mod_folders:
             compile["installation_path"] = None
+            extract["installation_path"] = None
         else:
             if not compile["installation_path"]:
                 compile["installation_path"] = self.mod_folders[0]
             else:
                 if compile["installation_path"] not in self.mod_folders:
                     compile["installation_path"] = self.mod_folders[0]
+            if not extract["installation_path"]:
+                extract["installation_path"] = self.mod_folders[0]
+            else:
+                if extract["installation_path"] not in self.mod_folders:
+                    extract["installation_path"] = self.mod_folders[0]
 
     async def load_tab(self, event=None, boot=False):
         if boot or event:
@@ -119,28 +133,154 @@ class ModdersController(Controller):
         self.settings.controls.append(Divider())
 
     async def load_extract(self):
+        directories = Row(
+            controls=[
+                Chip(
+                    data=mod_list,
+                    leading=Image(src=mod_list.icon, width=24),
+                    label=Text(mod_list.clean_name),
+                    disabled=mod_list == self.memory["extract"]["installation_path"],
+                    on_click=self.set_extract_installation_path,
+                )
+                for mod_list in self.mod_folders
+            ]
+        )
+        self.extract.controls.append(directories)
+        self.tmod_text_field = TextField(label="TMod File", icon=icons.FOLDER, read_only=True, expand=True)
         self.extract.controls.append(
             Row(
                 controls=[
-                    Column(
-                        controls=[
-                            TextField(label="TMod File", icon=icons.FOLDER, expand=True)
-                        ],
-                        expand=True,
+                    self.tmod_text_field,
+                    IconButton(
+                        icon=icons.FOLDER,
+                        tooltip="Select TMod File",
+                        on_click=self.select_tmod_file,
                     ),
-                    Column(
-                        controls=[
-                            ElevatedButton(
-                                text="Extract",
-                                icon=icons.ARROW_DOWNWARD,
-                                on_click=lambda: print("Extracting TMod"),
-                            )
-                        ]
-                    ),
-                ],
-                expand=True,
+                ]
             )
         )
+        self.output_path_text_field = TextField(
+            label="Output Directory", icon=icons.FOLDER, read_only=True, expand=True
+        )
+        self.extract.controls.append(
+            Row(
+                controls=[
+                    self.output_path_text_field,
+                    IconButton(
+                        icon=icons.FOLDER,
+                        tooltip="Select Output Directory",
+                        on_click=self.select_output_directory,
+                    ),
+                ]
+            )
+        )
+        self.extract.controls.append(
+            Row(
+                controls=[
+                    ElevatedButton("Clear", icon=icons.CLEAR, on_click=self.clear_extract),
+                    ElevatedButton("Extract TMod", icon=icons.BUILD, on_click=self.extract_tmod),
+                    ElevatedButton("Extract overrides", icon=icons.DETAILS, on_click=self.extract_overrides),
+                ]
+            )
+        )
+
+    async def set_extract_installation_path(self, event):
+        self.memory["extract"]["installation_path"] = event.control.data
+        await self.load_tab()
+
+    async def select_tmod_file(self, _):
+        self.page.overlay.clear()
+        picker = FilePicker(on_result=self.extract_tmod_result)
+        self.page.overlay.append(picker)
+        await self.page.update_async()
+        await picker.pick_files_async(
+            dialog_title="Select TMod file",
+            initial_directory=str(
+                self.memory["extract"]["installation_path"].path.absolute()
+            ),
+            allow_multiple=False,
+            allowed_extensions=["tmod", "tmod.disabled"],
+        )
+
+    async def extract_tmod_result(self, result):
+        if not result.files:
+            return
+        file = Path(result.files[0].path)
+        file_name = file.name
+        self.memory["extract"]["tmod_file"] = file
+        self.tmod_text_field.value = file_name
+        await self.tmod_text_field.update_async()
+
+    async def select_output_directory(self, _):
+        self.page.overlay.clear()
+        picker = FilePicker(on_result=self.extract_output_result)
+        self.page.overlay.append(picker)
+        await self.page.update_async()
+        await picker.get_directory_path_async(
+            dialog_title="Select Output Directory",
+            initial_directory=str(
+                self.memory["extract"]["installation_path"].path.absolute()
+            ),
+        )
+
+    async def extract_output_result(self, result):
+        if not result.path:
+            return
+        path = Path(result.path)
+        self.memory["extract"]["output_path"] = path
+        self.output_path_text_field.value = path.as_posix()
+        await self.output_path_text_field.update_async()
+
+    async def clear_extract(self, _):
+        self.memory["extract"]["tmod_file"] = None
+        self.memory["extract"]["output_path"] = None
+        self.tmod_text_field.value = None
+        self.output_path_text_field.value = None
+        await self.tmod_text_field.update_async()
+        await self.output_path_text_field.update_async()
+
+    async def extract_tmod(self, _):
+        if not self.memory["extract"]["tmod_file"]:
+            self.page.snack_bar.content = Text("TMod file is required")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
+        if not self.memory["extract"]["output_path"]:
+            self.page.snack_bar.content = Text("Output directory is required")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
+        tmod_file = self.memory["extract"]["tmod_file"]
+        tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
+        output = self.memory["extract"]["output_path"]
+        for file in tmod.files:
+            file_path = output.joinpath(file.trove_path)
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_bytes(file.data)
+        self.page.snack_bar.content = Text("TMod extracted")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        await self.page.snack_bar.update_async()
+
+    async def extract_overrides(self, _):
+        if not self.memory["extract"]["tmod_file"]:
+            self.page.snack_bar.content = Text("TMod file is required")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
+        tmod_file = self.memory["extract"]["tmod_file"]
+        tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
+        game_path = self.memory["extract"]["installation_path"].path
+        for file in tmod.files:
+            trove_path = Path(file.trove_path)
+            file_path = game_path.joinpath(trove_path.parent.joinpath("override").joinpath(trove_path.name))
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_bytes(file.data)
+        self.page.snack_bar.content = Text("TMod overrides extracted")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        await self.page.snack_bar.update_async()
 
     async def load_compile(self):
         mod_types = await self.api.get_mod_types()
@@ -556,6 +696,16 @@ class ModdersController(Controller):
             self.page.snack_bar.bgcolor = colors.GREEN
             self.page.snack_bar.open = True
             await self.page.snack_bar.update_async()
+        value = not bool(
+            [
+                f[1]
+                for f in self.memory["compile"]["mod_data"].mod_files
+                if f[1].endswith(".swf")
+            ]
+        )
+        for control in self.config_row.controls:
+            control.disabled = value
+            await control.update_async()
         await self.update_file_list()
 
     async def remove_file(self, event):
