@@ -650,7 +650,6 @@ class ModdersController(Controller):
             mod.preview_path = Path(preview_path)
             mod.add_file(
                 TroveModFile(
-                    "",
                     Path(mod.preview_path),
                     self.memory["compile"]["mod_data"].preview[0].read_bytes(),
                 )
@@ -662,7 +661,6 @@ class ModdersController(Controller):
             mod.add_property("configPath", config_path)
             mod.add_file(
                 TroveModFile(
-                    "",
                     Path(config_path),
                     self.memory["compile"]["mod_data"].config[0].read_bytes(),
                 )
