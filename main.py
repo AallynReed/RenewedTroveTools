@@ -27,6 +27,7 @@ from models.interface import CustomAppBar
 from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
+from utils.path import BasePath
 from utils.protocol import set_protocol
 from utils.routing import Routing
 from utils.trove.server_time import ServerTime
@@ -80,10 +81,7 @@ class App:
 
     def setup_folders(self):
         self.compiled = getattr(sys, "frozen", False)
-        if self.compiled:
-            self.app_path = Path(sys.executable).parent
-        else:
-            self.app_path = Path(__file__).parent
+        self.app_path = BasePath
         self.page.metadata = Metadata.load_from_file(
             self.app_path.joinpath("data/metadata.json")
         )
