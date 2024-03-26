@@ -14,4 +14,3 @@ aiofiles
 aiofile
 toml
 vdf
-black
