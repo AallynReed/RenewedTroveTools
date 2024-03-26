@@ -108,7 +108,7 @@ class TroveModFile:
         data.write_int8(len(str(self.trove_path)))
         data.write_str(str(self.trove_path))
         data.extend(WriteLeb128(self.index))
-        data.extend(WriteLeb128(self.offset))
+        data.extend(WriteLeb128(self.offset if self.content.buffer() else 0))
         data.extend(WriteLeb128(self.size))
         data.extend(WriteLeb128(self.checksum))
         return data.buffer()
