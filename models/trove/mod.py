@@ -371,7 +371,7 @@ class TroveMod:
         return data.getvalue()
 
     def compile_tmod(self) -> bytes:
-        if self.tmod_content:
+        if self._tmod_content:
             return self.tmod_content
         if not self.files:
             raise NoFilesError("No files to compile")
