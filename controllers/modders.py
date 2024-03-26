@@ -624,9 +624,20 @@ class ModdersController(Controller):
 
     async def build_tmod(self, event):
         mod = TMod()
+        try:
+            self.memory["compile"]["mod_data"].sanity_check()
+        except (ValueError, FileNotFoundError) as e:
+            self.page.snack_bar.content = Text("Mod data is not valid: " + str(e))
+            if isinstance(e, FileNotFoundError):
+                self.page.snack_bar.content.value += f" not found"
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
         mod.name = self.memory["compile"]["mod_data"].title
         mod.author = self.memory["compile"]["mod_data"].authors_string
         mod.add_property("notes", self.memory["compile"]["mod_data"].description)
+        mod.add_property("tags", "")
         preview_path = self.memory["compile"]["mod_data"].preview[1]
         if preview_path:
             mod.preview_path = Path(preview_path)

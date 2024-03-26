@@ -26,18 +26,19 @@ class ModYaml:
 
     def sanity_check(self):
         if self.title is None:
-            return False
+            raise ValueError("Title is required")
         if len(self.authors) == 0:
-            return False
+            raise ValueError("Authors are required")
         if self.description is None:
-            return False
-        if not self.preview[0].exists():
-            return False
-        if not self.config[0].exists():
-            return False
+            raise ValueError("Description is required")
+        if self.preview[0] is not None and not self.preview[0].exists():
+            raise FileNotFoundError(self.preview[0])
+        if self.config[0] is not None and not self.config[0].exists():
+            raise FileNotFoundError(self.config[0])
         for f in self.mod_files:
             if not f[0].exists():
-                return False
+                self.remove_file(f[0])
+                raise FileNotFoundError(f[0])
         return True
 
     @staticmethod
