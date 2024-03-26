@@ -10,6 +10,8 @@ from typing import Generator, Optional
 
 import aiofiles
 from binary_reader import BinaryReader
+from utils.functions import ReadLeb128
+
 
 archive_id = re.compile(r"^archive(\d+)")
 
@@ -198,12 +200,12 @@ class TFIndex:
         reader = BinaryReader(await self.content)
         while reader.pos() < reader.size():
             file = dict()
-            file["name"] = reader.read_str(ReadVarInt7Bit(reader, reader.pos()))
+            file["name"] = reader.read_str(ReadLeb128(reader, reader.pos()))
             file["path"] = self.directory.joinpath(file["name"])
-            file["archive_index"] = ReadVarInt7Bit(reader, reader.pos())
-            file["offset"] = ReadVarInt7Bit(reader, reader.pos())
-            file["size"] = ReadVarInt7Bit(reader, reader.pos())
-            file["hash"] = ReadVarInt7Bit(reader, reader.pos())
+            file["archive_index"] = ReadLeb128(reader, reader.pos())
+            file["offset"] = ReadLeb128(reader, reader.pos())
+            file["size"] = ReadLeb128(reader, reader.pos())
+            file["hash"] = ReadLeb128(reader, reader.pos())
             yield file
 
 
@@ -262,21 +264,3 @@ async def find_changes(
             FileStatus.changed,
         ]:
             yield file
-
-
-def ReadVarInt7Bit(buffer: BinaryReader, pos):
-    result = 0
-    shift = 0
-    while 1:
-        buffer.seek(pos)
-        b = buffer.read_bytes()
-        for i, byte in enumerate(b):
-            result |= (byte & 0x7F) << shift
-            pos += 1
-            if not (byte & 0x80):
-                result &= (1 << 32) - 1
-                result = int(result)
-                return result
-            shift += 7
-            if shift >= 64:
-                raise Exception("Too many bytes when decoding varint.")
