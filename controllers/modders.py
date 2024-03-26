@@ -668,7 +668,7 @@ class ModdersController(Controller):
         if sub_type:
             mod.add_tag(sub_type)
         for file in self.memory["compile"]["mod_data"].mod_files:
-            mod_file = TroveModFile("", Path(file[1]), file[0].read_bytes())
+            mod_file = TroveModFile(Path(file[1]), file[0].read_bytes())
             mod.add_file(mod_file)
         installation_path = self.memory["compile"]["installation_path"].path
         mod_location = installation_path.joinpath(f"mods/{mod.name}.tmod")

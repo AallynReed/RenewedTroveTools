@@ -55,8 +55,7 @@ class TroveModFile:
     index: int = 0
     offset: int = 0
 
-    def __init__(self, cwd: Path, trove_path: Path, data: bytes):
-        self.cwd = cwd
+    def __init__(self, trove_path: Path, data: bytes):
         self.trove_path = trove_path.as_posix().lower()
         self._content = BinaryReader(bytearray(data))
         self._checksum = None
@@ -526,7 +525,7 @@ class TMod(TroveMod):
             checksum = ReadLeb128(data, data.pos())
             file_stream.seek(offset)
             content = file_stream.read_bytes(size)
-            file = TroveModFile(path, Path(name), content)
+            file = TroveModFile(Path(name), content)
             file.index = index
             file.old_checksum = checksum
             mod.files.append(file)
@@ -610,7 +609,7 @@ class ZMod(TroveMod):
             for file_name in f.namelist():
                 if file_name.endswith("/"):
                     continue
-                mod.files.append(TroveModFile(path, Path(file_name), f.read(file_name)))
+                mod.files.append(TroveModFile(Path(file_name), f.read(file_name)))
         mod.name = path.stem
         return mod
 
