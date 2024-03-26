@@ -659,7 +659,7 @@ class ModdersController(Controller):
             mod.add_property("previewPath", "")
         config_path = self.memory["compile"]["mod_data"].config[1] or None
         if config_path:
-            mod.add_property("config_path", config_path)
+            mod.add_property("configPath", config_path)
             mod.add_file(
                 TroveModFile(
                     "",
