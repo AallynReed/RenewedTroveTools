@@ -79,12 +79,7 @@ class ModdersController(Controller):
         pass
 
     def setup_memory(self):
-        self.memory = {
-            "compile": {
-                "installation_path": None,
-                "mod_data": ModYaml(),
-            }
-        }
+        self.memory = {"compile": {"installation_path": None, "mod_data": ModYaml()}}
 
     def check_memory(self):
         self.mod_folders = list(get_trove_locations())
@@ -162,7 +157,7 @@ class ModdersController(Controller):
                     on_click=self.set_compile_installation_path,
                 )
                 for mod_list in self.mod_folders
-            ],
+            ]
         )
         self.sub_type_dropdown = Dropdown(
             label="Class",
@@ -233,11 +228,7 @@ class ModdersController(Controller):
         header = ResponsiveRow(
             controls=[
                 Column(
-                    controls=[
-                        self.preview_image,
-                        self.preview_row,
-                        self.config_row,
-                    ],
+                    controls=[self.preview_image, self.preview_row, self.config_row],
                     expand=True,
                     alignment="center",
                     horizontal_alignment="center",
@@ -323,9 +314,7 @@ class ModdersController(Controller):
                                 on_click=self.detect_overrides,
                             ),
                             ElevatedButton(
-                                "Add files",
-                                icon=icons.ADD,
-                                on_click=self.add_file,
+                                "Add files", icon=icons.ADD, on_click=self.add_file
                             ),
                             ElevatedButton(
                                 "Clear files",
@@ -611,7 +600,7 @@ class ModdersController(Controller):
                                             icon=icons.DELETE,
                                             tooltip="Delete",
                                             on_click=self.remove_file,
-                                        ),
+                                        )
                                     ],
                                     alignment=MainAxisAlignment.END,
                                 )
