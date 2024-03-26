@@ -34,6 +34,7 @@ from flet_core import padding, MainAxisAlignment, icons
 
 from models.interface import Controller
 from models.trove.directory import Directories
+from models.trove.mod import TMod, TroveModFile
 from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
 from utils.trove.registry import get_trove_locations
@@ -344,7 +345,7 @@ class ModdersController(Controller):
                             ElevatedButton(
                                 "Build TMod",
                                 icon=icons.BUILD,
-                                on_click=lambda: print("Compiling"),
+                                on_click=self.build_tmod,
                             ),
                         ],
                         alignment=MainAxisAlignment.CENTER,
@@ -620,6 +621,51 @@ class ModdersController(Controller):
                 )
         if not boot:
             await self.files_list.update_async()
+
+    async def build_tmod(self, event):
+        mod = TMod()
+        mod.name = self.memory["compile"]["mod_data"].title
+        mod.author = self.memory["compile"]["mod_data"].authors_string
+        mod.add_property("notes", self.memory["compile"]["mod_data"].description)
+        preview_path = self.memory["compile"]["mod_data"].preview[1]
+        if preview_path:
+            mod.preview_path = Path(preview_path)
+            mod.add_file(
+                TroveModFile(
+                    "",
+                    Path(mod.preview_path),
+                    self.memory["compile"]["mod_data"].preview[0].read_bytes(),
+                )
+            )
+        else:
+            mod.add_property("previewPath", "")
+        config_path = self.memory["compile"]["mod_data"].config[1] or None
+        if config_path:
+            mod.add_property("config_path", config_path)
+            mod.add_file(
+                TroveModFile(
+                    "",
+                    Path(config_path),
+                    self.memory["compile"]["mod_data"].config[0].read_bytes(),
+                )
+            )
+        mod.game_version = "313"
+        type = self.memory["compile"]["mod_data"].type
+        if type:
+            mod.add_tag(type[:-1])
+        sub_type = self.memory["compile"]["mod_data"].sub_type
+        if sub_type:
+            mod.add_tag(sub_type)
+        for file in self.memory["compile"]["mod_data"].mod_files:
+            mod_file = TroveModFile("", Path(file[1]), file[0].read_bytes())
+            mod.add_file(mod_file)
+        installation_path = self.memory["compile"]["installation_path"].path
+        mod_location = installation_path.joinpath(f"mods/{mod.name}.tmod")
+        mod_location.write_bytes(mod.tmod_content)
+        self.page.snack_bar.content = Text(f"Built TMod {mod.name}")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
 
     async def load_projects(self):
         self.projects.controls.append(Text("Projects"))
