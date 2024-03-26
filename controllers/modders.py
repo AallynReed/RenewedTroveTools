@@ -2,7 +2,6 @@ import asyncio
 import os
 from itertools import chain
 from pathlib import Path
-from base64 import b64encode
 
 import humanize
 from flet import (
@@ -29,7 +28,7 @@ from flet import (
     DataCell,
     BorderSide,
     colors,
-    FilePicker
+    FilePicker,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -158,8 +157,7 @@ class ModdersController(Controller):
                     data=mod_list,
                     leading=Image(src=mod_list.icon, width=24),
                     label=Text(mod_list.clean_name),
-                    disabled=mod_list
-                    == self.memory["compile"]["installation_path"],
+                    disabled=mod_list == self.memory["compile"]["installation_path"],
                     on_click=self.set_compile_installation_path,
                 )
                 for mod_list in self.mod_folders
@@ -168,10 +166,7 @@ class ModdersController(Controller):
         self.sub_type_dropdown = Dropdown(
             label="Class",
             value=self.memory["compile"]["mod_data"].sub_type,
-            options=[
-                dropdown.Option(key=t, text=t)
-                for t in mod_sub_types
-            ],
+            options=[dropdown.Option(key=t, text=t) for t in mod_sub_types],
             icon=icons.CATEGORY,
             content_padding=padding.symmetric(4, 4),
             disabled=not bool(mod_sub_types),
@@ -179,7 +174,8 @@ class ModdersController(Controller):
             expand=True,
         )
         self.preview_image = Image(
-            src=self.memory["compile"]["mod_data"].preview[0] or "https://i.imgur.com/1zOz177.png",
+            src=self.memory["compile"]["mod_data"].preview[0]
+            or "https://i.imgur.com/1zOz177.png",
             width=400,
             height=230,
         )
@@ -216,7 +212,7 @@ class ModdersController(Controller):
                             for f in self.memory["compile"]["mod_data"].mod_files
                             if f[1].endswith(".swf")
                         ]
-                    )
+                    ),
                 ),
                 IconButton(
                     icon=icons.FOLDER,
@@ -228,7 +224,7 @@ class ModdersController(Controller):
                             for f in self.memory["compile"]["mod_data"].mod_files
                             if f[1].endswith(".swf")
                         ]
-                    )
+                    ),
                 ),
             ],
             expand=True,
@@ -313,13 +309,9 @@ class ModdersController(Controller):
             controls=[
                 Card(
                     content=Column(
-                        controls=[
-                            self.files_list
-                        ],
-                        expand=True,
-                        scroll=True
+                        controls=[self.files_list], expand=True, scroll=True
                     ),
-                    col=10
+                    col=10,
                 ),
                 Card(
                     content=Column(
@@ -420,8 +412,7 @@ class ModdersController(Controller):
                 self.memory["compile"]["mod_data"].type
             )
             self.sub_type_dropdown.options = [
-                dropdown.Option(key=t, text=t)
-                for t in mod_sub_types
+                dropdown.Option(key=t, text=t) for t in mod_sub_types
             ]
             self.sub_type_dropdown.disabled = not bool(mod_sub_types)
             if not mod_sub_types:
@@ -449,7 +440,9 @@ class ModdersController(Controller):
                 true_override = override.parent.parent.joinpath(file_name).relative_to(
                     installation_path.path
                 )
-                self.memory["compile"]["mod_data"].add_file(override, str(true_override).replace("\\", "/"))
+                self.memory["compile"]["mod_data"].add_file(
+                    override, str(true_override).replace("\\", "/")
+                )
         self.memory["compile"]["mod_data"].mod_files.sort(key=lambda x: x[1])
         value = not bool(
             [
@@ -465,16 +458,14 @@ class ModdersController(Controller):
 
     async def add_preview(self, event):
         self.page.overlay.clear()
-        picker = FilePicker(
-            on_result=self.add_preview_result
-        )
-        self.page.overlay.append(
-            picker
-        )
+        picker = FilePicker(on_result=self.add_preview_result)
+        self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
             dialog_title="Select preview image",
-            initial_directory=str(self.memory["compile"]["installation_path"].path.absolute()),
+            initial_directory=str(
+                self.memory["compile"]["installation_path"].path.absolute()
+            ),
             allow_multiple=False,
             allowed_extensions=["png", "jpg", "jpeg"],
         )
@@ -504,16 +495,14 @@ class ModdersController(Controller):
 
     async def add_config(self, event):
         self.page.overlay.clear()
-        picker = FilePicker(
-            on_result=self.add_config_result
-        )
-        self.page.overlay.append(
-            picker
-        )
+        picker = FilePicker(on_result=self.add_config_result)
+        self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
             dialog_title="Select config file",
-            initial_directory=str(self.memory["compile"]["installation_path"].path.absolute()),
+            initial_directory=str(
+                self.memory["compile"]["installation_path"].path.absolute()
+            ),
             allow_multiple=False,
             allowed_extensions=["cfg"],
         )
@@ -539,16 +528,14 @@ class ModdersController(Controller):
 
     async def add_file(self, event):
         self.page.overlay.clear()
-        picker = FilePicker(
-            on_result=self.add_file_result
-        )
-        self.page.overlay.append(
-            picker
-        )
+        picker = FilePicker(on_result=self.add_file_result)
+        self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
             dialog_title="Select files to add to mod",
-            initial_directory=str(self.memory["compile"]["installation_path"].path.absolute()),
+            initial_directory=str(
+                self.memory["compile"]["installation_path"].path.absolute()
+            ),
             allow_multiple=True,
         )
 
@@ -559,10 +546,14 @@ class ModdersController(Controller):
             file = Path(f.path)
             file_name = file.name
             try:
-                true_override = str(file.relative_to(self.memory["compile"]["installation_path"].path))
+                true_override = str(
+                    file.relative_to(self.memory["compile"]["installation_path"].path)
+                )
             except ValueError:
                 trove_directory = self.memory["compile"]["installation_path"].name
-                self.page.snack_bar.content = Text(f"File is not within the Trove directory selected {trove_directory}")
+                self.page.snack_bar.content = Text(
+                    f"File is not within the Trove directory selected {trove_directory}"
+                )
                 self.page.snack_bar.bgcolor = colors.RED
                 self.page.snack_bar.open = True
                 await self.page.snack_bar.update_async()
@@ -573,7 +564,6 @@ class ModdersController(Controller):
             self.page.snack_bar.open = True
             await self.page.snack_bar.update_async()
         await self.update_file_list()
-
 
     async def remove_file(self, event):
         self.memory["compile"]["mod_data"].remove_file(event.control.data)

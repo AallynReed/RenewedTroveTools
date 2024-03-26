@@ -73,7 +73,7 @@ class ModYaml:
             "description": self.description,
             "preview": (str(self.preview[0]), self.preview[1]),
             "config": (str(self.config[0]), self.config[1]),
-            "mod_files": [(str(f[0]), f[1]) for f in self.mod_files]
+            "mod_files": [(str(f[0]), f[1]) for f in self.mod_files],
         }
 
     @classmethod
@@ -83,9 +83,13 @@ class ModYaml:
         mod_yaml.authors_string = ", ".join(data.get("authors", []))
         mod_yaml.description = data.get("description")
         preview = data.get("preview", (None, None))
-        mod_yaml.preview = (Path(preview[0]), preview[1]) if preview != (None, None) else (None, None)
+        mod_yaml.preview = (
+            (Path(preview[0]), preview[1]) if preview != (None, None) else (None, None)
+        )
         config = data.get("config", (None, None))
-        mod_yaml.config = (Path(config[0]), config[1]) if config != (None, None) else (None, None)
+        mod_yaml.config = (
+            (Path(config[0]), config[1]) if config != (None, None) else (None, None)
+        )
         mod_yaml.mod_files = [(Path(f[0]), f[1]) for f in data.get("mod_files", [])]
         return mod_yaml
 
