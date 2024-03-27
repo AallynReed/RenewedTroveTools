@@ -5,6 +5,7 @@ from pathlib import Path
 
 import humanize
 from flet import (
+    AlertDialog,
     Divider,
     Card,
     Text,
@@ -147,32 +148,32 @@ class ModdersController(Controller):
         )
         self.extract.controls.append(directories)
         self.tmod_text_field = TextField(
-            label="TMod File", icon=icons.FOLDER, read_only=True, expand=True
+            label="TMod File", read_only=True, expand=True
         )
         self.extract.controls.append(
             Row(
                 controls=[
-                    self.tmod_text_field,
                     IconButton(
                         icon=icons.FOLDER,
                         tooltip="Select TMod File",
                         on_click=self.select_tmod_file,
                     ),
+                    self.tmod_text_field,
                 ]
             )
         )
         self.output_path_text_field = TextField(
-            label="Output Directory", icon=icons.FOLDER, read_only=True, expand=True
+            label="Output Directory", read_only=True, expand=True
         )
         self.extract.controls.append(
             Row(
                 controls=[
-                    self.output_path_text_field,
                     IconButton(
                         icon=icons.FOLDER,
                         tooltip="Select Output Directory",
                         on_click=self.select_output_directory,
                     ),
+                    self.output_path_text_field,
                 ]
             )
         )
@@ -461,6 +462,11 @@ class ModdersController(Controller):
                     content=Column(
                         controls=[
                             ElevatedButton(
+                                "Clear all overrides",
+                                icon=icons.CLEAR_ALL,
+                                on_click=self.clear_overrides,
+                            ),
+                            ElevatedButton(
                                 "Detect overrides",
                                 icon=icons.DETAILS,
                                 on_click=self.detect_overrides,
@@ -561,6 +567,56 @@ class ModdersController(Controller):
 
     async def change_mod_sub_type(self, event):
         self.memory["compile"]["mod_data"].sub_type = event.control.value
+
+    async def clear_overrides(self, event):
+        install_path = self.memory["compile"]["installation_path"].path.as_posix()
+        message = "Are you sure you want to clear all overrides?"
+        message += "\n\nThis will remove all files in the 'override' directories within the Trove directory:"
+        message += f"\n -> {install_path}"
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Clear all overrides"),
+            content=Text(message),
+            actions=[
+                ElevatedButton("No", on_click=self.close_dialog),
+                ElevatedButton(
+                    "Yes",
+                    on_click=self.clear_overrides_folders,
+                ),
+            ],
+            actions_alignment=MainAxisAlignment.END,
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def clear_overrides_folders(self, _):
+        directories = [d.value for d in Directories]
+        installation_path = self.memory["compile"]["installation_path"]
+        overrides = []
+        for file in self.memory["compile"]["mod_data"].mod_files:
+            if not file[0].exists():
+                self.memory["compile"]["mod_data"].remove_file(file[0])
+        for file in installation_path.path.iterdir():
+            if file.is_dir() and file.name in directories:
+                for sub_file in file.rglob("override"):
+                    if sub_file.is_dir():
+                        overrides.append(sub_file.iterdir())
+        for override in chain(*overrides):
+            if override.is_file():
+                try:
+                    override.unlink()
+                except Exception:
+                    pass
+        self.page.dialog.open = False
+        self.page.snack_bar.content = Text("Overrides cleared")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+
+    async def close_dialog(self, _):
+        self.page.dialog.open = False
+        await self.page.update_async()
 
     async def detect_overrides(self, event):
         directories = [d.value for d in Directories]
