@@ -24,7 +24,7 @@ from flet import (
     ProgressBar,
     colors,
     padding,
-    TextSpan
+    TextSpan,
 )
 from pytz import UTC
 import humanize
@@ -106,15 +106,13 @@ class HomeController(Controller):
                 )
                 for k, v in self.daily_data.items()
             ],
-            spacing=0
+            spacing=0,
         )
         self.weekly_widgets = Row(
             controls=[
                 Tooltip(
                     data=k,
-                    message="\n".join(
-                        ["Buffs", *[" \u2022 " + b for b in v["buffs"]]]
-                    ),
+                    message="\n".join(["Buffs", *[" \u2022 " + b for b in v["buffs"]]]),
                     content=Stack(
                         controls=[
                             Image(
@@ -166,7 +164,7 @@ class HomeController(Controller):
             "level": x,
             "remaining": y,
             "needed": z,
-            "percentage": round(y / z, 2)
+            "percentage": round(y / z, 2),
         }
         x, y, z = points_to_mr(mastery_data["geode"]["live"])
         geode = {
@@ -174,7 +172,7 @@ class HomeController(Controller):
             "level": x,
             "remaining": y,
             "needed": z,
-            "percentage": round(y / z, 2)
+            "percentage": round(y / z, 2),
         }
         self.live_mastery_widgets = Row(
             controls=[
@@ -188,30 +186,30 @@ class HomeController(Controller):
                                     spans=[
                                         TextSpan(
                                             text=f"  ({live['points']:,})",
-                                            style=TextStyle(size=11)
+                                            style=TextStyle(size=11),
                                         )
                                     ],
                                     size=16,
                                 ),
                                 ProgressBar(
                                     width=200,
-                                    value=live['percentage'],
+                                    value=live["percentage"],
                                     color=colors.BLUE_500,
-                                    bar_height=10
+                                    bar_height=10,
                                 ),
                                 Row(
                                     controls=[
-                                        Text(live['remaining']),
+                                        Text(live["remaining"]),
                                         Text(f"{round(live['percentage'] * 100, 2)}%"),
-                                        Text(live['needed'])
+                                        Text(live["needed"]),
                                     ],
                                     alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180
-                                )
+                                    width=180,
+                                ),
                             ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER
+                            horizontal_alignment=CrossAxisAlignment.CENTER,
                         ),
-                        padding=padding.symmetric(10, 10)
+                        padding=padding.symmetric(10, 10),
                     )
                 ),
                 Card(
@@ -224,32 +222,32 @@ class HomeController(Controller):
                                     spans=[
                                         TextSpan(
                                             text=f"  ({geode['points']:,})",
-                                            style=TextStyle(size=11)
+                                            style=TextStyle(size=11),
                                         )
                                     ],
                                     size=16,
                                 ),
                                 ProgressBar(
                                     width=200,
-                                    value=geode['percentage'],
+                                    value=geode["percentage"],
                                     color=colors.BLUE_500,
-                                    bar_height=10
+                                    bar_height=10,
                                 ),
                                 Row(
                                     controls=[
-                                        Text(geode['remaining']),
+                                        Text(geode["remaining"]),
                                         Text(f"{round(geode['percentage'] * 100, 2)}%"),
-                                        Text(geode['needed'])
+                                        Text(geode["needed"]),
                                     ],
                                     alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180
-                                )
+                                    width=180,
+                                ),
                             ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER
+                            horizontal_alignment=CrossAxisAlignment.CENTER,
                         ),
-                        padding=padding.symmetric(10, 10)
+                        padding=padding.symmetric(10, 10),
                     ),
-                )
+                ),
             ]
         )
         x, y, z = points_to_mr(mastery_data["normal"]["live"])
@@ -258,7 +256,7 @@ class HomeController(Controller):
             "level": x,
             "remaining": y,
             "needed": z,
-            "percentage": round(y / z, 2)
+            "percentage": round(y / z, 2),
         }
         x, y, z = points_to_mr(mastery_data["geode"]["live"])
         geode = {
@@ -266,7 +264,7 @@ class HomeController(Controller):
             "level": x,
             "remaining": y,
             "needed": z,
-            "percentage": round(y / z, 2)
+            "percentage": round(y / z, 2),
         }
         self.pts_mastery_widgets = Row(
             controls=[
@@ -280,30 +278,30 @@ class HomeController(Controller):
                                     spans=[
                                         TextSpan(
                                             text=f"  ({live['points']:,})",
-                                            style=TextStyle(size=11)
+                                            style=TextStyle(size=11),
                                         )
                                     ],
                                     size=16,
                                 ),
                                 ProgressBar(
                                     width=200,
-                                    value=live['percentage'],
+                                    value=live["percentage"],
                                     color=colors.BLUE_500,
-                                    bar_height=10
+                                    bar_height=10,
                                 ),
                                 Row(
                                     controls=[
-                                        Text(live['remaining']),
+                                        Text(live["remaining"]),
                                         Text(f"{round(live['percentage'] * 100, 2)}%"),
-                                        Text(live['needed'])
+                                        Text(live["needed"]),
                                     ],
                                     alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180
-                                )
+                                    width=180,
+                                ),
                             ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER
+                            horizontal_alignment=CrossAxisAlignment.CENTER,
                         ),
-                        padding=padding.symmetric(10, 10)
+                        padding=padding.symmetric(10, 10),
                     )
                 ),
                 Card(
@@ -316,42 +314,37 @@ class HomeController(Controller):
                                     spans=[
                                         TextSpan(
                                             text=f"  ({geode['points']:,})",
-                                            style=TextStyle(size=11)
+                                            style=TextStyle(size=11),
                                         )
                                     ],
                                     size=16,
                                 ),
                                 ProgressBar(
                                     width=200,
-                                    value=geode['percentage'],
+                                    value=geode["percentage"],
                                     color=colors.BLUE_500,
-                                    bar_height=10
+                                    bar_height=10,
                                 ),
                                 Row(
                                     controls=[
-                                        Text(geode['remaining']),
+                                        Text(geode["remaining"]),
                                         Text(f"{round(geode['percentage'] * 100, 2)}%"),
-                                        Text(geode['needed'])
+                                        Text(geode["needed"]),
                                     ],
                                     alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180
-                                )
+                                    width=180,
+                                ),
                             ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER
+                            horizontal_alignment=CrossAxisAlignment.CENTER,
                         ),
-                        padding=padding.symmetric(10, 10)
+                        padding=padding.symmetric(10, 10),
                     )
-                )
+                ),
             ]
         )
         self.luxion = Card()
         self.corruxion = Card()
-        self.dragons = Row(
-            controls=[
-                self.luxion,
-                self.corruxion
-            ]
-        )
+        self.dragons = Row(controls=[self.luxion, self.corruxion])
         self.widgets = Row(
             controls=[
                 Container(
@@ -360,13 +353,13 @@ class HomeController(Controller):
                             Row(
                                 controls=[
                                     self.live_mastery_widgets,
-                                    self.pts_mastery_widgets
+                                    self.pts_mastery_widgets,
                                 ]
                             ),
-                            self.dragons
+                            self.dragons,
                         ]
                     ),
-                    expand=True
+                    expand=True,
                 ),
                 self.daily_widgets,
             ],
@@ -374,7 +367,9 @@ class HomeController(Controller):
             vertical_alignment="start",
         )
         self.main.controls = [
-            Column(controls=[self.weekly_widgets, Divider(), self.widgets], expand=True),
+            Column(
+                controls=[self.weekly_widgets, Divider(), self.widgets], expand=True
+            ),
         ]
         tasks = [
             self.update_daily,
@@ -443,11 +438,7 @@ class HomeController(Controller):
         try:
             trove_time = self.page.trove_time
             luxion = trove_time.first_luxion
-            image = Image(
-                src="assets/images/dragons/lux.png",
-                width=50,
-                height=50
-            )
+            image = Image(src="assets/images/dragons/lux.png", width=50, height=50)
             self.luxion.content = Container(
                 Column(
                     controls=[
@@ -457,15 +448,15 @@ class HomeController(Controller):
                             url="https://trovesaurus.com/luxion",
                         ),
                     ],
-                    horizontal_alignment=CrossAxisAlignment.CENTER
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
                 ),
                 padding=padding.all(10),
             )
             if trove_time.is_dragon(luxion):
                 self.luxion.content.content.controls.append(
                     Text(
-                        "Leaving " +
-                        humanize.naturaltime(-trove_time.until_end_dragon(luxion))
+                        "Leaving "
+                        + humanize.naturaltime(-trove_time.until_end_dragon(luxion))
                     )
                 )
             else:
@@ -473,8 +464,8 @@ class HomeController(Controller):
                 image.color_blend_mode = BlendMode.SATURATION
                 self.luxion.content.content.controls.append(
                     Text(
-                        "Arriving " +
-                        humanize.naturaltime(-trove_time.until_next_dragon(luxion))
+                        "Arriving "
+                        + humanize.naturaltime(-trove_time.until_next_dragon(luxion))
                     )
                 )
             await self.luxion.update_async()
@@ -486,11 +477,7 @@ class HomeController(Controller):
         try:
             trove_time = self.page.trove_time
             corruxion = trove_time.first_corruxion
-            image = Image(
-                src="assets/images/dragons/nlux.png",
-                width=50,
-                height=50
-            )
+            image = Image(src="assets/images/dragons/nlux.png", width=50, height=50)
             self.corruxion.content = Container(
                 Column(
                     controls=[
@@ -500,15 +487,15 @@ class HomeController(Controller):
                             url="https://trovesaurus.com/corruxion",
                         ),
                     ],
-                    horizontal_alignment=CrossAxisAlignment.CENTER
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
                 ),
                 padding=padding.all(10),
             )
             if trove_time.is_dragon(corruxion):
                 self.corruxion.content.content.controls.append(
                     Text(
-                        "Leaving " +
-                        humanize.naturaltime(-trove_time.until_end_dragon(corruxion))
+                        "Leaving "
+                        + humanize.naturaltime(-trove_time.until_end_dragon(corruxion))
                     )
                 )
             else:
@@ -516,8 +503,8 @@ class HomeController(Controller):
                 image.color_blend_mode = BlendMode.SATURATION
                 self.corruxion.content.content.controls.append(
                     Text(
-                        "Arriving " +
-                        humanize.naturaltime(-trove_time.until_next_dragon(corruxion))
+                        "Arriving "
+                        + humanize.naturaltime(-trove_time.until_next_dragon(corruxion))
                     )
                 )
             await self.corruxion.update_async()
