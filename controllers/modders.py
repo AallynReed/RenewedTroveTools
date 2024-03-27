@@ -323,7 +323,7 @@ class ModdersController(Controller):
         )
         self.preview_image = Image(
             src=self.memory["compile"]["mod_data"].preview[0]
-            or "https://i.imgur.com/1zOz177.png",
+            or "assets/images/no_preview.png",
             width=400,
             height=230,
         )
@@ -482,11 +482,6 @@ class ModdersController(Controller):
                                 "Clear config",
                                 icon=icons.SETTINGS,
                                 on_click=self.clear_config,
-                            ),
-                            ElevatedButton(
-                                "Steam upload",
-                                icon=icons.COPY,
-                                on_click=self.steam_upload_command,
                             ),
                             ElevatedButton(
                                 "Build TMod", icon=icons.BUILD, on_click=self.build_tmod
@@ -776,22 +771,7 @@ class ModdersController(Controller):
         if not boot:
             await self.files_list.update_async()
 
-    async def steam_upload_command(self, event):
-        command = '/workshop upload title="{}" changes=""'
-        if not self.memory["compile"]["mod_data"].title:
-            self.page.snack_bar.content = Text("Mod title is required")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
-        command = command.format(self.memory["compile"]["mod_data"].title)
-        self.page.snack_bar.content = Text("Copied command to clipboard")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.set_clipboard_async(command)
-        await self.page.snack_bar.update_async()
-
-    async def build_tmod(self, event):
+    async def build_tmod(self, _):
         mod = TMod()
         try:
             self.memory["compile"]["mod_data"].sanity_check()
