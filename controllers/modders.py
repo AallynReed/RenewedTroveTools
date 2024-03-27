@@ -147,9 +147,7 @@ class ModdersController(Controller):
             ]
         )
         self.extract.controls.append(directories)
-        self.tmod_text_field = TextField(
-            label="TMod File", read_only=True, expand=True
-        )
+        self.tmod_text_field = TextField(label="TMod File", read_only=True, expand=True)
         self.extract.controls.append(
             Row(
                 controls=[
