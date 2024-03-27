@@ -14,5 +14,5 @@ class HomeView(View):
         ctrl = HomeController(page)
         super().__init__(
             route=self.route,
-            controls=[ctrl.widgets],
+            controls=[ctrl.main],
         )

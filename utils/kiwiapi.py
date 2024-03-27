@@ -129,6 +129,7 @@ class ModsEndpoint(Enum):
     types: str = "/mods/types"
     sub_types: str = "/mods/sub_types"
     image_resize: str = "/image/resize"
+    mastery: str = "/stats/mastery"
 
 
 class KiwiAPI:
@@ -207,3 +208,10 @@ class KiwiAPI:
             + ModsEndpoint.image_resize.value
             + f"?url={url}&size={size.name}"
         )
+
+    async def get_mastery(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.mastery.value}"
+            ) as response:
+                return await response.json()

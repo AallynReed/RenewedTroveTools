@@ -1,10 +1,9 @@
-from math import ceil
-
 from flet import Text, TextField, TextStyle
 from i18n import t
 
 from models.interface import Controller
 from utils.functions import throttle
+from utils.trove.mastery import mr_to_points, points_to_mr
 
 
 class MasteryController(Controller):
@@ -35,10 +34,10 @@ class MasteryController(Controller):
                 except ValueError:
                     self.points_input.helper_text = t("errors.invalid_number")
                 else:
-                    level, points, increment = self.points_to_mr(points)
+                    level, points, increment = points_to_mr(points)
                     if level > 1000 or (level == 1000 and points):
                         level = 1000
-                        increment, points = self.mr_to_points(level)
+                        increment, points = mr_to_points(level)
                         self.points_input.value = str(points)
                         self.points_input.helper_text = t("errors.max_mastery_1000")
                     self.level_input.value = str(level)
@@ -56,56 +55,10 @@ class MasteryController(Controller):
                         levels = 1000
                         self.level_input.helper_text = t("errors.max_mastery_1000")
                     self.level_input.value = str(levels)
-                    increment, points = self.mr_to_points(levels)
+                    increment, points = mr_to_points(levels)
                     self.points_input.value = points
                     self.get_buffs()
         await self.page.update_async()
-
-    def points_to_mr(self, points):
-        i = 1
-        while True:
-            if i == 1001:
-                break
-            i += 1
-            if i <= 5:
-                increment = 25
-            elif 6 <= i <= 10:
-                increment = 50
-            elif 11 <= i <= 20:
-                increment = 75
-            elif 21 <= i <= 300:
-                increment = 100
-            elif i > 300:
-                increment = 150 + ceil((i - 300) * 0.5)
-            points -= increment
-            if points <= 0:
-                if points < 0:
-                    points += increment
-                    i -= 1
-                break
-        return i, points, increment
-
-    def mr_to_points(self, level):
-        points = 0
-        i = 1
-        while True:
-            i += 1
-            if i <= 5:
-                increment = 25
-            elif 6 <= i <= 10:
-                increment = 50
-            elif 11 <= i <= 20:
-                increment = 75
-            elif 21 <= i <= 300:
-                increment = 100
-            elif i > 300:
-                increment = 150 + ceil((i - 300) * 0.5)
-            if i == level + 1:
-                if i - 1 > 300:
-                    increment = 150 + ceil((i - 1 - 300) * 0.5)
-                break
-            points += increment
-        return increment, points
 
     def get_buffs(self):
         mastery_limit = 500
