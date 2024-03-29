@@ -692,11 +692,15 @@ class ModdersController(Controller):
             return
         file = Path(result.files[0].path)
         file_name = file.name
-        true_override = "ui/preview.png"
+        true_override = f"ui/{file_name}"
         self.memory["compile"]["mod_data"].preview = (file, true_override)
         self.preview_image.src = str(file)
         await self.preview_image.update_async()
         self.preview_row.controls[0].value = file_name
+        for f in self.memory["compile"]["mod_data"].mod_files:
+            if f[0] == file:
+                self.memory["compile"]["mod_data"].mod_files.remove(f)
+        await self.update_file_list()
         await self.preview_row.controls[0].update_async()
         self.page.snack_bar.content = Text(f"Added {file_name}")
         self.page.snack_bar.bgcolor = colors.GREEN
@@ -733,6 +737,10 @@ class ModdersController(Controller):
         self.memory["compile"]["mod_data"].config = (file, true_override)
         self.config_row.controls[0].value = file_name
         await self.config_row.controls[0].update_async()
+        for f in self.memory["compile"]["mod_data"].mod_files:
+            if f[0] == file:
+                self.memory["compile"]["mod_data"].mod_files.remove(f)
+        await self.update_file_list()
         self.page.snack_bar.content = Text(f"Added {file_name}")
         self.page.snack_bar.bgcolor = colors.GREEN
         self.page.snack_bar.open = True
