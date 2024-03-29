@@ -764,7 +764,7 @@ class ModdersController(Controller):
             file_name = file.name
             try:
                 true_override = str(
-                    file.relative_to(self.memory["compile"]["installation_path"].path)
+                    file.parent.parent.joinpath(file_name).relative_to(self.memory["compile"]["installation_path"].path)
                 )
             except ValueError:
                 trove_directory = self.memory["compile"]["installation_path"].name
