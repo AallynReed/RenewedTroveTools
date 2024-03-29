@@ -176,6 +176,16 @@ class CustomAppBar(AppBar):
                             on_click=self.go_url,
                         ),
                         PopupMenuItem(
+                            data="buy_me_a_coffee",
+                            content=Row(
+                                controls=[
+                                    Image("assets/icons/brands/bmc.png", width=24),
+                                    Text("Buy me a Coffee"),
+                                ]
+                            ),
+                            on_click=self.go_url,
+                        ),
+                        PopupMenuItem(
                             data="kofi",
                             content=Row(
                                 controls=[
@@ -498,6 +508,7 @@ class CustomAppBar(AppBar):
             "github": "https://github.com/Sly0511/RenewedTroveTools",
             "paypal": "https://www.paypal.com/paypalme/waterin",
             "kofi": "https://ko-fi.com/slydev",
+            "buy_me_a_coffee": "https://www.buymeacoffee.com/sly1301",
         }
         await self.page.launch_url_async(urls[event.control.data])
 
