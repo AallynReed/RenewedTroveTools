@@ -41,6 +41,7 @@ from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
 from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
+from models.custom.projects import ProjectConfig
 
 
 class ModdersController(Controller):
@@ -49,7 +50,7 @@ class ModdersController(Controller):
             self.setup_memory()
             self.api = KiwiAPI()
             self.main = Column(expand=True)
-            self.tabs = Tabs(selected_index=1, on_change=self.load_tab)
+            self.tabs = Tabs(selected_index=3, on_change=self.load_tab)
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab("Extract TMod")
             self.compile_tab = Tab("Build TMod")
@@ -88,15 +89,18 @@ class ModdersController(Controller):
                 "output_path": None,
             },
             "compile": {"installation_path": None, "mod_data": ModYaml()},
+            "projects": {"installation_path": None},
         }
 
     def check_memory(self):
         self.mod_folders = list(get_trove_locations())
         extract = self.memory["extract"]
         compile = self.memory["compile"]
+        projects = self.memory["projects"]
         if not self.mod_folders:
             compile["installation_path"] = None
             extract["installation_path"] = None
+            projects["installation_path"] = None
         else:
             if not compile["installation_path"]:
                 compile["installation_path"] = self.mod_folders[0]
@@ -108,6 +112,11 @@ class ModdersController(Controller):
             else:
                 if extract["installation_path"] not in self.mod_folders:
                     extract["installation_path"] = self.mod_folders[0]
+            if not projects["installation_path"]:
+                projects["installation_path"] = self.mod_folders[0]
+            else:
+                if projects["installation_path"] not in self.mod_folders:
+                    projects["installation_path"] = self.mod_folders[0]
 
     async def load_tab(self, event=None, boot=False):
         if boot or event:
@@ -133,6 +142,59 @@ class ModdersController(Controller):
     async def load_settings(self):
         self.settings.controls.append(Text("Settings"))
         self.settings.controls.append(Divider())
+        path = self.page.preferences.modders_tools.project_path
+        self.project_folder_text_field = TextField(
+            value=path.as_posix() if path else None,
+            label="Project folder",
+            hint_text="Select a project folder",
+            read_only=True,
+            expand=True,
+            icon=icons.FOLDER,
+            on_focus=self.select_project_folder,
+        )
+        self.clear_project_folder_button = IconButton(
+            icons.CLEAR,
+            on_click=self.clear_project_folder,
+            tooltip="Clear project folder",
+        )
+        self.settings.controls.append(
+            Row(
+                controls=[
+                    self.project_folder_text_field,
+                    self.clear_project_folder_button,
+                ]
+            )
+        )
+
+    async def select_project_folder(self, event):
+        self.page.overlay.clear()
+        picker = FilePicker(on_result=self.select_project_folder_result)
+        self.page.overlay.append(picker)
+        await self.page.update_async()
+        await picker.get_directory_path_async(dialog_title="Select Project Folder")
+
+    async def select_project_folder_result(self, result):
+        if not result.path:
+            return
+        path = Path(result.path)
+        self.page.preferences.modders_tools.project_path = path
+        self.project_folder_text_field.value = path.as_posix()
+        await self.project_folder_text_field.update_async()
+        self.page.preferences.save()
+        self.page.snack_bar.content = Text("Project folder selected")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
+
+    async def clear_project_folder(self, event):
+        self.page.preferences.modders_tools.project_path = None
+        self.project_folder_text_field.value = None
+        await self.project_folder_text_field.update_async()
+        self.page.preferences.save()
+        self.page.snack_bar.content = Text("Project folder cleared")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
 
     async def load_extract(self):
         directories = Row(
@@ -159,34 +221,22 @@ class ModdersController(Controller):
             ]
         )
         self.extract.controls.append(directories)
-        self.tmod_text_field = TextField(label="TMod File", read_only=True, expand=True)
-        self.extract.controls.append(
-            Row(
-                controls=[
-                    IconButton(
-                        icon=icons.FOLDER,
-                        tooltip="Select TMod File",
-                        on_click=self.select_tmod_file,
-                    ),
-                    self.tmod_text_field,
-                ]
-            )
+        self.tmod_text_field = TextField(
+            label="TMod File",
+            icon=icons.FOLDER,
+            read_only=True,
+            expand=True,
+            on_focus=self.select_tmod_file,
         )
+        self.extract.controls.append(Row(controls=[self.tmod_text_field]))
         self.output_path_text_field = TextField(
-            label="Output Directory", read_only=True, expand=True
+            label="Output Directory",
+            read_only=True,
+            expand=True,
+            icon=icons.FOLDER,
+            on_focus=self.select_output_directory,
         )
-        self.extract.controls.append(
-            Row(
-                controls=[
-                    IconButton(
-                        icon=icons.FOLDER,
-                        tooltip="Select Output Directory",
-                        on_click=self.select_output_directory,
-                    ),
-                    self.output_path_text_field,
-                ]
-            )
-        )
+        self.extract.controls.append(Row(controls=[self.output_path_text_field]))
         self.extract.controls.append(
             Row(
                 controls=[
@@ -232,7 +282,7 @@ class ModdersController(Controller):
         self.tmod_text_field.value = file_name
         await self.tmod_text_field.update_async()
 
-    async def select_output_directory(self, _):
+    async def select_output_directory(self, event):
         self.page.overlay.clear()
         picker = FilePicker(on_result=self.extract_output_result)
         self.page.overlay.append(picker)
@@ -358,12 +408,8 @@ class ModdersController(Controller):
                     hint_text="Select Preview image",
                     read_only=True,
                     expand=True,
-                ),
-                IconButton(
-                    icon=icons.FOLDER,
-                    tooltip="Select Preview image",
-                    on_click=self.add_preview,
-                ),
+                    on_focus=self.add_preview,
+                )
             ],
             expand=True,
         )
@@ -376,6 +422,7 @@ class ModdersController(Controller):
                     hint_text="Select Config file",
                     read_only=True,
                     expand=True,
+                    on_focus=self.add_config,
                     disabled=not bool(
                         [
                             f[1]
@@ -383,19 +430,7 @@ class ModdersController(Controller):
                             if f[1].endswith(".swf")
                         ]
                     ),
-                ),
-                IconButton(
-                    icon=icons.FOLDER,
-                    tooltip="Select Config file",
-                    on_click=self.add_config,
-                    disabled=not bool(
-                        [
-                            f[1]
-                            for f in self.memory["compile"]["mod_data"].mod_files
-                            if f[1].endswith(".swf")
-                        ]
-                    ),
-                ),
+                )
             ],
             expand=True,
         )
@@ -940,6 +975,56 @@ class ModdersController(Controller):
         return version[0]
 
     async def load_projects(self):
-        self.projects.controls.append(Text("Projects"))
-        self.projects.controls.append(Divider())
-        self.projects.controls.append(Text("Coming soon..."))
+        if not self.page.preferences.modders_tools.project_path:
+            self.projects.controls.append(
+                Text(
+                    "No project folder selected, please select one in the settings tab",
+                    size=24,
+                )
+            )
+            return
+        project_path = self.page.preferences.modders_tools.project_path
+        projects = []
+        for folder in project_path.iterdir():
+            if folder.is_dir():
+                rtt = folder.joinpath(".rtt")
+                config = rtt.joinpath("config.json")
+                if rtt.exists() and config.exists():
+                    projects.append(folder)
+        if not projects:
+            self.projects.controls.append(
+                Text("No projects found in selected folder", size=24)
+            )
+            self.projects.controls.append(
+                ElevatedButton(
+                    "Create project", icon=icons.ADD, on_click=self.create_project
+                )
+            )
+            return
+        self.projects.controls.append(
+            Row(
+                controls=[
+                    IconButton(
+                        icons.FOLDER_OPEN,
+                        on_click=lambda x: os.startfile(
+                            self.memory["extract"]["installation_path"].path
+                        ),
+                    ),
+                    *(
+                        [
+                            Chip(
+                                data=mod_list,
+                                leading=Image(src=mod_list.icon, width=24),
+                                label=Text(mod_list.clean_name),
+                                disabled=mod_list
+                                == self.memory["extract"]["installation_path"],
+                                on_click=self.set_extract_installation_path,
+                            )
+                            for mod_list in self.mod_folders
+                        ]
+                    ),
+                ]
+            )
+        )
+
+    async def create_project(self, event): ...

@@ -48,6 +48,7 @@ class HomeController(Controller):
             controls=[
                 Tooltip(
                     data=k,
+                    vertical_offset=50,
                     message="\n".join(
                         [
                             "Normal",
@@ -69,28 +70,16 @@ class HomeController(Controller):
                                 gradient=LinearGradient(
                                     begin=alignment.center_left,
                                     end=alignment.center_right,
-                                    colors=[
-                                        "#ff000000",
-                                        "#00000000",
-                                    ],
+                                    colors=["#ff000000", "#00000000"],
                                 ),
                                 width=300,
                                 height=55,
                             ),
                             Text(
-                                v["weekday"],
-                                color="#cccccc",
-                                left=10,
-                                top=3,
-                                size=16,
+                                v["weekday"], color="#cccccc", left=10, top=3, size=16
                             ),
-                            Text(
-                                v["name"],
-                                color="#cccccc",
-                                left=10,
-                                top=23,
-                            ),
-                        ],
+                            Text(v["name"], color="#cccccc", left=10, top=23),
+                        ]
                     ),
                     border_radius=10,
                     bgcolor="#1E1E28",
@@ -124,21 +113,12 @@ class HomeController(Controller):
                                 gradient=LinearGradient(
                                     begin=alignment.center_left,
                                     end=alignment.center_right,
-                                    colors=[
-                                        "#ff000000",
-                                        "#00000000",
-                                    ],
+                                    colors=["#ff000000", "#00000000"],
                                 ),
                                 width=200,
                                 height=182,
                             ),
-                            Text(
-                                v["name"],
-                                color="#cccccc",
-                                size=16,
-                                left=10,
-                                top=3,
-                            ),
+                            Text(v["name"], color="#cccccc", size=16, left=10, top=3),
                         ]
                     ),
                     border_radius=10,
@@ -158,17 +138,21 @@ class HomeController(Controller):
             alignment=MainAxisAlignment.CENTER,
         )
         mastery_data = await self.api.get_mastery()
-        x, y, z = points_to_mr(mastery_data["normal"]["live"])
+        live_mastery = mastery_data["normal"]["live"]
+        pts_mastery = mastery_data["normal"]["pts"]
+        live_g_mastery = mastery_data["geode"]["live"]
+        pts_g_mastery = mastery_data["geode"]["pts"]
+        x, y, z = points_to_mr(live_mastery)
         live = {
-            "points": mastery_data["normal"]["live"],
+            "points": live_mastery,
             "level": x,
             "remaining": y,
             "needed": z,
             "percentage": round(y / z, 2),
         }
-        x, y, z = points_to_mr(mastery_data["geode"]["live"])
+        x, y, z = points_to_mr(live_g_mastery)
         geode = {
-            "points": mastery_data["geode"]["live"],
+            "points": live_g_mastery,
             "level": x,
             "remaining": y,
             "needed": z,
@@ -194,7 +178,7 @@ class HomeController(Controller):
                                 ProgressBar(
                                     width=200,
                                     value=live["percentage"],
-                                    color=colors.BLUE_500,
+                                    color=colors.YELLOW_600,
                                     bar_height=10,
                                 ),
                                 Row(
@@ -230,7 +214,7 @@ class HomeController(Controller):
                                 ProgressBar(
                                     width=200,
                                     value=geode["percentage"],
-                                    color=colors.BLUE_500,
+                                    color=colors.CYAN_400,
                                     bar_height=10,
                                 ),
                                 Row(
@@ -246,102 +230,89 @@ class HomeController(Controller):
                             horizontal_alignment=CrossAxisAlignment.CENTER,
                         ),
                         padding=padding.symmetric(10, 10),
-                    ),
+                    )
                 ),
             ]
         )
-        x, y, z = points_to_mr(mastery_data["normal"]["live"])
+        x, y, z = points_to_mr(pts_mastery)
         live = {
-            "points": mastery_data["normal"]["live"],
+            "points": pts_mastery,
             "level": x,
             "remaining": y,
             "needed": z,
             "percentage": round(y / z, 2),
         }
-        x, y, z = points_to_mr(mastery_data["geode"]["live"])
+        x, y, z = points_to_mr(pts_g_mastery)
         geode = {
-            "points": mastery_data["geode"]["live"],
+            "points": pts_g_mastery,
             "level": x,
             "remaining": y,
             "needed": z,
             "percentage": round(y / z, 2),
         }
-        self.pts_mastery_widgets = Row(
-            controls=[
-                Card(
-                    content=Container(
-                        Column(
-                            controls=[
-                                Text("PTS Trove Mastery", size=20),
-                                Text(
-                                    f"{live['level']}",
-                                    spans=[
-                                        TextSpan(
-                                            text=f"  ({live['points']:,})",
-                                            style=TextStyle(size=11),
-                                        )
-                                    ],
-                                    size=16,
-                                ),
-                                ProgressBar(
-                                    width=200,
-                                    value=live["percentage"],
-                                    color=colors.BLUE_500,
-                                    bar_height=10,
-                                ),
-                                Row(
-                                    controls=[
-                                        Text(live["remaining"]),
-                                        Text(f"{round(live['percentage'] * 100, 2)}%"),
-                                        Text(live["needed"]),
-                                    ],
-                                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180,
-                                ),
-                            ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER,
-                        ),
-                        padding=padding.symmetric(10, 10),
-                    )
-                ),
-                Card(
-                    content=Container(
-                        Column(
-                            controls=[
-                                Text("PTS Geode Mastery", size=20),
-                                Text(
-                                    f"{geode['level']}",
-                                    spans=[
-                                        TextSpan(
-                                            text=f"  ({geode['points']:,})",
-                                            style=TextStyle(size=11),
-                                        )
-                                    ],
-                                    size=16,
-                                ),
-                                ProgressBar(
-                                    width=200,
-                                    value=geode["percentage"],
-                                    color=colors.BLUE_500,
-                                    bar_height=10,
-                                ),
-                                Row(
-                                    controls=[
-                                        Text(geode["remaining"]),
-                                        Text(f"{round(geode['percentage'] * 100, 2)}%"),
-                                        Text(geode["needed"]),
-                                    ],
-                                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180,
-                                ),
-                            ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER,
-                        ),
-                        padding=padding.symmetric(10, 10),
-                    )
-                ),
-            ]
-        )
+        if bool(live_mastery < pts_mastery or live_g_mastery < pts_g_mastery):
+            self.live_mastery_widgets.controls[0].content.content.controls.extend(
+                [
+                    Divider(),
+                    Text("PTS Trove Mastery", size=20),
+                    Text(
+                        f"{live['level']}",
+                        spans=[
+                            TextSpan(
+                                text=f"  ({live['points']:,})",
+                                style=TextStyle(size=11),
+                            )
+                        ],
+                        size=16,
+                    ),
+                    ProgressBar(
+                        width=200,
+                        value=live["percentage"],
+                        color=colors.YELLOW_600,
+                        bar_height=10,
+                    ),
+                    Row(
+                        controls=[
+                            Text(live["remaining"]),
+                            Text(f"{round(live['percentage'] * 100, 2)}%"),
+                            Text(live["needed"]),
+                        ],
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        width=180,
+                    ),
+                ]
+            )
+            self.live_mastery_widgets.controls[1].content.content.controls.extend(
+                [
+                    Divider(),
+                    Text("PTS Geode Mastery", size=20),
+                    Text(
+                        f"{geode['level']}",
+                        spans=[
+                            TextSpan(
+                                text=f"  ({geode['points']:,})",
+                                style=TextStyle(size=11),
+                            )
+                        ],
+                        size=16,
+                    ),
+                    ProgressBar(
+                        width=200,
+                        value=geode["percentage"],
+                        color=colors.CYAN_400,
+                        bar_height=10,
+                    ),
+                    Row(
+                        controls=[
+                            Text(geode["remaining"]),
+                            Text(f"{round(geode['percentage'] * 100, 2)}%"),
+                            Text(geode["needed"]),
+                        ],
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        width=180,
+                    ),
+                ]
+            )
         self.luxion = Card()
         self.corruxion = Card()
         self.dragons = Row(controls=[self.luxion, self.corruxion])
@@ -351,12 +322,9 @@ class HomeController(Controller):
                     content=Column(
                         controls=[
                             Row(
-                                controls=[
-                                    self.live_mastery_widgets,
-                                    self.pts_mastery_widgets,
-                                ]
+                                controls=[self.live_mastery_widgets, self.dragons],
+                                vertical_alignment="start",
                             ),
-                            self.dragons,
                         ]
                     ),
                     expand=True,
@@ -367,9 +335,7 @@ class HomeController(Controller):
             vertical_alignment="start",
         )
         self.main.controls = [
-            Column(
-                controls=[self.weekly_widgets, Divider(), self.widgets], expand=True
-            ),
+            Column(controls=[self.weekly_widgets, Divider(), self.widgets], expand=True)
         ]
         tasks = [
             self.update_daily,
@@ -438,7 +404,7 @@ class HomeController(Controller):
         try:
             trove_time = self.page.trove_time
             luxion = trove_time.first_luxion
-            image = Image(src="assets/images/dragons/lux.png", width=50, height=50)
+            image = Image(width=50, height=50)
             self.luxion.content = Container(
                 Column(
                     controls=[
@@ -453,6 +419,7 @@ class HomeController(Controller):
                 padding=padding.all(10),
             )
             if trove_time.is_dragon(luxion):
+                image.src = "assets/images/dragons/lux.png"
                 self.luxion.content.content.controls.append(
                     Text(
                         "Leaving "
@@ -460,8 +427,7 @@ class HomeController(Controller):
                     )
                 )
             else:
-                image.color = "black"
-                image.color_blend_mode = BlendMode.SATURATION
+                image.src = "assets/images/dragons/lux_out.png"
                 self.luxion.content.content.controls.append(
                     Text(
                         "Arriving "
@@ -477,7 +443,7 @@ class HomeController(Controller):
         try:
             trove_time = self.page.trove_time
             corruxion = trove_time.first_corruxion
-            image = Image(src="assets/images/dragons/nlux.png", width=50, height=50)
+            image = Image(width=50, height=50)
             self.corruxion.content = Container(
                 Column(
                     controls=[
@@ -492,6 +458,7 @@ class HomeController(Controller):
                 padding=padding.all(10),
             )
             if trove_time.is_dragon(corruxion):
+                image.src = "assets/images/dragons/nlux.png"
                 self.corruxion.content.content.controls.append(
                     Text(
                         "Leaving "
@@ -499,8 +466,7 @@ class HomeController(Controller):
                     )
                 )
             else:
-                image.color = "black"
-                image.color_blend_mode = BlendMode.SATURATION
+                image.src = "assets/images/dragons/nlux_out.png"
                 self.corruxion.content.content.controls.append(
                     Text(
                         "Arriving "
