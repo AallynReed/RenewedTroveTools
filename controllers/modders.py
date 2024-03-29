@@ -136,14 +136,25 @@ class ModdersController(Controller):
     async def load_extract(self):
         directories = Row(
             controls=[
-                Chip(
-                    data=mod_list,
-                    leading=Image(src=mod_list.icon, width=24),
-                    label=Text(mod_list.clean_name),
-                    disabled=mod_list == self.memory["extract"]["installation_path"],
-                    on_click=self.set_extract_installation_path,
-                )
-                for mod_list in self.mod_folders
+                IconButton(
+                    icons.FOLDER_OPEN,
+                    on_click=lambda x: os.startfile(
+                        self.memory["extract"]["installation_path"].path
+                    ),
+                ),
+                *(
+                    [
+                        Chip(
+                            data=mod_list,
+                            leading=Image(src=mod_list.icon, width=24),
+                            label=Text(mod_list.clean_name),
+                            disabled=mod_list
+                            == self.memory["extract"]["installation_path"],
+                            on_click=self.set_extract_installation_path,
+                        )
+                        for mod_list in self.mod_folders
+                    ]
+                ),
             ]
         )
         self.extract.controls.append(directories)
@@ -577,10 +588,7 @@ class ModdersController(Controller):
             content=Text(message),
             actions=[
                 ElevatedButton("No", on_click=self.close_dialog),
-                ElevatedButton(
-                    "Yes",
-                    on_click=self.clear_overrides_folders,
-                ),
+                ElevatedButton("Yes", on_click=self.clear_overrides_folders),
             ],
             actions_alignment=MainAxisAlignment.END,
         )

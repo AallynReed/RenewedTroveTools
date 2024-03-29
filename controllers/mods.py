@@ -53,19 +53,10 @@ class ModsController(Controller):
             self.mod_submenus = Tabs()
             self.mod_submenus.on_change = self.tab_loader
             self.settings_tab = Tab(
-                tab_content=Row(
-                    controls=[
-                        Icon(icons.SETTINGS, size=24),
-                    ]
-                ),
+                tab_content=Row(controls=[Icon(icons.SETTINGS, size=24)])
             )
             self.my_mods_tab = Tab(
-                tab_content=Row(
-                    controls=[
-                        Icon(icons.FOLDER, size=24),
-                        Text("My Mods"),
-                    ]
-                ),
+                tab_content=Row(controls=[Icon(icons.FOLDER, size=24), Text("My Mods")])
             )
             self.trovesaurus_tab = Tab(
                 tab_content=Row(
@@ -135,13 +126,8 @@ class ModsController(Controller):
 
     def setup_memory(self):
         self.memory = {
-            "settings": {
-                "picked_custom_dir_name": None,
-                "picked_custom_dir": None,
-            },
-            "my_mods": {
-                "installation_path": None,
-            },
+            "settings": {"picked_custom_dir_name": None, "picked_custom_dir": None},
+            "my_mods": {"installation_path": None},
             "trovesaurus": {
                 "page": 0,
                 "page_size": self.page.preferences.mod_manager.page_size,
@@ -165,12 +151,7 @@ class ModsController(Controller):
         self.mod_folders = list(get_trove_locations())
         custom_mod_folders = self.page.preferences.mod_manager.custom_directories
         for name, path in custom_mod_folders:
-            self.mod_folders.append(
-                TroveGamePath(
-                    path=Path(path),
-                    name=name,
-                )
-            )
+            self.mod_folders.append(TroveGamePath(path=Path(path), name=name))
         my_mods = self.memory["my_mods"]
         trovesarus = self.memory["trovesaurus"]
         if not self.mod_folders:
@@ -419,16 +400,26 @@ class ModsController(Controller):
         self.my_mods.controls.append(
             Row(
                 controls=[
-                    Chip(
-                        data=mod_list,
-                        leading=Image(src=mod_list.icon, width=24),
-                        label=Text(mod_list.clean_name),
-                        disabled=mod_list
-                        == self.memory["my_mods"]["installation_path"],
-                        on_click=self.set_my_mods_installation_path,
-                    )
-                    for mod_list in self.mod_folders
-                ],
+                    IconButton(
+                        icons.FOLDER_OPEN,
+                        on_click=lambda x: os.startfile(
+                            self.memory["my_mods"]["installation_path"].path
+                        ),
+                    ),
+                    *(
+                        [
+                            Chip(
+                                data=mod_list,
+                                leading=Image(src=mod_list.icon, width=24),
+                                label=Text(mod_list.clean_name),
+                                disabled=mod_list
+                                == self.memory["my_mods"]["installation_path"],
+                                on_click=self.set_my_mods_installation_path,
+                            )
+                            for mod_list in self.mod_folders
+                        ]
+                    ),
+                ]
             )
         )
         installation_path = self.memory["my_mods"]["installation_path"]
@@ -452,7 +443,7 @@ class ModsController(Controller):
                                 width=24,
                             ),
                             Text("Trovesaurus"),
-                        ],
+                        ]
                     ),
                     tile_padding=padding.symmetric(0, 10),
                     initially_expanded=True,
@@ -469,18 +460,14 @@ class ModsController(Controller):
         self.enabled_mods_list = Column(
             controls=[
                 Column(
-                    controls=[
-                        self.my_mods_list_maps[0][0],
-                    ],
+                    controls=[self.my_mods_list_maps[0][0]],
                     spacing=0,
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
                 Divider(),
                 Column(
-                    controls=[
-                        self.my_mods_list_maps[0][1],
-                    ],
+                    controls=[self.my_mods_list_maps[0][1]],
                     spacing=0,
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
@@ -493,17 +480,13 @@ class ModsController(Controller):
         self.disabled_mods_list = Column(
             controls=[
                 Column(
-                    controls=[
-                        self.my_mods_list_maps[1][0],
-                    ],
+                    controls=[self.my_mods_list_maps[1][0]],
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
                 Divider(height=1),
                 Column(
-                    controls=[
-                        self.my_mods_list_maps[1][1],
-                    ],
+                    controls=[self.my_mods_list_maps[1][1]],
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
@@ -586,9 +569,7 @@ class ModsController(Controller):
                         expand=True,
                     ),
                     tooltip="Click to preview image",
-                    style=ButtonStyle(
-                        padding=padding.symmetric(0, 0),
-                    ),
+                    style=ButtonStyle(padding=padding.symmetric(0, 0)),
                     on_click=self.go_to_image_preview,
                     width=64,
                     expand=True,
@@ -598,9 +579,7 @@ class ModsController(Controller):
                     TextButton(
                         content=Text(mod.name),
                         height=28,
-                        style=ButtonStyle(
-                            padding=padding.symmetric(4, 4),
-                        ),
+                        style=ButtonStyle(padding=padding.symmetric(4, 4)),
                         url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
                     ),
                     *(
@@ -646,9 +625,7 @@ class ModsController(Controller):
                                         ]
                                     ),
                                     height=28,
-                                    style=ButtonStyle(
-                                        padding=padding.symmetric(4, 4),
-                                    ),
+                                    style=ButtonStyle(padding=padding.symmetric(4, 4)),
                                     url=f"https://trovesaurus.com/user={author.ID}",
                                 ),
                             )
@@ -670,22 +647,14 @@ class ModsController(Controller):
                         expand=True,
                     ),
                     tooltip="Click to preview image",
-                    style=ButtonStyle(
-                        padding=padding.symmetric(0, 0),
-                    ),
+                    style=ButtonStyle(padding=padding.symmetric(0, 0)),
                     on_click=self.go_to_image_preview,
                     width=64,
                     expand=True,
                 )
             mod_tile.title = Row(controls=[Text(mod.name)])
             mod_tile.subtitle = Row(
-                controls=[
-                    Icon(icons.PERSON),
-                    TextButton(
-                        mod.author,
-                        disabled=True,
-                    ),
-                ]
+                controls=[Icon(icons.PERSON), TextButton(mod.author, disabled=True)]
             )
         if mod.has_conflicts:
             mod_tile.title.controls.append(
@@ -873,16 +842,26 @@ class ModsController(Controller):
         self.trovesaurus.controls.append(
             Row(
                 controls=[
-                    Chip(
-                        data=mod_list,
-                        leading=Image(src=mod_list.icon, width=24),
-                        label=Text(mod_list.clean_name),
-                        disabled=mod_list
-                        == self.memory["trovesaurus"]["installation_path"],
-                        on_click=self.set_trovesaurus_installation_path,
-                    )
-                    for mod_list in self.mod_folders
-                ],
+                    IconButton(
+                        icons.FOLDER_OPEN,
+                        on_click=lambda x: os.startfile(
+                            self.memory["trovesaurus"]["installation_path"].path
+                        ),
+                    ),
+                    *(
+                        [
+                            Chip(
+                                data=mod_list,
+                                leading=Image(src=mod_list.icon, width=24),
+                                label=Text(mod_list.clean_name),
+                                disabled=mod_list
+                                == self.memory["trovesaurus"]["installation_path"],
+                                on_click=self.set_trovesaurus_installation_path,
+                            )
+                            for mod_list in self.mod_folders
+                        ]
+                    ),
+                ]
             )
         )
         self.trovesaurus_search_bar = TextField(
@@ -903,8 +882,7 @@ class ModsController(Controller):
                 controls=[
                     self.trovesaurus_search_bar,
                     IconButton(
-                        icon=icons.SEARCH,
-                        on_click=self.trovesaurus_search_bar_submit,
+                        icon=icons.SEARCH, on_click=self.trovesaurus_search_bar_submit
                     ),
                     VerticalDivider(visible=True),
                     Text("Type:"),
@@ -948,9 +926,7 @@ class ModsController(Controller):
                                         #     visible=i != 0,
                                         #     on_click=self.set_trovesaurus_sorter_reorder,
                                         # ),
-                                        Text(
-                                            sorter.capitalize(),
-                                        ),
+                                        Text(sorter.capitalize()),
                                         # IconButton(
                                         #     data=((sorter, order), i + 1),
                                         #     icon=icons.ARROW_RIGHT,
@@ -1177,10 +1153,10 @@ class ModsController(Controller):
                                             col=1.4,
                                             disabled=True,
                                         ),
-                                    ],
+                                    ]
                                 ),
-                            ],
-                        ),
+                            ]
+                        )
                     ],
                 )
             )
@@ -1222,7 +1198,7 @@ class ModsController(Controller):
                         height=48,
                         content_padding=padding.symmetric(0, 30),
                     ),
-                ],
+                ]
             )
         )
         if not boot:
