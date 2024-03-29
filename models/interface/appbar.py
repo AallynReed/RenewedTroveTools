@@ -179,7 +179,7 @@ class CustomAppBar(AppBar):
                             data="buy_me_a_coffee",
                             content=Row(
                                 controls=[
-                                    Image("assets/icons/brands/bmc.png", width=24),
+                                    Image("assets/icons/brands/bmc.png", width=12),
                                     Text("Buy me a Coffee"),
                                 ]
                             ),
