@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 from itertools import chain
 from pathlib import Path
 
@@ -869,7 +870,14 @@ class ModdersController(Controller):
                     self.memory["compile"]["mod_data"].config[0].read_bytes(),
                 )
             )
-        mod.game_version = "313"
+        try:
+            mod.game_version = self.get_mod_version()
+        except Exception:
+            self.page.snack_bar.content = Text("Failed to get game version, please open trove at least once")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.snack_bar.update_async()
+            return
         type = self.memory["compile"]["mod_data"].type
         if type:
             mod.add_tag(type[:-1])
@@ -886,6 +894,13 @@ class ModdersController(Controller):
         self.page.snack_bar.bgcolor = colors.GREEN
         self.page.snack_bar.open = True
         await self.page.snack_bar.update_async()
+
+    def get_mod_version(self):
+        app_data = os.getenv("APPDATA")
+        trove_path = Path(app_data).joinpath("Trove")
+        config = trove_path.joinpath("Trove.cfg")
+        version = re.findall("LastModVersion = (\d+)", config.read_text(), re.MULTILINE)
+        return version[0]
 
     async def load_projects(self):
         self.projects.controls.append(Text("Projects"))
