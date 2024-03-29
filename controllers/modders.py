@@ -904,7 +904,7 @@ class ModdersController(Controller):
             return
         type = self.memory["compile"]["mod_data"].type
         if type:
-            mod.add_tag(type[:-1])
+            mod.add_tag(type)
         sub_type = self.memory["compile"]["mod_data"].sub_type
         if sub_type:
             mod.add_tag(sub_type)
