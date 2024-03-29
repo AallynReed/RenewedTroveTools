@@ -312,14 +312,25 @@ class ModdersController(Controller):
         )
         directories = Row(
             controls=[
-                Chip(
-                    data=mod_list,
-                    leading=Image(src=mod_list.icon, width=24),
-                    label=Text(mod_list.clean_name),
-                    disabled=mod_list == self.memory["compile"]["installation_path"],
-                    on_click=self.set_compile_installation_path,
-                )
-                for mod_list in self.mod_folders
+                IconButton(
+                    icons.FOLDER_OPEN,
+                    on_click=lambda x: os.startfile(
+                        self.memory["compile"]["installation_path"].path
+                    ),
+                ),
+                *(
+                    [
+                        Chip(
+                            data=mod_list,
+                            leading=Image(src=mod_list.icon, width=24),
+                            label=Text(mod_list.clean_name),
+                            disabled=mod_list
+                            == self.memory["compile"]["installation_path"],
+                            on_click=self.set_compile_installation_path,
+                        )
+                        for mod_list in self.mod_folders
+                    ]
+                ),
             ]
         )
         self.sub_type_dropdown = Dropdown(
@@ -642,14 +653,14 @@ class ModdersController(Controller):
                 if all(
                     [
                         self.memory["compile"]["mod_data"].preview,
-                        self.memory["compile"]["mod_data"].preview[0] == override
+                        self.memory["compile"]["mod_data"].preview[0] == override,
                     ]
                 ):
                     continue
                 if all(
                     [
                         self.memory["compile"]["mod_data"].config,
-                        self.memory["compile"]["mod_data"].config[0] == override
+                        self.memory["compile"]["mod_data"].config[0] == override,
                     ]
                 ):
                     continue
@@ -772,7 +783,9 @@ class ModdersController(Controller):
             file_name = file.name
             try:
                 true_override = str(
-                    file.parent.parent.joinpath(file_name).relative_to(self.memory["compile"]["installation_path"].path)
+                    file.parent.parent.joinpath(file_name).relative_to(
+                        self.memory["compile"]["installation_path"].path
+                    )
                 )
             except ValueError:
                 trove_directory = self.memory["compile"]["installation_path"].name
