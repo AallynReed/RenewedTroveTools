@@ -11,16 +11,7 @@ from urllib.parse import urlparse
 
 import requests
 from aiohttp import ClientSession
-from flet import (
-    app_async,
-    WEB_BROWSER,
-    FLET_APP,
-    Theme,
-    SnackBar,
-    Row,
-    Text,
-    Icon,
-)
+from flet import app_async, WEB_BROWSER, FLET_APP, Theme, SnackBar, Row, Text, Icon
 
 from models import Metadata, Preferences
 from models.interface import CustomAppBar
@@ -57,7 +48,7 @@ class App:
         else:
             await self.start_app(page)
 
-    async def start_app(self, page):
+    async def start_app(self, _):
         set_protocol()
         self.setup_folders()
         await self.load_configurations()
@@ -69,7 +60,7 @@ class App:
         await self.gather_views()
         await self.process_login()
 
-    async def start_web(self, page):
+    async def start_web(self, _):
         self.setup_folders()
         await self.load_configurations()
         await self.load_constants()
@@ -238,12 +229,7 @@ class App:
         self.page.appbar = CustomAppBar(
             page=self.page,
             title=Text(self.page.metadata.app_name),
-            leading=Row(
-                controls=[
-                    Icon("Star"),
-                    self.page.clock,
-                ],
-            ),
+            leading=Row(controls=[Icon("Star"), self.page.clock]),
         )
 
     async def gather_views(self):
