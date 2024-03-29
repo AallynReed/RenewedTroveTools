@@ -180,6 +180,7 @@ class NumberField(TextField):
 
         self._add_event_handler("submit", verify_value)
 
+
 class PathField(TextField):
     async def _verify_value(self, event):
         event.control.border_color = None
