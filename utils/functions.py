@@ -185,7 +185,7 @@ async def check_update(current_version):
     return None
 
 
-def ReadLeb128(buffer: BinaryReader, pos):
+def read_leb128(buffer: BinaryReader, pos):
     result = 0
     shift = 0
     while 1:
@@ -203,7 +203,7 @@ def ReadLeb128(buffer: BinaryReader, pos):
                 raise Exception("Too many bytes when decoding varint.")
 
 
-def WriteLeb128(value):
+def write_leb128(value):
     result = bytearray()
     while value >= 0x80:
         result.append((value & 0x7F) | 0x80)

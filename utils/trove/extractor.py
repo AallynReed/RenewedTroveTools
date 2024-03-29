@@ -10,7 +10,7 @@ from typing import Generator, Optional
 
 import aiofiles
 from binary_reader import BinaryReader
-from utils.functions import ReadLeb128
+from utils.functions import read_leb128
 
 
 archive_id = re.compile(r"^archive(\d+)")
@@ -200,12 +200,12 @@ class TFIndex:
         reader = BinaryReader(await self.content)
         while reader.pos() < reader.size():
             file = dict()
-            file["name"] = reader.read_str(ReadLeb128(reader, reader.pos()))
+            file["name"] = reader.read_str(read_leb128(reader, reader.pos()))
             file["path"] = self.directory.joinpath(file["name"])
-            file["archive_index"] = ReadLeb128(reader, reader.pos())
-            file["offset"] = ReadLeb128(reader, reader.pos())
-            file["size"] = ReadLeb128(reader, reader.pos())
-            file["hash"] = ReadLeb128(reader, reader.pos())
+            file["archive_index"] = read_leb128(reader, reader.pos())
+            file["offset"] = read_leb128(reader, reader.pos())
+            file["size"] = read_leb128(reader, reader.pos())
+            file["hash"] = read_leb128(reader, reader.pos())
             yield file
 
 

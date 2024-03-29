@@ -4,7 +4,7 @@ from pathlib import Path
 from binary_reader import BinaryReader
 
 from models.trove.mod import TroveMod, Property
-from utils.functions import get_attr, ReadLeb128, WriteLeb128, calculate_hash, chunks
+from utils.functions import get_attr, read_leb128, write_leb128, calculate_hash, chunks
 
 
 class TPack:
@@ -18,20 +18,20 @@ class TPack:
         pack.write_uint16(1)
         pack.write_uint16(len(self.properties))
         for prop in self.properties:
-            pack.write_bytes(WriteLeb128(len(prop.name)))
+            pack.write_bytes(write_leb128(len(prop.name)))
             pack.write_str(prop.name)
-            pack.write_bytes(WriteLeb128(len(prop.value)))
+            pack.write_bytes(write_leb128(len(prop.value)))
             pack.write_str(prop.value)
         offset = 0
         for file in self.files:
             mod_data = file.mod_path.read_bytes()
             pack.write_int8(len(file.mod_path.name))
             pack.write_str(file.mod_path.name)
-            pack.write_bytes(WriteLeb128(0))
-            pack.write_bytes(WriteLeb128(0))
-            pack.write_bytes(WriteLeb128(offset))
-            pack.write_bytes(WriteLeb128(len(mod_data)))
-            pack.write_bytes(WriteLeb128(calculate_hash(mod_data, len(mod_data))))
+            pack.write_bytes(write_leb128(0))
+            pack.write_bytes(write_leb128(0))
+            pack.write_bytes(write_leb128(offset))
+            pack.write_bytes(write_leb128(len(mod_data)))
+            pack.write_bytes(write_leb128(calculate_hash(mod_data, len(mod_data))))
             offset += len(mod_data)
             file_stream.write_bytes(mod_data)
         pack.seek(0)
@@ -55,18 +55,18 @@ class TPack:
         file_count = pack.read_uint16()
         property_count = pack.read_uint16()
         for _ in range(property_count):
-            name_length = ReadLeb128(pack)
+            name_length = read_leb128(pack)
             name = pack.read_str(name_length)
-            value_length = ReadLeb128(pack)
+            value_length = read_leb128(pack)
             value = pack.read_str(value_length)
             tpack.add_property(name, value)
         for _ in range(file_count):
             file_name_length = pack.read_int8()
             file_name = pack.read_str(file_name_length)
-            index = ReadLeb128(pack, pack.pos())
-            file_offset = ReadLeb128(pack, pack.pos())
-            file_size = ReadLeb128(pack, pack.pos())
-            file_hash = ReadLeb128(pack, pack.pos())
+            index = read_leb128(pack, pack.pos())
+            file_offset = read_leb128(pack, pack.pos())
+            file_size = read_leb128(pack, pack.pos())
+            file_hash = read_leb128(pack, pack.pos())
             tpack.files.append(TroveMod(file_name, file_offset, file_size, file_hash))
 
     @property

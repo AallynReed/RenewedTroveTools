@@ -16,7 +16,7 @@ from toml import dumps
 import re
 import os
 
-from utils.functions import ReadLeb128, WriteLeb128, calculate_hash, chunks, get_attr
+from utils.functions import read_leb128, write_leb128, calculate_hash, chunks, get_attr
 from utils.logger import Logger
 from ..trovesaurus.mods import Mod
 from utils.trove.registry import TroveGamePath
@@ -106,10 +106,10 @@ class TroveModFile:
         data = BinaryReader(bytearray())
         data.write_int8(len(str(self.trove_path)))
         data.write_str(str(self.trove_path))
-        data.extend(WriteLeb128(self.index))
-        data.extend(WriteLeb128(self.offset if self.content.buffer() else 0))
-        data.extend(WriteLeb128(self.size))
-        data.extend(WriteLeb128(self.checksum))
+        data.extend(write_leb128(self.index))
+        data.extend(write_leb128(self.offset if self.content.buffer() else 0))
+        data.extend(write_leb128(self.size))
+        data.extend(write_leb128(self.checksum))
         return data.buffer()
 
 
@@ -386,9 +386,9 @@ class TroveMod:
         file_stream = BinaryReader(bytearray())
         self.add_property("modLoader", "RTT")
         for prop in self.properties:
-            properties_stream.write_bytes(WriteLeb128(len(prop.name)))
+            properties_stream.write_bytes(write_leb128(len(prop.name)))
             properties_stream.write_str(prop.name)
-            properties_stream.write_bytes(WriteLeb128(len(prop.value)))
+            properties_stream.write_bytes(write_leb128(len(prop.value)))
             properties_stream.write_str(prop.value)
         for file in self.files:
             file_stream.extend(bytearray(file.padded_data))
@@ -507,9 +507,9 @@ class TMod(TroveMod):
         properties_count = data.read_uint16()
         mod.properties = []
         for i in range(properties_count):
-            name_size = ReadLeb128(data, data.pos())
+            name_size = read_leb128(data, data.pos())
             name = data.read_str(name_size)
-            value_size = ReadLeb128(data, data.pos())
+            value_size = read_leb128(data, data.pos())
             value = data.read_str(value_size)
             mod.properties.append(Property(name=name, value=value))
         file_stream = data.buffer()[header_size:]
@@ -524,10 +524,10 @@ class TMod(TroveMod):
         while data.pos() < header_size:
             name_size = data.read_uint8()
             name = data.read_str(name_size)
-            index = ReadLeb128(data, data.pos())
-            offset = ReadLeb128(data, data.pos())
-            size = ReadLeb128(data, data.pos())
-            checksum = ReadLeb128(data, data.pos())
+            index = read_leb128(data, data.pos())
+            offset = read_leb128(data, data.pos())
+            size = read_leb128(data, data.pos())
+            checksum = read_leb128(data, data.pos())
             file_stream.seek(offset)
             content = file_stream.read_bytes(size)
             file = TroveModFile(Path(name), content)
