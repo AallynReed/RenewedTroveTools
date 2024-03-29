@@ -166,6 +166,10 @@ class TroveMod:
     def is_ui_mod(self):
         return False
 
+    @property
+    def is_rtt_mod(self):
+        return self.get_property_value("modLoader") == "RTT"
+
     def toggle(self):
         self.enabled = not self.enabled
         extension = ".tmod" if isinstance(self, TMod) else ".zip"
@@ -380,6 +384,7 @@ class TroveMod:
         properties_stream = BinaryReader(bytearray())
         files_list_stream = BinaryReader(bytearray())
         file_stream = BinaryReader(bytearray())
+        self.add_property("modLoader", "RTT")
         for prop in self.properties:
             properties_stream.write_bytes(WriteLeb128(len(prop.name)))
             properties_stream.write_str(prop.name)
