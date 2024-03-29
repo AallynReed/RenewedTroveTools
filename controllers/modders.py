@@ -639,6 +639,20 @@ class ModdersController(Controller):
                         overrides.append(sub_file.iterdir())
         for override in chain(*overrides):
             if override.is_file():
+                if all(
+                    [
+                        self.memory["compile"]["mod_data"].preview,
+                        self.memory["compile"]["mod_data"].preview[0] == override
+                    ]
+                ):
+                    continue
+                if all(
+                    [
+                        self.memory["compile"]["mod_data"].config,
+                        self.memory["compile"]["mod_data"].config[0] == override
+                    ]
+                ):
+                    continue
                 file_name = override.name
                 true_override = override.parent.parent.joinpath(file_name).relative_to(
                     installation_path.path
@@ -873,7 +887,9 @@ class ModdersController(Controller):
         try:
             mod.game_version = self.get_mod_version()
         except Exception:
-            self.page.snack_bar.content = Text("Failed to get game version, please open trove at least once")
+            self.page.snack_bar.content = Text(
+                "Failed to get game version, please open trove at least once"
+            )
             self.page.snack_bar.bgcolor = colors.RED
             self.page.snack_bar.open = True
             await self.page.snack_bar.update_async()

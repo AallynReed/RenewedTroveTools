@@ -39,6 +39,11 @@ class ModYaml:
             if not f[0].exists():
                 self.remove_file(f[0])
                 raise FileNotFoundError(f[0])
+        for f in self.mod_files:
+            if f[0] == self.preview[0]:
+                raise ValueError("Preview file cannot be a mod file")
+            if f[0] == self.config[0]:
+                raise ValueError("Config file cannot be a mod file")
         return True
 
     @staticmethod
