@@ -87,7 +87,7 @@ class App:
             )
             self.logs_folder = self.app_data.joinpath("logs")
             self.logs_folder.mkdir(parents=True, exist_ok=True)
-        self.app_data.mkdir(parents=True, exist_ok=True)
+            self.app_data.mkdir(parents=True, exist_ok=True)
 
     async def load_configurations(self):
         self.page.user_data = None
