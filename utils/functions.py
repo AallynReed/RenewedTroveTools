@@ -4,6 +4,7 @@ import asyncio
 import ctypes
 import datetime
 import random
+import sys
 import time
 from random import randint
 from random import sample
@@ -15,7 +16,10 @@ from binary_reader import BinaryReader
 
 from .path import BasePath
 
-dll = ctypes.CDLL(BasePath.joinpath("trove.dll").as_posix())
+if sys.platform == "win32":
+    dll = ctypes.CDLL(BasePath.joinpath("trove.dll").as_posix())
+else:
+    dll = ctypes.CDLL(BasePath.joinpath("trove.so").as_posix())
 calculate_hash = dll.calculate_hash
 calculate_hash.restype = ctypes.c_uint32
 calculate_hash.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
