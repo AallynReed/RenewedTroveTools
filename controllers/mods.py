@@ -590,8 +590,7 @@ class ModsController(Controller):
                                 content=IconButton(
                                     icons.DOWNLOAD,
                                     data=mod,
-                                    icon_size=12,
-                                    width=12,
+                                    icon_size=24,
                                     on_click=self.update_my_mods_mod,
                                 ),
                             )
