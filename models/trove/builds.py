@@ -135,6 +135,7 @@ class BuildConfig(BaseModel):
     no_face: bool = False
     light: int = 0
     subclass_active: bool = False
+    litany: bool = False
     star_chart: Optional[str] = None
 
     def __eq__(self, other):

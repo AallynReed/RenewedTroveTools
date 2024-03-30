@@ -415,7 +415,7 @@ class GemBuildsController(Controller):
                                                 ),
                                             ],
                                             alignment="center",
-                                            col={"xxl": 4},
+                                            col={"xxl": 3},
                                         ),
                                         ResponsiveRow(
                                             controls=[
@@ -429,7 +429,7 @@ class GemBuildsController(Controller):
                                                 ),
                                             ],
                                             alignment="center",
-                                            col={"xxl": 4},
+                                            col={"xxl": 3},
                                         ),
                                         ResponsiveRow(
                                             controls=[
@@ -443,7 +443,21 @@ class GemBuildsController(Controller):
                                                 ),
                                             ],
                                             alignment="center",
-                                            col={"xxl": 4},
+                                            col={"xxl": 3},
+                                        ),
+                                        ResponsiveRow(
+                                            controls=[
+                                                Switch(
+                                                    value=self.config.litany,
+                                                    on_change=self.toggle_litany,
+                                                ),
+                                                Text(
+                                                    "Enlightened",
+                                                    text_align="center",
+                                                ),
+                                            ],
+                                            alignment="center",
+                                            col={"xxl": 3},
                                         ),
                                     ],
                                 ),
@@ -858,6 +872,8 @@ class GemBuildsController(Controller):
                         second += value["value"]
                     if value["name"] == "Light":
                         third += value["value"]
+        if self.config.litany:
+            sixth += 1
         for build_tuple in builder:
             build = list(build_tuple)
             gem_first, gem_second, gem_third = self.calculate_gem_stats(
@@ -878,7 +894,7 @@ class GemBuildsController(Controller):
                 build,
                 cfirst,
                 csecond,
-                cthird * (sixth / 100),
+                int(cthird * (sixth / 100)),
                 fourth,
                 final,
                 class_bonus,
@@ -1011,6 +1027,10 @@ class GemBuildsController(Controller):
 
     async def toggle_berserker_battler(self, _):
         self.config.berserker_battler = not self.config.berserker_battler
+        await self.update_builds()
+
+    async def toggle_litany(self, _):
+        self.config.litany = not self.config.litany
         await self.update_builds()
 
     async def toggle_star_chart(self, _):
