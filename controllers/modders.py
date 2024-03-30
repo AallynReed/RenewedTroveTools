@@ -524,7 +524,7 @@ class ModdersController(Controller):
                             ),
                             ElevatedButton(
                                 "Detect overrides",
-                                icon=icons.DETAILS,
+                                icon=icons.SEARCH,
                                 on_click=self.detect_overrides,
                             ),
                             ElevatedButton(
