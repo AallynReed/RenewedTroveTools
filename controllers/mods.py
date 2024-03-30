@@ -433,6 +433,17 @@ class ModsController(Controller):
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.release_ui()
             return
+        updates = [mod for mod in self.my_mod_list.mods if mod.has_update]
+        self.my_mods.controls[0].controls.insert(
+            1,
+            IconButton(
+                data=updates,
+                icon=icons.DOWNLOAD,
+                tooltip=f"Update {len(updates)} mods",
+                on_click=self.update_mods,
+                disabled=not bool(updates),
+            ),
+        )
         self.my_mods_list_maps = {
             i: [
                 ExpansionTile(
@@ -714,6 +725,17 @@ class ModsController(Controller):
     async def close_dialog(self, _):
         self.dialog.open = False
         await self.page.update_async()
+
+    async def update_mods(self, event):
+        await self.lock_ui()
+        mods = event.control.data
+        for mod in mods:
+            await mod.update()
+        await self.tab_loader(boot=True)
+        self.page.snack_bar.content = Text(f"Updated {len(mods)} mods")
+        self.page.snack_bar.bgcolor = "green"
+        self.page.snack_bar.open = True
+        await self.page.snack_bar.update_async()
 
     async def update_my_mods_mod(self, event=None, mod=None):
         await self.lock_ui()
