@@ -142,6 +142,7 @@ class ModsController(Controller):
                         ("downloads", "desc"),
                         ("likes", "desc"),
                         ("name", "asc"),
+                        ("last_update", "desc"),
                     ],
                 },
             },
@@ -947,7 +948,7 @@ class ModsController(Controller):
                                         #     visible=i != 0,
                                         #     on_click=self.set_trovesaurus_sorter_reorder,
                                         # ),
-                                        Text(sorter.capitalize()),
+                                        Text(sorter.replace("_", " ").capitalize()),
                                         # IconButton(
                                         #     data=((sorter, order), i + 1),
                                         #     icon=icons.ARROW_RIGHT,
@@ -1243,12 +1244,10 @@ class ModsController(Controller):
 
     async def set_trovesaurus_sorter_switch(self, event):
         sorter = event.control.data
-        new_order = []
+        new_order = [(s, o) for s, o in self.memory["trovesaurus"]["search"]["sort_by"] if s != sorter]
         for s, o in self.memory["trovesaurus"]["search"]["sort_by"]:
             if s == sorter:
-                new_order.append((s, "asc" if o == "desc" else "desc"))
-            else:
-                new_order.append((s, o))
+                new_order.insert(0, (s, "asc" if o == "desc" else "desc"))
         self.memory["trovesaurus"]["search"]["sort_by"] = new_order
         await self.load_trovesaurus_mods(boot=True)
 
