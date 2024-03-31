@@ -24,6 +24,8 @@ class FileStatus(Enum):
 
 
 class TroveFile:
+    index: TFIndex = None
+
     def __init__(self, **data):
         for key, value in data.items():
             setattr(self, key, value)
@@ -252,6 +254,7 @@ async def find_all_archives(path: Path, hashes: dict) -> Generator[TFArchive]:
 async def find_all_files(path: Path, hashes: dict) -> Generator[TroveFile]:
     async for archive in find_all_archives(path, hashes):
         async for file in archive.files():
+            file.index = archive.index
             yield file
 
 

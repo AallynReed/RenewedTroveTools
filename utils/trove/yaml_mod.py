@@ -13,6 +13,8 @@ class ModYaml:
     mod_files: list[tuple[Path, str]]
     type: Optional[str]
     sub_type: Optional[str]
+    version: Optional[str]
+    changes: Optional[str]
 
     def __init__(self):
         self.title = None
@@ -23,6 +25,8 @@ class ModYaml:
         self.mod_files = []
         self.type = None
         self.sub_type = None
+        self._version = None
+        self._changes = None
 
     def sanity_check(self):
         if self.title is None:
@@ -58,6 +62,22 @@ class ModYaml:
     def authors(self, authors):
         self.authors_string = authors
 
+    @property
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        self._version = version
+
+    @property
+    def changes(self):
+        return self._changes
+
+    @changes.setter
+    def changes(self, changes):
+        self._changes = changes
+
     def add_file(self, override, true_override):
         ovr = (override, true_override)
         if ovr not in self.mod_files:
@@ -80,6 +100,8 @@ class ModYaml:
             "preview": (str(self.preview[0]), self.preview[1]),
             "config": (str(self.config[0]), self.config[1]),
             "mod_files": [(str(f[0]), f[1]) for f in self.mod_files],
+            "version": self.version,
+            "changes": self.changes,
         }
 
     @classmethod
@@ -97,6 +119,8 @@ class ModYaml:
             (Path(config[0]), config[1]) if config != (None, None) else (None, None)
         )
         mod_yaml.mod_files = [(Path(f[0]), f[1]) for f in data.get("mod_files", [])]
+        mod_yaml.version = data.get("version")
+        mod_yaml.changes = data.get("changes")
         return mod_yaml
 
     @classmethod

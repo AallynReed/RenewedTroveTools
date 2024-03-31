@@ -1,4 +1,6 @@
 import asyncio
+import ctypes
+import json
 import os
 import re
 from itertools import chain
@@ -18,6 +20,7 @@ from flet import (
     Image,
     TextField,
     ElevatedButton,
+    ScrollMode,
     ResponsiveRow,
     VerticalDivider,
     Tabs,
@@ -31,9 +34,12 @@ from flet import (
     BorderSide,
     colors,
     FilePicker,
+    Icon,
+    Container
 )
 from flet_core import padding, MainAxisAlignment, icons
 
+from models.custom.projects import ProjectConfig, VersionConfig
 from models.interface import Controller
 from models.trove.directory import Directories
 from models.trove.mod import TMod, TroveModFile
@@ -41,7 +47,6 @@ from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
 from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
-from models.custom.projects import ProjectConfig
 
 
 class ModdersController(Controller):
@@ -54,7 +59,7 @@ class ModdersController(Controller):
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab("Extract TMod")
             self.compile_tab = Tab("Build TMod")
-            self.projects_tab = Tab("Projects")
+            self.projects_tab = Tab("Projects (VERY BETA)")
             self.settings = Column(expand=True)
             self.extract = Column(expand=True)
             self.compile = Column(expand=True)
@@ -89,7 +94,13 @@ class ModdersController(Controller):
                 "output_path": None,
             },
             "compile": {"installation_path": None, "mod_data": ModYaml()},
-            "projects": {"installation_path": None},
+            "projects": {
+                "installation_path": None,
+                "project_path": None,
+                "selected_project": None,
+                "config": None,
+                "version": None,
+            },
         }
 
     def check_memory(self):
@@ -1026,5 +1037,522 @@ class ModdersController(Controller):
                 ]
             )
         )
+        self.projects_list = Tabs(on_change=self.project_tab_loader, expand=True)
+        for project in projects:
+            config = ProjectConfig.parse_obj(json.loads(project.joinpath(".rtt/config.json").read_text()))
+            self.projects_list.tabs.append(
+                Tab(
+                    tab_content=Row(
+                        data=project,
+                        controls=[
+                            IconButton(
+                                icons.FOLDER_OPEN,
+                                on_click=lambda x: os.startfile(project),
+                            ),
+                            Text(config.name),
+                        ]
+                    ),
+                )
+            )
+        self.projects.controls.append(
+            Row(
+                controls=[
+                    ElevatedButton(
+                        "Create project", icon=icons.ADD, on_click=self.create_project
+                    ),
+                    self.projects_list,
+                ],
+            )
+        )
+        self.project_control = Column(expand=True)
+        self.projects.controls.append(self.project_control)
+        await self.project_tab_loader()
 
-    async def create_project(self, event): ...
+    async def project_tab_loader(self, event=None):
+        if event:
+            project = event.tab_content.data
+        else:
+            selected_tab = self.projects_list.selected_index
+            project = self.projects_list.tabs[selected_tab].tab_content.data
+        self.project_control.controls.clear()
+        config = ProjectConfig.parse_obj(json.loads(project.joinpath(".rtt/config.json").read_text()))
+        self.memory["projects"]["config"] = config
+        self.memory["projects"]["selected_project"] = project
+        versions_folder = project.joinpath("versions")
+        if not versions_folder.exists():
+            versions_folder.mkdir(exist_ok=True)
+        versions = []
+        for version in versions_folder.iterdir():
+            if version.is_dir():
+                if version.joinpath("version.json").exists():
+                    version_config = VersionConfig.parse_obj(
+                        json.loads(
+                            version.joinpath("version.json").read_text()
+                        )
+                    )
+                    versions.append((version, version_config))
+        versions.reverse()
+        if not self.memory["projects"]["version"]:
+            self.memory["projects"]["version"] = versions[0] if versions else None
+        else:
+            if self.memory["projects"]["version"] not in versions:
+                self.memory["projects"]["version"] = versions[0] if versions else None
+        if not versions:
+            self.project_control.controls.append(
+                Text("No versions found", size=24)
+            )
+            self.project_control.controls.append(
+                ElevatedButton(
+                    "Create version", icon=icons.ADD, on_click=self.create_version
+                )
+            )
+            return
+        version, version_config = self.memory["projects"]["version"]
+        self.project_control.controls.append(
+            Row(
+                controls=[
+                    ElevatedButton(
+                        "New version", icon=icons.ADD, on_click=self.create_version
+                    ),
+                    *(
+                        [
+                            Chip(
+                                data=(version, config),
+                                leading=Icon(icons.FOLDER),
+                                label=Text(config.version),
+                                disabled=config.version == version_config.version,
+                                on_click=self.set_version,
+                            )
+                            for version, config in versions
+                        ]
+                    ),
+                ]
+            )
+        )
+        mod_types = await self.api.get_mod_types()
+        sub_types = await self.api.get_mod_sub_types(config.type)
+        self.version_type_picker = Dropdown(
+            label="Type",
+            value=config.type,
+            options=[
+                dropdown.Option(key=t, text=t)
+                for t in mod_types
+            ],
+            icon=icons.CATEGORY,
+            content_padding=padding.symmetric(4, 4),
+            on_change=self.version_change_mod_type,
+        )
+        self.version_sub_type_picker = Dropdown(
+            label="Class",
+            value=config.sub_type,
+            options=[
+                dropdown.Option(key=t, text=t)
+                for t in sub_types
+            ],
+            icon=icons.CATEGORY,
+            content_padding=padding.symmetric(4, 4),
+            on_change=self.version_change_mod_sub_type,
+            disabled=not bool(sub_types),
+        )
+        self.project_control.controls.append(
+            Row(
+                controls=[
+                    Image(
+                        src="" or "assets/images/no_preview.png",
+                        width=400,
+                        height=230,
+                    ),
+                    Column(
+                        controls=[
+                            Row(
+                                controls=[
+                                    Icon(icons.PERSON),
+                                    *(
+                                        [
+                                            Chip(
+                                                data=author,
+                                                label=Text(author),
+                                                on_click=self.remove_author
+                                            )
+                                            for author in config.authors
+                                        ]
+                                    ),
+                                    IconButton(
+                                        icons.ADD,
+                                        on_click=self.add_author,
+                                        visible=len(config.authors) < 5
+                                    )
+                                ]
+                            ),
+                            TextField(
+                                value=config.description,
+                                label="Description",
+                                icon=icons.DESCRIPTION,
+                                multiline=True,
+                                max_lines=3,
+                                max_length=200,
+                                on_change=self.version_change_description
+                            ),
+                            Row(
+                                controls=[
+                                    self.version_type_picker,
+                                    self.version_sub_type_picker,
+                                ]
+                            ),
+                            TextField(
+                                value=version_config.changes,
+                                label="Changes",
+                                hint_text="Enter changes",
+                                icon=icons.TRACK_CHANGES,
+                                multiline=True,
+                                max_lines=3,
+                                max_length=200,
+                                on_change=self.version_change_changes
+                            )
+                        ],
+                        expand=True,
+                        alignment=MainAxisAlignment.CENTER,
+                    )
+                ],
+                vertical_alignment="center",
+            )
+        )
+        files = []
+        if self.memory["projects"]["version"]:
+            version_path = project.joinpath(
+                f"versions/{self.memory['projects']['version'][1].version}"
+            )
+            for d in Directories:
+                directory = version_path.joinpath(d.value)
+                if not directory.exists():
+                    continue
+                for file in directory.rglob("*"):
+                    if file.is_file():
+                        files.append(file)
+        self.project_control.controls.append(
+            ResponsiveRow(
+                controls=[
+                    Card(
+                        content=Column(
+                            controls=[
+                                DataTable(
+                                    columns=[
+                                        DataColumn(label=Text("File Path")),
+                                        DataColumn(label=Text("Size"), numeric=True),
+                                    ],
+                                    vertical_lines=BorderSide(1, colors.GREY_800),
+                                    rows=[
+                                        *(
+                                            [
+                                                DataRow(
+                                                    cells=[
+                                                        DataCell(
+                                                            TextButton(
+                                                                data=file,
+                                                                text=file.relative_to(version_path),
+                                                                on_click=lambda x: os.startfile(x.data)
+                                                            )
+                                                        ),
+                                                        DataCell(Text(humanize.naturalsize(file.stat().st_size))),
+                                                    ]
+                                                )
+                                            ] if files else [
+                                                DataRow(
+                                                    cells=[
+                                                        DataCell(Text("No files found")),
+                                                        DataCell(Text("")),
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
+                            ],
+                            expand=True,
+                            scroll=ScrollMode.ADAPTIVE,
+                        ),
+                        expand=True,
+                        col=9,
+                    ),
+                    Card(
+                        content=Container(
+                            content=Column(
+                                controls=[
+                                    ElevatedButton("Add files", icon=icons.ADD),
+                                ],
+                                expand=True,
+                            ),
+                            expand=True,
+                        ),
+                        expand=True,
+                        col=3
+                    )
+                ],
+                expand=True,
+            )
+        )
+        if event:
+            await self.projects.update_async()
+
+    async def create_project(self, event):
+        types = await self.api.get_mod_types()
+        sub_types = await self.api.get_mod_sub_types(types[0])
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Create project"),
+            content=Column(
+                controls=[
+                    TextField(
+                        label="Project name (Mod name)",
+                        hint_text="Enter project name (Mod name)",
+                        icon=icons.TITLE,
+                        max_length=100,
+                    ),
+                    TextField(
+                        label="Author(s)",
+                        hint_text="Enter author name (separate by comma for multiple authors)",
+                        icon=icons.PERSON,
+                        max_length=256,
+                    ),
+                    TextField(
+                        label="Description",
+                        hint_text="Enter project description",
+                        icon=icons.DESCRIPTION,
+                        multiline=True,
+                        max_lines=5,
+                        max_length=200,
+                    ),
+                    Dropdown(
+                        label="Type",
+                        options=[dropdown.Option(key=t, text=t) for t in types],
+                        icon=icons.CATEGORY,
+                        content_padding=padding.symmetric(4, 4),
+                        on_change=self.project_change_mod_type,
+                    ),
+                    Dropdown(
+                        label="Class",
+                        options=[dropdown.Option(key=t, text=t) for t in sub_types],
+                        icon=icons.CATEGORY,
+                        content_padding=padding.symmetric(4, 4),
+                        disabled=not bool(sub_types),
+                    )
+                ],
+                width=500
+            ),
+            actions=[
+                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Create", on_click=self.create_project_result),
+            ]
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def project_change_mod_type(self, event):
+        value = event.control.value
+        if value == "None":
+            value = None
+        sub_types = await self.api.get_mod_sub_types(value)
+        self.page.dialog.content.controls[4].options = [
+            dropdown.Option(key=t, text=t) for t in sub_types
+        ]
+        self.page.dialog.content.controls[4].disabled = not bool(
+            sub_types
+        )
+        if not sub_types:
+            self.page.dialog.content.controls[4].value = None
+        await self.page.dialog.content.controls[4].update_async()
+
+    async def create_project_result(self, event):
+        self.page.dialog.open = False
+        await self.page.update_async()
+        project_name = self.page.dialog.content.controls[0].value
+        author_string = self.page.dialog.content.controls[1].value
+        authors = [a.strip() for a in author_string.split(",") if a.strip()]
+        description = self.page.dialog.content.controls[2].value
+        project_path = self.page.preferences.modders_tools.project_path
+        if not project_path.exists():
+            self.page.preferences.modders_tools.project_path = None
+            self.page.preferences.save()
+            self.page.snack_bar.content = Text("Project folder not found")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.update_async()
+            await self.load_tab()
+            return
+        project_folder = project_path.joinpath(project_name)
+        self.memory["projects"]["selected_project"] = project_folder
+        rtt = project_folder.joinpath(".rtt")
+        rtt.mkdir(exist_ok=True, parents=True)
+        try:
+            ctypes.windll.kernel32.SetFileAttributesW(str(rtt), 2)
+        except Exception:
+            ...
+        config = rtt.joinpath("config.json")
+        tags = []
+        tags.append(self.page.dialog.content.controls[3].value)
+        tags.append(self.page.dialog.content.controls[4].value)
+        config.write_text(
+            ProjectConfig(
+                name=project_name,
+                authors=authors,
+                description=description or "",
+                tags=[t for t in tags if t is not None]
+            ).json()
+        )
+        self.page.snack_bar.content = Text("Project created")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+        await self.load_tab()
+
+    async def create_version(self, event):
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Create version"),
+            content=Column(
+                controls=[
+                    TextField(
+                        label="Version",
+                        hint_text="Enter version number",
+                        icon=icons.TRACK_CHANGES,
+                        max_length=100,
+                    )
+                ],
+                width=500
+            ),
+            actions=[
+                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Create", on_click=self.create_version_result),
+            ]
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def create_version_result(self, event):
+        self.page.dialog.open = False
+        await self.page.update_async()
+        version = self.page.dialog.content.controls[0].value
+        active_tab = self.projects_list.selected_index
+        project = self.projects_list.tabs[active_tab].tab_content.data
+        versions_folder = project.joinpath("versions")
+        version_folder = versions_folder.joinpath(version)
+        version_folder.mkdir(exist_ok=True, parents=True)
+        for directory in Directories:
+            version_folder.joinpath(directory.value).mkdir(exist_ok=True)
+        version_config = VersionConfig(version=version, changes="")
+        version_folder.joinpath("version.json").write_text(version_config.json())
+        self.page.snack_bar.content = Text("Version created")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+        await self.load_tab()
+
+    async def set_version(self, event):
+        self.memory["projects"]["version"] = event.control.data
+        await self.load_tab()
+
+    async def version_change_mod_type(self, event):
+        value = event.control.value
+        if value == "None":
+            value = None
+            self.memory["projects"]["config"].tags = []
+        else:
+            self.memory["projects"]["config"].tags = [value]
+        sub_types = await self.api.get_mod_sub_types(value)
+        self.version_sub_type_picker.options = [
+            dropdown.Option(key=t, text=t) for t in sub_types
+        ]
+        self.version_sub_type_picker.value = None
+        self.version_sub_type_picker.disabled = not bool(sub_types)
+        self.save_project_config()
+        await self.version_sub_type_picker.update_async()
+
+    async def version_change_mod_sub_type(self, event):
+        value = event.control.value
+        tags = self.memory["projects"]["config"].tags
+        self.memory["projects"]["config"].tags = tags[:1] + [value] if value else tags[:1]
+        self.save_project_config()
+
+    async def add_author(self, event):
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Add author"),
+            content=TextField(
+                label="Author",
+                hint_text="Enter author name",
+                icon=icons.PERSON,
+                max_length=24,
+            ),
+            actions=[
+                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Add", on_click=self.add_author_result),
+            ]
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def add_author_result(self, event):
+        author = self.page.dialog.content.value
+        author = "".join([a.strip() for a in author.split(",")][0])
+        if author and author not in self.memory["projects"]["config"].authors:
+            self.memory["projects"]["config"].authors.append(author)
+            self.save_project_config()
+        self.page.dialog.open = False
+        await self.page.update_async()
+        await self.load_tab()
+        self.page.snack_bar.content = Text(f"Added {author}")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+
+    async def remove_author(self, event):
+        if len(self.memory["projects"]["config"].authors) == 1:
+            self.page.snack_bar.content = Text("Cannot remove last author")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.update_async()
+            return
+        author = event.control.data
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Remove author"),
+            content=Text("Are you sure you want to remove this author?"),
+            actions=[
+                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Remove", data=author, on_click=self.remove_author_result),
+            ]
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def remove_author_result(self, event):
+        author = event.control.data
+        self.memory["projects"]["config"].authors.remove(author)
+        self.save_project_config()
+        self.page.dialog.open = False
+        await self.page.update_async()
+        await self.load_tab()
+        self.page.snack_bar.content = Text(f"Removed {author}")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+
+    @throttle
+    async def version_change_description(self, event):
+        self.memory["projects"]["config"].description = event.control.value
+        self.save_project_config()
+
+    @throttle
+    async def version_change_changes(self, event):
+        version, config = self.memory["projects"]["version"]
+        config.changes = event.control.value
+        version.joinpath("version.json").write_text(config.json())
+
+    def save_project_config(self):
+        self.memory["projects"]["selected_project"].joinpath(".rtt/config.json").write_text(
+            self.memory["projects"]["config"].json()
+        )
