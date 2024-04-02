@@ -1272,7 +1272,7 @@ class ModdersController(Controller):
                             scroll=ScrollMode.ADAPTIVE,
                         ),
                         expand=True,
-                        col=9,
+                        col=10,
                     ),
                     Card(
                         content=Container(
@@ -1285,7 +1285,7 @@ class ModdersController(Controller):
                             expand=True,
                         ),
                         expand=True,
-                        col=3
+                        col=2
                     )
                 ],
                 expand=True,
@@ -1410,16 +1410,11 @@ class ModdersController(Controller):
         modal = AlertDialog(
             modal=True,
             title=Text("Create version"),
-            content=Column(
-                controls=[
-                    TextField(
-                        label="Version",
-                        hint_text="Enter version number",
-                        icon=icons.TRACK_CHANGES,
-                        max_length=100,
-                    )
-                ],
-                width=500
+            content=TextField(
+                label="Version",
+                hint_text="Enter version number",
+                icon=icons.TRACK_CHANGES,
+                max_length=100,
             ),
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
@@ -1433,7 +1428,25 @@ class ModdersController(Controller):
     async def create_version_result(self, event):
         self.page.dialog.open = False
         await self.page.update_async()
-        version = self.page.dialog.content.controls[0].value
+        versions = []
+        for version in self.memory["projects"]["selected_project"].joinpath("versions").iterdir():
+            if version.is_dir():
+                if version.joinpath("version.json").exists():
+                    version_config = VersionConfig.parse_obj(
+                        json.loads(
+                            version.joinpath("version.json").read_text()
+                        )
+                    )
+                    versions.append((version, version_config))
+        version = self.page.dialog.content.value
+        for v, c in versions:
+            if c.version == version:
+                self.page.snack_bar.content = Text("Version already exists")
+                self.page.snack_bar.bgcolor = colors.RED
+                self.page.snack_bar.open = True
+                self.page.dialog.open = False
+                await self.page.update_async()
+                return
         active_tab = self.projects_list.selected_index
         project = self.projects_list.tabs[active_tab].tab_content.data
         versions_folder = project.joinpath("versions")
