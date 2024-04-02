@@ -459,11 +459,13 @@ class ModsController(Controller):
                     ),
                     tile_padding=padding.symmetric(0, 10),
                     initially_expanded=True,
+                    dense=True,
                 ),
                 ExpansionTile(
                     title=Row(controls=[Icon(icons.FOLDER), Text("Local")]),
                     tile_padding=padding.symmetric(0, 10),
                     initially_expanded=True,
+                    dense=True,
                 ),
             ]
             for i in range(2)
@@ -564,6 +566,7 @@ class ModsController(Controller):
             content_padding=padding.symmetric(0, 5),
             on_click=self.toggle_mod,
             expand=True,
+            dense=True,
         )
         if mod.trovesaurus_data:
             if self.page.preferences.mod_manager.show_previews:
@@ -663,9 +666,16 @@ class ModsController(Controller):
                     width=64,
                     expand=True,
                 )
-            mod_tile.title = Row(controls=[Text(mod.name)])
+            mod_tile.title = Row(controls=[Text(mod.name, height=28)])
             mod_tile.subtitle = Row(
-                controls=[Icon(icons.PERSON), TextButton(mod.author, disabled=True)]
+                controls=[
+                    TextButton(
+                        content=Row(controls=[Icon(icons.PERSON), Text(mod.author)]),
+                        height=28,
+                        style=ButtonStyle(padding=padding.symmetric(4, 4)),
+                        disabled=True,
+                    )
+                ]
             )
         if mod.has_conflicts:
             mod_tile.title.controls.append(
@@ -703,6 +713,7 @@ class ModsController(Controller):
                 ),
             ],
             expand=True,
+            spacing=0,
         )
 
     async def go_to_image_preview(self, event):
@@ -1244,7 +1255,11 @@ class ModsController(Controller):
 
     async def set_trovesaurus_sorter_switch(self, event):
         sorter = event.control.data
-        new_order = [(s, o) for s, o in self.memory["trovesaurus"]["search"]["sort_by"] if s != sorter]
+        new_order = [
+            (s, o)
+            for s, o in self.memory["trovesaurus"]["search"]["sort_by"]
+            if s != sorter
+        ]
         for s, o in self.memory["trovesaurus"]["search"]["sort_by"]:
             if s == sorter:
                 new_order.insert(0, (s, "asc" if o == "desc" else "desc"))
