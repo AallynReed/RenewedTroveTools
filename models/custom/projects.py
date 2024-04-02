@@ -9,7 +9,7 @@ class ProjectConfig(BaseModel):
 
     @property
     def authors_string(self):
-        return ", ".join(self.authors)
+        return ",".join(self.authors)
 
     @property
     def type(self):

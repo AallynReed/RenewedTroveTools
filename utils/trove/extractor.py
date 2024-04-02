@@ -11,6 +11,7 @@ from typing import Generator, Optional
 import aiofiles
 from binary_reader import BinaryReader
 from utils.functions import read_leb128
+from models.trove.directory import Directories
 
 
 archive_id = re.compile(r"^archive(\d+)")
@@ -214,23 +215,10 @@ class TFIndex:
 async def find_all_indexes(
     path: Path, hashes: dict, track_changes=True
 ) -> Generator[TFIndex]:
-    known_directories = [
-        "audio",
-        "blueprints",
-        "fonts",
-        "languages",
-        "models",
-        "movies",
-        "particles",
-        "prefabs",
-        "shadersunified",
-        "textures",
-        "ui",
-    ]
     for item in path.iterdir():
         if item.is_file():
             continue
-        if item.name not in known_directories:
+        if item.name not in [d.value for d in Directories]:
             continue
         for index_file in item.rglob("index.tfi"):
             index = TFIndex(index_file)

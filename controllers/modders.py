@@ -3,6 +3,7 @@ import ctypes
 import json
 import os
 import re
+import shutil
 from itertools import chain
 from pathlib import Path
 
@@ -35,7 +36,7 @@ from flet import (
     colors,
     FilePicker,
     Icon,
-    Container
+    Container,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -47,6 +48,8 @@ from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
 from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
+from utils.trove.extractor import find_all_indexes
+from itertools import chain
 
 
 class ModdersController(Controller):
@@ -59,7 +62,7 @@ class ModdersController(Controller):
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab("Extract TMod")
             self.compile_tab = Tab("Build TMod")
-            self.projects_tab = Tab("Projects (VERY BETA)")
+            self.projects_tab = Tab("Projects (BETA)")
             self.settings = Column(expand=True)
             self.extract = Column(expand=True)
             self.compile = Column(expand=True)
@@ -1039,7 +1042,9 @@ class ModdersController(Controller):
         )
         self.projects_list = Tabs(on_change=self.project_tab_loader, expand=True)
         for project in projects:
-            config = ProjectConfig.parse_obj(json.loads(project.joinpath(".rtt/config.json").read_text()))
+            config = ProjectConfig.parse_obj(
+                json.loads(project.joinpath(".rtt/config.json").read_text())
+            )
             self.projects_list.tabs.append(
                 Tab(
                     tab_content=Row(
@@ -1050,8 +1055,8 @@ class ModdersController(Controller):
                                 on_click=lambda x: os.startfile(project),
                             ),
                             Text(config.name),
-                        ]
-                    ),
+                        ],
+                    )
                 )
             )
         self.projects.controls.append(
@@ -1061,7 +1066,7 @@ class ModdersController(Controller):
                         "Create project", icon=icons.ADD, on_click=self.create_project
                     ),
                     self.projects_list,
-                ],
+                ]
             )
         )
         self.project_control = Column(expand=True)
@@ -1074,8 +1079,11 @@ class ModdersController(Controller):
         else:
             selected_tab = self.projects_list.selected_index
             project = self.projects_list.tabs[selected_tab].tab_content.data
+        installation_path = self.memory["extract"]["installation_path"].path
         self.project_control.controls.clear()
-        config = ProjectConfig.parse_obj(json.loads(project.joinpath(".rtt/config.json").read_text()))
+        config = ProjectConfig.parse_obj(
+            json.loads(project.joinpath(".rtt/config.json").read_text())
+        )
         self.memory["projects"]["config"] = config
         self.memory["projects"]["selected_project"] = project
         versions_folder = project.joinpath("versions")
@@ -1086,9 +1094,7 @@ class ModdersController(Controller):
             if version.is_dir():
                 if version.joinpath("version.json").exists():
                     version_config = VersionConfig.parse_obj(
-                        json.loads(
-                            version.joinpath("version.json").read_text()
-                        )
+                        json.loads(version.joinpath("version.json").read_text())
                     )
                     versions.append((version, version_config))
         versions.reverse()
@@ -1098,9 +1104,7 @@ class ModdersController(Controller):
             if self.memory["projects"]["version"] not in versions:
                 self.memory["projects"]["version"] = versions[0] if versions else None
         if not versions:
-            self.project_control.controls.append(
-                Text("No versions found", size=24)
-            )
+            self.project_control.controls.append(Text("No versions found", size=24))
             self.project_control.controls.append(
                 ElevatedButton(
                     "Create version", icon=icons.ADD, on_click=self.create_version
@@ -1134,10 +1138,7 @@ class ModdersController(Controller):
         self.version_type_picker = Dropdown(
             label="Type",
             value=config.type,
-            options=[
-                dropdown.Option(key=t, text=t)
-                for t in mod_types
-            ],
+            options=[dropdown.Option(key=t, text=t) for t in mod_types],
             icon=icons.CATEGORY,
             content_padding=padding.symmetric(4, 4),
             on_change=self.version_change_mod_type,
@@ -1145,22 +1146,26 @@ class ModdersController(Controller):
         self.version_sub_type_picker = Dropdown(
             label="Class",
             value=config.sub_type,
-            options=[
-                dropdown.Option(key=t, text=t)
-                for t in sub_types
-            ],
+            options=[dropdown.Option(key=t, text=t) for t in sub_types],
             icon=icons.CATEGORY,
             content_padding=padding.symmetric(4, 4),
             on_change=self.version_change_mod_sub_type,
             disabled=not bool(sub_types),
         )
+        version_path = project.joinpath(f"versions/{version_config.version}")
+        preview = None
+        for file in chain(
+            version_path.glob("*.png"),
+            version_path.glob("*.jpg"),
+            version_path.glob("*.jpeg"),
+        ):
+            preview = str(file)
+            break
         self.project_control.controls.append(
             Row(
                 controls=[
                     Image(
-                        src="" or "assets/images/no_preview.png",
-                        width=400,
-                        height=230,
+                        src=preview or "assets/images/no_preview.png", width=400, height=230
                     ),
                     Column(
                         controls=[
@@ -1172,7 +1177,7 @@ class ModdersController(Controller):
                                             Chip(
                                                 data=author,
                                                 label=Text(author),
-                                                on_click=self.remove_author
+                                                on_click=self.remove_author,
                                             )
                                             for author in config.authors
                                         ]
@@ -1180,8 +1185,8 @@ class ModdersController(Controller):
                                     IconButton(
                                         icons.ADD,
                                         on_click=self.add_author,
-                                        visible=len(config.authors) < 5
-                                    )
+                                        visible=len(config.authors) < 5,
+                                    ),
                                 ]
                             ),
                             TextField(
@@ -1191,7 +1196,7 @@ class ModdersController(Controller):
                                 multiline=True,
                                 max_lines=3,
                                 max_length=200,
-                                on_change=self.version_change_description
+                                on_change=self.version_change_description,
                             ),
                             Row(
                                 controls=[
@@ -1207,12 +1212,12 @@ class ModdersController(Controller):
                                 multiline=True,
                                 max_lines=3,
                                 max_length=200,
-                                on_change=self.version_change_changes
-                            )
+                                on_change=self.version_change_changes,
+                            ),
                         ],
                         expand=True,
                         alignment=MainAxisAlignment.CENTER,
-                    )
+                    ),
                 ],
                 vertical_alignment="center",
             )
@@ -1249,23 +1254,38 @@ class ModdersController(Controller):
                                                         DataCell(
                                                             TextButton(
                                                                 data=file,
-                                                                text=file.relative_to(version_path),
-                                                                on_click=lambda x: os.startfile(x.data)
+                                                                text=file.relative_to(
+                                                                    version_path
+                                                                ),
+                                                                on_click=lambda x: os.startfile(
+                                                                    x.data
+                                                                ),
                                                             )
                                                         ),
-                                                        DataCell(Text(humanize.naturalsize(file.stat().st_size))),
+                                                        DataCell(
+                                                            Text(
+                                                                humanize.naturalsize(
+                                                                    file.stat().st_size
+                                                                )
+                                                            )
+                                                        ),
                                                     ]
                                                 )
-                                            ] if files else [
+                                                for file in files
+                                            ]
+                                            if files
+                                            else [
                                                 DataRow(
                                                     cells=[
-                                                        DataCell(Text("No files found")),
+                                                        DataCell(
+                                                            Text("No files found")
+                                                        ),
                                                         DataCell(Text("")),
                                                     ]
                                                 )
                                             ]
                                         )
-                                    ]
+                                    ],
                                 )
                             ],
                             expand=True,
@@ -1278,15 +1298,41 @@ class ModdersController(Controller):
                         content=Container(
                             content=Column(
                                 controls=[
-                                    ElevatedButton("Add files", icon=icons.ADD),
+                                    ElevatedButton(
+                                        "Refresh files list",
+                                        icon=icons.REFRESH,
+                                        on_click=self.refresh_files_list,
+                                    ),
+                                    ElevatedButton(
+                                        "Fix files paths",
+                                        icon=icons.FOLDER,
+                                        on_click=self.fix_files_paths,
+                                    ),
+                                    ElevatedButton(
+                                        "Test overrides",
+                                        icon=icons.LOGO_DEV,
+                                        on_click=self.test_project_overrides,
+                                    ),
+                                    ElevatedButton(
+                                        "Clear overrides",
+                                        icon=icons.CLEAR_ALL,
+                                        on_click=self.clear_project_overrides,
+                                    ),
+                                    ElevatedButton(
+                                        "Build TMod",
+                                        icon=icons.BUILD,
+                                        on_click=self.build_project_tmod,
+                                    ),
                                 ],
                                 expand=True,
+                                alignment=MainAxisAlignment.CENTER,
+                                horizontal_alignment="center",
                             ),
                             expand=True,
                         ),
                         expand=True,
-                        col=2
-                    )
+                        col=2,
+                    ),
                 ],
                 expand=True,
             )
@@ -1335,14 +1381,14 @@ class ModdersController(Controller):
                         icon=icons.CATEGORY,
                         content_padding=padding.symmetric(4, 4),
                         disabled=not bool(sub_types),
-                    )
+                    ),
                 ],
-                width=500
+                width=500,
             ),
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
                 ElevatedButton("Create", on_click=self.create_project_result),
-            ]
+            ],
         )
         self.page.dialog = modal
         modal.open = True
@@ -1356,9 +1402,7 @@ class ModdersController(Controller):
         self.page.dialog.content.controls[4].options = [
             dropdown.Option(key=t, text=t) for t in sub_types
         ]
-        self.page.dialog.content.controls[4].disabled = not bool(
-            sub_types
-        )
+        self.page.dialog.content.controls[4].disabled = not bool(sub_types)
         if not sub_types:
             self.page.dialog.content.controls[4].value = None
         await self.page.dialog.content.controls[4].update_async()
@@ -1397,7 +1441,7 @@ class ModdersController(Controller):
                 name=project_name,
                 authors=authors,
                 description=description or "",
-                tags=[t for t in tags if t is not None]
+                tags=[t for t in tags if t is not None],
             ).json()
         )
         self.page.snack_bar.content = Text("Project created")
@@ -1419,7 +1463,7 @@ class ModdersController(Controller):
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
                 ElevatedButton("Create", on_click=self.create_version_result),
-            ]
+            ],
         )
         self.page.dialog = modal
         modal.open = True
@@ -1429,13 +1473,13 @@ class ModdersController(Controller):
         self.page.dialog.open = False
         await self.page.update_async()
         versions = []
-        for version in self.memory["projects"]["selected_project"].joinpath("versions").iterdir():
+        for version in (
+            self.memory["projects"]["selected_project"].joinpath("versions").iterdir()
+        ):
             if version.is_dir():
                 if version.joinpath("version.json").exists():
                     version_config = VersionConfig.parse_obj(
-                        json.loads(
-                            version.joinpath("version.json").read_text()
-                        )
+                        json.loads(version.joinpath("version.json").read_text())
                     )
                     versions.append((version, version_config))
         version = self.page.dialog.content.value
@@ -1485,7 +1529,9 @@ class ModdersController(Controller):
     async def version_change_mod_sub_type(self, event):
         value = event.control.value
         tags = self.memory["projects"]["config"].tags
-        self.memory["projects"]["config"].tags = tags[:1] + [value] if value else tags[:1]
+        self.memory["projects"]["config"].tags = (
+            tags[:1] + [value] if value else tags[:1]
+        )
         self.save_project_config()
 
     async def add_author(self, event):
@@ -1501,7 +1547,7 @@ class ModdersController(Controller):
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
                 ElevatedButton("Add", on_click=self.add_author_result),
-            ]
+            ],
         )
         self.page.dialog = modal
         modal.open = True
@@ -1535,8 +1581,10 @@ class ModdersController(Controller):
             content=Text("Are you sure you want to remove this author?"),
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
-                ElevatedButton("Remove", data=author, on_click=self.remove_author_result),
-            ]
+                ElevatedButton(
+                    "Remove", data=author, on_click=self.remove_author_result
+                ),
+            ],
         )
         self.page.dialog = modal
         modal.open = True
@@ -1566,6 +1614,165 @@ class ModdersController(Controller):
         version.joinpath("version.json").write_text(config.json())
 
     def save_project_config(self):
-        self.memory["projects"]["selected_project"].joinpath(".rtt/config.json").write_text(
-            self.memory["projects"]["config"].json()
-        )
+        self.memory["projects"]["selected_project"].joinpath(
+            ".rtt/config.json"
+        ).write_text(self.memory["projects"]["config"].json())
+
+    async def refresh_files_list(self, event):
+        await self.load_tab()
+
+    async def test_project_overrides(self, event):
+        project = self.memory["projects"]["selected_project"]
+        version, version_config = self.memory["projects"]["version"]
+        directories = [d.value for d in Directories]
+        files = []
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        for d in directories:
+            directory = version_folder.joinpath(d)
+            if not directory.exists():
+                continue
+            for file in directory.rglob("*"):
+                if file.is_file():
+                    files.append(file)
+        installation_path = self.memory["extract"]["installation_path"].path
+        for file in files:
+            file_name = file.name
+            override = installation_path.joinpath(
+                file.parent.relative_to(version_folder)
+                .joinpath("override")
+                .joinpath(file_name)
+            )
+            override.parent.mkdir(exist_ok=True, parents=True)
+            shutil.copy(file, override)
+        self.page.snack_bar.content = Text("Overrides copied")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+
+    async def clear_project_overrides(self, event):
+        project = self.memory["projects"]["selected_project"]
+        version, version_config = self.memory["projects"]["version"]
+        directories = [d.value for d in Directories]
+        files = []
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        for d in directories:
+            directory = version_folder.joinpath(d)
+            if not directory.exists():
+                continue
+            for file in directory.rglob("*"):
+                if file.is_file():
+                    files.append(file)
+        installation_path = self.memory["extract"]["installation_path"].path
+        for file in files:
+            file_name = file.name
+            override = installation_path.joinpath(
+                file.parent.relative_to(version_folder)
+                .joinpath("override")
+                .joinpath(file_name)
+            )
+            if override.exists():
+                try:
+                    override.unlink()
+                except Exception:
+                    pass
+        self.page.snack_bar.content = Text("Overrides cleared")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+
+    async def fix_files_paths(self, event):
+        await self.lock_ui()
+        project = self.memory["projects"]["selected_project"]
+        version, version_config = self.memory["projects"]["version"]
+        directories = [d.value for d in Directories]
+        files = []
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        for d in directories:
+            directory = version_folder.joinpath(d)
+            if not directory.exists():
+                continue
+            for file in directory.rglob("*"):
+                if file.is_file():
+                    files.append(file)
+        installation_path = self.memory["extract"]["installation_path"].path
+        file_names = [f.name for f in files]
+        async for index in find_all_indexes(installation_path, {}, False):
+            for f in await index.files_list:
+                if f["name"] in file_names:
+                    for file in files:
+                        if file.name == f["name"]:
+                            f_rel_path = f["path"].relative_to(installation_path).as_posix()
+                            file_rel_path = file.relative_to(version_folder).as_posix()
+                            if f_rel_path != file_rel_path:
+                                files.remove(file)
+                                new_file_path = version_folder.joinpath(f_rel_path)
+                                new_file_path.parent.mkdir(parents=True, exist_ok=True)
+                                shutil.move(file, new_file_path)
+                                files.append(new_file_path)
+                                break
+        self.page.snack_bar.content = Text("Files paths fixed")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+        await self.load_tab()
+
+    async def build_project_tmod(self, event):
+        mod = TMod()
+        installation_path = self.memory["projects"]["installation_path"].path
+        project = self.memory["projects"]["selected_project"]
+        config = self.memory["projects"]["config"]
+        version, version_config = self.memory["projects"]["version"]
+        mod.name = config.name
+        mod.author = config.authors_string
+        mod.notes = config.description
+        mod.add_tag(config.type)
+        mod.add_tag(config.sub_type)
+        game_version = self.get_mod_version()
+        mod.game_version = game_version
+        mod.add_property("modVersion", version_config.version)
+        mod.add_property("changes", version_config.changes)
+        mod.add_property("modLoader", "RTT")
+        files = []
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        for d in Directories:
+            directory = version_folder.joinpath(d.value)
+            if not directory.exists():
+                continue
+            for file in directory.rglob("*"):
+                if file.is_file():
+                    files.append(file)
+        trove_files = [
+            TroveModFile(file.relative_to(version_folder), file.read_bytes())
+            for file in files
+        ]
+        for file in trove_files:
+            mod.add_file(file)
+        preview = None
+        for file in chain(
+            version_folder.glob("*.png"),
+            version_folder.glob("*.jpg"),
+            version_folder.glob("*.jpeg"),
+        ):
+            preview = file
+            break
+        if preview:
+            preview_path = Path("ui").joinpath(preview.relative_to(version_folder))
+            mod.preview_path = preview_path
+            mod.add_file(
+                TroveModFile(preview_path, preview.read_bytes())
+            )
+        cfg = None
+        for file in version_folder.glob("*.cfg"):
+            cfg = file
+            break
+        if cfg:
+            mod.add_property("configPath", cfg.relative_to(version_folder))
+            mod.add_file(
+                TroveModFile(cfg.relative_to(version_folder), cfg.read_bytes())
+            )
+        version_folder.joinpath(f"{mod.name}.tmod").write_bytes(mod.tmod_content)
+        installation_path.joinpath(f"mods/{mod.name}.tmod").write_bytes(mod.tmod_content)
+        self.page.snack_bar.content = Text(f"Built TMod {mod.name}")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
