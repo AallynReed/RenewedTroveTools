@@ -1458,7 +1458,7 @@ class ModdersController(Controller):
                 label="Version",
                 hint_text="Enter version number",
                 icon=icons.TRACK_CHANGES,
-                max_length=100,
+                max_length=16,
             ),
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
