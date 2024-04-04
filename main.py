@@ -173,10 +173,35 @@ class App:
         self.page.title = self.page.metadata.name
         self.page.window_min_width = 1630
         self.page.window_min_height = 950
-        self.page.window_width = 1630
-        self.page.window_height = 950
+        width = self.page.preferences.window_size[0]
+        height = self.page.preferences.window_size[1]
+        if width < self.page.window_min_width:
+            width = self.page.window_min_width
+        if height < self.page.window_min_height:
+            height = self.page.window_min_height
+        self.page.preferences.window_size = (width, height)
+        self.page.preferences.save()
+        self.page.window_width = width
+        self.page.window_height = height
+        self.page.window_maximized = self.page.preferences.fullscreen
         self.page.snack_bar = SnackBar(content=Text())
         self.page.clock = Text(str(self.page.trove_time))
+        self.page.on_error = self.renderer_error_logger
+        self.page.on_window_event = self.window_event
+
+    async def window_event(self, e):
+        if e.data == "maximize":
+            self.page.preferences.fullscreen = True
+        elif e.data == "unmaximize":
+            self.page.preferences.fullscreen = False
+        elif e.data == "resized":
+            width = self.page.window_width
+            height = self.page.window_height
+            self.page.preferences.window_size = (width, height)
+        self.page.preferences.save()
+
+    async def renderer_error_logger(self, e):
+        self.page.logger.error(e.data)
 
     async def process_login(self):
         token = await self.page.client_storage.get_async("rnt-token")

@@ -65,6 +65,8 @@ class Preferences(BaseModel):
     locale: Locale = Locale.American_English
     theme: ThemeMode = Field(default=ThemeMode.DARK)
     accent_color: AccentColor = AccentColor.amber
+    fullscreen: bool = False
+    window_size: tuple[int, int] = (1630, 950)
     advanced_mode: bool = False
     performance_mode: bool = False
     changes_name_format: str = "%Y-%m-%d %H-%M-%S $dir"
