@@ -1,5 +1,5 @@
 python-dotenv
-flet~=0.22.0.dev
+flet==0.22.0.dev2595
 python-i18n
 pydantic==1.10.12
 cryptography
