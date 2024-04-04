@@ -23,7 +23,7 @@ from urllib.parse import quote_plus
 class PathViewer(UserControl):
     def __init__(self, installation_path, project_path):
         super().__init__(expand=True)
-        self.installation_path = installation_path.path
+        self.installation_path = installation_path
         self.project_path = project_path
         self.query = None
         self.search_bar = TextField(
@@ -62,18 +62,31 @@ class PathViewer(UserControl):
         )
 
     def get_file_tile(self, files):
-        return ExpansionTile(
+        tile = ExpansionTile(
             leading=Icon(icons.FILE_COPY),
             title=Text("Files"),
-            controls=[
+        )
+        for file in files:
+            icon = icons.DOWNLOAD
+            icon_color = None
+            relative_path = file.path.relative_to(self.installation_path)
+            project_path = self.project_path.joinpath(relative_path)
+            if project_path.exists():
+                icon = icons.CHECK
+                icon_color = "green"
+            tile.controls.append(
                 ListTile(
                     leading=Icon(icons.FILE_COPY),
                     title=Text(file.name),
-                    trailing=IconButton(icons.DOWNLOAD)
+                    trailing=IconButton(
+                        icon,
+                        icon_color=icon_color,
+                        data=file,
+                        on_click=self.extract_file
+                    )
                 )
-                for file in files
-            ]
-        )
+            )
+        return tile
 
     async def get_viewer(self):
         viewer = Column(scroll=ScrollMode.ADAPTIVE, expand=True)
@@ -162,7 +175,7 @@ class PathViewer(UserControl):
                 controls=[
                     self.search_bar,
                     ProgressRing(),
-                    Text("Searching...")
+                    Text("Loading Virtual Directory...please wait a second.")
                 ]
             )
         ]
@@ -170,6 +183,17 @@ class PathViewer(UserControl):
         self.search_bar.disabled = False
         self.controls = [await self.get_viewer()]
         await self.update_async()
+
+    async def extract_file(self, event):
+        file = event.control.data
+        relative_path = file.path.relative_to(self.installation_path)
+        project_path = self.project_path.joinpath(relative_path)
+        project_path.parent.mkdir(parents=True, exist_ok=True)
+        project_path.write_bytes(await file.content)
+        event.control.disabled = True
+        event.control.icon = icons.CHECK
+        event.control.icon_color = "green"
+        await event.control.update_async()
 
 
 class IntField(UserControl):
