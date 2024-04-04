@@ -52,7 +52,7 @@ from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
 from utils.trove.extractor import find_all_indexes
 from itertools import chain
-from models.interface.controls import RegexField
+from models.interface.controls import RegexField, PathViewer
 
 
 class ModdersController(Controller):
@@ -1258,12 +1258,12 @@ class ModdersController(Controller):
                                                     cells=[
                                                         DataCell(
                                                             TextButton(
-                                                                data=file,
+                                                                data=file.parent,
                                                                 text=file.relative_to(
                                                                     version_path
                                                                 ),
                                                                 on_click=lambda x: os.startfile(
-                                                                    x.data
+                                                                    x.control.data
                                                                 ),
                                                             )
                                                         ),
@@ -1304,6 +1304,11 @@ class ModdersController(Controller):
                             content=Column(
                                 controls=[
                                     ElevatedButton(
+                                        "Open version folder",
+                                        icon=icons.FOLDER_OPEN,
+                                        on_click=lambda x: os.startfile(version_path)
+                                    ),
+                                    ElevatedButton(
                                         "Refresh files list",
                                         icon=icons.REFRESH,
                                         on_click=self.refresh_files_list,
@@ -1312,6 +1317,11 @@ class ModdersController(Controller):
                                         "Fix files paths",
                                         icon=icons.FOLDER,
                                         on_click=self.fix_files_paths,
+                                    ),
+                                    ElevatedButton(
+                                        "Extract from archives",
+                                        icon=icons.DOWNLOAD,
+                                        on_click=self.extract_from_archives,
                                     ),
                                     ElevatedButton(
                                         "Test overrides",
@@ -1715,6 +1725,32 @@ class ModdersController(Controller):
         self.page.snack_bar.bgcolor = colors.GREEN
         self.page.snack_bar.open = True
         await self.page.update_async()
+
+    async def extract_from_archives(self, event):
+        installation_path = self.memory["extract"]["installation_path"].path
+        project_path = self.memory["projects"]["version"][0]
+        print(installation_path, project_path)
+        modal = AlertDialog(
+            modal=True,
+            title=Text("Extract from archives"),
+            content=Column(
+                controls=[
+                    PathViewer(installation_path, project_path=project_path),
+                ],
+                width=500,
+            ),
+            actions=[
+                ElevatedButton("Done", on_click=self.close_extract_dialog),
+            ],
+        )
+        self.page.dialog = modal
+        modal.open = True
+        await self.page.update_async()
+
+    async def close_extract_dialog(self, event):
+        self.page.dialog.open = False
+        await self.page.update_async()
+        await self.load_tab()
 
     async def fix_files_paths(self, event):
         await self.lock_ui()
