@@ -258,3 +258,90 @@ class IntField(UserControl):
         if self.max_value is not None and value > self.max_value:
             raise ValueError(f"Value is greater than max value: {self.max_value}")
         return value
+
+
+class RegexField(UserControl):
+    def __init__(self, pattern, on_change=None, on_submit=None, **kwargs):
+        super().__init__()
+        self._on_change = None
+        self._on_submit = None
+        self.text_field = TextField(**kwargs)
+        self.on_change = on_change
+        self.on_submit = on_submit
+        self.pattern = pattern
+
+    def build(self):
+        return self.text_field
+
+    @property
+    def on_change(self):
+        return self._on_change
+
+    @on_change.setter
+    def on_change(self, value):
+        if value is None:
+            self.text_field.on_change = None
+            return
+
+        async def on_change(event):
+            if event.control.value == "" or event.control.value is None:
+                event.control.border_color = None
+                event.control.helper_text = None
+                await event.control.update_async()
+                return
+            try:
+                await self.validate(event.control.value)
+            except ValueError as e:
+                event.control.border_color = "red"
+                event.control.helper_text = str(e)
+                await event.control.update_async()
+                return
+            event.control.border_color = "green"
+            event.control.helper_text = None
+            await event.control.update_async()
+            await value(event)
+
+        self._on_change = on_change
+        self.text_field.on_change = self._on_change
+
+    @property
+    def on_submit(self):
+        return self._on_submit
+
+    @on_submit.setter
+    def on_submit(self, value):
+        if value is None:
+            self.text_field.on_submit = None
+            return
+
+        async def on_submit(event):
+            if event.control.value == "" or event.control.value is None:
+                event.control.border_color = None
+                event.control.helper_text = None
+                await event.control.update_async()
+                return
+            try:
+                await self.validate(event.control.value)
+            except ValueError as e:
+                event.control.border_color = "red"
+                event.control.helper_text = str(e)
+                await event.control.update_async()
+                return
+            event.control.border_color = "green"
+            event.control.helper_text = None
+            await event.control.update_async()
+            await value(event)
+
+        self._on_submit = on_submit
+        self.text_field.on_submit = self._on_submit
+
+    async def validate(self, value, error_message="Please enter a valid value"):
+        if not self.pattern.match(value):
+            raise ValueError(error_message)
+        return value
+
+    @property
+    def value(self):
+        if self.text_field.value is None:
+            return None
+        return self.pattern.match(self.text_field.value).group(0)

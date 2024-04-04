@@ -4,8 +4,8 @@ import json
 import os
 import re
 import shutil
-from itertools import chain
 from pathlib import Path
+import packaging.version as pv
 
 import humanize
 from flet import (
@@ -37,6 +37,8 @@ from flet import (
     FilePicker,
     Icon,
     Container,
+    InputFilter,
+    Switch
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -50,6 +52,7 @@ from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
 from utils.trove.extractor import find_all_indexes
 from itertools import chain
+from models.interface.controls import RegexField
 
 
 class ModdersController(Controller):
@@ -1196,6 +1199,7 @@ class ModdersController(Controller):
                                 multiline=True,
                                 max_lines=3,
                                 max_length=200,
+                                content_padding=padding.symmetric(4, 8),
                                 on_change=self.version_change_description,
                             ),
                             Row(
@@ -1212,6 +1216,7 @@ class ModdersController(Controller):
                                 multiline=True,
                                 max_lines=3,
                                 max_length=200,
+                                content_padding=padding.symmetric(4, 8),
                                 on_change=self.version_change_changes,
                             ),
                         ],
@@ -1454,11 +1459,23 @@ class ModdersController(Controller):
         modal = AlertDialog(
             modal=True,
             title=Text("Create version"),
-            content=TextField(
-                label="Version",
-                hint_text="Enter version number",
-                icon=icons.TRACK_CHANGES,
-                max_length=16,
+            content=Column(
+                controls=[
+                    RegexField(
+                        pattern=re.compile(r"^(?:[0-9]+(?:\.[0-9]+)*)$", re.MULTILINE),
+                        label="Version",
+                        hint_text="Enter version number (e.g. 1.0.0)",
+                        icon=icons.TRACK_CHANGES,
+                        max_length=16,
+                        autofocus=True,
+                        on_change=lambda x: x.control.update_async(),
+                    ),
+                    Switch(
+                        label="Copy previous version",
+                        value=True,
+                    )
+                ],
+                width=500,
             ),
             actions=[
                 ElevatedButton("Cancel", on_click=self.close_dialog),
@@ -1482,7 +1499,18 @@ class ModdersController(Controller):
                         json.loads(version.joinpath("version.json").read_text())
                     )
                     versions.append((version, version_config))
-        version = self.page.dialog.content.value
+        version_codes = [v[1].version for v in versions]
+        version_codes.sort(key=lambda x: pv.parse(x), reverse=True)
+        versions.sort(key=lambda x: version_codes.index(x[1].version))
+        latest_version = pv.parse(version_codes[0])
+        latest_version_data = versions[0]
+        version = pv.parse(self.page.dialog.content.controls[0].value)
+        if version < latest_version:
+            self.page.snack_bar.content = Text("Version must be higher than latest")
+            self.page.snack_bar.bgcolor = colors.RED
+            self.page.snack_bar.open = True
+            await self.page.update_async()
+            return
         for v, c in versions:
             if c.version == version:
                 self.page.snack_bar.content = Text("Version already exists")
@@ -1491,14 +1519,22 @@ class ModdersController(Controller):
                 self.page.dialog.open = False
                 await self.page.update_async()
                 return
+        copy_old = self.page.dialog.content.controls[1].value
         active_tab = self.projects_list.selected_index
         project = self.projects_list.tabs[active_tab].tab_content.data
         versions_folder = project.joinpath("versions")
-        version_folder = versions_folder.joinpath(version)
+        version_folder = versions_folder.joinpath(str(version))
         version_folder.mkdir(exist_ok=True, parents=True)
         for directory in Directories:
             version_folder.joinpath(directory.value).mkdir(exist_ok=True)
-        version_config = VersionConfig(version=version, changes="")
+        if copy_old:
+            for file in latest_version_data[0].rglob("*"):
+                if file.is_file():
+                    new_file = version_folder.joinpath(file.relative_to(latest_version_data[0]))
+                    new_file.parent.mkdir(exist_ok=True, parents=True)
+                    new_file.write_bytes(file.read_bytes())
+        version_config = VersionConfig(version=str(version), changes="")
+        self.memory["projects"]["version"] = (version_folder, version_config)
         version_folder.joinpath("version.json").write_text(version_config.json())
         self.page.snack_bar.content = Text("Version created")
         self.page.snack_bar.bgcolor = colors.GREEN
