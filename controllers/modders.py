@@ -1512,8 +1512,12 @@ class ModdersController(Controller):
         version_codes = [v[1].version for v in versions]
         version_codes.sort(key=lambda x: pv.parse(x), reverse=True)
         versions.sort(key=lambda x: version_codes.index(x[1].version))
-        latest_version = pv.parse(version_codes[0])
-        latest_version_data = versions[0]
+        if not version_codes:
+            latest_version = pv.parse("0.0.0")
+            latest_version_data = None
+        else:
+            latest_version = pv.parse(version_codes[0])
+            latest_version_data = versions[0]
         version = pv.parse(self.page.dialog.content.controls[0].value)
         if version < latest_version:
             self.page.snack_bar.content = Text("Version must be higher than latest")
@@ -1537,7 +1541,7 @@ class ModdersController(Controller):
         version_folder.mkdir(exist_ok=True, parents=True)
         for directory in Directories:
             version_folder.joinpath(directory.value).mkdir(exist_ok=True)
-        if copy_old:
+        if copy_old and version_codes:
             for file in latest_version_data[0].rglob("*"):
                 if file.is_file():
                     new_file = version_folder.joinpath(file.relative_to(latest_version_data[0]))
