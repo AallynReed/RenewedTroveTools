@@ -1801,8 +1801,10 @@ class ModdersController(Controller):
         mod.name = config.name
         mod.author = config.authors_string
         mod.notes = config.description
-        mod.add_tag(config.type)
-        mod.add_tag(config.sub_type)
+        if config.type:
+            mod.add_tag(config.type)
+        if config.sub_type:
+            mod.add_tag(config.sub_type)
         game_version = self.get_mod_version()
         mod.game_version = game_version
         mod.add_property("modVersion", version_config.version)
