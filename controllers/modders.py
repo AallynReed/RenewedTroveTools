@@ -4,10 +4,11 @@ import json
 import os
 import re
 import shutil
+from itertools import chain
 from pathlib import Path
-import packaging.version as pv
 
 import humanize
+import packaging.version as pv
 from flet import (
     AlertDialog,
     Divider,
@@ -37,22 +38,21 @@ from flet import (
     FilePicker,
     Icon,
     Container,
-    InputFilter,
-    Switch
+    Switch,
+    Stack,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
 from models.custom.projects import ProjectConfig, VersionConfig
 from models.interface import Controller
+from models.interface.controls import RegexField, PathViewer
 from models.trove.directory import Directories
 from models.trove.mod import TMod, TroveModFile
 from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
+from utils.trove.extractor import find_all_indexes
 from utils.trove.registry import get_trove_locations
 from utils.trove.yaml_mod import ModYaml
-from utils.trove.extractor import find_all_indexes
-from itertools import chain
-from models.interface.controls import RegexField, PathViewer
 
 
 class ModdersController(Controller):
@@ -1164,11 +1164,35 @@ class ModdersController(Controller):
         ):
             preview = str(file)
             break
+        config_file = None
+        for file in version_path.glob("*.cfg"):
+            config_file = file
+            break
         self.project_control.controls.append(
             Row(
                 controls=[
-                    Image(
-                        src=preview or "assets/images/no_preview.png", width=400, height=230
+                    Container(
+                        image_src=preview or "assets/images/no_preview.png",
+                        content=Stack(
+                            controls=[
+                                *(
+                                    [
+                                        IconButton(
+                                            icons.ADD, on_click=self.add_project_preview
+                                        )
+                                    ]
+                                    if not preview
+                                    else [
+                                        IconButton(
+                                            icons.CLEAR,
+                                            on_click=self.clear_project_preview,
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                        width=400,
+                        height=230,
                     ),
                     Column(
                         controls=[
@@ -1206,6 +1230,19 @@ class ModdersController(Controller):
                                 controls=[
                                     self.version_type_picker,
                                     self.version_sub_type_picker,
+                                    TextField(
+                                        value=(
+                                            config_file.relative_to(
+                                                version_path
+                                            ).as_posix()
+                                            if config_file
+                                            else None
+                                        ),
+                                        label="Config file (.cfg)",
+                                        icon=icons.SETTINGS,
+                                        read_only=True,
+                                        content_padding=padding.symmetric(4, 8),
+                                    ),
                                 ]
                             ),
                             TextField(
@@ -1306,7 +1343,7 @@ class ModdersController(Controller):
                                     ElevatedButton(
                                         "Open version folder",
                                         icon=icons.FOLDER_OPEN,
-                                        on_click=lambda x: os.startfile(version_path)
+                                        on_click=lambda x: os.startfile(version_path),
                                     ),
                                     ElevatedButton(
                                         "Refresh files list",
@@ -1480,10 +1517,7 @@ class ModdersController(Controller):
                         autofocus=True,
                         on_change=lambda x: x.control.update_async(),
                     ),
-                    Switch(
-                        label="Copy previous version",
-                        value=True,
-                    )
+                    Switch(label="Copy previous version", value=True),
                 ],
                 width=500,
             ),
@@ -1544,7 +1578,9 @@ class ModdersController(Controller):
         if copy_old and version_codes:
             for file in latest_version_data[0].rglob("*"):
                 if file.is_file():
-                    new_file = version_folder.joinpath(file.relative_to(latest_version_data[0]))
+                    new_file = version_folder.joinpath(
+                        file.relative_to(latest_version_data[0])
+                    )
                     new_file.parent.mkdir(exist_ok=True, parents=True)
                     new_file.write_bytes(file.read_bytes())
         version_config = VersionConfig(version=str(version), changes="")
@@ -1733,19 +1769,14 @@ class ModdersController(Controller):
     async def extract_from_archives(self, event):
         installation_path = self.memory["extract"]["installation_path"].path
         project_path = self.memory["projects"]["version"][0]
-        print(installation_path, project_path)
         modal = AlertDialog(
             modal=True,
             title=Text("Extract from archives"),
             content=Column(
-                controls=[
-                    PathViewer(installation_path, project_path=project_path),
-                ],
+                controls=[PathViewer(installation_path, project_path=project_path)],
                 width=500,
             ),
-            actions=[
-                ElevatedButton("Done", on_click=self.close_extract_dialog),
-            ],
+            actions=[ElevatedButton("Done", on_click=self.close_extract_dialog)],
         )
         self.page.dialog = modal
         modal.open = True
@@ -1753,6 +1784,47 @@ class ModdersController(Controller):
 
     async def close_extract_dialog(self, event):
         self.page.dialog.open = False
+        await self.page.update_async()
+        await self.load_tab()
+
+    async def add_project_preview(self, event):
+        self.page.overlay.clear()
+        picker = FilePicker(on_result=self.add_project_preview_result)
+        self.page.overlay.append(picker)
+        await self.page.update_async()
+        await picker.pick_files_async(dialog_title="Select preview image")
+
+    async def add_project_preview_result(self, result):
+        if not result.files:
+            return
+        file = Path(result.files[0].path)
+        project = self.memory["projects"]["selected_project"]
+        version, version_config = self.memory["projects"]["version"]
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        preview = version_folder.joinpath(file.name)
+        shutil.copy(file, preview)
+        self.page.snack_bar.content = Text("Preview added")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
+        await self.page.update_async()
+        await self.load_tab()
+
+    async def clear_project_preview(self, event):
+        project = self.memory["projects"]["selected_project"]
+        version, version_config = self.memory["projects"]["version"]
+        version_folder = project.joinpath(f"versions/{version_config.version}")
+        for file in chain(
+            version_folder.glob("*.png"),
+            version_folder.glob("*.jpg"),
+            version_folder.glob("*.jpeg"),
+        ):
+            try:
+                file.unlink()
+            except Exception:
+                pass
+        self.page.snack_bar.content = Text("Preview cleared")
+        self.page.snack_bar.bgcolor = colors.GREEN
+        self.page.snack_bar.open = True
         await self.page.update_async()
         await self.load_tab()
 
@@ -1777,7 +1849,9 @@ class ModdersController(Controller):
                 if f["name"] in file_names:
                     for file in files:
                         if file.name == f["name"]:
-                            f_rel_path = f["path"].relative_to(installation_path).as_posix()
+                            f_rel_path = (
+                                f["path"].relative_to(installation_path).as_posix()
+                            )
                             file_rel_path = file.relative_to(version_folder).as_posix()
                             if f_rel_path != file_rel_path:
                                 files.remove(file)
@@ -1800,7 +1874,7 @@ class ModdersController(Controller):
         version, version_config = self.memory["projects"]["version"]
         mod.name = config.name
         mod.author = config.authors_string
-        mod.notes = config.description
+        mod.notes = config.description or ""
         if config.type:
             mod.add_tag(config.type)
         if config.sub_type:
@@ -1836,9 +1910,7 @@ class ModdersController(Controller):
         if preview:
             preview_path = Path("ui").joinpath(preview.relative_to(version_folder))
             mod.preview_path = preview_path
-            mod.add_file(
-                TroveModFile(preview_path, preview.read_bytes())
-            )
+            mod.add_file(TroveModFile(preview_path, preview.read_bytes()))
         cfg = None
         for file in version_folder.glob("*.cfg"):
             cfg = file
@@ -1849,7 +1921,9 @@ class ModdersController(Controller):
                 TroveModFile(cfg.relative_to(version_folder), cfg.read_bytes())
             )
         version_folder.joinpath(f"{mod.name}.tmod").write_bytes(mod.tmod_content)
-        installation_path.joinpath(f"mods/{mod.name}.tmod").write_bytes(mod.tmod_content)
+        installation_path.joinpath(f"mods/{mod.name}.tmod").write_bytes(
+            mod.tmod_content
+        )
         self.page.snack_bar.content = Text(f"Built TMod {mod.name}")
         self.page.snack_bar.bgcolor = colors.GREEN
         self.page.snack_bar.open = True
