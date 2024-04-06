@@ -39,6 +39,8 @@ from flet import (
     Container,
     Switch,
     Stack,
+    PopupMenuButton,
+    PopupMenuItem
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -654,13 +656,11 @@ class ModdersController(Controller):
                     override.unlink()
                 except Exception:
                     pass
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
         await self.page.snack_bar.show("Overrides cleared")
 
     async def close_dialog(self, _):
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
 
     async def detect_overrides(self, event):
         directories = [d.value for d in Directories]
@@ -1073,22 +1073,61 @@ class ModdersController(Controller):
         self.project_control.controls.append(
             Row(
                 controls=[
-                    ElevatedButton(
-                        "New version", icon=icons.ADD, on_click=self.create_version
-                    ),
-                    *(
-                        [
-                            Chip(
-                                data=(version, config),
-                                leading=Icon(icons.FOLDER),
-                                label=Text(config.version),
-                                disabled=config.version == version_config.version,
-                                on_click=self.set_version,
-                            )
-                            for version, config in versions
+                    Row(
+                        controls=[
+                            ElevatedButton(
+                                "New version", icon=icons.ADD, on_click=self.create_version
+                            ),
+                            *(
+                                [
+                                    Chip(
+                                        data=(version, config),
+                                        leading=Icon(icons.FOLDER),
+                                        label=Text(config.version),
+                                        disabled=config.version == version_config.version,
+                                        on_click=self.set_version,
+                                    )
+                                    for version, config in versions
+                                ]
+                            ),
                         ]
                     ),
-                ]
+                    PopupMenuButton(
+                        content=Row(
+                            controls=[
+                                Icon(icons.API),
+                                Text("Get Modding Software")
+                            ]
+                        ),
+                        items=[
+                            PopupMenuItem(
+                                data="blueprints",
+                                text="Blueprints (.blueprint)",
+                                icon=icons.SQUARE_FOOT,
+                                on_click=self.show_software,
+                            ),
+                            PopupMenuItem(
+                                data="vfx",
+                                text="Particles (.pkfx)",
+                                icon=icons.LOCAL_FIRE_DEPARTMENT,
+                                on_click=self.show_software,
+                            ),
+                            PopupMenuItem(
+                                data="ui",
+                                text="UI (.swf)",
+                                icon=icons.GRID_VIEW,
+                                on_click=self.show_software,
+                            ),
+                            PopupMenuItem(
+                                data="sound",
+                                text="Audio (.bnk)",
+                                icon=icons.MUSIC_NOTE,
+                                on_click=self.show_software,
+                            ),
+                        ]
+                    )
+                ],
+                alignment=MainAxisAlignment.SPACE_BETWEEN,
             )
         )
         mod_types = await self.api.get_mod_types()
@@ -1347,6 +1386,42 @@ class ModdersController(Controller):
         if event:
             await self.projects.update_async()
 
+    async def show_software(self, event):
+        types_data = json.load(open("data/modding_software.json"))
+        await self.page.dialog.set_data(
+            modal=True,
+            title=Text(event.control.text),
+            content=Column(
+                controls=[
+                    Text(types_data[event.control.data]["description"]),
+                    Text("Software:"),
+                    *(
+                        [
+                            Column(
+                                controls=[
+                                    Row(
+                                        controls=[
+                                            Icon(icons.ATTACH_MONEY if not software["free"] else icons.MONEY_OFF),
+                                            TextButton(
+                                                text=software["name"],
+                                                url=software["url"],
+                                            )
+                                        ]
+                                    ),
+                                    Text(software["description"]),
+                                ]
+                            )
+                            for software in types_data[event.control.data]["software"]
+                        ]
+                    )
+                ],
+                width=500,
+            ),
+            actions=[
+                ElevatedButton("Close", on_click=self.page.RTT.close_dialog),
+            ],
+        )
+
     async def create_project(self, event):
         types = await self.api.get_mod_types()
         sub_types = await self.api.get_mod_sub_types(types[0])
@@ -1474,8 +1549,7 @@ class ModdersController(Controller):
         )
 
     async def create_version_result(self, event):
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
         versions = []
         for version in (
             self.memory["projects"]["selected_project"].joinpath("versions").iterdir()
@@ -1502,7 +1576,7 @@ class ModdersController(Controller):
             )
         for v, c in versions:
             if c.version == version:
-                self.page.dialog.open = False
+                await self.page.dialog.hide()
                 return await self.page.snack_bar.show(
                     "Version already exists", color="red"
                 )
@@ -1578,8 +1652,7 @@ class ModdersController(Controller):
         if author and author not in self.memory["projects"]["config"].authors:
             self.memory["projects"]["config"].authors.append(author)
             self.save_project_config()
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
         await self.load_tab()
         await self.page.snack_bar.show(f"Added {author}")
 
@@ -1605,8 +1678,7 @@ class ModdersController(Controller):
         author = event.control.data
         self.memory["projects"]["config"].authors.remove(author)
         self.save_project_config()
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
         await self.load_tab()
         await self.page.snack_bar.show(f"Removed {author}")
 

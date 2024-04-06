@@ -369,6 +369,10 @@ class Modal(UserControl):
     def page(self):
         return self._page
 
+    @property
+    def content(self):
+        return self.dialog.content
+
     @page.setter
     def page(self, value): ...  # Void setter
 
