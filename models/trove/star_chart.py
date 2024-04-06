@@ -276,7 +276,7 @@ class StarType(Enum):
 
 class Star(BaseModel):
     constellation: Constellation
-    coords: list[int]
+    coords: list[float]
     type: StarType
     acts: StarType
     name: str

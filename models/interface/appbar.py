@@ -45,6 +45,7 @@ from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.localization import Locale
 from utils.tasks import loop
+from models.interface.controls import Dialog
 
 
 async def check_update(current_version, debug=False, force=False):
@@ -361,7 +362,8 @@ class CustomAppBar(AppBar):
                             ],
                         )
                     )
-        self.dlg = AlertDialog(
+        Dialog(
+            page=self.page,
             modal=True,
             title=Text("Changelog"),
             actions=[
@@ -370,21 +372,34 @@ class CustomAppBar(AppBar):
             actions_alignment=MainAxisAlignment.END,
             content=content,
         )
-        self.page.dialog = self.dlg
-        self.dlg.open = True
-        await self.page.update_async()
+        await self.page.dialog.show()
 
     async def check_for_update(self):
         await asyncio.sleep(1)
-        if (await check_update(self.page.metadata.version, self.page.metadata.dev))[
-            0
-        ] is not None:
+        update = await check_update(self.page.metadata.version, self.page.metadata.dev)
+        if update[0] is not None:
+            Dialog(
+                page=self.page,
+                modal=True,
+                title=Text("Update available"),
+                content=Text(
+                    "A new update is available, do you want to download it?\n"
+                    "The application will download update and close itself to install it.\n"
+                    "After the installation is complete, the application will be automatically restarted.\n\n"
+                    "Keeping the app up to date is important to ensure that you have the latest features and bug fixes."
+                ),
+                actions=[
+                    TextButton("Later", on_click=self.page.RTT.close_dialog),
+                    TextButton("Update", on_click=self.go_to_update_page),
+                ],
+                actions_alignment=MainAxisAlignment.END,
+            )
+            # await self.page.dialog.show()
             self.page.appbar.actions[0].visible = True
-            self.page.snack_bar.content.value = "A new update is available"
-            self.page.snack_bar.bgcolor = "yellow"
-            self.page.snack_bar.open = True
-            self.page.snack_bar.duration = 1000
-            await self.page.snack_bar.update_async()
+            await self.page.snack_bar.show(
+                "A new update is available, click on the download icon to update.",
+                "yellow"
+            )
             await self.page.appbar.update_async()
 
     async def feedback_modal(self, event):
@@ -431,6 +446,9 @@ class CustomAppBar(AppBar):
         update_url, is_windows = await check_update(
             self.page.metadata.version, dev, True
         )
+        if self.page.dialog is not None:
+            self.page.dialog.open = False
+            await self.page.close_dialog_async()
         if is_windows:
             self.page.controls = [
                 Column(
