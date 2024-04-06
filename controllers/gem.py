@@ -513,6 +513,5 @@ class GemController(Controller):
     async def copy_to_clipboard(self, event):
         if value := event.control.content.value:
             await self.page.set_clipboard_async(str(value))
-            self.page.snack_bar.content.value = "Copied to clipboard"
-            self.page.snack_bar.open = True
+            await self.page.snack_bar.show("Copied to clipboard")
         await self.page.update_async()

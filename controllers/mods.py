@@ -7,7 +7,6 @@ from pathlib import Path
 import flet_core.icons as icons
 from aiohttp import ClientSession
 from flet import (
-    AlertDialog,
     Column,
     Row,
     Tabs,
@@ -718,9 +717,9 @@ class ModsController(Controller):
 
     async def go_to_image_preview(self, event):
         mod = event.control.data
-        self.dialog = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
-            actions=[TextButton("Close", on_click=self.close_dialog)],
+            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
             content=Image(
                 src=self.api.get_resized_image_url(
                     (f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"),
@@ -730,13 +729,6 @@ class ModsController(Controller):
                 expand=True,
             ),
         )
-        self.page.dialog = self.dialog
-        self.dialog.open = True
-        await self.page.update_async()
-
-    async def close_dialog(self, _):
-        self.dialog.open = False
-        await self.page.update_async()
 
     async def update_mods(self, event):
         await self.lock_ui()
@@ -744,10 +736,7 @@ class ModsController(Controller):
         for mod in mods:
             await mod.update()
         await self.tab_loader(boot=True)
-        self.page.snack_bar.content = Text(f"Updated {len(mods)} mods")
-        self.page.snack_bar.bgcolor = "green"
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Updated {len(mods)} mods")
 
     async def update_my_mods_mod(self, event=None, mod=None):
         await self.lock_ui()
@@ -797,12 +786,9 @@ class ModsController(Controller):
         mod_frame_tile.controls.sort(key=lambda x: self.my_mod_list.mods.index(x.data))
         self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
         self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
-        self.page.snack_bar.content = Text(
+        await self.page.snack_bar.show(
             f"{mod.name} {'enabled' if mod.enabled else 'disabled'}"
         )
-        self.page.snack_bar.bgcolor = "green"
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
         return await self.release_ui()
 
     async def update_mod_tile_ui(self, mod, move=False):
@@ -848,10 +834,7 @@ class ModsController(Controller):
         self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
         self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
         await self.release_ui()
-        self.page.snack_bar.content = Text(f"Uninstalled {mod.name}")
-        self.page.snack_bar.bgcolor = "red"
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Uninstalled {mod.name}", color="red")
 
     async def set_my_mods_installation_path(self, event):
         self.memory["my_mods"]["installation_path"] = event.control.data
@@ -1235,9 +1218,7 @@ class ModsController(Controller):
             )
         )
         if not boot:
-            self.page.snack_bar.content = Text(f"Refreshed Trovesaurus")
-            self.page.snack_bar.bgcolor = "green"
-            self.page.snack_bar.open = True
+            await self.page.snack_bar.show(f"Refreshed Trovesaurus")
         await self.release_ui()
 
     async def set_trovesaurus_sorter_reorder(self, event):
@@ -1395,10 +1376,7 @@ class ModsController(Controller):
                 file_path = installation_path.mods_path.joinpath(file_name)
                 file_path.write_bytes(data)
         await self.tab_loader(index=self.mod_submenus.selected_index)
-        self.page.snack_bar.content = Text(f"Installed {mod_name}")
-        self.page.snack_bar.bgcolor = "green"
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Installed {mod_name}")
 
     # Mod Profiles Tab
 

@@ -10,7 +10,6 @@ from pathlib import Path
 import humanize
 import packaging.version as pv
 from flet import (
-    AlertDialog,
     Divider,
     Card,
     Text,
@@ -198,20 +197,14 @@ class ModdersController(Controller):
         self.project_folder_text_field.value = path.as_posix()
         await self.project_folder_text_field.update_async()
         self.page.preferences.save()
-        self.page.snack_bar.content = Text("Project folder selected")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show("Project folder selected: " + path.as_posix())
 
     async def clear_project_folder(self, event):
         self.page.preferences.modders_tools.project_path = None
         self.project_folder_text_field.value = None
         await self.project_folder_text_field.update_async()
         self.page.preferences.save()
-        self.page.snack_bar.content = Text("Project folder cleared")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show("Project folder cleared")
 
     async def load_extract(self):
         directories = Row(
@@ -329,17 +322,11 @@ class ModdersController(Controller):
 
     async def extract_tmod(self, _):
         if not self.memory["extract"]["tmod_file"]:
-            self.page.snack_bar.content = Text("TMod file is required")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
+            return await self.page.snack_bar.show("TMod file is required", color="red")
         if not self.memory["extract"]["output_path"]:
-            self.page.snack_bar.content = Text("Output directory is required")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
+            return await self.page.snack_bar.show(
+                "Output directory is required", color="red"
+            )
         tmod_file = self.memory["extract"]["tmod_file"]
         tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
         output = self.memory["extract"]["output_path"]
@@ -347,17 +334,11 @@ class ModdersController(Controller):
             file_path = output.joinpath(file.trove_path)
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_bytes(file.data)
-        self.page.snack_bar.content = Text("TMod extracted")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show("TMod extracted")
 
     async def extract_overrides(self, _):
         if not self.memory["extract"]["tmod_file"]:
-            self.page.snack_bar.content = Text("TMod file is required")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
+            return await self.page.snack_bar.show("TMod file is required", color="red")
         tmod_file = self.memory["extract"]["tmod_file"]
         tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
         game_path = self.memory["extract"]["installation_path"].path
@@ -368,9 +349,7 @@ class ModdersController(Controller):
             )
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_bytes(file.data)
-        self.page.snack_bar.content = Text("TMod overrides extracted")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show("TMod overrides extracted")
 
     async def load_compile(self):
         mod_types = await self.api.get_mod_types()
@@ -646,7 +625,7 @@ class ModdersController(Controller):
         message = "Are you sure you want to clear all overrides?"
         message += "\n\nThis will remove all files in the 'override' directories within the Trove directory:"
         message += f"\n -> {install_path}"
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Clear all overrides"),
             content=Text(message),
@@ -656,9 +635,6 @@ class ModdersController(Controller):
             ],
             actions_alignment=MainAxisAlignment.END,
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
 
     async def clear_overrides_folders(self, _):
         directories = [d.value for d in Directories]
@@ -679,10 +655,8 @@ class ModdersController(Controller):
                 except Exception:
                     pass
         self.page.dialog.open = False
-        self.page.snack_bar.content = Text("Overrides cleared")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
         await self.page.update_async()
+        await self.page.snack_bar.show("Overrides cleared")
 
     async def close_dialog(self, _):
         self.page.dialog.open = False
@@ -765,10 +739,7 @@ class ModdersController(Controller):
                 self.memory["compile"]["mod_data"].mod_files.remove(f)
         await self.update_file_list()
         await self.preview_row.controls[0].update_async()
-        self.page.snack_bar.content = Text(f"Added {file_name}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Added {file_name}")
 
     async def clear_preview(self, event):
         self.memory["compile"]["mod_data"].preview = (None, None)
@@ -804,10 +775,7 @@ class ModdersController(Controller):
             if f[0] == file:
                 self.memory["compile"]["mod_data"].mod_files.remove(f)
         await self.update_file_list()
-        self.page.snack_bar.content = Text(f"Added {file_name}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Added {file_name}")
 
     async def clear_config(self, event):
         self.memory["compile"]["mod_data"].config = (None, None)
@@ -841,18 +809,14 @@ class ModdersController(Controller):
                 )
             except ValueError:
                 trove_directory = self.memory["compile"]["installation_path"].name
-                self.page.snack_bar.content = Text(
-                    f"File is not within the Trove directory selected {trove_directory}"
+                await self.page.snack_bar.show(
+                    "File is not within the Trove directory selected "
+                    + trove_directory,
+                    color="red",
                 )
-                self.page.snack_bar.bgcolor = colors.RED
-                self.page.snack_bar.open = True
-                await self.page.snack_bar.update_async()
                 continue
             self.memory["compile"]["mod_data"].add_file(file, true_override)
-            self.page.snack_bar.content = Text(f"Added {file_name}")
-            self.page.snack_bar.bgcolor = colors.GREEN
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
+            await self.page.snack_bar.show(f"Added {file_name}")
         value = not bool(
             [
                 f[1]
@@ -926,13 +890,10 @@ class ModdersController(Controller):
         try:
             self.memory["compile"]["mod_data"].sanity_check()
         except (ValueError, FileNotFoundError) as e:
-            self.page.snack_bar.content = Text("Mod data is not valid: " + str(e))
+            message = Text("Mod data is not valid: " + str(e))
             if isinstance(e, FileNotFoundError):
-                self.page.snack_bar.content.value += f" not found"
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
+                message += f" not found"
+            return await self.page.snack_bar.show(message, color="red")
         mod.name = self.memory["compile"]["mod_data"].title
         mod.author = self.memory["compile"]["mod_data"].authors_string
         mod.add_property("notes", self.memory["compile"]["mod_data"].description)
@@ -960,13 +921,10 @@ class ModdersController(Controller):
         try:
             mod.game_version = self.get_mod_version()
         except Exception:
-            self.page.snack_bar.content = Text(
-                "Failed to get game version, please open trove at least once"
+            return await self.page.snack_bar.show(
+                "Failed to get game version, please open trove at least once",
+                color="red",
             )
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.snack_bar.update_async()
-            return
         type = self.memory["compile"]["mod_data"].type
         if type:
             mod.add_tag(type)
@@ -979,10 +937,7 @@ class ModdersController(Controller):
         installation_path = self.memory["compile"]["installation_path"].path
         mod_location = installation_path.joinpath(f"mods/{mod.name}.tmod")
         mod_location.write_bytes(mod.tmod_content)
-        self.page.snack_bar.content = Text(f"Built TMod {mod.name}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show(f"Built TMod {mod.name}")
 
     def get_mod_version(self):
         app_data = os.getenv("APPDATA")
@@ -1395,7 +1350,7 @@ class ModdersController(Controller):
     async def create_project(self, event):
         types = await self.api.get_mod_types()
         sub_types = await self.api.get_mod_sub_types(types[0])
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Create project"),
             content=Column(
@@ -1438,13 +1393,10 @@ class ModdersController(Controller):
                 width=500,
             ),
             actions=[
-                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
                 ElevatedButton("Create", on_click=self.create_project_result),
             ],
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
 
     async def project_change_mod_type(self, event):
         value = event.control.value
@@ -1470,10 +1422,7 @@ class ModdersController(Controller):
         if not project_path.exists():
             self.page.preferences.modders_tools.project_path = None
             self.page.preferences.save()
-            self.page.snack_bar.content = Text("Project folder not found")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.update_async()
+            await self.page.snack_bar.show("Project folder not found", color="red")
             await self.load_tab()
             return
         project_folder = project_path.joinpath(project_name)
@@ -1496,14 +1445,11 @@ class ModdersController(Controller):
                 tags=[t for t in tags if t is not None],
             ).json()
         )
-        self.page.snack_bar.content = Text("Project created")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Project created")
         await self.load_tab()
 
     async def create_version(self, event):
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Create version"),
             content=Column(
@@ -1522,13 +1468,10 @@ class ModdersController(Controller):
                 width=500,
             ),
             actions=[
-                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
                 ElevatedButton("Create", on_click=self.create_version_result),
             ],
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
 
     async def create_version_result(self, event):
         self.page.dialog.open = False
@@ -1554,19 +1497,15 @@ class ModdersController(Controller):
             latest_version_data = versions[0]
         version = pv.parse(self.page.dialog.content.controls[0].value)
         if version < latest_version:
-            self.page.snack_bar.content = Text("Version must be higher than latest")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.update_async()
-            return
+            return await self.page.snack_bar.show(
+                "Version must be higher than latest", color="red"
+            )
         for v, c in versions:
             if c.version == version:
-                self.page.snack_bar.content = Text("Version already exists")
-                self.page.snack_bar.bgcolor = colors.RED
-                self.page.snack_bar.open = True
                 self.page.dialog.open = False
-                await self.page.update_async()
-                return
+                return await self.page.snack_bar.show(
+                    "Version already exists", color="red"
+                )
         copy_old = self.page.dialog.content.controls[1].value
         active_tab = self.projects_list.selected_index
         project = self.projects_list.tabs[active_tab].tab_content.data
@@ -1586,10 +1525,7 @@ class ModdersController(Controller):
         version_config = VersionConfig(version=str(version), changes="")
         self.memory["projects"]["version"] = (version_folder, version_config)
         version_folder.joinpath("version.json").write_text(version_config.json())
-        self.page.snack_bar.content = Text("Version created")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Version created")
         await self.load_tab()
 
     async def set_version(self, event):
@@ -1621,7 +1557,7 @@ class ModdersController(Controller):
         self.save_project_config()
 
     async def add_author(self, event):
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Add author"),
             content=TextField(
@@ -1631,13 +1567,10 @@ class ModdersController(Controller):
                 max_length=24,
             ),
             actions=[
-                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
                 ElevatedButton("Add", on_click=self.add_author_result),
             ],
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
 
     async def add_author_result(self, event):
         author = self.page.dialog.content.value
@@ -1648,33 +1581,25 @@ class ModdersController(Controller):
         self.page.dialog.open = False
         await self.page.update_async()
         await self.load_tab()
-        self.page.snack_bar.content = Text(f"Added {author}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show(f"Added {author}")
 
     async def remove_author(self, event):
         if len(self.memory["projects"]["config"].authors) == 1:
-            self.page.snack_bar.content = Text("Cannot remove last author")
-            self.page.snack_bar.bgcolor = colors.RED
-            self.page.snack_bar.open = True
-            await self.page.update_async()
-            return
+            return await self.page.snack_bar.show(
+                "Cannot remove last author", color="red"
+            )
         author = event.control.data
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Remove author"),
             content=Text("Are you sure you want to remove this author?"),
             actions=[
-                ElevatedButton("Cancel", on_click=self.close_dialog),
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
                 ElevatedButton(
                     "Remove", data=author, on_click=self.remove_author_result
                 ),
             ],
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
 
     async def remove_author_result(self, event):
         author = event.control.data
@@ -1683,10 +1608,7 @@ class ModdersController(Controller):
         self.page.dialog.open = False
         await self.page.update_async()
         await self.load_tab()
-        self.page.snack_bar.content = Text(f"Removed {author}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show(f"Removed {author}")
 
     @throttle
     async def version_change_description(self, event):
@@ -1730,10 +1652,7 @@ class ModdersController(Controller):
             )
             override.parent.mkdir(exist_ok=True, parents=True)
             shutil.copy(file, override)
-        self.page.snack_bar.content = Text("Overrides copied")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Overrides copied")
 
     async def clear_project_overrides(self, event):
         project = self.memory["projects"]["selected_project"]
@@ -1761,31 +1680,20 @@ class ModdersController(Controller):
                     override.unlink()
                 except Exception:
                     pass
-        self.page.snack_bar.content = Text("Overrides cleared")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Overrides cleared")
 
     async def extract_from_archives(self, event):
         installation_path = self.memory["extract"]["installation_path"].path
         project_path = self.memory["projects"]["version"][0]
-        modal = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Extract from archives"),
             content=Column(
                 controls=[PathViewer(installation_path, project_path=project_path)],
                 width=500,
             ),
-            actions=[ElevatedButton("Done", on_click=self.close_extract_dialog)],
+            actions=[ElevatedButton("Done", on_click=self.page.RTT.close_dialog)],
         )
-        self.page.dialog = modal
-        modal.open = True
-        await self.page.update_async()
-
-    async def close_extract_dialog(self, event):
-        self.page.dialog.open = False
-        await self.page.update_async()
-        await self.load_tab()
 
     async def add_project_preview(self, event):
         self.page.overlay.clear()
@@ -1803,10 +1711,7 @@ class ModdersController(Controller):
         version_folder = project.joinpath(f"versions/{version_config.version}")
         preview = version_folder.joinpath(file.name)
         shutil.copy(file, preview)
-        self.page.snack_bar.content = Text("Preview added")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Preview added")
         await self.load_tab()
 
     async def clear_project_preview(self, event):
@@ -1822,10 +1727,7 @@ class ModdersController(Controller):
                 file.unlink()
             except Exception:
                 pass
-        self.page.snack_bar.content = Text("Preview cleared")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Preview cleared")
         await self.load_tab()
 
     async def fix_files_paths(self, event):
@@ -1860,10 +1762,7 @@ class ModdersController(Controller):
                                 shutil.move(file, new_file_path)
                                 files.append(new_file_path)
                                 break
-        self.page.snack_bar.content = Text("Files paths fixed")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Files paths fixed")
         await self.load_tab()
 
     async def build_project_tmod(self, event):
@@ -1924,7 +1823,4 @@ class ModdersController(Controller):
         installation_path.joinpath(f"mods/{mod.name}.tmod").write_bytes(
             mod.tmod_content
         )
-        self.page.snack_bar.content = Text(f"Built TMod {mod.name}")
-        self.page.snack_bar.bgcolor = colors.GREEN
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show(f"Built TMod {mod.name}")

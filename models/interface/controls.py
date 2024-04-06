@@ -1,5 +1,7 @@
 import asyncio
+from urllib.parse import quote_plus
 
+from aiohttp import ClientSession
 from flet import (
     UserControl,
     Column,
@@ -13,11 +15,11 @@ from flet import (
     icons,
     ProgressRing,
     ScrollMode,
+    AlertDialog,
+    SnackBar,
 )
 
 from utils.trove.extractor import find_all_files
-from aiohttp import ClientSession
-from urllib.parse import quote_plus
 
 
 class PathViewer(UserControl):
@@ -354,3 +356,60 @@ class RegexField(UserControl):
         if self.text_field.value is None:
             return None
         return self.pattern.match(self.text_field.value).group(0)
+
+
+class Modal(UserControl):
+    def __init__(self, page, **kwargs):
+        self._page = page
+        self.dialog = AlertDialog(**kwargs)
+        page.dialog = self
+        super().__init__()
+
+    @property
+    def page(self):
+        return self._page
+
+    @page.setter
+    def page(self, value): ...  # Void setter
+
+    def build(self):
+        return self.dialog
+
+    async def show(self):
+        self.dialog.open = True
+        await self.dialog.update_async()
+
+    async def hide(self, e=None):
+        self.dialog.open = False
+        await self.dialog.update_async()
+
+    async def set_data(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self.dialog, key, value)
+        await self.show()
+
+
+class Snackbar(UserControl):
+    def __init__(self, page):
+        self._page = page
+        self.snackbar = SnackBar(content=Text())
+        page.snackbar = self
+        super().__init__()
+
+    @property
+    def page(self):
+        return self._page
+
+    @page.setter
+    def page(self, value): ...  # Void setter
+
+    def build(self):
+        return self.snackbar
+
+    async def show(self, message, color="green", duration=1000):
+        self.snackbar.content.value = message
+        self.snackbar.bgcolor = color
+        self.snackbar.duration = duration
+        self.snackbar.open = True
+        await self.snackbar.update_async()
+        await self.page.update_async()

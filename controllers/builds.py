@@ -1052,9 +1052,7 @@ class GemBuildsController(Controller):
                 f"https://kiwiapi.slynx.xyz/v1/gem_builds/build/{build_id}"
             ) as response:
                 if response.status != 200:
-                    self.page.snack_bar.content.value = "Invalid build ID"
-                    self.page.snack_bar.open = True
-                    await self.page.update_async()
+                    await self.page.snack_bar.show("Invalid build ID")
                     return
                 data = await response.json()
                 self.config = BuildConfig(**json.loads(data)["config"])
@@ -1069,27 +1067,22 @@ class GemBuildsController(Controller):
                 data = await response.json()
                 build_id = json.loads(data)["build"]
                 await self.page.set_clipboard_async("GB-" + build_id)
-                self.page.snack_bar.content.value = (
+                await self.page.snack_bar.show(
                     f"Copied build GB-{build_id} to clipboard"
                 )
-                self.page.snack_bar.bgcolor = "green"
-                self.page.snack_bar.open = True
-                await self.page.update_async()
 
     async def select_build(self, event):
         if self.selected_build == event.control.data:
             self.selected_build = None
         else:
             self.selected_build = event.control.data
-        self.page.snack_bar.content.value = "Ability build changed"
-        self.page.snack_bar.open = True
+        await self.page.snack_bar.show("Ability build changed")
         await self.update_builds()
 
     async def copy_to_clipboard(self, event):
         if value := event.control.content.value:
             await self.page.set_clipboard_async(str(value))
-            self.page.snack_bar.content.value = "Copied to clipboard"
-            self.page.snack_bar.open = True
+            await self.page.snack_bar.show("Copied to clipboard")
         await self.page.update_async()
 
     def get_build_string(self, data):
@@ -1107,9 +1100,7 @@ class GemBuildsController(Controller):
 
     async def copy_build_clipboard(self, event):
         await self.page.set_clipboard_async(event.control.data)
-        self.page.snack_bar.content.value = "Copied to clipboard"
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Copied to clipboard")
 
     async def copy_build_hover(self, event):
         event.control.ink = True
@@ -1124,8 +1115,7 @@ class GemBuildsController(Controller):
             await self.update_builds()
             return
         if await self.star_chart.from_string(build_id):
-            self.page.snack_bar.content.value = f"Loaded build with id {build_id}"
-            self.page.snack_bar.open = True
+            await self.page.snack_bar.show(f"Loaded build with id {build_id}")
             self.config.star_chart = build_id
             self.star_chart_abilities = self.star_chart.activated_abilities_stats
             await self.update_builds()

@@ -226,15 +226,13 @@ class StarChartController(Controller):
         if staged_lock <= 0:
             event.control.data.switch_lock()
         else:
-            self.page.snack_bar.bgcolor = "red"
-            self.page.snack_bar.content.value = (
+            await self.page.snack_bar.show(
                 f"Activating this star exceeds max of {self.star_chart.max_nodes}"
-                f" by {staged_lock}"
+                f" by {staged_lock}",
+                color="red",
             )
-            self.page.snack_bar.open = True
         self.setup_controls()
         await self.page.update_async()
-        self.page.snack_bar.bgcolor = "green"
 
     async def reset_chart(self, _):
         self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
@@ -365,19 +363,15 @@ class StarChartController(Controller):
     async def copy_star_chart_build(self, _):
         build_id = await self.star_chart.get_build()
         await self.page.set_clipboard_async("SC-" + build_id)
-        self.page.snack_bar.content.value = "Copied to clipboard"
-        self.page.snack_bar.open = True
-        await self.page.snack_bar.update_async()
+        await self.page.snack_bar.show("Copied to clipboard")
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value
         self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
         if await self.star_chart.from_string(build_id):
             event.control.value = None
-            self.page.snack_bar.content.value = f"Loaded build with id SC-{build_id}"
-            self.page.snack_bar.open = True
             self.setup_controls()
-            await self.page.snack_bar.update_async()
+            await self.page.snack_bar.show(f"Loaded build with id SC-{build_id}")
             await self.map.update_async()
 
     async def start_with_build_id(self, build_id):

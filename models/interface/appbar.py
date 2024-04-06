@@ -2,6 +2,7 @@ import asyncio
 import os
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from aiohttp import ClientSession
@@ -16,7 +17,6 @@ from flet import (
     Text,
     Container,
     Image,
-    AlertDialog,
     TextButton,
     MainAxisAlignment,
     Icon,
@@ -24,7 +24,6 @@ from flet import (
     ButtonStyle,
     TextField,
 )
-from datetime import datetime
 from flet_core.colors import SURFACE_VARIANT
 from flet_core.icons import (
     LIGHT_MODE,
@@ -41,11 +40,11 @@ from flet_core.icons import (
     HISTORY_EDU,
 )
 
+from models.interface.controls import Modal
 from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.localization import Locale
 from utils.tasks import loop
-from models.interface.controls import Dialog
 
 
 async def check_update(current_version, debug=False, force=False):
@@ -362,24 +361,21 @@ class CustomAppBar(AppBar):
                             ],
                         )
                     )
-        Dialog(
-            page=self.page,
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Changelog"),
             actions=[
-                TextButton("Close", on_click=self.close_dlg),
+                TextButton("Close", on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
             content=content,
         )
-        await self.page.dialog.show()
 
     async def check_for_update(self):
         await asyncio.sleep(1)
         update = await check_update(self.page.metadata.version, self.page.metadata.dev)
         if update[0] is not None:
-            Dialog(
-                page=self.page,
+            await self.page.dialog.set_data(
                 modal=True,
                 title=Text("Update available"),
                 content=Text(
@@ -394,11 +390,10 @@ class CustomAppBar(AppBar):
                 ],
                 actions_alignment=MainAxisAlignment.END,
             )
-            # await self.page.dialog.show()
             self.page.appbar.actions[0].visible = True
             await self.page.snack_bar.show(
                 "A new update is available, click on the download icon to update.",
-                "yellow"
+                "yellow",
             )
             await self.page.appbar.update_async()
 
@@ -410,18 +405,16 @@ class CustomAppBar(AppBar):
             max_lines=10,
             min_lines=5,
         )
-        self.dlg = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("Feedback"),
             actions=[
-                TextButton("Close", on_click=self.close_dlg),
+                TextButton("Close", on_click=self.page.RTT.close_dialog),
                 TextButton("Send", on_click=self.send_feedback),
             ],
             actions_alignment=MainAxisAlignment.END,
             content=self.feedback_text,
         )
-        self.page.dialog = self.dlg
-        self.dlg.open = True
         await self.page.update_async()
 
     async def send_feedback(self, event):
@@ -531,11 +524,11 @@ class CustomAppBar(AppBar):
         await self.page.launch_url_async(urls[event.control.data])
 
     async def open_about(self, event):
-        self.dlg = AlertDialog(
+        await self.page.dialog.set_data(
             modal=True,
             title=Text("About"),
             actions=[
-                TextButton("Close", on_click=self.close_dlg),
+                TextButton("Close", on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
             content=Text(
@@ -547,15 +540,7 @@ class CustomAppBar(AppBar):
                 " previous content.\n\nI don't promise to keep this up to date forever, but as long as"
                 " I am around I should be able to.\n\nThanks for using my application. <3"
             ),
-            on_dismiss=lambda e: print("Modal dialog dismissed!"),
         )
-        self.page.dialog = self.dlg
-        self.dlg.open = True
-        await self.page.update_async()
-
-    async def close_dlg(self, e):
-        self.dlg.open = False
-        await self.page.update_async()
 
     async def change_color(self, event):
         color = event.control.data

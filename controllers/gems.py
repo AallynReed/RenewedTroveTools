@@ -689,9 +689,8 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(1)
-        self.page.snack_bar.content.value = t("messages.mined_gem_levels")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
+        await self.page.snack_bar.show(t("messages.mined_gem_levels"))
         await self.page.update_async()
 
     @throttle
@@ -699,8 +698,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(5)
-        self.page.snack_bar.content.value = t("messages.fived_levels")
-        self.page.snack_bar.open = True
+        await self.page.snack_bar.show(t("messages.fived_levels"))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -709,8 +707,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(10)
-        self.page.snack_bar.content.value = t("messages.tened_levels")
-        self.page.snack_bar.open = True
+        await self.page.snack_bar.show(t("messages.tened_levels"))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -719,8 +716,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(15)
-        self.page.snack_bar.content.value = t("messages.fifteened_levels")
-        self.page.snack_bar.open = True
+        await self.page.snack_bar.show(t("messages.fifteened_levels"))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -729,10 +725,8 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(max_levels[gem.tier.name])
-        self.page.snack_bar.content.value = t("messages.maxed_gem_levels")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.maxed_gem_levels"))
 
     @throttle
     async def zero_augmentation(self, _):
@@ -740,10 +734,8 @@ class GemSetController(Controller):
             for gem in gs:
                 for stat in gem.stats:
                     stat.zero_augments()
-        self.page.snack_bar.content.value = t("messages.zeroed_all_gems")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.zeroed_all_gems"))
 
     @throttle
     async def on_min_augmentation(self, _):
@@ -751,10 +743,8 @@ class GemSetController(Controller):
             for gem in gs:
                 for stat in gem.stats:
                     stat.reset_augments()
-        self.page.snack_bar.content.value = t("messages.deaugmented_all_gems")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.deaugmented_all_gems"))
 
     @throttle
     async def on_max_augmentation(self, _):
@@ -763,10 +753,8 @@ class GemSetController(Controller):
                 for stat in gem.stats:
                     while not stat.is_maxed:
                         stat.add_superior_focus()
-        self.page.snack_bar.content.value = t("messages.augmented_all_gems")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.augmented_all_gems"))
 
     @throttle
     async def on_all_magic(self, _):
@@ -778,10 +766,8 @@ class GemSetController(Controller):
                     for stat in gem.stats:
                         if stat.name == Stat.physical_damage:
                             stat.name = Stat.magic_damage
-        self.page.snack_bar.content.value = t("messages.changed_all_magic")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.changed_all_magic"))
 
     @throttle
     async def on_all_physical(self, _):
@@ -793,10 +779,8 @@ class GemSetController(Controller):
                     for stat in gem.stats:
                         if stat.name == Stat.magic_damage:
                             stat.name = Stat.physical_damage
-        self.page.snack_bar.content.value = t("messages.changed_all_physical")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.changed_all_physical"))
 
     @throttle
     async def on_full_damage(self, _):
@@ -834,10 +818,8 @@ class GemSetController(Controller):
                 elif gem.type == GemType.empowered:
                     for stat, new_stat in zipped_stats:
                         stat.name = new_stat
-        self.page.snack_bar.content.value = t("messages.changed_all_damage")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.changed_all_damage"))
 
     @throttle
     async def on_full_health(self, _):
@@ -857,10 +839,8 @@ class GemSetController(Controller):
                 elif gem.type == GemType.empowered:
                     for stat, new_stat in zipped_stats:
                         stat.name = new_stat
-        self.page.snack_bar.content.value = t("messages.changed_all_health")
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
-        await self.page.update_async()
+        await self.page.snack_bar.show(t("messages.changed_all_health"))
 
     async def on_full_radiant(self, event):
         for gs in self.gem_set:
@@ -923,10 +903,9 @@ class GemSetController(Controller):
     @throttle
     async def on_gem_level_change(self, event):
         self.selected_gem.set_level(int(event.control.value))
-        self.page.snack_bar.content.value = t("messages.updated_gem_level").format(
-            level=self.selected_gem.level
+        await self.page.snack_bar.show(
+            t("messages.updated_gem_level").format(level=self.selected_gem.level)
         )
-        self.page.snack_bar.open = True
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -942,8 +921,7 @@ class GemSetController(Controller):
             if a.name == event.control.value
         ][0]
         self.setup_controls(self.selected_gem)
-        self.page.snack_bar.content.value = t("messages.updated_ability")
-        self.page.snack_bar.open = True
+        await self.page.snack_bar.show(t("messages.updated_ability"))
         await self.page.update_async()
 
     async def on_stat_change(self, event):
@@ -983,6 +961,5 @@ class GemSetController(Controller):
     async def copy_to_clipboard(self, event):
         if value := event.control.content.value:
             await self.page.set_clipboard_async(str(value))
-            self.page.snack_bar.content.value = "Copied to clipboard"
-            self.page.snack_bar.open = True
+            await self.page.snack_bar.show("Copied to clipboard")
         await self.page.update_async()

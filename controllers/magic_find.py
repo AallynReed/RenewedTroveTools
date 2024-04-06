@@ -165,23 +165,20 @@ class MagicFindController(Controller):
 
     async def switch_stat(self, event):
         self.control_values[event.control.data] = event.control.value
-        self.page.snack_bar.content.value = f"Updated {event.control.data}"
-        self.page.snack_bar.open = True
         self.setup_controls()
+        await self.page.snack_bar.show(f"Updated {event.control.data}")
         await self.page.update_async()
 
     async def slider_stat(self, event):
         self.control_values[event.control.data] = int(event.control.value)
-        self.page.snack_bar.content.value = f"Updated {event.control.data}"
-        self.page.snack_bar.open = True
         self.setup_controls()
+        await self.page.snack_bar.show(f"Updated {event.control.data}")
         await self.page.update_async()
 
     async def mastery_stat(self, event):
         self.control_values[event.control.data] = int(event.control.value) - 500
-        self.page.snack_bar.content.value = f"Updated {event.control.data}"
-        self.page.snack_bar.open = True
         self.setup_controls()
+        await self.page.snack_bar.show(f"Updated {event.control.data}")
         await self.page.update_async()
 
     async def set_star_chart_build(self, event):
@@ -192,7 +189,6 @@ class MagicFindController(Controller):
             await self.page.update_async()
             return
         if await self.star_chart.from_string(build_id):
-            self.page.snack_bar.content.value = f"Loaded build with id {build_id}"
-            self.page.snack_bar.open = True
             self.setup_controls()
+            await self.page.snack_bar.show(f"Loaded build with id {build_id}")
             await self.page.update_async()

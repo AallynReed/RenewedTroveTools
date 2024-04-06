@@ -11,10 +11,11 @@ from urllib.parse import urlparse
 
 import requests
 from aiohttp import ClientSession
-from flet import app_async, WEB_BROWSER, FLET_APP, Theme, SnackBar, Row, Text, Icon
+from flet import app_async, WEB_BROWSER, FLET_APP, Theme, Row, Text, Icon
 
 from models import Metadata, Preferences
 from models.interface import CustomAppBar
+from models.interface.controls import Snackbar, Modal
 from utils import tasks
 from utils.localization import LocalizationManager
 from utils.logger import Logger
@@ -184,10 +185,11 @@ class App:
         self.page.window_width = width
         self.page.window_height = height
         self.page.window_maximized = self.page.preferences.fullscreen
-        self.page.snack_bar = SnackBar(content=Text())
+        self.page.snack_bar = Snackbar(page=self.page)
         self.page.clock = Text(str(self.page.trove_time))
         self.page.on_error = self.renderer_error_logger
         self.page.on_window_event = self.window_event
+        self.page.dialog = Modal(page=self.page)
 
     async def window_event(self, e):
         if e.data == "maximize":
@@ -256,6 +258,9 @@ class App:
             title=Text(self.page.metadata.app_name),
             leading=Row(controls=[Icon("Star"), self.page.clock]),
         )
+
+    async def close_dialog(self, e=None):
+        await self.page.dialog.hide()
 
     async def gather_views(self):
         self.page.all_views = []

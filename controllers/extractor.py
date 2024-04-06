@@ -23,7 +23,6 @@ from flet import (
     DataCell,
     MainAxisAlignment,
     FilePicker,
-    AlertDialog,
 )
 from flet_core import icons
 from humanize import naturalsize
@@ -320,10 +319,9 @@ class ExtractorController(Controller):
     async def set_changes_format(self, event):
         self.page.preferences.changes_name_format = event.control.value
         self.page.preferences.save()
-        self.page.snack_bar.content.value = "Changed the format for changes folder"
-        self.page.snack_bar.bgcolor = "green"
-        self.page.snack_bar.open = True
-        return await self.page.update_async()
+        return await self.page.snack_bar.show(
+            "Changed the format for changes folder", color="green"
+        )
 
     async def cancel_ongoing_extraction(self, _):
         self.cancel_extraction = True
@@ -439,12 +437,10 @@ class ExtractorController(Controller):
             ]
             for directory in known_directories:
                 if not Path(event.path).joinpath(directory).exists():
-                    self.page.snack_bar.content.value = (
-                        "Please select a valid trove directory"
+                    return await self.page.snack_bar.show(
+                        "Please select a valid trove directory",
+                        color="red",
                     )
-                    self.page.snack_bar.bgcolor = "red"
-                    self.page.snack_bar.open = True
-                    return await self.page.update_async()
             trove_path = Path(event.path)
             self.directory_dropdown.value = (
                 trove_path
@@ -789,19 +785,16 @@ class ExtractorController(Controller):
             "Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes",
         ]
         task = "\n\n".join(task_lines)
-        dlg = AlertDialog(
+        await self.page.dialog.set_data(
             modal=False,
             title=Text("Advanced mode enabled"),
             content=Text(task),
             actions=[
                 ElevatedButton("Don't show again", on_click=self.am_dont_show),
-                ElevatedButton("Ok", on_click=self.close_dlg),
+                ElevatedButton("Ok", on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
-        self.page.dialog = dlg
-        dlg.open = True
-        await self.page.update_async()
 
     async def warn_performance_mode(self):
         task_lines = [
@@ -817,19 +810,16 @@ class ExtractorController(Controller):
             "of).",
         ]
         task = "\n\n".join(task_lines)
-        dlg = AlertDialog(
+        await self.page.dialog.set_data(
             modal=False,
             title=Text("Performance mode enabled"),
             content=Text(task),
             actions=[
                 ElevatedButton("Don't show again", on_click=self.pm_dont_show),
-                ElevatedButton("Ok", on_click=self.close_dlg),
+                ElevatedButton("Ok", on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
-        self.page.dialog = dlg
-        dlg.open = True
-        await self.page.update_async()
 
     async def pm_dont_show(self, _):
         self.page.preferences.dismissables.performance_mode = True
@@ -843,29 +833,22 @@ class ExtractorController(Controller):
         self.page.dialog.open = False
         await self.page.update_async()
 
-    async def close_dlg(self, _):
-        self.page.dialog.open = False
-        await self.page.update_async()
-
     async def warn_extraction(self, extraction_type: str):
         task = f"Do you really wish to extract {extraction_type} from {self.locations.extract_from} into {self.locations.extract_to}"
         if self.page.preferences.advanced_mode:
             task += f"\nWhilst keeping track of changes in a versioned folder in {self.locations.changes_to}"
-        dlg = AlertDialog(
+        await self.page.dialog.set_data(
             modal=False,
             title=Text("Extraction confirmation"),
             content=Text(task),
             actions=[
-                ElevatedButton("Cancel", on_click=self.close_dlg),
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
                 ElevatedButton(
                     "Confirm extraction", data=extraction_type, on_click=self.extract
                 ),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
-        self.page.dialog = dlg
-        dlg.open = True
-        await self.page.update_async()
 
     async def extract_changes(self, _):
         await self.warn_extraction("changes")
@@ -1032,10 +1015,9 @@ class ExtractorController(Controller):
                             ].value = "Extractor Idle"
                             self.extraction_progress.controls[0].controls[1].value = ""
                             self.extraction_progress.controls[1].controls[0].value = 0
-                            self.page.snack_bar.content.value = "Extraction Cancelled"
-                            self.page.snack_bar.bgcolor = "red"
-                            self.page.snack_bar.open = True
-                            return await self.page.update_async()
+                            return await self.page.snack_bar.show(
+                                "Extraction cancelled", color="red"
+                            )
                         old_pro = self.extraction_progress.controls[1].controls[0].value
                         i += 1
                         if old_pro != (
@@ -1063,8 +1045,5 @@ class ExtractorController(Controller):
         self.extraction_progress.controls[0].controls[0].value = "Extractor Idle"
         self.extraction_progress.controls[0].controls[1].value = ""
         self.extraction_progress.controls[1].controls[0].value = 0
-        self.page.snack_bar.content.value = "Extraction Complete"
-        self.page.snack_bar.bgcolor = "green"
-        self.page.snack_bar.open = True
-        await self.page.update_async()
+        await self.page.snack_bar.show("Extraction Complete")
         self.refresh_lists.start()
