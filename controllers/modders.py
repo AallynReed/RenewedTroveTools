@@ -1167,7 +1167,7 @@ class ModdersController(Controller):
                                     IconButton(
                                         icons.ADD,
                                         on_click=self.add_author,
-                                        visible=len(config.authors) < 5,
+                                        visible=len(config.authors) < 8,
                                     ),
                                 ]
                             ),
