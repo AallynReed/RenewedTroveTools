@@ -12,7 +12,7 @@ from flet import (
     IconButton,
     icons,
     ProgressRing,
-    ScrollMode
+    ScrollMode,
 )
 
 from utils.trove.extractor import find_all_files
@@ -29,7 +29,7 @@ class PathViewer(UserControl):
         self.search_bar = TextField(
             label="Search",
             hint_text="Search for files in archives (Minimum characters: 5)",
-            on_submit=self.search
+            on_submit=self.search,
         )
         self.directories = {}
 
@@ -41,7 +41,7 @@ class PathViewer(UserControl):
                     Icon(icons.FOLDER),
                     Text(name),
                 ],
-                expand=True
+                expand=True,
             ),
             controls=[
                 *(
@@ -51,14 +51,8 @@ class PathViewer(UserControl):
                         if directory not in ["index", "files"]
                     ]
                 ),
-                *(
-                    [
-                        self.get_file_tile(index["files"])
-                    ]
-                    if index["files"]
-                    else []
-                )
-            ]
+                *([self.get_file_tile(index["files"])] if index["files"] else []),
+            ],
         )
 
     def get_file_tile(self, files):
@@ -82,8 +76,8 @@ class PathViewer(UserControl):
                         icon,
                         icon_color=icon_color,
                         data=file,
-                        on_click=self.extract_file
-                    )
+                        on_click=self.extract_file,
+                    ),
                 )
             )
         return tile
@@ -94,17 +88,8 @@ class PathViewer(UserControl):
             viewer.controls.clear()
             await self._load_files()
             for directory, data in self.directories.items():
-                viewer.controls.append(
-                    self.get_folder_tile(directory, data)
-                )
-        return Column(
-            controls=[
-                self.search_bar,
-                viewer
-            ],
-            width=800,
-            expand=True
-        )
+                viewer.controls.append(self.get_folder_tile(directory, data))
+        return Column(controls=[self.search_bar, viewer], width=800, expand=True)
 
     async def _load_files(self):
         self.directories = {}
@@ -115,7 +100,7 @@ class PathViewer(UserControl):
             async with ClientSession() as session:
                 query = quote_plus(self.query)
                 async with session.get(
-                        f"https://trovesaurus.com/search/collections?q={query}.json&full&parts"
+                    f"https://trovesaurus.com/search/collections?q={query}.json&full&parts"
                 ) as response:
                     if response.status == 200:
                         data = await response.json()
@@ -135,13 +120,14 @@ class PathViewer(UserControl):
                     continue
             index = file.index
             cursor = self.directories
-            path_parts = index.path.parent.relative_to(self.installation_path).as_posix().split("/")
+            path_parts = (
+                index.path.parent.relative_to(self.installation_path)
+                .as_posix()
+                .split("/")
+            )
             for path_part in path_parts:
                 if path_part not in cursor:
-                    cursor[path_part] = {
-                        "index": index,
-                        "files": []
-                    }
+                    cursor[path_part] = {"index": index, "files": []}
                 cursor = cursor[path_part]
             cursor["files"].append(file)
 
@@ -149,10 +135,7 @@ class PathViewer(UserControl):
         if not control:
             asyncio.create_task(self.reload_path())
             return Column(
-                controls=[
-                    ProgressRing(),
-                    Text("Loading Virtual Directory...")
-                ]
+                controls=[ProgressRing(), Text("Loading Virtual Directory...")]
             )
         return control
 
@@ -175,7 +158,7 @@ class PathViewer(UserControl):
                 controls=[
                     self.search_bar,
                     ProgressRing(),
-                    Text("Loading Virtual Directory...please wait a second.")
+                    Text("Loading Virtual Directory...please wait a second."),
                 ]
             )
         ]
@@ -197,7 +180,9 @@ class PathViewer(UserControl):
 
 
 class IntField(UserControl):
-    def __init__(self, min_value=None, max_value=None, on_change=None, on_submit=None, **kwargs):
+    def __init__(
+        self, min_value=None, max_value=None, on_change=None, on_submit=None, **kwargs
+    ):
         super().__init__()
         self._on_change = None
         self._on_submit = None
