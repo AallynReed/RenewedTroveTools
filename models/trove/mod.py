@@ -221,10 +221,7 @@ class TroveMod:
         metadata = dict()
         metadata["name"] = self.name
         metadata["properties"] = {}
-        needed_props = [
-            "author",
-            "title",
-        ]
+        needed_props = ["author", "title"]
         for prop in needed_props:
             if prop not in [p.name for p in self.properties]:
                 raise MissingPropertyError(f'Property "{prop}" is missing')
@@ -640,6 +637,55 @@ class TroveModList:
 
     def __len__(self):
         return self.count
+
+    async def cloud_check(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"https://kiwiapi.slynx.xyz/v1/profile/cloud_mods",
+                json={"hashes": self.all_hashes},
+            ) as response:
+                data = await response.json()
+                uploads = []
+                for hash, entry in data.items():
+                    for mod in self:
+                        if mod.hash == hash:
+                            if entry is None:
+                                if isinstance(mod, TMod):
+                                    authors = [
+                                        {
+                                            "ID": None,
+                                            "Username": author,
+                                            "Avatar": None,
+                                            "Role": None
+                                        }
+                                        for author in mod.author.split(",")
+                                    ]
+                                    uploads.append(
+                                        {
+                                            "hash": mod.hash,
+                                            "name": mod.name,
+                                            "format": "tmod",
+                                            "authors": authors,
+                                            "description": None,
+                                            "data": base64.b64encode(mod.tmod_content).decode("utf-8"),
+                                        }
+                                    )
+                                else:
+                                    uploads.append(
+                                        {
+                                            "hash": mod.hash,
+                                            "name": mod.name,
+                                            "format": "zip",
+                                            "authors": [],
+                                            "description": None,
+                                            "data": base64.b64encode(mod.zip_content).decode("utf-8"),
+                                        }
+                                    )
+                await session.post(
+                    f"https://kiwiapi.slynx.xyz/v1/profile/upload_cloud_mods",
+                    json={"mods": uploads}
+                )
+
 
     async def update_trovesaurus_data(self):
         async with ClientSession() as session:

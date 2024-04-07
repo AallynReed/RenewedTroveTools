@@ -429,6 +429,7 @@ class ModsController(Controller):
             fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
         )
         await self.my_mod_list.update_trovesaurus_data()
+        await self.my_mod_list.cloud_check()
         if not self.my_mod_list.mods:
             self.my_mods.controls.append(Text("No mods in this directory"))
             await self.release_ui()

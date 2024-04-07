@@ -40,7 +40,7 @@ from flet import (
     Switch,
     Stack,
     PopupMenuButton,
-    PopupMenuItem
+    PopupMenuItem,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -1076,7 +1076,9 @@ class ModdersController(Controller):
                     Row(
                         controls=[
                             ElevatedButton(
-                                "New version", icon=icons.ADD, on_click=self.create_version
+                                "New version",
+                                icon=icons.ADD,
+                                on_click=self.create_version,
                             ),
                             *(
                                 [
@@ -1084,7 +1086,8 @@ class ModdersController(Controller):
                                         data=(version, config),
                                         leading=Icon(icons.FOLDER),
                                         label=Text(config.version),
-                                        disabled=config.version == version_config.version,
+                                        disabled=config.version
+                                        == version_config.version,
                                         on_click=self.set_version,
                                     )
                                     for version, config in versions
@@ -1094,10 +1097,7 @@ class ModdersController(Controller):
                     ),
                     PopupMenuButton(
                         content=Row(
-                            controls=[
-                                Icon(icons.API),
-                                Text("Get Modding Software")
-                            ]
+                            controls=[Icon(icons.API), Text("Get Modding Software")]
                         ),
                         items=[
                             PopupMenuItem(
@@ -1124,8 +1124,8 @@ class ModdersController(Controller):
                                 icon=icons.MUSIC_NOTE,
                                 on_click=self.show_software,
                             ),
-                        ]
-                    )
+                        ],
+                    ),
                 ],
                 alignment=MainAxisAlignment.SPACE_BETWEEN,
             )
@@ -1401,11 +1401,15 @@ class ModdersController(Controller):
                                 controls=[
                                     Row(
                                         controls=[
-                                            Icon(icons.ATTACH_MONEY if not software["free"] else icons.MONEY_OFF),
+                                            Icon(
+                                                icons.ATTACH_MONEY
+                                                if not software["free"]
+                                                else icons.MONEY_OFF
+                                            ),
                                             TextButton(
                                                 text=software["name"],
                                                 url=software["url"],
-                                            )
+                                            ),
                                         ]
                                     ),
                                     Text(software["description"]),
@@ -1413,13 +1417,11 @@ class ModdersController(Controller):
                             )
                             for software in types_data[event.control.data]["software"]
                         ]
-                    )
+                    ),
                 ],
                 width=500,
             ),
-            actions=[
-                ElevatedButton("Close", on_click=self.page.RTT.close_dialog),
-            ],
+            actions=[ElevatedButton("Close", on_click=self.page.RTT.close_dialog)],
         )
 
     async def create_project(self, event):
