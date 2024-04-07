@@ -1530,6 +1530,7 @@ class ModdersController(Controller):
         )
         await self.page.snack_bar.show("Project created")
         await self.load_tab()
+        await self.page.dialog.hide()
 
     async def create_version(self, event):
         await self.page.dialog.set_data(
@@ -1895,7 +1896,7 @@ class ModdersController(Controller):
             cfg = file
             break
         if cfg:
-            mod.add_property("configPath", cfg.relative_to(version_folder))
+            mod.add_property("configPath", cfg.relative_to(version_folder).as_posix())
             mod.add_file(
                 TroveModFile(cfg.relative_to(version_folder), cfg.read_bytes())
             )
