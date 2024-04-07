@@ -439,9 +439,7 @@ class CustomAppBar(AppBar):
         update_url, is_windows = await check_update(
             self.page.metadata.version, dev, True
         )
-        if self.page.dialog is not None:
-            self.page.dialog.open = False
-            await self.page.close_dialog_async()
+        await self.page.dialog.hide()
         if is_windows:
             self.page.controls = [
                 Column(
