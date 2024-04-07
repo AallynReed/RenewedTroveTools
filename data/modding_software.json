@@ -41,7 +41,7 @@
         ]
     },
     "vfx": {
-        "description": "VFX (Visual Effects) are used to create visual effects for Trove's collectibles.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
+        "description": "Create visual effects for Trove's collectibles.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
         "software": {
             "name": "PopcornFX (1.13.5)",
             "free": true,
@@ -67,12 +67,23 @@
         ]
     },
     "sound": {
-        "description": "Sound is used to create sound effects and music for Trove'.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
+        "description": "Create sound effects and music for Trove'.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
         "software": {
             "name": "BNK Replacer",
             "free": true,
             "url": "https://github.com/EtiTheSpirit/BNKReplacer",
             "description": "BNK Replacer is a free tool that is used to replace sound effects in Trove's sound bank."
         }
+    },
+    "textures": {
+        "description": "Create textures for Trove's visual effects.",
+        "software": [
+            {
+                "name": "Paint.NET",
+                "free": true,
+                "url": "https://www.getpaint.net/",
+                "description": "Paint.NET is a free image and photo editing software that is used to create and edit textures."
+            }
+        ]
     }
 }

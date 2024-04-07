@@ -1113,6 +1113,12 @@ class ModdersController(Controller):
                                 on_click=self.show_software,
                             ),
                             PopupMenuItem(
+                                data="textures",
+                                text="Textures (.dds)",
+                                icon=icons.BRUSH,
+                                on_click=self.show_software,
+                            ),
+                            PopupMenuItem(
                                 data="ui",
                                 text="UI (.swf)",
                                 icon=icons.GRID_VIEW,
