@@ -62,7 +62,7 @@ class ModdersController(Controller):
             self.setup_memory()
             self.api = KiwiAPI()
             self.main = Column(expand=True)
-            self.tabs = Tabs(selected_index=3, on_change=self.load_tab)
+            self.tabs = Tabs(selected_index=1, on_change=self.load_tab)
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab("Extract TMod")
             self.compile_tab = Tab("Build TMod")
