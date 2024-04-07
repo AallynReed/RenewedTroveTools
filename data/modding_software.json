@@ -83,6 +83,12 @@
                 "free": true,
                 "url": "https://www.getpaint.net/",
                 "description": "Paint.NET is a free image and photo editing software that is used to create and edit textures."
+            },
+            {
+                "name": "GIMP",
+                "free": true,
+                "url": "https://www.gimp.org/",
+                "description": "GIMP is a free image and photo editing software that is used to create and edit textures."
             }
         ]
     }
