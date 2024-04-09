@@ -144,7 +144,6 @@ class App:
             if arguments:
                 server = socket.create_connection(("127.0.0.1", 13010))
                 server.sendall(json.dumps(arguments).encode())
-            await self.page.window_close_async()
             await asyncio.sleep(3)
 
     async def protocol_handler(self, reader, _):
