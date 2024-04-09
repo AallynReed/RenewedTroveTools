@@ -24,7 +24,7 @@ from utils.trove.extractor import find_all_files
 
 class PathViewer(UserControl):
     def __init__(self, installation_path, project_path):
-        super().__init__(expand=True)
+        super().__init__()
         self.installation_path = installation_path
         self.project_path = project_path
         self.query = None
@@ -38,13 +38,7 @@ class PathViewer(UserControl):
     def get_folder_tile(self, name, index):
         return ExpansionTile(
             data=index,
-            title=Row(
-                controls=[
-                    Icon(icons.FOLDER),
-                    Text(name),
-                ],
-                expand=True,
-            ),
+            title=Row(controls=[Icon(icons.FOLDER), Text(name)], expand=True),
             controls=[
                 *(
                     [
@@ -58,10 +52,7 @@ class PathViewer(UserControl):
         )
 
     def get_file_tile(self, files):
-        tile = ExpansionTile(
-            leading=Icon(icons.FILE_COPY),
-            title=Text("Files"),
-        )
+        tile = ExpansionTile(leading=Icon(icons.FILE_COPY), title=Text("Files"))
         for file in files:
             icon = icons.DOWNLOAD
             icon_color = None
@@ -85,13 +76,13 @@ class PathViewer(UserControl):
         return tile
 
     async def get_viewer(self):
-        viewer = Column(scroll=ScrollMode.ADAPTIVE, expand=True)
+        viewer = Column(scroll=ScrollMode.ADAPTIVE)
         if self.query is not None:
             viewer.controls.clear()
             await self._load_files()
             for directory, data in self.directories.items():
                 viewer.controls.append(self.get_folder_tile(directory, data))
-        return Column(controls=[self.search_bar, viewer], width=800, expand=True)
+        return Column(controls=[self.search_bar, viewer])
 
     async def _load_files(self):
         self.directories = {}
@@ -134,12 +125,7 @@ class PathViewer(UserControl):
             cursor["files"].append(file)
 
     def build(self, control=None):
-        if not control:
-            asyncio.create_task(self.reload_path())
-            return Column(
-                controls=[ProgressRing(), Text("Loading Virtual Directory...")]
-            )
-        return control
+        return self.search_bar
 
     async def reload_path(self):
         await self.display()
