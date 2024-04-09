@@ -1,9 +1,7 @@
-import asyncio
 from urllib.parse import quote_plus
 
 from aiohttp import ClientSession
 from flet import (
-    UserControl,
     Column,
     Row,
     ExpansionTile,
@@ -17,9 +15,21 @@ from flet import (
     ScrollMode,
     AlertDialog,
     SnackBar,
+    Stack,
 )
 
 from utils.trove.extractor import find_all_files
+
+
+class UserControl(Stack):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def build(self):
+        pass
+
+    def is_isolated(self):
+        return True
 
 
 class PathViewer(UserControl):

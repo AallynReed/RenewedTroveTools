@@ -1,7 +1,9 @@
 import flet as ft
 
+from models.interface.controls import UserControl
 
-class ScrollingFrame(ft.UserControl):
+
+class ScrollingFrame(UserControl):
     def __init__(
         self, content, vertical_scrollbar_always_visible=True, expand=True, **kwargs
     ):
@@ -19,7 +21,7 @@ class ScrollingFrame(ft.UserControl):
         )
 
         scroller = first_dimension(
-            [other_direction := second_dimension([ft.Container(self.content_control)])],
+            [other_direction := second_dimension([ft.Container(self.content_control)])]
         )
 
         scroller.scroll = ft.ScrollMode.AUTO

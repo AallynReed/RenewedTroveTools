@@ -1,7 +1,6 @@
 from typing import Optional, Callable
 
 from flet import (
-    UserControl,
     DataTable,
     DataColumn,
     DataRow,
@@ -12,6 +11,8 @@ from flet import (
     Text,
 )
 from flet_core import icons
+
+from models.interface.controls import UserControl
 
 
 class PagedDataTable(UserControl):
@@ -34,9 +35,7 @@ class PagedDataTable(UserControl):
         super().__init__(**kwargs)
 
     def build(self):
-        self.table = DataTable(
-            columns=self._columns,
-        )
+        self.table = DataTable(columns=self._columns)
         self._text_indicator = TextField(
             value=str(self.current_page + 1),
             width=100,
@@ -66,10 +65,7 @@ class PagedDataTable(UserControl):
                             ),
                         ),
                         self._text_indicator,
-                        Text(
-                            f"/ {self.page_count}",
-                            scale=0.75,
-                        ),
+                        Text(f"/ {self.page_count}", scale=0.75),
                         IconButton(
                             icons.NAVIGATE_NEXT,
                             on_click=(
