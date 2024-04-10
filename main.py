@@ -2,7 +2,6 @@ import asyncio
 import json
 import os
 import re
-import socket
 import sys
 from datetime import datetime
 from json import load
@@ -24,7 +23,6 @@ from utils.protocol import set_protocol
 from utils.routing import Routing
 from utils.trove.server_time import ServerTime
 from views import all_views
-import psutil
 
 
 class App:
@@ -135,34 +133,16 @@ class App:
                 }
 
     async def setup_protocol_socket(self):
-        arguments = sys.argv[1:]
-        processes = [
-            p.info["pid"]
-            for p in psutil.process_iter(attrs=["pid", "name", "exe"])
-            if p.info["name"] == "RenewedTroveTools.exe"
-        ]
-        conns = psutil.net_connections()
-        connections = []
-        if processes:
-            if arguments:
-                for conn in conns:
-                    if conn.pid in processes:
-                        if conn.laddr.port in range(13010, 13020):
-                            connections.append(conn)
-                            server = socket.create_connection(
-                                (conn.laddr.ip, conn.laddr.port)
-                            )
-                            server.sendall(json.dumps(arguments).encode())
-        if connections:
-            await self.page.window_close_async()
-            return await asyncio.sleep(3)
         for port in range(13010, 13020):
             try:
                 self.page.protocol_socket = await asyncio.start_server(
                     self.protocol_handler, "127.0.0.1", port
                 )
                 asyncio.create_task(self.page.protocol_socket.serve_forever())
-            except OSError:
+                break
+                print(f"Protocol socket started on port {port}")
+            except OSError as e:
+                print(e)
                 continue
 
     async def protocol_handler(self, reader, _):
