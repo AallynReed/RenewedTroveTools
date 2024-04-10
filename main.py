@@ -142,15 +142,18 @@ class App:
             if p.info["name"] == "RenewedTroveTools.exe"
         ]
         conns = psutil.net_connections()
+        connections = []
         if processes:
             if arguments:
                 for conn in conns:
                     if conn.pid in processes:
-                        if conn.status == "LISTEN" and conn.laddr.port in range(
-                            13010, 13020
-                        ):
-                            server = socket.create_connection(("127.0.0.1", 13010))
+                        if conn.laddr.port in range(13010, 13020):
+                            connections.append(conn)
+                            server = socket.create_connection(
+                                (conn.laddr.ip, conn.laddr.port)
+                            )
                             server.sendall(json.dumps(arguments).encode())
+        if connections:
             await self.page.window_close_async()
             return await asyncio.sleep(3)
         for port in range(13010, 13020):
