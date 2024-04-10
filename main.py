@@ -140,7 +140,7 @@ class App:
                 )
                 asyncio.create_task(self.page.protocol_socket.serve_forever())
                 break
-            except OSError as e:
+            except OSError:
                 continue
 
     async def protocol_handler(self, reader, _):
