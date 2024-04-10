@@ -243,7 +243,21 @@ class App:
     async def post_login(self, route=None):
         await self.setup_appbar()
         await self.start_tasks()
-        await self.page.go_async(route or "/")
+
+        data = sys.argv[1:]
+        if data:
+            uri = urlparse(data[0])
+            if uri.scheme == "rtt":
+                params = {
+                    k: v
+                    for kv in uri.query.split("&")
+                    for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
+                }
+            else:
+                params = {}
+            await self.page.go_async(uri.path, **params)
+        else:
+            await self.page.go_async(route or "/mods_manager")
 
     async def setup_appbar(self):
         if self.page.appbar:
