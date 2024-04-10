@@ -257,7 +257,7 @@ class App:
                 params = {}
             await self.page.go_async(uri.path, **params)
         else:
-            await self.page.go_async(route or "/mods_manager")
+            await self.page.go_async(route or "/")
 
     async def setup_appbar(self):
         if self.page.appbar:
