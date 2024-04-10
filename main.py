@@ -140,7 +140,6 @@ class App:
                 )
                 asyncio.create_task(self.page.protocol_socket.serve_forever())
                 break
-                print(f"Protocol socket started on port {port}")
             except OSError as e:
                 print(e)
                 continue
