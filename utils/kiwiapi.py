@@ -130,6 +130,8 @@ class ModsEndpoint(Enum):
     sub_types: str = "/mods/sub_types"
     image_resize: str = "/image/resize"
     mastery: str = "/stats/mastery"
+    profiles: str = "/profile"
+    twitch_streams: str = "/misc/twitch_streams"
 
 
 class KiwiAPI:
@@ -213,5 +215,57 @@ class KiwiAPI:
         async with ClientSession() as session:
             async with session.get(
                 f"{self.api_url}{ModsEndpoint.mastery.value}"
+            ) as response:
+                return await response.json()
+
+    async def create_profile(self, user_token: str, name: str, description: str):
+        async with ClientSession() as session:
+            await session.post(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/create",
+                headers={"Authorization": user_token},
+                json={"name": name, "description": description},
+            )
+
+    async def update_profile(self, user_token: str, profile_id: str, **kwargs):
+        async with ClientSession() as session:
+            await session.put(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/update/{profile_id}",
+                headers={"Authorization": user_token},
+                json=kwargs,
+            )
+
+    async def list_profiles(self, user_token: str):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/list_profiles",
+                headers={"Authorization": user_token},
+            ) as response:
+                return await response.json()
+
+    async def share_profile(self, user_token: str, profile_id: str):
+        async with ClientSession() as session:
+            await session.post(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/share/{profile_id}",
+                headers={"Authorization": user_token},
+            )
+
+    async def private_profile(self, user_token: str, profile_id: str):
+        async with ClientSession() as session:
+            await session.post(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/unshare/{profile_id}",
+                headers={"Authorization": user_token},
+            )
+
+    async def delete_profile(self, user_token: str, profile_id: str):
+        async with ClientSession() as session:
+            await session.delete(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/delete/{profile_id}",
+                headers={"Authorization": user_token},
+            )
+
+    async def get_twitch_streams(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{ModsEndpoint.twitch_streams.value}"
             ) as response:
                 return await response.json()

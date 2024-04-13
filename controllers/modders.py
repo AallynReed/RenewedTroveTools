@@ -1505,8 +1505,7 @@ class ModdersController(Controller):
             self.page.preferences.modders_tools.project_path = None
             self.page.preferences.save()
             await self.page.snack_bar.show("Project folder not found", color="red")
-            await self.load_tab()
-            return
+            return await self.load_tab()
         project_folder = project_path.joinpath(project_name)
         self.memory["projects"]["selected_project"] = project_folder
         rtt = project_folder.joinpath(".rtt")
