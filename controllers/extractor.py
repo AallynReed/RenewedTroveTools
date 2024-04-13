@@ -163,7 +163,7 @@ class ExtractorController(Controller):
                                     col=6,
                                 ),
                                 self.directory_dropdown,
-                            ],
+                            ]
                         ),
                         ResponsiveRow(
                             controls=[
@@ -234,9 +234,7 @@ class ExtractorController(Controller):
         )
         self.directory_progress = Column(
             controls=[
-                Row(
-                    controls=[Text("Loading files..."), Text("")],
-                ),
+                Row(controls=[Text("Loading files..."), Text("")]),
                 ProgressBar(value=0, expand=False),
             ],
             visible=False,
@@ -438,8 +436,7 @@ class ExtractorController(Controller):
             for directory in known_directories:
                 if not Path(event.path).joinpath(directory).exists():
                     return await self.page.snack_bar.show(
-                        "Please select a valid trove directory",
-                        color="red",
+                        "Please select a valid trove directory", color="red"
                     )
             trove_path = Path(event.path)
             self.directory_dropdown.value = (
@@ -824,14 +821,12 @@ class ExtractorController(Controller):
     async def pm_dont_show(self, _):
         self.page.preferences.dismissables.performance_mode = True
         self.page.preferences.save()
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
 
     async def am_dont_show(self, _):
         self.page.preferences.dismissables.advanced_mode = True
         self.page.preferences.save()
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
 
     async def warn_extraction(self, extraction_type: str):
         task = f"Do you really wish to extract {extraction_type} from {self.locations.extract_from} into {self.locations.extract_to}"
@@ -860,9 +855,8 @@ class ExtractorController(Controller):
         await self.warn_extraction("all")
 
     async def extract(self, event):
-        self.page.dialog.open = False
         self.main_controls.disabled = True
-        await self.page.update_async()
+        await self.page.dialog.hide()
         await asyncio.sleep(0.5)
         if event.control.data == "changes":
             self.cancel_extraction_button.visible = False

@@ -1495,8 +1495,7 @@ class ModdersController(Controller):
         await self.page.dialog.content.controls[4].update_async()
 
     async def create_project_result(self, event):
-        self.page.dialog.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
         project_name = self.page.dialog.content.controls[0].value
         author_string = self.page.dialog.content.controls[1].value
         authors = [a.strip() for a in author_string.split(",") if a.strip()]
