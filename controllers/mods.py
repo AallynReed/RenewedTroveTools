@@ -1523,15 +1523,15 @@ class ModsController(Controller):
                             RTTIconDecoButton(
                                 icon=icons.COPY,
                                 icon_color="blue",
-                                text=Text(f"{profile["clones"]}"),
-                                visible=profile["shared"]
+                                text=Text(f"{profile['clones']}"),
+                                visible=profile["shared"],
                             ),
                             RTTIconDecoButton(
                                 icon=icons.FAVORITE,
                                 icon_color="pink",
                                 text=Text(f"{len(profile['likes'])}"),
-                                visible=profile["shared"]
-                            )
+                                visible=profile["shared"],
+                            ),
                         ]
                     ),
                 ],
