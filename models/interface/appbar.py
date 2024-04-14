@@ -426,8 +426,7 @@ class CustomAppBar(AppBar):
                 "https://kiwiapi.slynx.xyz/v1/misc/feedback",
                 json=data,
             )
-        self.dlg.open = False
-        await self.page.update_async()
+        await self.page.dialog.hide()
 
     async def switch_debug(self, event):
         await self.go_to_update_page(event, True)

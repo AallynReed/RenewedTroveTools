@@ -263,6 +263,26 @@ class KiwiAPI:
                 headers={"Authorization": user_token},
             )
 
+    async def add_mods_to_profile(
+        self, user_token: str, profile_id: str, mod_hashes: list[str]
+    ):
+        async with ClientSession() as session:
+            await session.post(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/mod_hashes/{profile_id}",
+                headers={"Authorization": user_token},
+                json={"hashes": mod_hashes},
+            )
+
+    async def remove_mods_from_profile(
+        self, user_token: str, profile_id: str, mod_hashes: list[str]
+    ):
+        async with ClientSession() as session:
+            await session.delete(
+                f"{self.api_url}{ModsEndpoint.profiles.value}/mod_hashes/{profile_id}",
+                headers={"Authorization": user_token},
+                json={"hashes": mod_hashes},
+            )
+
     async def get_twitch_streams(self):
         async with ClientSession() as session:
             async with session.get(

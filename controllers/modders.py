@@ -943,7 +943,9 @@ class ModdersController(Controller):
         app_data = os.getenv("APPDATA")
         trove_path = Path(app_data).joinpath("Trove")
         config = trove_path.joinpath("Trove.cfg")
-        version = re.findall("LastModVersion = (\d+)", config.read_text(), re.MULTILINE)
+        version = re.findall(
+            r"LastModVersion = (\d+)", config.read_text(), re.MULTILINE
+        )
         return version[0]
 
     async def load_projects(self):

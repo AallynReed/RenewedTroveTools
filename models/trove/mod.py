@@ -289,7 +289,7 @@ class TroveMod:
             if file.trove_path == self.preview_path:
                 return base64.b64encode(file.data).decode("utf-8")
         return base64.b64encode(
-            open("assets/images/construction.png", "rb").read()
+            open("assets/images/no_preview.png", "rb").read()
         ).decode("utf-8")
 
     @property
@@ -656,7 +656,7 @@ class TroveModList:
                                             "ID": None,
                                             "Username": author,
                                             "Avatar": None,
-                                            "Role": None
+                                            "Role": None,
                                         }
                                         for author in mod.author.split(",")
                                     ]
@@ -667,7 +667,9 @@ class TroveModList:
                                             "format": "tmod",
                                             "authors": authors,
                                             "description": None,
-                                            "data": base64.b64encode(mod.tmod_content).decode("utf-8"),
+                                            "data": base64.b64encode(
+                                                mod.tmod_content
+                                            ).decode("utf-8"),
                                         }
                                     )
                                 else:
@@ -678,14 +680,16 @@ class TroveModList:
                                             "format": "zip",
                                             "authors": [],
                                             "description": None,
-                                            "data": base64.b64encode(mod.zip_content).decode("utf-8"),
+                                            "data": base64.b64encode(
+                                                mod.zip_content
+                                            ).decode("utf-8"),
                                         }
                                     )
-                await session.post(
-                    f"https://kiwiapi.slynx.xyz/v1/profile/upload_cloud_mods",
-                    json={"mods": uploads}
-                )
-
+                if uploads:
+                    await session.post(
+                        f"https://kiwiapi.slynx.xyz/v1/profile/upload_cloud_mods",
+                        json={"mods": uploads},
+                    )
 
     async def update_trovesaurus_data(self):
         async with ClientSession() as session:

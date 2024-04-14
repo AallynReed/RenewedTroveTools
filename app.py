@@ -23,9 +23,10 @@ if __name__ == "__main__":
                 if conn.pid in processes:
                     connections.append(conn)
                     if arguments:
-                        server = socket.create_connection((conn.laddr.ip, conn.laddr.port))
+                        server = socket.create_connection(
+                            (conn.laddr.ip, conn.laddr.port)
+                        )
                         server.sendall(json.dumps(arguments).encode())
                     break
     if not connections:
         app.run()
-

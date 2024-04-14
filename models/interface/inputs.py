@@ -6,8 +6,8 @@ from flet import TextField, TextStyle
 
 from utils.functions import long_throttle
 
-int_regex = re.compile("^-?\d+$")
-float_regex = re.compile("^-?\d+((?:\.|\,)\d*)?$")
+int_regex = re.compile(r"^-?\d+$")
+float_regex = re.compile(r"^-?\d+((?:\.|\,)\d*)?$")
 
 
 class AutoNumberField(TextField):

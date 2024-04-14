@@ -89,6 +89,9 @@ class App:
             self.logs_folder.mkdir(parents=True, exist_ok=True)
             self.app_data.mkdir(parents=True, exist_ok=True)
 
+    async def watcher_result(self, *args, **kwargs):
+        print(*args, **kwargs)
+
     async def load_configurations(self):
         self.page.user_data = None
         self.page.trove_time = ServerTime()
@@ -201,10 +204,10 @@ class App:
     async def renderer_error_logger(self, e):
         self.page.logger.error(e.data)
 
-    async def process_login(self):
+    async def process_login(self, logout=False):
         token = await self.page.client_storage.get_async("rnt-token")
         self.page.user_data = await self.login(token)
-        await self.post_login()
+        await self.post_login(logout=logout)
 
     async def login(self, token):
         if token is None:
@@ -238,14 +241,14 @@ class App:
     async def execute_logout(self, e):
         await self.page.client_storage.remove_async("rnt-token")
         await self.stop_tasks()
-        await self.process_login()
+        await self.process_login(logout=True)
 
-    async def post_login(self, route=None):
+    async def post_login(self, route=None, logout=False):
         await self.setup_appbar()
         await self.start_tasks()
 
         data = sys.argv[1:]
-        if data:
+        if data and not logout:
             uri = urlparse(data[0])
             if uri.scheme == "rtt":
                 params = {
@@ -257,6 +260,8 @@ class App:
                 params = {}
             await self.page.go_async(uri.path, **params)
         else:
+            if logout:
+                return await self.page.go_async("/")
             await self.page.go_async(route or "/")
 
     async def setup_appbar(self):

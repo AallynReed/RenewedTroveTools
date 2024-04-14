@@ -7,6 +7,7 @@ from pathlib import Path
 import flet_core.icons as icons
 from aiohttp import ClientSession
 from flet import (
+    MainAxisAlignment,
     Column,
     Row,
     Tabs,
@@ -34,8 +35,11 @@ from flet import (
     ButtonStyle,
     Switch,
     ImageFit,
+    PopupMenuButton,
+    PopupMenuItem,
+    WebView,
 )
-
+from models.interface import RTTChip, RTTIconDecoButton
 from models.interface import Controller
 from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
@@ -100,7 +104,7 @@ class ModsController(Controller):
                 2: self.load_trovesaurus_mods,
                 3: self.load_mod_profiles,
             }
-            self.mod_submenus.selected_index = 1
+            self.mod_submenus.selected_index = 3
             if self.page.params:
                 mod_id = self.page.params.get("mod_id")
                 if mod_id:
@@ -698,6 +702,15 @@ class ModsController(Controller):
             controls=[
                 mod_tile,
                 Tooltip(
+                    message="Add to Profile",
+                    content=IconButton(
+                        icons.ADD,
+                        on_click=self.add_my_mod_to_profile,
+                        data=mod,
+                        disabled=not bool(self.page.user_data),
+                    ),
+                ),
+                Tooltip(
                     message="Uninstall",
                     content=IconButton(
                         icons.DELETE, on_click=self.delete_mod, data=mod
@@ -731,10 +744,61 @@ class ModsController(Controller):
             ),
         )
 
+    async def add_my_mod_to_profile(self, event):
+        mod = event.control.data
+        profiles = await self.api.list_profiles(self.page.user_data["internal_token"])
+        if not profiles:
+            return await self.page.snack_bar.show(
+                "You don't have any profiles yet", color="red"
+            )
+        await self.page.dialog.set_data(
+            modal=True,
+            actions=[
+                TextButton("Close", on_click=self.page.RTT.close_dialog),
+            ],
+            content=Column(
+                controls=[
+                    Text("Add to Profile"),
+                    ListView(
+                        controls=[
+                            *(
+                                [
+                                    ListTile(
+                                        leading=Icon(icons.PERSON),
+                                        title=Text(profile["name"]),
+                                        on_click=self.add_my_mod_to_profile_confirm,
+                                        data=(profile, mod),
+                                    )
+                                    for profile in profiles
+                                ]
+                            )
+                        ]
+                    ),
+                ]
+            ),
+        )
+
+    async def add_my_mod_to_profile_confirm(self, event):
+        profile, mod = event.control.data
+        if mod.trovesaurus_data:
+            await self.api.remove_mods_from_profile(
+                self.page.user_data["internal_token"],
+                profile["profile_id"],
+                [f.hash for f in mod.trovesaurus_data.file_objs],
+            )
+        await self.api.add_mods_to_profile(
+            self.page.user_data["internal_token"],
+            profile["profile_id"],
+            [mod.hash],
+        )
+        await self.page.dialog.hide()
+        await self.page.snack_bar.show(f"Added {mod.name} to {profile['name']}")
+
     async def update_mods(self, event):
         await self.lock_ui()
         mods = event.control.data
         for mod in mods:
+            await mod.update()
             await mod.update()
         await self.tab_loader(boot=True)
         await self.page.snack_bar.show(f"Updated {len(mods)} mods")
@@ -1036,29 +1100,17 @@ class ModsController(Controller):
                             ),
                             Row(
                                 controls=[
-                                    Tooltip(
-                                        message="Downloads",
-                                        content=TextButton(
-                                            content=Row(
-                                                controls=[
-                                                    Icon(
-                                                        icons.DOWNLOAD, color="primary"
-                                                    ),
-                                                    Text(f"{mod.downloads:,}"),
-                                                ]
-                                            )
-                                        ),
+                                    RTTIconDecoButton(
+                                        icon=icons.DOWNLOAD,
+                                        text=Text(f"{mod.downloads:,}"),
+                                        icon_color="primary",
+                                        tooltip="Downloads",
                                     ),
-                                    Tooltip(
-                                        message="Likes",
-                                        content=TextButton(
-                                            content=Row(
-                                                controls=[
-                                                    Icon(icons.FAVORITE, color="pink"),
-                                                    Text(f"{mod.likes:,}"),
-                                                ]
-                                            )
-                                        ),
+                                    RTTIconDecoButton(
+                                        icon=icons.FAVORITE,
+                                        text=Text(f"{mod.likes:,}"),
+                                        icon_color="pink",
+                                        tooltip="Likes",
                                     ),
                                 ],
                                 alignment="end",
@@ -1166,9 +1218,9 @@ class ModsController(Controller):
                                                 alignment="center",
                                             ),
                                             height=64,
-                                            on_click=...,
+                                            on_click=self.add_trovesaurus_mod_to_profile,
                                             col=1.4,
-                                            disabled=True,
+                                            disabled=not bool(self.page.user_data),
                                         ),
                                     ]
                                 ),
@@ -1353,6 +1405,48 @@ class ModsController(Controller):
                 )
                 break
 
+    async def add_trovesaurus_mod_to_profile(self, _):
+        selected_file = self.memory["trovesaurus"]["selected_file"]
+        if selected_file is None:
+            return
+        profiles = await self.api.list_profiles(self.page.user_data["internal_token"])
+        if not profiles:
+            return await self.page.snack_bar.show("No profiles found", color="red")
+        await self.page.dialog.set_data(
+            title=Text("Add to profile"),
+            modal=True,
+            actions=[TextButton("Cancel", on_click=self.page.RTT.close_dialog)],
+            content=Column(
+                controls=[
+                    ListTile(
+                        data=(selected_file, profile),
+                        title=Text(profile["name"]),
+                        subtitle=Text(profile["description"]),
+                        leading=Image(
+                            src="https://trovesaurus.com/images/logos/Sage_64.png?1",
+                            width=24,
+                        ),
+                        on_click=self.add_trovesaurus_mod_to_profile_submit,
+                    )
+                    for profile in profiles
+                ]
+            ),
+        )
+
+    async def add_trovesaurus_mod_to_profile_submit(self, event):
+        (mod_data, file_data, hashes), profile = event.control.data
+        await self.api.remove_mods_from_profile(
+            self.page.user_data["internal_token"], profile["profile_id"], hashes
+        )
+        await self.api.add_mods_to_profile(
+            self.page.user_data["internal_token"],
+            profile["profile_id"],
+            [file_data.hash],
+        )
+        await self.page.dialog.hide()
+        await self.tab_loader(index=self.mod_submenus.selected_index)
+        await self.page.snack_bar.show(f"Added {mod_data.name} to {profile['name']}")
+
     async def install_mod(self, _):
         selected_file = self.memory["trovesaurus"]["selected_file"]
         if selected_file is None:
@@ -1390,5 +1484,301 @@ class ModsController(Controller):
             )
             await self.release_ui()
             return
-        self.mod_profiles.controls.append(Text("Mod Profiles"))
+        self.mod_profiles.controls.append(
+            TextButton(
+                content=Text("Create new profile"), on_click=self.create_new_profile
+            )
+        )
+        mod_profiles = await self.api.list_profiles(
+            self.page.user_data["internal_token"]
+        )
+        if not mod_profiles:
+            self.mod_profiles.controls.append(Text("No profiles found"))
+            await self.release_ui()
+            return
+        for profile in mod_profiles:
+            self.mod_profiles.controls.append(self.get_mod_profile_tile(profile))
         await self.release_ui()
+
+    def get_mod_profile_tile(self, profile):
+        return ExpansionTile(
+            data=profile,
+            title=Row(
+                controls=[
+                    Row(
+                        controls=[
+                            Icon(icons.PEOPLE if profile["shared"] else icons.LOCK),
+                            Text(profile["name"], size=22),
+                            Chip(
+                                data=profile["profile_id"],
+                                label=Text(f"Copy ID"),
+                                visible=profile["shared"],
+                                on_click=self.copy_profile_id,
+                            ),
+                            RTTChip(label=Text(f"{len(profile['mods'])} mods")),
+                        ]
+                    ),
+                    Row(
+                        controls=[
+                            RTTIconDecoButton(
+                                icon=icons.COPY,
+                                icon_color="blue",
+                                text=Text(f"{profile["clones"]}"),
+                                visible=profile["shared"]
+                            ),
+                            RTTIconDecoButton(
+                                icon=icons.FAVORITE,
+                                icon_color="pink",
+                                text=Text(f"{len(profile['likes'])}"),
+                                visible=profile["shared"]
+                            )
+                        ]
+                    ),
+                ],
+                alignment=MainAxisAlignment.SPACE_BETWEEN,
+            ),
+            subtitle=Text(profile["description"]),
+            trailing=PopupMenuButton(
+                icon=icons.MORE_VERT,
+                items=[
+                    PopupMenuItem(
+                        icon=(icons.SHARE if not profile["shared"] else icons.LOCK),
+                        text="Share" if not profile["shared"] else "Private",
+                        data=profile,
+                        on_click=self.toggle_share_profile,
+                    ),
+                    PopupMenuItem(
+                        icon=icons.EDIT,
+                        text="Edit",
+                        data=profile,
+                        on_click=self.edit_profile,
+                    ),
+                    PopupMenuItem(
+                        icon=icons.DELETE,
+                        text="Delete",
+                        data=profile,
+                        on_click=self.delete_profile,
+                    ),
+                ],
+            ),
+            controls=[
+                ListTile(
+                    leading=Image(
+                        src=f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod['hash']}"
+                    ),
+                    title=Row(
+                        controls=[
+                            *(
+                                [
+                                    TextButton(
+                                        mod["name"],
+                                        url=f"https://trovesaurus.com/mod={mod['mod_id']}",
+                                    )
+                                ]
+                                if mod.get("mod_id") is not None
+                                else [Text(mod["name"])]
+                            ),
+                            *(
+                                [
+                                    RTTChip(
+                                        leading=Image(
+                                            src="https://trovesaurus.com/images/logos/Sage_64.png?1"
+                                        ),
+                                        label=Text("Trovesaurus"),
+                                    )
+                                ]
+                                if mod.get("mod_id") is not None
+                                else [
+                                    RTTChip(
+                                        leading=Icon(icons.FOLDER), label=Text("Local")
+                                    )
+                                ]
+                            ),
+                            RTTChip(label=Text(mod["format"].upper())),
+                        ]
+                    ),
+                    subtitle=Column(
+                        controls=[
+                            Text(mod["description"], visible=bool(mod["description"])),
+                            Row(
+                                controls=[
+                                    *(
+                                        (
+                                            TextButton(
+                                                content=Row(
+                                                    controls=[
+                                                        Image(
+                                                            src=author["Avatar"],
+                                                            width=24,
+                                                        ),
+                                                        Tooltip(
+                                                            message=(
+                                                                author["Role"]
+                                                                if author["Role"]
+                                                                else "User"
+                                                            ),
+                                                            content=Text(
+                                                                author["Username"],
+                                                                color=ModAuthorRoleColors[
+                                                                    author[
+                                                                        "Role"
+                                                                    ].lower()
+                                                                ].value,
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                                url=f"https://trovesaurus.com/user={author['ID']}",
+                                            )
+                                            if author["ID"]
+                                            else TextButton(
+                                                content=Row(
+                                                    controls=[
+                                                        Icon(icons.PERSON),
+                                                        Text(author["Username"]),
+                                                    ]
+                                                ),
+                                                disabled=True,
+                                            )
+                                        )
+                                        for author in mod["authors"]
+                                    )
+                                ]
+                            ),
+                        ]
+                    ),
+                    trailing=IconButton(
+                        data=mod,
+                        icon=icons.DELETE,
+                        on_click=self.remove_mod_from_profile,
+                    ),
+                )
+                for mod in profile["mods"]
+            ],
+        )
+
+    async def remove_mod_from_profile(self, event):
+        holder = event.control.parent.parent
+        profile = holder.data
+        mod = event.control.data
+        await self.api.remove_mods_from_profile(
+            self.page.user_data["internal_token"], profile["profile_id"], [mod["hash"]]
+        )
+        profiles = await self.api.list_profiles(self.page.user_data["internal_token"])
+        for profile in profiles:
+            if profile["profile_id"] == holder.data["profile_id"]:
+                new_holder = self.get_mod_profile_tile(profile)
+                holder.title = new_holder.title
+                holder.subtitle = new_holder.subtitle
+                holder.controls = new_holder.controls
+                break
+        await event.control.update_async()
+        await self.page.snack_bar.show(f"Removed {mod['name']} from {profile['name']}")
+
+    async def copy_profile_id(self, event):
+        profile_id = event.control.data
+        await self.page.set_clipboard_async(profile_id)
+        await self.page.snack_bar.show("Profile ID copied to clipboard")
+
+    async def toggle_share_profile(self, event):
+        profile = event.control.data
+        shared = not profile["shared"]
+        if shared:
+            await self.api.share_profile(
+                self.page.user_data["internal_token"], profile["profile_id"]
+            )
+        else:
+            await self.api.private_profile(
+                self.page.user_data["internal_token"], profile["profile_id"]
+            )
+        await self.load_mod_profiles()
+
+    async def create_new_profile(self, event):
+        await self.page.dialog.set_data(
+            title=Text("Create new mod profile"),
+            modal=True,
+            actions=[
+                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+                TextButton("Create", on_click=self.create_profile),
+            ],
+            content=Column(
+                controls=[
+                    TextField(label="Profile name"),
+                    TextField(label="Profile description"),
+                ],
+                spacing=20,
+            ),
+        )
+
+    async def create_profile(self, event):
+        profile_name = self.page.dialog.content.controls[0].value
+        profile_description = self.page.dialog.content.controls[1].value
+        await self.api.create_profile(
+            self.page.user_data["internal_token"], profile_name, profile_description
+        )
+        await self.load_mod_profiles()
+        await self.page.dialog.hide()
+
+    async def edit_profile(self, event):
+        profile = event.control.data
+        await self.page.dialog.set_data(
+            title=Text("Edit mod profile"),
+            modal=True,
+            actions=[
+                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+                TextButton("Save", data=profile, on_click=self.edit_profile_save),
+            ],
+            content=Column(
+                controls=[
+                    TextField(label="Profile name", value=profile["name"]),
+                    TextField(
+                        label="Profile description", value=profile["description"]
+                    ),
+                    TextField(label="Profile Image URL", value=profile["image_url"]),
+                ],
+                spacing=20,
+            ),
+        )
+
+    async def edit_profile_save(self, event):
+        profile = event.control.data
+        profile_name = self.page.dialog.content.controls[0].value
+        profile_description = self.page.dialog.content.controls[1].value or ""
+        profile_image_url = self.page.dialog.content.controls[2].value or ""
+        update = {}
+        if profile_name and profile_name != profile["name"]:
+            update["name"] = profile_name
+        if (
+            profile_description is not None
+            and profile_description != profile["description"]
+        ):
+            update["description"] = profile_description or None
+        if profile_image_url is not None and profile_image_url != profile["image_url"]:
+            update["image_url"] = profile_image_url
+        await self.api.update_profile(
+            self.page.user_data["internal_token"], profile["profile_id"], **update
+        )
+        await self.load_mod_profiles()
+        await self.page.dialog.hide()
+        await self.page.snack_bar.show("Profile updated")
+
+    async def delete_profile(self, event):
+        await self.page.dialog.set_data(
+            title=Text("Delete profile"),
+            modal=True,
+            actions=[
+                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+                TextButton(
+                    "Delete",
+                    data=event.control.data,
+                    on_click=self.delete_profile_confirm,
+                ),
+            ],
+            content=Text("Are you sure you want to delete this profile?"),
+        )
+
+    async def delete_profile_confirm(self, event):
+        profile_id = event.control.data["profile_id"]
+        await self.api.delete_profile(self.page.user_data["internal_token"], profile_id)
+        await self.load_mod_profiles()
+        await self.page.dialog.hide()

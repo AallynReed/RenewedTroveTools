@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime, timedelta
-from utils.kiwiapi import KiwiAPI
 
+import humanize
 from flet import (
     Text,
     TextButton,
@@ -25,11 +25,17 @@ from flet import (
     colors,
     padding,
     TextSpan,
+    IconButton,
+    Icon,
+    icons,
+    ButtonStyle,
 )
+from flet_contrib.shimmer import Shimmer
 from pytz import UTC
-import humanize
+
 from models.interface import Controller
 from utils import tasks
+from utils.kiwiapi import KiwiAPI
 from utils.trove.mastery import points_to_mr
 
 
@@ -41,9 +47,11 @@ class HomeController(Controller):
             self.daily_data = self.page.data_files["daily_buffs.json"]
             self.weekly_data = self.page.data_files["weekly_buffs.json"]
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
+
         asyncio.create_task(self.post_setup())
 
     async def post_setup(self):
+        self.twitch_streams = Row(scroll=True)
         self.daily_widgets = Column(
             controls=[
                 Tooltip(
@@ -135,7 +143,7 @@ class HomeController(Controller):
                 )
                 for k, v in self.weekly_data.items()
             ],
-            alignment=MainAxisAlignment.CENTER,
+            alignment=MainAxisAlignment.START,
         )
         mastery_data = await self.api.get_mastery()
         live_mastery = mastery_data["normal"]["live"]
@@ -259,8 +267,7 @@ class HomeController(Controller):
                         f"{live['level']}",
                         spans=[
                             TextSpan(
-                                text=f"  ({live['points']:,})",
-                                style=TextStyle(size=11),
+                                text=f"  ({live['points']:,})", style=TextStyle(size=11)
                             )
                         ],
                         size=16,
@@ -324,7 +331,7 @@ class HomeController(Controller):
                             Row(
                                 controls=[self.live_mastery_widgets, self.dragons],
                                 vertical_alignment="start",
-                            ),
+                            )
                         ]
                     ),
                     expand=True,
@@ -335,13 +342,33 @@ class HomeController(Controller):
             vertical_alignment="start",
         )
         self.main.controls = [
-            Column(controls=[self.weekly_widgets, Divider(), self.widgets], expand=True)
+            Column(
+                controls=[
+                    Row(
+                        controls=[
+                            Image(
+                                src="assets/icons/brands/twitch.png",
+                                width=24,
+                                height=24,
+                            ),
+                            Text("Twitch Streams", size=16),
+                        ]
+                    ),
+                    self.twitch_streams,
+                    Divider(),
+                    self.weekly_widgets,
+                    Divider(),
+                    self.widgets,
+                ],
+                expand=True,
+            )
         ]
         tasks = [
             self.update_daily,
             self.update_weekly,
             self.update_luxion,
             self.update_corruxion,
+            self.update_twitch_streams,
         ]
         for task in tasks:
             if not task.is_running():
@@ -474,5 +501,56 @@ class HomeController(Controller):
                     )
                 )
             await self.corruxion.update_async()
+        except Exception as e:
+            print(e)
+
+    @tasks.loop(seconds=60)
+    async def update_twitch_streams(self):
+        try:
+            streams = await self.api.get_twitch_streams()
+            self.twitch_streams.controls.clear()
+            self.twitch_streams.controls = [
+                Container(
+                    Column(
+                        controls=[
+                            Container(
+                                Stack(
+                                    controls=[
+                                        Image(
+                                            src=stream["thumbnail_url"]
+                                            .replace("{width}", "160")
+                                            .replace("{height}", "90"),
+                                            width=160,
+                                            height=90,
+                                        ),
+                                        IconButton(
+                                            content=Row(
+                                                controls=[
+                                                    Icon(icons.VISIBILITY),
+                                                    Text(f"{stream['viewer_count']:,}"),
+                                                ]
+                                            )
+                                        ),
+                                    ]
+                                ),
+                                url=f"https://twitch.tv/{stream['user_name']}",
+                            ),
+                            Tooltip(
+                                message=stream["title"],
+                                content=TextButton(
+                                    stream["title"][:30],
+                                    width=160,
+                                    url=f"https://twitch.tv/{stream['user_name']}",
+                                    style=ButtonStyle(padding=padding.symmetric(0, 0)),
+                                ),
+                                prefer_below=True,
+                            ),
+                        ]
+                    ),
+                    padding=padding.all(10),
+                )
+                for stream in streams
+            ]
+            await self.twitch_streams.update_async()
         except Exception as e:
             print(e)

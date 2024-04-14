@@ -26,6 +26,7 @@ class LoginController(Controller):
             helper_style=TextStyle(color="red"),
             on_change=self.execute_login,
             content_padding=10,
+            autofocus=True,
         )
         self.main = Card(
             Container(
