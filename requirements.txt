@@ -16,3 +16,4 @@ aiofile
 toml
 vdf
 psutil
+sympy

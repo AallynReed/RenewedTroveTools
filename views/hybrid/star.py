@@ -13,7 +13,7 @@ class StarView(View):
     def __init__(self, page):
         ctrl = StarChartController(page=page)
         super().__init__(
-            self.route,
+            route=self.route,
             controls=[
                 Column(controls=[ctrl.map], expand=True, scroll=ScrollMode.ADAPTIVE)
             ],

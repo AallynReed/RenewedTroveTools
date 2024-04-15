@@ -33,7 +33,9 @@ from flet import (
     icons,
     ButtonStyle,
     ResponsiveRow,
+    TextField,
 )
+from sympy import sympify
 
 from models.interface import Controller
 from models.interface import HomeWidget, RTTChip
@@ -46,7 +48,7 @@ class HomeController(Controller):
     def setup_controls(self):
         if not hasattr(self, "widgets"):
             self.api = KiwiAPI()
-            self.main = Column(expand=True)
+            self.main = Column()
             self.daily_data = self.page.data_files["daily_buffs.json"]
             self.weekly_data = self.page.data_files["weekly_buffs.json"]
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
@@ -282,6 +284,7 @@ class HomeController(Controller):
                             TextButton(
                                 content=Text(name, size=20),
                                 url="https://trovesaurus.com/corruxion",
+                                style=ButtonStyle(padding=padding.symmetric(0, 0)),
                             ),
                             text,
                         ],
@@ -354,34 +357,162 @@ class HomeController(Controller):
 
     @tasks.loop(seconds=60)
     async def update_mastery(self):
-        mastery_data = await self.api.get_mastery()
-        live_mastery = mastery_data["normal"]["live"]
-        pts_mastery = mastery_data["normal"]["pts"]
-        live_g_mastery = mastery_data["geode"]["live"]
-        pts_g_mastery = mastery_data["geode"]["pts"]
-        x, y, z = points_to_mr(live_mastery)
-        live = {
-            "points": live_mastery,
-            "level": x,
-            "remaining": y,
-            "needed": z,
-            "percentage": round(y / z, 2),
-        }
-        x, y, z = points_to_mr(live_g_mastery)
-        geode = {
-            "points": live_g_mastery,
-            "level": x,
-            "remaining": y,
-            "needed": z,
-            "percentage": round(y / z, 2),
-        }
-        mastery_widgets = Row(
-            controls=[
-                Card(
-                    content=Container(
-                        Column(
+        try:
+            is_admin = self.page.user_data["is_admin"] if self.page.user_data else False
+            mastery_data = await self.api.get_mastery()
+            live_mastery = mastery_data["normal"]["live"]
+            pts_mastery = mastery_data["normal"]["pts"]
+            live_g_mastery = mastery_data["geode"]["live"]
+            pts_g_mastery = mastery_data["geode"]["pts"]
+            x, y, z = points_to_mr(live_mastery)
+            live = {
+                "points": live_mastery,
+                "level": x,
+                "remaining": y,
+                "needed": z,
+                "percentage": round(y / z, 2),
+            }
+            x, y, z = points_to_mr(live_g_mastery)
+            geode = {
+                "points": live_g_mastery,
+                "level": x,
+                "remaining": y,
+                "needed": z,
+                "percentage": round(y / z, 2),
+            }
+            mastery_widgets = Row(
+                controls=[
+                    Card(
+                        content=Container(
+                            Column(
+                                controls=[
+                                    Text("Live Trove Mastery", size=20),
+                                    Row(
+                                        controls=[
+                                            Text(
+                                                f"{live['level']}",
+                                                spans=[
+                                                    TextSpan(
+                                                        text=f"  ({live['points']:,})",
+                                                        style=TextStyle(size=11),
+                                                    )
+                                                ],
+                                                size=16,
+                                            ),
+                                            IconButton(
+                                                data=("live", "normal", live["points"]),
+                                                icon=icons.EDIT,
+                                                style=ButtonStyle(
+                                                    padding=padding.all(0)
+                                                ),
+                                                on_click=self.edit_mastery,
+                                                visible=is_admin,
+                                            ),
+                                        ]
+                                    ),
+                                    ProgressBar(
+                                        width=200,
+                                        value=live["percentage"],
+                                        color=colors.YELLOW_600,
+                                        bar_height=10,
+                                    ),
+                                    Row(
+                                        controls=[
+                                            Text(live["remaining"]),
+                                            Text(
+                                                f"{round(live['percentage'] * 100, 2)}%"
+                                            ),
+                                            Text(live["needed"]),
+                                        ],
+                                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                                        width=180,
+                                    ),
+                                ],
+                                horizontal_alignment=CrossAxisAlignment.CENTER,
+                            ),
+                            padding=padding.symmetric(10, 10),
+                        )
+                    ),
+                    Card(
+                        content=Container(
+                            Column(
+                                controls=[
+                                    Text("Live Geode Mastery", size=20),
+                                    Row(
+                                        controls=[
+                                            Text(
+                                                f"{geode['level']}",
+                                                spans=[
+                                                    TextSpan(
+                                                        text=f"  ({geode['points']:,})",
+                                                        style=TextStyle(size=11),
+                                                    )
+                                                ],
+                                                size=16,
+                                            ),
+                                            IconButton(
+                                                data=("live", "geode", geode["points"]),
+                                                icon=icons.EDIT,
+                                                style=ButtonStyle(
+                                                    padding=padding.all(0)
+                                                ),
+                                                on_click=self.edit_mastery,
+                                                visible=is_admin,
+                                            ),
+                                        ]
+                                    ),
+                                    ProgressBar(
+                                        width=200,
+                                        value=geode["percentage"],
+                                        color=colors.CYAN_400,
+                                        bar_height=10,
+                                    ),
+                                    Row(
+                                        controls=[
+                                            Text(geode["remaining"]),
+                                            Text(
+                                                f"{round(geode['percentage'] * 100, 2)}%"
+                                            ),
+                                            Text(geode["needed"]),
+                                        ],
+                                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                                        width=180,
+                                    ),
+                                ],
+                                horizontal_alignment=CrossAxisAlignment.CENTER,
+                            ),
+                            padding=padding.symmetric(10, 10),
+                        )
+                    ),
+                ],
+                alignment=MainAxisAlignment.SPACE_AROUND,
+            )
+            x, y, z = points_to_mr(pts_mastery)
+            live = {
+                "points": pts_mastery,
+                "level": x,
+                "remaining": y,
+                "needed": z,
+                "percentage": round(y / z, 2),
+            }
+            x, y, z = points_to_mr(pts_g_mastery)
+            geode = {
+                "points": pts_g_mastery,
+                "level": x,
+                "remaining": y,
+                "needed": z,
+                "percentage": round(y / z, 2),
+            }
+            if (
+                bool(live_mastery < pts_mastery or live_g_mastery < pts_g_mastery)
+                or is_admin
+            ):
+                mastery_widgets.controls[0].content.content.controls.extend(
+                    [
+                        Divider(height=1),
+                        Text("PTS Trove Mastery", size=20),
+                        Row(
                             controls=[
-                                Text("Live Trove Mastery", size=20),
                                 Text(
                                     f"{live['level']}",
                                     spans=[
@@ -392,32 +523,38 @@ class HomeController(Controller):
                                     ],
                                     size=16,
                                 ),
-                                ProgressBar(
-                                    width=200,
-                                    value=live["percentage"],
-                                    color=colors.YELLOW_600,
-                                    bar_height=10,
+                                IconButton(
+                                    data=("pts", "normal", live["points"]),
+                                    icon=icons.EDIT,
+                                    style=ButtonStyle(padding=padding.all(0)),
+                                    on_click=self.edit_mastery,
+                                    visible=is_admin,
                                 ),
-                                Row(
-                                    controls=[
-                                        Text(live["remaining"]),
-                                        Text(f"{round(live['percentage'] * 100, 2)}%"),
-                                        Text(live["needed"]),
-                                    ],
-                                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180,
-                                ),
-                            ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER,
+                            ]
                         ),
-                        padding=padding.symmetric(10, 10),
-                    )
-                ),
-                Card(
-                    content=Container(
-                        Column(
+                        ProgressBar(
+                            width=200,
+                            value=live["percentage"],
+                            color=colors.YELLOW_600,
+                            bar_height=10,
+                        ),
+                        Row(
                             controls=[
-                                Text("Live Geode Mastery", size=20),
+                                Text(live["remaining"]),
+                                Text(f"{round(live['percentage'] * 100, 2)}%"),
+                                Text(live["needed"]),
+                            ],
+                            alignment=MainAxisAlignment.SPACE_BETWEEN,
+                            width=180,
+                        ),
+                    ]
+                )
+                mastery_widgets.controls[1].content.content.controls.extend(
+                    [
+                        Divider(height=1),
+                        Text("PTS Geode Mastery", size=20),
+                        Row(
+                            controls=[
                                 Text(
                                     f"{geode['level']}",
                                     spans=[
@@ -428,110 +565,36 @@ class HomeController(Controller):
                                     ],
                                     size=16,
                                 ),
-                                ProgressBar(
-                                    width=200,
-                                    value=geode["percentage"],
-                                    color=colors.CYAN_400,
-                                    bar_height=10,
+                                IconButton(
+                                    data=("pts", "geode", geode["points"]),
+                                    icon=icons.EDIT,
+                                    style=ButtonStyle(padding=padding.all(0)),
+                                    on_click=self.edit_mastery,
+                                    visible=is_admin,
                                 ),
-                                Row(
-                                    controls=[
-                                        Text(geode["remaining"]),
-                                        Text(f"{round(geode['percentage'] * 100, 2)}%"),
-                                        Text(geode["needed"]),
-                                    ],
-                                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                    width=180,
-                                ),
-                            ],
-                            horizontal_alignment=CrossAxisAlignment.CENTER,
+                            ]
                         ),
-                        padding=padding.symmetric(10, 10),
-                    )
-                ),
-            ],
-            alignment=MainAxisAlignment.SPACE_AROUND,
-        )
-        x, y, z = points_to_mr(pts_mastery)
-        live = {
-            "points": pts_mastery,
-            "level": x,
-            "remaining": y,
-            "needed": z,
-            "percentage": round(y / z, 2),
-        }
-        x, y, z = points_to_mr(pts_g_mastery)
-        geode = {
-            "points": pts_g_mastery,
-            "level": x,
-            "remaining": y,
-            "needed": z,
-            "percentage": round(y / z, 2),
-        }
-        if bool(live_mastery < pts_mastery or live_g_mastery < pts_g_mastery):
-            mastery_widgets.controls[0].content.content.controls.extend(
-                [
-                    Divider(),
-                    Text("PTS Trove Mastery", size=20),
-                    Text(
-                        f"{live['level']}",
-                        spans=[
-                            TextSpan(
-                                text=f"  ({live['points']:,})", style=TextStyle(size=11)
-                            )
-                        ],
-                        size=16,
-                    ),
-                    ProgressBar(
-                        width=200,
-                        value=live["percentage"],
-                        color=colors.YELLOW_600,
-                        bar_height=10,
-                    ),
-                    Row(
-                        controls=[
-                            Text(live["remaining"]),
-                            Text(f"{round(live['percentage'] * 100, 2)}%"),
-                            Text(live["needed"]),
-                        ],
-                        alignment=MainAxisAlignment.SPACE_BETWEEN,
-                        width=180,
-                    ),
-                ]
-            )
-            mastery_widgets.controls[1].content.content.controls.extend(
-                [
-                    Divider(),
-                    Text("PTS Geode Mastery", size=20),
-                    Text(
-                        f"{geode['level']}",
-                        spans=[
-                            TextSpan(
-                                text=f"  ({geode['points']:,})",
-                                style=TextStyle(size=11),
-                            )
-                        ],
-                        size=16,
-                    ),
-                    ProgressBar(
-                        width=200,
-                        value=geode["percentage"],
-                        color=colors.CYAN_400,
-                        bar_height=10,
-                    ),
-                    Row(
-                        controls=[
-                            Text(geode["remaining"]),
-                            Text(f"{round(geode['percentage'] * 100, 2)}%"),
-                            Text(geode["needed"]),
-                        ],
-                        alignment=MainAxisAlignment.SPACE_BETWEEN,
-                        width=180,
-                    ),
-                ]
-            )
-        self.mastery_widget.set_controls(mastery_widgets)
-        await self.mastery_widget.update_async()
+                        ProgressBar(
+                            width=200,
+                            value=geode["percentage"],
+                            color=colors.CYAN_400,
+                            bar_height=10,
+                        ),
+                        Row(
+                            controls=[
+                                Text(geode["remaining"]),
+                                Text(f"{round(geode['percentage'] * 100, 2)}%"),
+                                Text(geode["needed"]),
+                            ],
+                            alignment=MainAxisAlignment.SPACE_BETWEEN,
+                            width=180,
+                        ),
+                    ]
+                )
+            self.mastery_widget.set_controls(mastery_widgets)
+            await self.mastery_widget.update_async()
+        except Exception as e:
+            print(e)
 
     @tasks.loop(seconds=60)
     async def update_events(self):
@@ -599,3 +662,45 @@ class HomeController(Controller):
                     await self.events_widget.update_async()
         except Exception as e:
             print(e)
+
+    async def edit_mastery(self, event):
+        server, mastery_type, points = event.control.data
+        await self.page.dialog.set_data(
+            title=Text("Edit Mastery"),
+            modal=True,
+            actions=[
+                TextButton("Save", data=event.control.data, on_click=self.save_mastery),
+                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+            ],
+            content=Column(
+                controls=[
+                    Text("Server: " + server.upper()),
+                    Text("Type: " + ("Trove" if mastery_type == "normal" else "Geode")),
+                    TextField(label="Points", value=points),
+                ],
+                expand=True,
+            ),
+        )
+
+    async def save_mastery(self, event):
+        value = self.page.dialog.dialog.content.controls[2].value
+        server, mastery_type, _ = event.control.data
+        final_value = int(sympify(value).evalf())
+        mastery_data = await self.api.get_mastery()
+        for m_t in mastery_data:
+            mastery_data[m_t]["updated"] = int(
+                datetime.fromisoformat(mastery_data[m_t]["updated"]).timestamp()
+            )
+        mastery_data[mastery_type][server] = final_value
+        mastery_data[mastery_type]["updated"] = int(datetime.now(UTC).timestamp())
+        if server == "live":
+            if mastery_data[mastery_type]["pts"] < final_value:
+                mastery_data[mastery_type]["pts"] = final_value
+        await self.api.update_mastery(
+            self.page.user_data["internal_token"], mastery_data
+        )
+        await self.page.dialog.hide()
+        self.update_mastery.cancel()
+        while self.update_mastery.is_running():
+            await asyncio.sleep(1)
+        self.update_mastery.start()

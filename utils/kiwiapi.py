@@ -218,6 +218,14 @@ class KiwiAPI:
             ) as response:
                 return await response.json()
 
+    async def update_mastery(self, user_token: str, mastery_data: dict):
+        async with ClientSession() as session:
+            await session.put(
+                f"{self.api_url}{ModsEndpoint.mastery.value}",
+                headers={"Authorization": user_token},
+                json={"mastery_data": mastery_data},
+            )
+
     async def create_profile(self, user_token: str, name: str, description: str):
         async with ClientSession() as session:
             await session.post(
