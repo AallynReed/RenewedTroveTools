@@ -98,9 +98,9 @@ class HomeController(Controller):
             Column(
                 controls=[
                     self.streams_widget,
-                    Divider(),
+                    Divider(height=1),
                     self.weekly_widget,
-                    Divider(),
+                    Divider(height=1),
                     ResponsiveRow(
                         controls=[
                             Row(
@@ -109,7 +109,7 @@ class HomeController(Controller):
                             Column(
                                 controls=[
                                     self.dragons_widget,
-                                    Divider(),
+                                    Divider(height=1),
                                     self.mastery_widget,
                                 ],
                                 col=3.5,
@@ -218,6 +218,7 @@ class HomeController(Controller):
                                         BlendMode.SATURATION if v != current else None
                                     ),
                                     src=v["banner"],
+                                    width=200,
                                 ),
                                 Container(
                                     gradient=LinearGradient(
@@ -225,8 +226,8 @@ class HomeController(Controller):
                                         end=alignment.center_right,
                                         colors=["#ff000000", "#00000000"],
                                     ),
-                                    width=200,
-                                    height=182,
+                                    width=100,
+                                    height=113,
                                 ),
                                 Text(
                                     v["name"],
@@ -276,7 +277,7 @@ class HomeController(Controller):
                     "Arriving "
                     + humanize.naturaltime(-trove_time.until_next_dragon(first))
                 )
-            image = Image(src=image_src, width=50, height=50)
+            image = Image(src=image_src, width=40, height=40)
             dragon_control = Card(
                 Container(
                     Column(
@@ -290,8 +291,9 @@ class HomeController(Controller):
                             text,
                         ],
                         horizontal_alignment=CrossAxisAlignment.CENTER,
+                        spacing=0,
                     ),
-                    padding=padding.all(10),
+                    padding=padding.all(5),
                 )
             )
             dragon_controls.append(dragon_control)
@@ -403,6 +405,8 @@ class HomeController(Controller):
                                             IconButton(
                                                 data=("live", "normal", live["points"]),
                                                 icon=icons.EDIT,
+                                                icon_size=16,
+                                                padding=padding.all(0),
                                                 style=ButtonStyle(
                                                     padding=padding.all(0)
                                                 ),
@@ -454,6 +458,8 @@ class HomeController(Controller):
                                             IconButton(
                                                 data=("live", "geode", geode["points"]),
                                                 icon=icons.EDIT,
+                                                icon_size=16,
+                                                padding=padding.all(0),
                                                 style=ButtonStyle(
                                                     padding=padding.all(0)
                                                 ),
@@ -527,6 +533,8 @@ class HomeController(Controller):
                                 IconButton(
                                     data=("pts", "normal", live["points"]),
                                     icon=icons.EDIT,
+                                    icon_size=16,
+                                    padding=padding.all(0),
                                     style=ButtonStyle(padding=padding.all(0)),
                                     on_click=self.edit_mastery,
                                     visible=is_admin,
@@ -569,6 +577,8 @@ class HomeController(Controller):
                                 IconButton(
                                     data=("pts", "geode", geode["points"]),
                                     icon=icons.EDIT,
+                                    icon_size=16,
+                                    padding=padding.all(0),
                                     style=ButtonStyle(padding=padding.all(0)),
                                     on_click=self.edit_mastery,
                                     visible=is_admin,
