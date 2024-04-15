@@ -2,10 +2,12 @@ from datetime import datetime, timedelta, timezone, UTC
 
 
 class ServerTime:
-    def __init__(self):
+    def __init__(self, page):
+        self.page = page
         self.trove_time = timedelta(hours=11)
         self.dragon_duration = timedelta(days=3)
         self.dragon_interval = timedelta(days=14)
+        self.first_week_buff = datetime(2020, 3, 23, tzinfo=UTC)
         self.first_luxion = datetime(2024, 3, 1, tzinfo=UTC)
         self.first_corruxion = datetime(2024, 3, 8, tzinfo=UTC)
 
@@ -16,7 +18,30 @@ class ServerTime:
     def now(self):
         return datetime.now(UTC) - self.trove_time
 
-    # Luxion
+    # Daily
+    @property
+    def daily_buffs(self):
+        return self.page.data_files["daily_buffs.json"]
+
+    @property
+    def current_daily_buffs(self):
+        return self.daily_buffs[str(self.now.weekday())]
+
+    # Weekly
+
+    @property
+    def weekly_buffs(self):
+        return self.page.data_files["weekly_buffs.json"]
+
+    @property
+    def current_weekly_buffs(self):
+        week_length = 60 * 60 * 24 * 7
+        weeks = (self.now.timestamp() - self.first_week_buff.timestamp()) // week_length
+        time_split = weeks / 4
+        time_find = (time_split - int(time_split)) * 4
+        return self.weekly_buffs[str(int(time_find))]
+
+    # Dragons
 
     def _calculate_dragon(self, first):
         delta = self.now - first

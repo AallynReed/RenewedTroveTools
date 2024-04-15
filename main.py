@@ -94,7 +94,7 @@ class App:
 
     async def load_configurations(self):
         self.page.user_data = None
-        self.page.trove_time = ServerTime()
+        self.page.trove_time = ServerTime(self.page)
         if self.page.web:
             self.page.preferences = await Preferences.load_from_web(self.page)
         else:

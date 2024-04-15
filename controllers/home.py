@@ -1,12 +1,15 @@
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, UTC
 
 import humanize
+from aiohttp import ClientSession
 from flet import (
+    ListTile,
     Text,
     TextButton,
     Column,
     Divider,
+    VerticalDivider,
     Container,
     Image,
     Stack,
@@ -29,11 +32,11 @@ from flet import (
     Icon,
     icons,
     ButtonStyle,
+    ResponsiveRow,
 )
-from flet_contrib.shimmer import Shimmer
-from pytz import UTC
 
 from models.interface import Controller
+from models.interface import HomeWidget, RTTChip
 from utils import tasks
 from utils.kiwiapi import KiwiAPI
 from utils.trove.mastery import points_to_mr
@@ -51,11 +54,95 @@ class HomeController(Controller):
         asyncio.create_task(self.post_setup())
 
     async def post_setup(self):
-        self.twitch_streams = Row(scroll=True)
-        self.daily_widgets = Column(
-            controls=[
+        self.streams_widget = HomeWidget(
+            image="assets/icons/brands/twitch.png",
+            title="Twitch Streams",
+            title_size=20,
+            controls=[Text("Loading...")],
+        )
+        self.daily_widget = HomeWidget(
+            icon=icons.CALENDAR_VIEW_DAY,
+            title="Daily Bonuses",
+            title_size=20,
+            controls=[Text("Loading...")],
+            column_spacing=0,
+        )
+        self.weekly_widget = HomeWidget(
+            icon=icons.CALENDAR_VIEW_WEEK,
+            title="Weekly Bonuses",
+            title_size=20,
+            controls=[Text("Loading...")],
+        )
+        self.events_widget = HomeWidget(
+            icon=icons.EVENT,
+            title="Events",
+            title_size=20,
+            controls=[Text("Loading...")],
+        )
+        self.dragons_widget = HomeWidget(
+            icon=icons.STORE,
+            title="Dragon Merchants",
+            title_size=20,
+            controls=[Text("Loading...")],
+        )
+        self.mastery_widget = HomeWidget(
+            icon=icons.QUERY_STATS,
+            title="Max Mastery",
+            title_size=20,
+            controls=[Text("Loading...")],
+        )
+        self.main.controls = [
+            Column(
+                controls=[
+                    self.streams_widget,
+                    Divider(),
+                    self.weekly_widget,
+                    Divider(),
+                    ResponsiveRow(
+                        controls=[
+                            Row(
+                                controls=[self.daily_widget, VerticalDivider()], col=2.2
+                            ),
+                            Column(
+                                controls=[
+                                    self.dragons_widget,
+                                    Divider(),
+                                    self.mastery_widget,
+                                ],
+                                col=3.5,
+                            ),
+                            Row(
+                                controls=[VerticalDivider(), self.events_widget],
+                                col=6.3,
+                            ),
+                        ]
+                    ),
+                ],
+                expand=True,
+            )
+        ]
+        tasks = [
+            self.update_twitch_streams,
+            self.update_weekly,
+            self.update_daily,
+            self.update_dragons,
+            self.update_mastery,
+            self.update_events,
+        ]
+        for task in tasks:
+            if not task.is_running():
+                task.start()
+        await self.main.update_async()
+
+    def setup_events(self): ...
+
+    @tasks.loop(seconds=60)
+    async def update_daily(self):
+        buffs = self.page.trove_time.daily_buffs
+        current = self.page.trove_time.current_daily_buffs
+        self.daily_widget.set_controls(
+            [
                 Tooltip(
-                    data=k,
                     vertical_offset=50,
                     message="\n".join(
                         [
@@ -69,8 +156,10 @@ class HomeController(Controller):
                         controls=[
                             Image(
                                 scale=1.5,
-                                color="black",
-                                color_blend_mode=BlendMode.SATURATION,
+                                color="black" if v != current else None,
+                                color_blend_mode=(
+                                    BlendMode.SATURATION if v != current else None
+                                ),
                                 src=v["banner"],
                                 left=-125,
                             ),
@@ -101,50 +190,170 @@ class HomeController(Controller):
                     prefer_below=False,
                     wait_duration=250,
                 )
-                for k, v in self.daily_data.items()
-            ],
-            spacing=0,
+                for k, v in buffs.items()
+            ]
         )
-        self.weekly_widgets = Row(
-            controls=[
-                Tooltip(
-                    data=k,
-                    message="\n".join(["Buffs", *[" \u2022 " + b for b in v["buffs"]]]),
-                    content=Stack(
-                        controls=[
-                            Image(
-                                color="black",
-                                color_blend_mode=BlendMode.SATURATION,
-                                src=v["banner"],
-                            ),
-                            Container(
-                                gradient=LinearGradient(
-                                    begin=alignment.center_left,
-                                    end=alignment.center_right,
-                                    colors=["#ff000000", "#00000000"],
+        await self.daily_widget.update_async()
+
+    @tasks.loop(seconds=60)
+    async def update_weekly(self):
+        buffs = self.page.trove_time.weekly_buffs
+        current = self.page.trove_time.current_weekly_buffs
+        self.weekly_widget.set_controls(
+            Row(
+                controls=[
+                    Tooltip(
+                        data=k,
+                        message="\n".join(
+                            ["Buffs", *[" \u2022 " + b for b in v["buffs"]]]
+                        ),
+                        content=Stack(
+                            controls=[
+                                Image(
+                                    color="black" if v != current else None,
+                                    color_blend_mode=(
+                                        BlendMode.SATURATION if v != current else None
+                                    ),
+                                    src=v["banner"],
                                 ),
-                                width=200,
-                                height=182,
-                            ),
-                            Text(v["name"], color="#cccccc", size=16, left=10, top=3),
-                        ]
-                    ),
-                    border_radius=10,
-                    bgcolor="#1E1E28",
-                    text_style=TextStyle(color="#cccccc"),
-                    border=Border(
-                        BorderSide(width=2, color="#" + v["color"]),
-                        BorderSide(width=2, color="#" + v["color"]),
-                        BorderSide(width=2, color="#" + v["color"]),
-                        BorderSide(width=2, color="#" + v["color"]),
-                    ),
-                    prefer_below=False,
-                    wait_duration=250,
-                )
-                for k, v in self.weekly_data.items()
-            ],
-            alignment=MainAxisAlignment.START,
+                                Container(
+                                    gradient=LinearGradient(
+                                        begin=alignment.center_left,
+                                        end=alignment.center_right,
+                                        colors=["#ff000000", "#00000000"],
+                                    ),
+                                    width=200,
+                                    height=182,
+                                ),
+                                Text(
+                                    v["name"],
+                                    color="#cccccc",
+                                    size=16,
+                                    left=10,
+                                    top=3,
+                                ),
+                            ]
+                        ),
+                        border_radius=10,
+                        bgcolor="#1E1E28",
+                        text_style=TextStyle(color="#cccccc"),
+                        border=Border(
+                            BorderSide(width=2, color="#" + v["color"]),
+                            BorderSide(width=2, color="#" + v["color"]),
+                            BorderSide(width=2, color="#" + v["color"]),
+                            BorderSide(width=2, color="#" + v["color"]),
+                        ),
+                        prefer_below=False,
+                        wait_duration=250,
+                    )
+                    for k, v in buffs.items()
+                ]
+            )
         )
+        await self.weekly_widget.update_async()
+
+    @tasks.loop(seconds=60)
+    async def update_dragons(self):
+        trove_time = self.page.trove_time
+        dragons = (
+            ("Luxion", trove_time.first_luxion, "lux"),
+            ("Corruxion", trove_time.first_corruxion, "nlux"),
+        )
+        dragon_controls = []
+        for name, first, image_name in dragons:
+            if trove_time.is_dragon(first):
+                image_src = f"assets/images/dragons/{image_name}.png"
+                text = Text(
+                    "Leaving "
+                    + humanize.naturaltime(-trove_time.until_end_dragon(first))
+                )
+            else:
+                image_src = f"assets/images/dragons/{image_name}_out.png"
+                text = Text(
+                    "Arriving "
+                    + humanize.naturaltime(-trove_time.until_next_dragon(first))
+                )
+            image = Image(src=image_src, width=50, height=50)
+            dragon_control = Card(
+                Container(
+                    Column(
+                        controls=[
+                            image,
+                            TextButton(
+                                content=Text(name, size=20),
+                                url="https://trovesaurus.com/corruxion",
+                            ),
+                            text,
+                        ],
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                    ),
+                    padding=padding.all(10),
+                )
+            )
+            dragon_controls.append(dragon_control)
+        self.dragons_widget.set_controls(
+            Row(controls=dragon_controls, alignment=MainAxisAlignment.SPACE_AROUND)
+        )
+        await self.dragons_widget.update_async()
+
+    @tasks.loop(seconds=60)
+    async def update_twitch_streams(self):
+        streams = await self.api.get_twitch_streams()
+        self.streams_widget.set_controls(
+            Row(
+                controls=[
+                    Container(
+                        Column(
+                            controls=[
+                                Container(
+                                    Stack(
+                                        controls=[
+                                            Image(
+                                                src=stream["thumbnail_url"]
+                                                .replace("{width}", "160")
+                                                .replace("{height}", "90"),
+                                                width=160,
+                                                height=90,
+                                            ),
+                                            IconButton(
+                                                content=Row(
+                                                    controls=[
+                                                        Icon(icons.VISIBILITY),
+                                                        Text(
+                                                            f"{stream['viewer_count']:,}"
+                                                        ),
+                                                    ]
+                                                )
+                                            ),
+                                        ]
+                                    ),
+                                    url=f"https://twitch.tv/{stream['user_name']}",
+                                ),
+                                Tooltip(
+                                    message=stream["title"],
+                                    content=TextButton(
+                                        stream["title"][:30],
+                                        width=160,
+                                        url=f"https://twitch.tv/{stream['user_name']}",
+                                        style=ButtonStyle(
+                                            padding=padding.symmetric(0, 0)
+                                        ),
+                                    ),
+                                    prefer_below=True,
+                                ),
+                            ]
+                        ),
+                        padding=padding.all(10),
+                    )
+                    for stream in streams
+                ],
+                scroll=True,
+            ),
+        )
+        await self.streams_widget.update_async()
+
+    @tasks.loop(seconds=60)
+    async def update_mastery(self):
         mastery_data = await self.api.get_mastery()
         live_mastery = mastery_data["normal"]["live"]
         pts_mastery = mastery_data["normal"]["pts"]
@@ -166,7 +375,7 @@ class HomeController(Controller):
             "needed": z,
             "percentage": round(y / z, 2),
         }
-        self.live_mastery_widgets = Row(
+        mastery_widgets = Row(
             controls=[
                 Card(
                     content=Container(
@@ -240,7 +449,8 @@ class HomeController(Controller):
                         padding=padding.symmetric(10, 10),
                     )
                 ),
-            ]
+            ],
+            alignment=MainAxisAlignment.SPACE_AROUND,
         )
         x, y, z = points_to_mr(pts_mastery)
         live = {
@@ -259,7 +469,7 @@ class HomeController(Controller):
             "percentage": round(y / z, 2),
         }
         if bool(live_mastery < pts_mastery or live_g_mastery < pts_g_mastery):
-            self.live_mastery_widgets.controls[0].content.content.controls.extend(
+            mastery_widgets.controls[0].content.content.controls.extend(
                 [
                     Divider(),
                     Text("PTS Trove Mastery", size=20),
@@ -289,7 +499,7 @@ class HomeController(Controller):
                     ),
                 ]
             )
-            self.live_mastery_widgets.controls[1].content.content.controls.extend(
+            mastery_widgets.controls[1].content.content.controls.extend(
                 [
                     Divider(),
                     Text("PTS Geode Mastery", size=20),
@@ -320,237 +530,72 @@ class HomeController(Controller):
                     ),
                 ]
             )
-        self.luxion = Card()
-        self.corruxion = Card()
-        self.dragons = Row(controls=[self.luxion, self.corruxion])
-        self.widgets = Row(
-            controls=[
-                Container(
-                    content=Column(
-                        controls=[
-                            Row(
-                                controls=[self.live_mastery_widgets, self.dragons],
-                                vertical_alignment="start",
-                            )
-                        ]
-                    ),
-                    expand=True,
-                ),
-                self.daily_widgets,
-            ],
-            alignment=MainAxisAlignment.END,
-            vertical_alignment="start",
-        )
-        self.main.controls = [
-            Column(
-                controls=[
-                    Row(
-                        controls=[
-                            Image(
-                                src="assets/icons/brands/twitch.png",
-                                width=24,
-                                height=24,
-                            ),
-                            Text("Twitch Streams", size=16),
-                        ]
-                    ),
-                    self.twitch_streams,
-                    Divider(),
-                    self.weekly_widgets,
-                    Divider(),
-                    self.widgets,
-                ],
-                expand=True,
-            )
-        ]
-        tasks = [
-            self.update_daily,
-            self.update_weekly,
-            self.update_luxion,
-            self.update_corruxion,
-            self.update_twitch_streams,
-        ]
-        for task in tasks:
-            if not task.is_running():
-                task.start()
-        await self.main.update_async()
-
-    def setup_events(self): ...
+        self.mastery_widget.set_controls(mastery_widgets)
+        await self.mastery_widget.update_async()
 
     @tasks.loop(seconds=60)
-    async def update_daily(self):
-        while True:
-            try:
-                now = datetime.utcnow() - timedelta(hours=11)
-                for control in self.daily_widgets.controls:
-                    stack = control.content
-                    if int(control.data) == now.weekday():
-                        stack.controls[0].color = None
-                        stack.controls[0].color_blend_mode = None
-                    else:
-                        stack.controls[0].color = "black"
-                        stack.controls[0].color_blend_mode = BlendMode.SATURATION
-                await self.daily_widgets.update_async()
-            except AssertionError:
-                await asyncio.sleep(1)
-                continue
-            except Exception as e:
-                print(e)
-            await asyncio.sleep(3)
-            break
-
-    @tasks.loop(seconds=60)
-    async def update_weekly(self):
-        while True:
-            try:
-                initial = datetime(2020, 3, 23, tzinfo=UTC) - timedelta(hours=11)
-                now = datetime.utcnow() - timedelta(hours=11)
-                week_length = 60 * 60 * 24 * 7
-                weeks = (now.timestamp() - initial.timestamp()) // week_length
-                time_split = weeks / 4
-                time_find = (time_split - int(time_split)) * 4
-                for control in self.weekly_widgets.controls:
-                    stack = control.content
-                    if int(control.data) == int(time_find):
-                        stack.controls[0].color = None
-                        stack.controls[0].color_blend_mode = None
-                    else:
-                        stack.controls[0].color = "black"
-                        stack.controls[0].color_blend_mode = BlendMode.SATURATION
-                await self.weekly_widgets.update_async()
-            except AssertionError:
-                await asyncio.sleep(1)
-                continue
-            except Exception as e:
-                print(e)
-            await asyncio.sleep(3)
-            break
-
-    @tasks.loop(seconds=60)
-    async def update_luxion(self):
+    async def update_events(self):
         try:
-            trove_time = self.page.trove_time
-            luxion = trove_time.first_luxion
-            image = Image(width=50, height=50)
-            self.luxion.content = Container(
-                Column(
-                    controls=[
-                        image,
-                        TextButton(
-                            content=Text("Luxion", size=20),
-                            url="https://trovesaurus.com/luxion",
-                        ),
-                    ],
-                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                ),
-                padding=padding.all(10),
-            )
-            if trove_time.is_dragon(luxion):
-                image.src = "assets/images/dragons/lux.png"
-                self.luxion.content.content.controls.append(
-                    Text(
-                        "Leaving "
-                        + humanize.naturaltime(-trove_time.until_end_dragon(luxion))
-                    )
-                )
-            else:
-                image.src = "assets/images/dragons/lux_out.png"
-                self.luxion.content.content.controls.append(
-                    Text(
-                        "Arriving "
-                        + humanize.naturaltime(-trove_time.until_next_dragon(luxion))
-                    )
-                )
-            await self.luxion.update_async()
-        except Exception as e:
-            print(e)
 
-    @tasks.loop(seconds=60)
-    async def update_corruxion(self):
-        try:
-            trove_time = self.page.trove_time
-            corruxion = trove_time.first_corruxion
-            image = Image(width=50, height=50)
-            self.corruxion.content = Container(
-                Column(
-                    controls=[
-                        image,
-                        TextButton(
-                            content=Text("Corruxion", size=20),
-                            url="https://trovesaurus.com/corruxion",
-                        ),
-                    ],
-                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                ),
-                padding=padding.all(10),
-            )
-            if trove_time.is_dragon(corruxion):
-                image.src = "assets/images/dragons/nlux.png"
-                self.corruxion.content.content.controls.append(
-                    Text(
-                        "Leaving "
-                        + humanize.naturaltime(-trove_time.until_end_dragon(corruxion))
-                    )
-                )
-            else:
-                image.src = "assets/images/dragons/nlux_out.png"
-                self.corruxion.content.content.controls.append(
-                    Text(
-                        "Arriving "
-                        + humanize.naturaltime(-trove_time.until_next_dragon(corruxion))
-                    )
-                )
-            await self.corruxion.update_async()
-        except Exception as e:
-            print(e)
-
-    @tasks.loop(seconds=60)
-    async def update_twitch_streams(self):
-        try:
-            streams = await self.api.get_twitch_streams()
-            self.twitch_streams.controls.clear()
-            self.twitch_streams.controls = [
-                Container(
-                    Column(
-                        controls=[
-                            Container(
-                                Stack(
+            async with ClientSession() as session:
+                async with session.get(
+                    "https://trovesaurus.com/calendar/feed"
+                ) as response:
+                    events = await response.json()
+                    self.events_widget.set_controls(
+                        [
+                            ListTile(
+                                title=Row(
                                     controls=[
-                                        Image(
-                                            src=stream["thumbnail_url"]
-                                            .replace("{width}", "160")
-                                            .replace("{height}", "90"),
-                                            width=160,
-                                            height=90,
+                                        TextButton(
+                                            content=Text(
+                                                event["name"],
+                                                size=20,
+                                            ),
+                                            style=ButtonStyle(
+                                                padding=padding.all(0),
+                                            ),
+                                            url=event["url"],
                                         ),
-                                        IconButton(
-                                            content=Row(
-                                                controls=[
-                                                    Icon(icons.VISIBILITY),
-                                                    Text(f"{stream['viewer_count']:,}"),
-                                                ]
+                                        RTTChip(
+                                            label=Text(event["category"]),
+                                            label_padding=padding.all(0),
+                                            padding=padding.symmetric(0, 5),
+                                        ),
+                                    ]
+                                ),
+                                subtitle=Row(
+                                    controls=[
+                                        Text(
+                                            humanize.naturalday(
+                                                datetime.fromtimestamp(
+                                                    int(event["startdate"]),
+                                                    UTC,
+                                                ),
+                                                "%B %d",
+                                            )
+                                        ),
+                                        Text(" - "),
+                                        Text(
+                                            humanize.naturalday(
+                                                datetime.fromtimestamp(
+                                                    int(event["enddate"]),
+                                                    UTC,
+                                                ),
+                                                "%B %d",
                                             )
                                         ),
                                     ]
                                 ),
-                                url=f"https://twitch.tv/{stream['user_name']}",
-                            ),
-                            Tooltip(
-                                message=stream["title"],
-                                content=TextButton(
-                                    stream["title"][:30],
-                                    width=160,
-                                    url=f"https://twitch.tv/{stream['user_name']}",
-                                    style=ButtonStyle(padding=padding.symmetric(0, 0)),
+                                leading=Image(
+                                    src=event["image"],
+                                    height=150,
+                                    width=150,
                                 ),
-                                prefer_below=True,
-                            ),
+                            )
+                            for event in events
                         ]
-                    ),
-                    padding=padding.all(10),
-                )
-                for stream in streams
-            ]
-            await self.twitch_streams.update_async()
+                    )
+                    await self.events_widget.update_async()
         except Exception as e:
             print(e)
