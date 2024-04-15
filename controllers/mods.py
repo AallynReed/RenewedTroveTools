@@ -104,7 +104,7 @@ class ModsController(Controller):
                 2: self.load_trovesaurus_mods,
                 3: self.load_mod_profiles,
             }
-            self.mod_submenus.selected_index = 3
+            self.mod_submenus.selected_index = 1
             if self.page.params:
                 mod_id = self.page.params.get("mod_id")
                 if mod_id:
