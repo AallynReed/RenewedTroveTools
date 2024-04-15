@@ -60,6 +60,7 @@ class HomeController(Controller):
             image="assets/icons/brands/twitch.png",
             title="Twitch Streams",
             title_size=20,
+            title_url="https://www.twitch.tv/directory/category/trove",
             controls=[Text("Loading...")],
         )
         self.daily_widget = HomeWidget(
