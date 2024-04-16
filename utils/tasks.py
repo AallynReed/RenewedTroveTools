@@ -200,6 +200,8 @@ class Loop(Generic[LF]):
             self._is_being_cancelled = True
             raise
         except Exception as exc:
+            self.cancel()
+            print(f"Killed task {self.coro.__name__} due to exception: {exc}")
             self._has_failed = True
             await self._call_loop_function("error", exc)
             raise exc
