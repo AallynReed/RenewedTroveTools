@@ -323,7 +323,7 @@ class HomeController(Controller):
                         image,
                         TextButton(
                             content=Text(f"[{phase_text}] Fluxion", size=20),
-                            url="https://trovesaurus.com/fluxion",
+                            url="https://trovesaurus.com/fluxion/list",
                             style=ButtonStyle(padding=padding.symmetric(0, 0)),
                         ),
                         text,
