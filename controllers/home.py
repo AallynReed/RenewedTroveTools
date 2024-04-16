@@ -230,11 +230,7 @@ class HomeController(Controller):
                                     height=113,
                                 ),
                                 Text(
-                                    v["name"],
-                                    color="#cccccc",
-                                    size=16,
-                                    left=10,
-                                    top=3,
+                                    v["name"], color="#cccccc", size=16, left=10, top=3
                                 ),
                             ]
                         ),
@@ -268,14 +264,18 @@ class HomeController(Controller):
             if trove_time.is_dragon(first):
                 image_src = f"assets/images/dragons/{image_name}.png"
                 text = Text(
-                    "Leaving "
-                    + humanize.naturaltime(-trove_time.until_end_dragon(first))
+                    "Leaving in "
+                    + humanize.naturaltime(-trove_time.until_end_dragon(first)).replace(
+                        " from now", ""
+                    )
                 )
             else:
                 image_src = f"assets/images/dragons/{image_name}_out.png"
                 text = Text(
-                    "Arriving "
-                    + humanize.naturaltime(-trove_time.until_next_dragon(first))
+                    "Arriving in "
+                    + humanize.naturaltime(
+                        -trove_time.until_next_dragon(first)
+                    ).replace(" from now", "")
                 )
             image = Image(src=image_src, width=40, height=40)
             dragon_control = Card(
@@ -285,7 +285,7 @@ class HomeController(Controller):
                             image,
                             TextButton(
                                 content=Text(name, size=20),
-                                url="https://trovesaurus.com/corruxion",
+                                url=f"https://trovesaurus.com/{name.lower()}",
                                 style=ButtonStyle(padding=padding.symmetric(0, 0)),
                             ),
                             text,
@@ -293,10 +293,49 @@ class HomeController(Controller):
                         horizontal_alignment=CrossAxisAlignment.CENTER,
                         spacing=0,
                     ),
-                    padding=padding.all(5),
+                    padding=padding.symmetric(5, 15),
                 )
             )
             dragon_controls.append(dragon_control)
+        if trove_time.is_fluxion():
+            image_src = "assets/images/dragons/fluxion.png"
+            phase_text = "Voting" if trove_time.is_fluxion_voting() else "Selling"
+            text = Text(
+                "Leaving in "
+                + humanize.naturaltime(-trove_time.until_end_fluxion()).replace(
+                    " from now", ""
+                )
+            )
+        else:
+            image_src = "assets/images/dragons/fluxion_out.png"
+            phase_text = "Voting" if trove_time.is_fluxion_selling() else "Selling"
+            text = Text(
+                "Arriving in "
+                + humanize.naturaltime(-trove_time.until_next_fluxion()).replace(
+                    " from now", ""
+                )
+            )
+        image = Image(src=image_src, width=40, height=40)
+        dragon_control = Card(
+            Container(
+                Column(
+                    controls=[
+                        image,
+                        TextButton(
+                            content=Text(f"[{phase_text}] Fluxion", size=20),
+                            url="https://trovesaurus.com/fluxion",
+                            style=ButtonStyle(padding=padding.symmetric(0, 0)),
+                        ),
+                        text,
+                    ],
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
+                    spacing=0,
+                ),
+                width=180,
+                padding=padding.symmetric(5, 15),
+            )
+        )
+        dragon_controls.append(dragon_control)
         self.dragons_widget.set_controls(
             Row(controls=dragon_controls, alignment=MainAxisAlignment.SPACE_AROUND)
         )
@@ -354,7 +393,7 @@ class HomeController(Controller):
                     for stream in streams
                 ],
                 scroll=True,
-            ),
+            )
         )
         await self.streams_widget.update_async()
 
@@ -622,13 +661,8 @@ class HomeController(Controller):
                                 title=Row(
                                     controls=[
                                         TextButton(
-                                            content=Text(
-                                                event["name"],
-                                                size=20,
-                                            ),
-                                            style=ButtonStyle(
-                                                padding=padding.all(0),
-                                            ),
+                                            content=Text(event["name"], size=20),
+                                            style=ButtonStyle(padding=padding.all(0)),
                                             url=event["url"],
                                         ),
                                         RTTChip(
@@ -643,8 +677,7 @@ class HomeController(Controller):
                                         Text(
                                             humanize.naturalday(
                                                 datetime.fromtimestamp(
-                                                    int(event["startdate"]),
-                                                    UTC,
+                                                    int(event["startdate"]), UTC
                                                 ),
                                                 "%B %d",
                                             )
@@ -653,8 +686,7 @@ class HomeController(Controller):
                                         Text(
                                             humanize.naturalday(
                                                 datetime.fromtimestamp(
-                                                    int(event["enddate"]),
-                                                    UTC,
+                                                    int(event["enddate"]), UTC
                                                 ),
                                                 "%B %d",
                                             )
@@ -662,9 +694,7 @@ class HomeController(Controller):
                                     ]
                                 ),
                                 leading=Image(
-                                    src=event["image"],
-                                    height=150,
-                                    width=150,
+                                    src=event["image"], height=150, width=150
                                 ),
                             )
                             for event in events
