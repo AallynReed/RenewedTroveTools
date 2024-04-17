@@ -108,6 +108,7 @@ class Loop(Generic[LF]):
         time: Union[datetime.time, Sequence[datetime.time]],
         count: Optional[int],
         reconnect: bool,
+        log_errors: bool,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
@@ -123,6 +124,7 @@ class Loop(Generic[LF]):
         self._before_loop = None
         self._after_loop = None
         self._is_being_cancelled = False
+        self._log_errors = log_errors
         self._has_failed = False
         self._stop_next_iteration = False
         if self.count is not None and self.count <= 0:
@@ -201,7 +203,8 @@ class Loop(Generic[LF]):
             raise
         except Exception as exc:
             self.cancel()
-            print(f"Killed task {self.coro.__name__} due to exception: {exc}")
+            if self._log_errors:
+                print(f"Killed task {self.coro.__name__} due to exception: {exc}")
             self._has_failed = True
             await self._call_loop_function("error", exc)
             raise exc
@@ -224,6 +227,7 @@ class Loop(Generic[LF]):
             time=self._time,
             count=self.count,
             reconnect=self.reconnect,
+            log_errors=self._log_errors,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
@@ -456,6 +460,7 @@ def loop(
     time: Union[datetime.time, Sequence[datetime.time]] = MISSING,
     count: Optional[int] = None,
     reconnect: bool = True,
+    log_errors: bool = False,
 ) -> Callable[[LF], Loop[LF]]:
     def decorator(func: LF) -> Loop[LF]:
         return Loop[LF](
@@ -466,6 +471,7 @@ def loop(
             count=count,
             time=time,
             reconnect=reconnect,
+            log_errors=log_errors,
         )
 
     return decorator
