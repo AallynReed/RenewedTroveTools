@@ -72,6 +72,7 @@ async def check_update(current_version, debug=False, force=False):
 class CustomAppBar(AppBar):
     def __init__(self, page, **kwargs):
         self.page = page
+        self.update_notified = False
         actions = self.build_actions(kwargs)
         super().__init__(
             bgcolor=SURFACE_VARIANT,
@@ -375,21 +376,23 @@ class CustomAppBar(AppBar):
         await asyncio.sleep(1)
         update = await check_update(self.page.metadata.version, self.page.metadata.dev)
         if update[0] is not None:
-            await self.page.dialog.set_data(
-                modal=True,
-                title=Text("Update available"),
-                content=Text(
-                    "A new update is available, do you want to download it?\n"
-                    "The application will download update and close itself to install it.\n"
-                    "After the installation is complete, the application will be automatically restarted.\n\n"
-                    "Keeping the app up to date is important to ensure that you have the latest features and bug fixes."
-                ),
-                actions=[
-                    TextButton("Later", on_click=self.page.RTT.close_dialog),
-                    TextButton("Update", on_click=self.go_to_update_page),
-                ],
-                actions_alignment=MainAxisAlignment.END,
-            )
+            if not self.update_notified:
+                await self.page.dialog.set_data(
+                    modal=True,
+                    title=Text("Update available"),
+                    content=Text(
+                        "A new update is available, do you want to download it?\n"
+                        "The application will download update and close itself to install it.\n"
+                        "After the installation is complete, the application will be automatically restarted.\n\n"
+                        "Keeping the app up to date is important to ensure that you have the latest features and bug fixes."
+                    ),
+                    actions=[
+                        TextButton("Later", on_click=self.page.RTT.close_dialog),
+                        TextButton("Update", on_click=self.go_to_update_page),
+                    ],
+                    actions_alignment=MainAxisAlignment.END,
+                )
+                self.update_notified = True
             self.page.appbar.actions[0].visible = True
             await self.page.snack_bar.show(
                 "A new update is available, click on the download icon to update.",
