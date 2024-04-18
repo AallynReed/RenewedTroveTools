@@ -75,10 +75,7 @@ class CustomAppBar(AppBar):
         self.update_notified = False
         actions = self.build_actions(kwargs)
         super().__init__(
-            bgcolor=SURFACE_VARIANT,
-            actions=actions,
-            center_title=True,
-            **kwargs,
+            bgcolor=SURFACE_VARIANT, actions=actions, center_title=True, **kwargs
         )
         self.i = 0
         if not page.web:
@@ -104,9 +101,7 @@ class CustomAppBar(AppBar):
                     tooltip="Changelog",
                 ),
                 IconButton(
-                    icon=FEEDBACK,
-                    on_click=self.feedback_modal,
-                    tooltip="Send feedback",
+                    icon=FEEDBACK, on_click=self.feedback_modal, tooltip="Send feedback"
                 ),
                 IconButton(
                     data="theme_switcher",
@@ -232,12 +227,12 @@ class CustomAppBar(AppBar):
                                         data="logout",
                                         text="Logout",
                                         on_click=self.page.RTT.execute_logout,
-                                    ),
+                                    )
                                 ]
                                 if self.page.user_data is not None
                                 else []
                             ),
-                        ),
+                        )
                     ]
                     if not self.page.web
                     else []
@@ -345,10 +340,7 @@ class CustomAppBar(AppBar):
                     content.controls.append(
                         Column(
                             controls=[
-                                Text(
-                                    f"Version {version}",
-                                    size=20,
-                                ),
+                                Text(f"Version {version}", size=20),
                                 *(
                                     [
                                         Text(
@@ -359,15 +351,13 @@ class CustomAppBar(AppBar):
                                         for change in version_data["commits"]
                                     ]
                                 ),
-                            ],
+                            ]
                         )
                     )
         await self.page.dialog.set_data(
             modal=True,
             title=Text("Changelog"),
-            actions=[
-                TextButton("Close", on_click=self.page.RTT.close_dialog),
-            ],
+            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
             actions_alignment=MainAxisAlignment.END,
             content=content,
         )
@@ -402,11 +392,7 @@ class CustomAppBar(AppBar):
 
     async def feedback_modal(self, event):
         self.feedback_text = TextField(
-            width=800,
-            expand=True,
-            multiline=True,
-            max_lines=10,
-            min_lines=5,
+            width=800, expand=True, multiline=True, max_lines=10, min_lines=5
         )
         await self.page.dialog.set_data(
             modal=True,
@@ -422,13 +408,8 @@ class CustomAppBar(AppBar):
 
     async def send_feedback(self, event):
         async with ClientSession() as session:
-            data = {
-                "message": self.feedback_text.value,
-            }
-            await session.post(
-                "https://kiwiapi.slynx.xyz/v1/misc/feedback",
-                json=data,
-            )
+            data = {"message": self.feedback_text.value}
+            await session.post("https://kiwiapi.slynx.xyz/v1/misc/feedback", json=data)
         await self.page.dialog.hide()
 
     async def switch_debug(self, event):
@@ -455,7 +436,7 @@ class CustomAppBar(AppBar):
                     alignment="center",
                     horizontal_alignment="center",
                     expand=True,
-                ),
+                )
             ]
             event.control.disabled = True
             await self.page.update_async()
@@ -471,11 +452,7 @@ class CustomAppBar(AppBar):
                         update_file = rtt_path / "update.msi"
                         update_file.write_bytes(await response.read())
                         subprocess.Popen(
-                            [
-                                "update.bat",
-                                str(exe_location),
-                                str(update_file),
-                            ],
+                            ["update.bat", str(exe_location), str(update_file)],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
@@ -527,9 +504,7 @@ class CustomAppBar(AppBar):
         await self.page.dialog.set_data(
             modal=True,
             title=Text("About"),
-            actions=[
-                TextButton("Close", on_click=self.page.RTT.close_dialog),
-            ],
+            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
             actions_alignment=MainAxisAlignment.END,
             content=Text(
                 "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.\n\nI am coding this as an hobby with the goal of"
