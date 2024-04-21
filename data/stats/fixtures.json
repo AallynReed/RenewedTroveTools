@@ -1,0 +1,12 @@
+{
+    "Shrine of Skill": [
+        [12, 100],
+        [10, 15]
+    ],
+    "Shrine of Ferocity": [
+        [5, 15]
+    ],
+    "Shrine of Vitality": [
+        [1, 100]
+    ]
+}
