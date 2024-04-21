@@ -2051,7 +2051,7 @@
                 "Stats": [
                     {
                         "name": "Attack Speed",
-                        "percentage": false,
+                        "percentage": true,
                         "value": 3
                     }
                 ],
@@ -2077,7 +2077,7 @@
                                 "Stats": [
                                     {
                                         "name": "Attack Speed",
-                                        "percentage": false,
+                                        "percentage": true,
                                         "value": 6
                                     }
                                 ],
@@ -2149,7 +2149,7 @@
                                                         "Stats": [
                                                             {
                                                                 "name": "Attack Speed",
-                                                                "percentage": false,
+                                                                "percentage": true,
                                                                 "value": 10
                                                             }
                                                         ],
