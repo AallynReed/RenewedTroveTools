@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
+from json import load
 
 
 class TroveStatNames(Enum):
     maximum_health = "Maximum Health"
     bonus_maximum_health = "Maximum Health"
-    health_regen = "Health Regen"
-    bonus_health_regen = "Health Regen Bonus"
+    health_regen = "Health Regeneration"
+    bonus_health_regen = "Health Regeneration Bonus"
     neutral_damage = "Damage"
     bonus_neutral_damage = "Damage Bonus"
     physical_damage = "Physical Damage"
@@ -25,6 +26,11 @@ class TroveStatNames(Enum):
     stability = "Stability"
     magic_find = "Magic Find"
     bonus_magic_find = "Magic Find Bonus"
+    power_rank = "Power Rank"
+    energy_regen = "Energy Regeneration"
+    bonus_energy_regen = "Energy Regeneration Bonus"
+    maximum_energy = "Maximum Energy"
+    lasermancy = "Lasermancy"
 
 
 class TroveStats(Enum):
@@ -50,6 +56,11 @@ class TroveStats(Enum):
     stability = 1 << 19
     magic_find = 1 << 20
     bonus_magic_find = 1 << 21
+    power_rank = 1 << 22
+    energy_regen = 1 << 23
+    bonus_energy_regen = 1 << 24
+    maximum_energy = 1 << 25
+    lasermancy = 1 << 26
 
 
 class TroveStatBonus(Enum):
@@ -75,6 +86,11 @@ class TroveStatBonus(Enum):
     stability = False
     magic_find = False
     bonus_magic_find = True
+    power_rank = False
+    energy_regen = False
+    bonus_energy_regen = True
+    maximum_energy = False
+    lasermancy = False
 
 
 @dataclass
@@ -132,6 +148,9 @@ class TroveStat:
         return self._value <= other._value
 
     def __add__(self, other):
+        if isinstance(other, (int, float)):
+            self._value += other
+            return self
         if not isinstance(other, TroveStat):
             raise ValueError("Cannot add TroveStat with non-TroveStat")
         if self.id != other.id:
@@ -139,6 +158,9 @@ class TroveStat:
         return TroveStat(self._id, self._value + other._value)
 
     def __sub__(self, other):
+        if isinstance(other, (int, float)):
+            self._value -= other
+            return self
         if not isinstance(other, TroveStat):
             raise ValueError("Cannot subtract TroveStat with non-TroveStat")
         if self.id != other.id:
@@ -146,6 +168,9 @@ class TroveStat:
         return TroveStat(self._id, self._value - other._value)
 
     def __mul__(self, other):
+        if isinstance(other, (int, float)):
+            self._value *= other
+            return self
         if not isinstance(other, TroveStat):
             raise ValueError("Cannot multiply TroveStat with non-TroveStat")
         if self.id != other.id:
@@ -153,11 +178,17 @@ class TroveStat:
         return TroveStat(self._id, self._value * other._value)
 
     def __truediv__(self, other):
+        if isinstance(other, (int, float)):
+            self._value /= other
+            return self
         if not isinstance(other, TroveStat):
             raise ValueError("Cannot divide TroveStat with non-TroveStat")
         if self.id != other.id:
             raise ValueError("Cannot divide TroveStat with different stat")
         return TroveStat(self._id, self._value / other._value)
+
+    def __repr__(self):
+        return f"TroveStat({self.stat_name}={self._value})"
 
     @property
     def id(self):
@@ -186,7 +217,3 @@ class TroveStat:
     @property
     def stat_str(self):
         return f"{self.value_str} {self.stat_name}"
-
-
-stat_1 = TroveStat.create(7, 540)
-stat_2 = TroveStat.create(7, 540)
