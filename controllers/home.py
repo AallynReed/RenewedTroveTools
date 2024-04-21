@@ -37,6 +37,7 @@ from flet import (
 )
 from sympy import sympify
 
+from models.constants import files_cache
 from models.interface import Controller
 from models.interface import HomeWidget, RTTChip
 from utils import tasks
@@ -49,8 +50,8 @@ class HomeController(Controller):
         if not hasattr(self, "widgets"):
             self.api = KiwiAPI()
             self.main = Column()
-            self.daily_data = self.page.data_files["daily_buffs.json"]
-            self.weekly_data = self.page.data_files["weekly_buffs.json"]
+            self.daily_data = files_cache["daily_buffs.json"]
+            self.weekly_data = files_cache["weekly_buffs.json"]
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
 
         asyncio.create_task(self.post_setup())

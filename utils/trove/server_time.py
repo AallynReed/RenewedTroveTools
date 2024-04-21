@@ -1,4 +1,6 @@
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import datetime, timedelta, UTC
+
+from models.constants import files_cache
 
 
 class ServerTime:
@@ -23,7 +25,7 @@ class ServerTime:
     # Daily
     @property
     def daily_buffs(self):
-        return self.page.data_files["daily_buffs.json"]
+        return files_cache["daily_buffs.json"]
 
     @property
     def current_daily_buffs(self):
@@ -33,7 +35,7 @@ class ServerTime:
 
     @property
     def weekly_buffs(self):
-        return self.page.data_files["weekly_buffs.json"]
+        return files_cache["weekly_buffs.json"]
 
     @property
     def current_weekly_buffs(self):

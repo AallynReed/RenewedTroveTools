@@ -1,0 +1,154 @@
+{
+    "name": "Bard",
+    "qualified_name": "bard",
+    "shorts": [
+        "BD"
+    ],
+    "damage_type": "Magic",
+    "weapons": [
+        "Fist"
+    ],
+    "attributes": [],
+    "stats": [
+        {
+            "name": "Physical Damage",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Magic Damage",
+            "value": 2376,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health",
+            "value": 4850,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health %",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Energy",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Health Regen",
+            "value": 25,
+            "percentage": false
+        },
+        {
+            "name": "Energy Regen",
+            "value": 136,
+            "percentage": false
+        },
+        {
+            "name": "Movement Speed",
+            "value": 46,
+            "percentage": false
+        },
+        {
+            "name": "Attack Speed",
+            "value": 131,
+            "percentage": true
+        },
+        {
+            "name": "Jump",
+            "value": 4,
+            "percentage": false
+        },
+        {
+            "name": "Critical Hit",
+            "value": 13.5,
+            "percentage": true
+        },
+        {
+            "name": "Critical Damage",
+            "value": 75,
+            "percentage": true
+        },
+        {
+            "name": "Light",
+            "value": 0,
+            "percentage": false
+        }
+    ],
+    "bonuses": [
+        {
+            "name": "Physical Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Magic Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Health Regen",
+            "value": 0,
+            "percentage": true
+        }
+    ],
+    "subclass": {
+        "name": "Personal Song",
+        "description": "Sing yourself a little song when you head into battle. When attacking gain Jubilant, Peaceful, and Battle song buffs in that order.",
+        "level": {
+            "1": [
+                {
+                    "name": "Critical Damage",
+                    "value": 1,
+                    "percentage": true
+                }
+            ],
+            "10": [
+                {
+                    "name": "Critical Damage",
+                    "value": 3,
+                    "percentage": true
+                }
+            ],
+            "15": [
+                {
+                    "name": "Critical Damage",
+                    "value": 6,
+                    "percentage": true
+                }
+            ],
+            "20": [
+                {
+                    "name": "Critical Damage",
+                    "value": 9,
+                    "percentage": true
+                }
+            ],
+            "25": [
+                {
+                    "name": "Critical Damage",
+                    "value": 12,
+                    "percentage": true
+                }
+            ],
+            "30": [
+                {
+                    "name": "Critical Damage",
+                    "value": 15,
+                    "percentage": true
+                }
+            ]
+        },
+        "power": {
+            "1": "",
+            "5000": "",
+            "10000": "",
+            "15000": "",
+            "20000": "",
+            "25000": "",
+            "30000": "",
+            "35000": ""
+        }
+    }
+}

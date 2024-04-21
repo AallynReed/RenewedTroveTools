@@ -22,6 +22,7 @@ from flet import (
     TextField,
 )
 
+from models.constants import files_cache
 from models.interface import Controller, ScrollingFrame
 from models.trove.star_chart import get_star_chart, StarType
 
@@ -35,7 +36,7 @@ class StarChartController(Controller):
     def setup_controls(self):
         if not hasattr(self, "map"):
             self.selected_stat = None
-            self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
+            self.star_chart = get_star_chart(files_cache["star_chart.json"])
             self.map = ResponsiveRow()
             self.star_details = Column(col={"xxl": 6.5})
             if self.page.params:
@@ -235,7 +236,7 @@ class StarChartController(Controller):
         await self.page.update_async()
 
     async def reset_chart(self, _):
-        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
+        self.star_chart = get_star_chart(files_cache["star_chart.json"])
         self.setup_controls()
         await self.page.update_async()
 
@@ -367,7 +368,7 @@ class StarChartController(Controller):
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value
-        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
+        self.star_chart = get_star_chart(files_cache["star_chart.json"])
         if await self.star_chart.from_string(build_id):
             event.control.value = None
             self.setup_controls()

@@ -1,0 +1,223 @@
+{
+    "name": "Candy Barbarian",
+    "qualified_name": "candybarbarian",
+    "shorts": [
+        "CB",
+        "Barb"
+    ],
+    "damage_type": "Physical",
+    "weapons": [
+        "Sword"
+    ],
+    "attributes": [],
+    "stats": [
+        {
+            "name": "Physical Damage",
+            "value": 2900,
+            "percentage": false
+        },
+        {
+            "name": "Magic Damage",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health",
+            "value": 4970,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health %",
+            "value": 20,
+            "percentage": true
+        },
+        {
+            "name": "Energy",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Health Regen",
+            "value": 2575,
+            "percentage": false
+        },
+        {
+            "name": "Energy Regen",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Movement Speed",
+            "value": 40,
+            "percentage": false
+        },
+        {
+            "name": "Attack Speed",
+            "value": 100,
+            "percentage": true
+        },
+        {
+            "name": "Jump",
+            "value": 3,
+            "percentage": false
+        },
+        {
+            "name": "Critical Hit",
+            "value": 2,
+            "percentage": true
+        },
+        {
+            "name": "Critical Damage",
+            "value": 50,
+            "percentage": true
+        },
+        {
+            "name": "Light",
+            "value": 0,
+            "percentage": false
+        }
+    ],
+    "bonuses": [
+        {
+            "name": "Physical Damage",
+            "value": 30,
+            "percentage": true
+        },
+        {
+            "name": "Magic Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Health Regen",
+            "value": 0,
+            "percentage": true
+        }
+    ],
+    "subclass": {
+        "name": "",
+        "description": "Damaging an enemy has a chance to drop candy that doubles attack speed and movement speed by 20 or heals you by 10% max health. 15s cooldown.",
+        "level": {
+            "1": [
+                {
+                    "name": "Stability",
+                    "value": 5,
+                    "percentage": false
+                }
+            ],
+            "10": [
+                {
+                    "name": "Stability",
+                    "value": 15,
+                    "percentage": false
+                }
+            ],
+            "15": [
+                {
+                    "name": "Stability",
+                    "value": 30,
+                    "percentage": false
+                }
+            ],
+            "20": [
+                {
+                    "name": "Stability",
+                    "value": 50,
+                    "percentage": false
+                }
+            ],
+            "25": [
+                {
+                    "name": "Stability",
+                    "value": 75,
+                    "percentage": false
+                }
+            ],
+            "30": [
+                {
+                    "name": "Stability",
+                    "value": 105,
+                    "percentage": false
+                }
+            ]
+        },
+        "power": {
+            "1": "22.5% chance to activate on damage dealt.",
+            "5000": "25% chance to activate on damage dealt.",
+            "10000": "27.5% chance to activate on damage dealt.",
+            "15000": "30% chance to activate on damage dealt.",
+            "20000": "32.5% chance to activate on damage dealt.",
+            "25000": "35% chance to activate on damage dealt.",
+            "30000": "40% chance to activate on damage dealt.",
+            "35000": "50% chance to activate on damage dealt."
+        }
+    },
+    "abilities": [
+        {
+            "name": "Gum Drop",
+            "icon": "ico_barbarian_passive_01",
+            "type": "Passive",
+            "stages": []
+        },
+        {
+            "name": "Basic Attack",
+            "icon": "icon_styles_gun",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 150,
+                    "multiplier": 1.85
+                }
+            ]
+        },
+        {
+            "name": "Vanilla Swirlwind",
+            "icon": "ico_barbarian_whirlwind_01",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 0,
+                    "multiplier": 6.5
+                }
+            ]
+        },
+        {
+            "name": "Sugar Crash",
+            "icon": "ico_barbarian_crash_01",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 50,
+                    "multiplier": 4.5
+                }
+            ]
+        },
+        {
+            "name": "Eis-Crom Cone",
+            "icon": "ico_barbarian_cromcone_01",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 25,
+                    "multiplier": 15
+                }
+            ]
+        },
+        {
+            "name": "Scoop n' Gloop",
+            "icon": "ico_barbarian_crash_01",
+            "type": "Upgrade",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 50,
+                    "multiplier": 4.5
+                }
+            ]
+        }
+    ]
+}

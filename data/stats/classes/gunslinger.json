@@ -1,0 +1,240 @@
+{
+    "name": "Gunslinger",
+    "qualified_name": "gunslinger",
+    "shorts": [
+        "GS"
+    ],
+    "damage_type": "Magic",
+    "weapons": [
+        "Gun"
+    ],
+    "attributes": [],
+    "stats": [
+        {
+            "name": "Physical Damage",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Magic Damage",
+            "value": 2376,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health",
+            "value": 4850,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health %",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Energy",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Health Regen",
+            "value": 25,
+            "percentage": false
+        },
+        {
+            "name": "Energy Regen",
+            "value": 136,
+            "percentage": false
+        },
+        {
+            "name": "Movement Speed",
+            "value": 40,
+            "percentage": false
+        },
+        {
+            "name": "Attack Speed",
+            "value": 100,
+            "percentage": true
+        },
+        {
+            "name": "Jump",
+            "value": 4,
+            "percentage": false
+        },
+        {
+            "name": "Critical Hit",
+            "value": 13.5,
+            "percentage": true
+        },
+        {
+            "name": "Critical Damage",
+            "value": 75,
+            "percentage": true
+        },
+        {
+            "name": "Light",
+            "value": 0,
+            "percentage": false
+        }
+    ],
+    "bonuses": [
+        {
+            "name": "Physical Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Magic Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Health Regen",
+            "value": 0,
+            "percentage": true
+        }
+    ],
+    "subclass": {
+        "name": "",
+        "level": {
+            "1": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ],
+            "10": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ],
+            "15": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ],
+            "20": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ],
+            "25": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ],
+            "30": [
+                {
+                    "name": "",
+                    "value": 0,
+                    "percentage": true
+                }
+            ]
+        },
+        "power": {
+            "1": "",
+            "5000": "",
+            "10000": "",
+            "15000": "",
+            "20000": "",
+            "25000": "",
+            "30000": "",
+            "35000": ""
+        }
+    },
+    "abilities": [
+        {
+            "name": "Basic Attack",
+            "icon": "icon_styles_gun",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 200,
+                    "multiplier": 1.33
+                }
+            ]
+        },
+        {
+            "name": "Lucky Shot",
+            "icon": "ico_gunslinger_luckyshot_01",
+            "type": "Passive",
+            "stages": []
+        },
+        {
+            "name": "Charged Shot",
+            "icon": "ico_gunslinger_chargeshot_01",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Stage 1 Hit",
+                    "base": 5,
+                    "multiplier": 1.5
+                },
+                {
+                    "name": "Stage 2 Hit",
+                    "base": 0,
+                    "multiplier": 2
+                },
+                {
+                    "name": "Stage 2 AoE",
+                    "base": 25,
+                    "multiplier": 2
+                },
+                {
+                    "name": "Stage 3 Hit",
+                    "base": 0,
+                    "multiplier": 4
+                },
+                {
+                    "name": "Stage 3 AoE",
+                    "base": 25,
+                    "multiplier": 3.5
+                }
+            ]
+        },
+        {
+            "name": "Blast Jump",
+            "icon": "ico_gunslinger_blastjump_01",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 10,
+                    "multiplier": 6
+                }
+            ]
+        },
+        {
+            "name": "Run and Gun",
+            "icon": "ico_gunslinger_runandgun_01",
+            "type": "Passive",
+            "stages": []
+        },
+        {
+            "name": "Overcharged",
+            "icon": "ico_gunslinger_runandgun_01",
+            "type": "Upgrade",
+            "stages": [
+                {
+                    "name": "Hit",
+                    "base": 0,
+                    "multiplier": 4
+                },
+                {
+                    "name": "AoE",
+                    "base": 25,
+                    "multiplier": 3.5
+                }
+            ]
+        }
+    ]
+}

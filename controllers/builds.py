@@ -32,6 +32,7 @@ from flet import (
 )
 from flet_core.icons import COPY, CALCULATE
 
+from models.constants import files_cache
 from models.interface import Controller
 from models.interface import ScrollingFrame, AutoNumberField
 from models.trove.builds import (
@@ -55,13 +56,13 @@ class GemBuildsController(Controller):
 
     async def setup(self):
         if not hasattr(self, "classes"):
-            self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
+            self.star_chart = get_star_chart(files_cache["star_chart.json"])
             self.star_chart_abilities = []
             self.selected_build = None
             self.build_page = 0
             self.max_pages = 0
             self.classes = {}
-            self.files = self.page.data_files
+            self.files = files_cache
             for trove_class in self.files["classes.json"]:
                 self.classes[trove_class["name"]] = TroveClass(**trove_class)
             self.foods = self.files["builds/food.json"]
@@ -913,7 +914,7 @@ class GemBuildsController(Controller):
         cosmic_first = 0
         cosmic_second = 0
         if not hasattr(self, "gem_stats"):
-            self.gem_stats = self.page.data_files["gems/crystal.json"]
+            self.gem_stats = files_cache["gems/crystal.json"]
         if config.build_type == BuildType.health:
             first_lesser = self.gem_stats["Lesser"]["Maximum Health"]
             first_empowered = self.gem_stats["Empowered"]["Maximum Health"]
@@ -1108,7 +1109,7 @@ class GemBuildsController(Controller):
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value.strip().split("-")[-1].strip()
-        self.star_chart = get_star_chart(self.page.data_files["star_chart.json"])
+        self.star_chart = get_star_chart(files_cache["star_chart.json"])
         if build_id == "none":
             self.config.star_chart = None
             self.star_chart_abilities = []

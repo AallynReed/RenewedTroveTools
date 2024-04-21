@@ -4,15 +4,14 @@ import os
 import re
 import sys
 from datetime import datetime
-from json import load
 from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-from aiohttp import ClientSession
 from flet import app_async, WEB_BROWSER, FLET_APP, Theme, Row, Text, Icon
 
 from models import Metadata, Preferences
+from models.constants import fetch_files
 from models.interface import CustomAppBar
 from models.interface.controls import Snackbar, Modal
 from utils import tasks
@@ -107,33 +106,7 @@ class App:
             )
 
     async def load_constants(self):
-        async with ClientSession() as session:
-            async with session.get(
-                "https://kiwiapi.slynx.xyz/v1/stats/files"
-            ) as response:
-                if response.status != 200:
-                    data_path = Path("data")
-                    files = [
-                        str(x.relative_to(data_path))
-                        for x in data_path.rglob("*")
-                        if x.is_file()
-                    ]
-                    self.page.data_files = {
-                        path.replace("\\", "/"): load(
-                            open(data_path.joinpath(path), encoding="utf-8")
-                        )
-                        for path in files
-                    }
-                    return
-                files = await response.json()
-                self.page.data_files = {
-                    path: await (
-                        await session.get(
-                            f"https://kiwiapi.slynx.xyz/v1/stats/file/{path}"
-                        )
-                    ).json()
-                    for path in files
-                }
+        await fetch_files()
 
     async def setup_protocol_socket(self):
         for port in range(13010, 13020):

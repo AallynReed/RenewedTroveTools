@@ -1,0 +1,244 @@
+{
+    "name": "Boomeranger",
+    "qualified_name": "adventurer",
+    "shorts": [
+        "BR",
+        "Boom"
+    ],
+    "damage_type": "Physical",
+    "weapons": [
+        "Bow",
+        "Sword"
+    ],
+    "attributes": [],
+    "stats": [
+        {
+            "name": "Physical Damage",
+            "value": 3080,
+            "percentage": false
+        },
+        {
+            "name": "Magic Damage",
+            "value": 100,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health",
+            "value": 6150,
+            "percentage": false
+        },
+        {
+            "name": "Maximum Health %",
+            "value": 30,
+            "percentage": true
+        },
+        {
+            "name": "Energy",
+            "value": null,
+            "percentage": false
+        },
+        {
+            "name": "Health Regen",
+            "value": 3025,
+            "percentage": false
+        },
+        {
+            "name": "Energy Regen",
+            "value": null,
+            "percentage": false
+        },
+        {
+            "name": "Movement Speed",
+            "value": 43,
+            "percentage": false
+        },
+        {
+            "name": "Attack Speed",
+            "value": 110,
+            "percentage": true
+        },
+        {
+            "name": "Jump",
+            "value": 3,
+            "percentage": false
+        },
+        {
+            "name": "Critical Hit",
+            "value": 2,
+            "percentage": true
+        },
+        {
+            "name": "Critical Damage",
+            "value": 50,
+            "percentage": true
+        },
+        {
+            "name": "Light",
+            "value": 0,
+            "percentage": false
+        }
+    ],
+    "bonuses": [
+        {
+            "name": "Physical Damage",
+            "value": 10,
+            "percentage": true
+        },
+        {
+            "name": "Magic Damage",
+            "value": 0,
+            "percentage": true
+        },
+        {
+            "name": "Health Regen",
+            "value": 30,
+            "percentage": true
+        }
+    ],
+    "subclass": {
+        "name": "Fae Companion",
+        "description": "A fae companion that provides healing when you are low on life.",
+        "level": {
+            "1": [
+                {
+                    "name": "Critical Damage",
+                    "value": 1,
+                    "percentage": true
+                }
+            ],
+            "10": [
+                {
+                    "name": "Critical Damage",
+                    "value": 2,
+                    "percentage": true
+                }
+            ],
+            "15": [
+                {
+                    "name": "Critical Damage",
+                    "value": 4,
+                    "percentage": true
+                }
+            ],
+            "20": [
+                {
+                    "name": "Critical Damage",
+                    "value": 8,
+                    "percentage": true
+                }
+            ],
+            "25": [
+                {
+                    "name": "Critical Damage",
+                    "value": 12,
+                    "percentage": true
+                }
+            ],
+            "30": [
+                {
+                    "name": "Critical Damage",
+                    "value": 20,
+                    "percentage": true
+                }
+            ]
+        },
+        "power": {
+            "1": "30% Heal",
+            "5000": "32% Heal",
+            "10000": "34% Heal",
+            "15000": "36% Heal",
+            "20000": "38% Heal",
+            "25000": "40% Heal",
+            "30000": "45% Heal",
+            "35000": "50% Heal"
+        }
+    },
+    "abilities": [
+        {
+            "name": "Final Blow",
+            "icon": "icon_adventurer_passive",
+            "type": "Passive",
+            "stages": []
+        },
+        {
+            "name": "Basic Attack",
+            "icon": "icon_styles_gun",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Sword",
+                    "base": 300,
+                    "multiplier": 1.7
+                },
+                {
+                    "name": "Bow",
+                    "base": 250,
+                    "multiplier": 1.4
+                }
+            ]
+        },
+        {
+            "name": "Boomerang",
+            "icon": "icon_adventurer_boomerang",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 0,
+                    "multiplier": 2.75
+                }
+            ]
+        },
+        {
+            "name": "Big Bomb",
+            "icon": "icon_adventurer_bomb",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 0,
+                    "multiplier": 5
+                }
+            ]
+        },
+        {
+            "name": "Mysterious Urn",
+            "icon": "icon_adventurer_urn",
+            "type": "Active",
+            "stages": [
+                {
+                    "name": "Damage",
+                    "base": 0,
+                    "multiplier": 6
+                },
+                {
+                    "name": "Bomb",
+                    "base": 0,
+                    "multiplier": 4
+                },
+                {
+                    "name": "Chicken",
+                    "base": 0,
+                    "multiplier": 2
+                }
+            ]
+        },
+        {
+            "name": "Bawk Bomb",
+            "icon": "icon_adventurer_bomb",
+            "type": "Upgrade",
+            "stages": [
+                {
+                    "name": "Explosion",
+                    "base": 0,
+                    "multiplier": 2.85
+                },
+                {
+                    "name": "Chicken",
+                    "base": 0,
+                    "multiplier": 0.65
+                }
+            ]
+        }
+    ]
+}
