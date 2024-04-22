@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 from aiohttp import ClientSession
 from pydantic import BaseModel, Field, validator
+import platform
 
 
 class ModFileType(Enum):
@@ -123,11 +124,12 @@ class ImageSize(Enum):
     MAX = 1024
 
 
-class ModsEndpoint(Enum):
-    base: str = "/mods"
-    list: str = "/mods/search"
-    types: str = "/mods/types"
-    sub_types: str = "/mods/sub_types"
+class Endpoints(Enum):
+    handshake: str = "/misc/handshake"
+    mods: str = "/mods"
+    mods_search: str = "/mods/search"
+    mod_types: str = "/mods/types"
+    mod_sub_types: str = "/mods/sub_types"
     image_resize: str = "/image/resize"
     mastery: str = "/stats/mastery"
     profiles: str = "/profile"
@@ -138,6 +140,21 @@ class KiwiAPI:
     base_url: str = "https://kiwiapi.slynx.xyz"
     api_version: int = 1
     api_url: str = f"{base_url}/v{api_version}"
+
+    async def handshake(self, page):
+        async with ClientSession() as session:
+            await session.get(
+                f"{self.api_url}{Endpoints.handshake.value}",
+                json={
+                    "version": page.metadata.version,
+                    "dev": page.metadata.dev,
+                    "os": {
+                        "name": platform.system(),
+                        "version": platform.version(),
+                        "release": platform.release(),
+                    },
+                },
+            )
 
     async def get_mods_page_count(
         self,
@@ -156,7 +173,7 @@ class KiwiAPI:
         encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.list.value}?{encoded_params}"
+                f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
             ) as response:
                 count = int(response.headers.get("count"))
                 pages = count // page_size + 1
@@ -185,7 +202,7 @@ class KiwiAPI:
         encoded_params = urlencode(params)
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.list.value}?{encoded_params}"
+                f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
             ) as response:
                 mods = await response.json()
         return [Mod(**mod) for mod in mods]
@@ -193,35 +210,33 @@ class KiwiAPI:
     async def get_mod_types(self):
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.types.value}"
+                f"{self.api_url}{Endpoints.mod_types.value}"
             ) as response:
                 return await response.json()
 
     async def get_mod_sub_types(self, type: str):
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.sub_types.value}/{type}"
+                f"{self.api_url}{Endpoints.mod_sub_types.value}/{type}"
             ) as response:
                 return await response.json()
 
     def get_resized_image_url(self, url: str, size: ImageSize):
         return (
-            self.api_url
-            + ModsEndpoint.image_resize.value
-            + f"?url={url}&size={size.name}"
+            self.api_url + Endpoints.image_resize.value + f"?url={url}&size={size.name}"
         )
 
     async def get_mastery(self):
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.mastery.value}"
+                f"{self.api_url}{Endpoints.mastery.value}"
             ) as response:
                 return await response.json()
 
     async def update_mastery(self, user_token: str, mastery_data: dict):
         async with ClientSession() as session:
             await session.put(
-                f"{self.api_url}{ModsEndpoint.mastery.value}",
+                f"{self.api_url}{Endpoints.mastery.value}",
                 headers={"Authorization": user_token},
                 json={"mastery_data": mastery_data},
             )
@@ -229,7 +244,7 @@ class KiwiAPI:
     async def create_profile(self, user_token: str, name: str, description: str):
         async with ClientSession() as session:
             await session.post(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/create",
+                f"{self.api_url}{Endpoints.profiles.value}/create",
                 headers={"Authorization": user_token},
                 json={"name": name, "description": description},
             )
@@ -237,7 +252,7 @@ class KiwiAPI:
     async def update_profile(self, user_token: str, profile_id: str, **kwargs):
         async with ClientSession() as session:
             await session.put(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/update/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/update/{profile_id}",
                 headers={"Authorization": user_token},
                 json=kwargs,
             )
@@ -245,7 +260,7 @@ class KiwiAPI:
     async def list_profiles(self, user_token: str):
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/list_profiles",
+                f"{self.api_url}{Endpoints.profiles.value}/list_profiles",
                 headers={"Authorization": user_token},
             ) as response:
                 return await response.json()
@@ -253,21 +268,21 @@ class KiwiAPI:
     async def share_profile(self, user_token: str, profile_id: str):
         async with ClientSession() as session:
             await session.post(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/share/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/share/{profile_id}",
                 headers={"Authorization": user_token},
             )
 
     async def private_profile(self, user_token: str, profile_id: str):
         async with ClientSession() as session:
             await session.post(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/unshare/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/unshare/{profile_id}",
                 headers={"Authorization": user_token},
             )
 
     async def delete_profile(self, user_token: str, profile_id: str):
         async with ClientSession() as session:
             await session.delete(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/delete/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/delete/{profile_id}",
                 headers={"Authorization": user_token},
             )
 
@@ -276,7 +291,7 @@ class KiwiAPI:
     ):
         async with ClientSession() as session:
             await session.post(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/mod_hashes/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/mod_hashes/{profile_id}",
                 headers={"Authorization": user_token},
                 json={"hashes": mod_hashes},
             )
@@ -286,7 +301,7 @@ class KiwiAPI:
     ):
         async with ClientSession() as session:
             await session.delete(
-                f"{self.api_url}{ModsEndpoint.profiles.value}/mod_hashes/{profile_id}",
+                f"{self.api_url}{Endpoints.profiles.value}/mod_hashes/{profile_id}",
                 headers={"Authorization": user_token},
                 json={"hashes": mod_hashes},
             )
@@ -294,6 +309,6 @@ class KiwiAPI:
     async def get_twitch_streams(self):
         async with ClientSession() as session:
             async with session.get(
-                f"{self.api_url}{ModsEndpoint.twitch_streams.value}"
+                f"{self.api_url}{Endpoints.twitch_streams.value}"
             ) as response:
                 return await response.json()

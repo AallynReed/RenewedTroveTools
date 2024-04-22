@@ -22,6 +22,7 @@ from utils.protocol import set_protocol
 from utils.routing import Routing
 from utils.trove.server_time import ServerTime
 from views import all_views
+from utils.kiwiapi import KiwiAPI
 
 
 class App:
@@ -57,6 +58,7 @@ class App:
         self.setup_localization()
         await self.setup_page()
         await self.gather_views()
+        await self.handshake_api()
         await self.process_login()
 
     async def start_web(self, _):
@@ -162,6 +164,7 @@ class App:
         self.page.on_error = self.renderer_error_logger
         self.page.on_window_event = self.window_event
         self.page.dialog = Modal(page=self.page)
+        self.page.api = KiwiAPI()
 
     async def window_event(self, e):
         if e.data == "maximize":
@@ -254,6 +257,9 @@ class App:
         self.page.all_views = []
         self.page.all_views.extend(all_views(self.page.web))
         Routing(self.page, self.page.all_views)
+
+    async def handshake_api(self):
+        await self.page.api.handshake(self.page)
 
     async def start_tasks(self):
         if self.update_clock.is_running():
