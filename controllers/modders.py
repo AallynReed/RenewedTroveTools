@@ -52,7 +52,7 @@ from models.trove.mod import TMod, TroveModFile
 from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
 from utils.trove.extractor import find_all_indexes
-from utils.trove.registry import get_trove_locations
+from utils.trove.registry import get_trove_locations, TroveGamePath
 from utils.trove.yaml_mod import ModYaml
 
 
@@ -112,6 +112,11 @@ class ModdersController(Controller):
 
     def check_memory(self):
         self.mod_folders = list(get_trove_locations())
+        custom_mod_folders = self.page.preferences.mod_manager.custom_directories
+        for name, path in custom_mod_folders:
+            path = path.parent
+            if path.joinpath("Trove.exe").is_file():
+                self.mod_folders.append(TroveGamePath(path=Path(path), name=name))
         extract = self.memory["extract"]
         compile = self.memory["compile"]
         projects = self.memory["projects"]
@@ -209,6 +214,14 @@ class ModdersController(Controller):
         await self.page.snack_bar.show("Project folder cleared")
 
     async def load_extract(self):
+        if not self.mod_folders:
+            self.extract.controls = [
+                Text(
+                    "No Trove installation found"
+                    "\nTry running program as administrator or go to settings and add the directory manually."
+                )
+            ]
+            return
         directories = Row(
             controls=[
                 IconButton(
@@ -354,6 +367,14 @@ class ModdersController(Controller):
         await self.page.snack_bar.show("TMod overrides extracted")
 
     async def load_compile(self):
+        if not self.mod_folders:
+            self.compile.controls = [
+                Text(
+                    "No Trove installation found"
+                    "\nTry running program as administrator or go to settings and add the directory manually."
+                )
+            ]
+            return
         mod_types = await self.api.get_mod_types()
         mod_sub_types = await self.api.get_mod_sub_types(
             self.memory["compile"]["mod_data"].type
