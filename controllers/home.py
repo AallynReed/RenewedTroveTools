@@ -105,7 +105,7 @@ class HomeController(Controller):
                     ResponsiveRow(
                         controls=[
                             Row(
-                                controls=[self.daily_widget, VerticalDivider()], col=2.2
+                                controls=[self.daily_widget, VerticalDivider()], col=2.5
                             ),
                             Column(
                                 controls=[
@@ -113,11 +113,11 @@ class HomeController(Controller):
                                     Divider(height=1),
                                     self.mastery_widget,
                                 ],
-                                col=3.5,
+                                col=4.25,
                             ),
                             Row(
                                 controls=[VerticalDivider(), self.events_widget],
-                                col=6.3,
+                                col=5.25,
                             ),
                         ]
                     ),
