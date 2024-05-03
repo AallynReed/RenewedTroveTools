@@ -1,0 +1,2291 @@
+{
+    "Gunslinger": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 4,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Chronomantic",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Ice Sage": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Chronomantic",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Pirate Captain": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 4,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Chloromancer": {
+        "light": {
+            "enabled": true,
+            "tier": 1,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 4,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Fae Trickster": {
+        "light": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Chronomantic",
+                "Zealous"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Dino Tamer": {
+        "light": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Dracolyte": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Movement Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Tomb Raiser": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Movement Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Zealous"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Bard": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Magic Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Starry Skyfire"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Lunar Lancer"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Evil Eye"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Magic Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Magic Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Orchian"
+            ],
+            "banner": [
+                "Light",
+                "Magic Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Lunar Lancer",
+                "CB"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Arcane",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Kabobs"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Revenant": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Earnie"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Preference",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Preference",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Candy Barbarian": {
+        "light": {
+            "enabled": true,
+            "tier": 5,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Jingles"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": true,
+            "tier": 1,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Maximum Health%",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Maximum Health"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Maximum Health%",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Maximum Health",
+                "Preference"
+            ],
+            "ally": [
+                "Lil' Whiptop"
+            ],
+            "banner": [
+                "Light",
+                "Maximum Health",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Chloromancer"
+            ],
+            "flask": [
+                "Elysian Bandolier",
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Unyielding",
+                "Bountiful"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Soup"
+            ],
+            "gems": [
+                "Class Gem",
+                "Spirit Surge",
+                "Cubic Curtain/Mired Mojo",
+                "Empyrean Barrier (Cosmic)"
+            ]
+        }
+    },
+    "Vanguardian": {
+        "light": {
+            "enabled": true,
+            "tier": 4,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Jingles"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Boomeranger": {
+        "light": {
+            "enabled": true,
+            "tier": 1,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Jingles"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Chronomantic"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Neon Ninja": {
+        "light": {
+            "enabled": true,
+            "tier": 5,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Earnie"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Zealous",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Knight": {
+        "light": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Jingles"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 3,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Pyrodisc",
+                "Cubic Curtain",
+                "Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Shadow Hunter": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Movement Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Energy Regeneration"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Movement Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Energy Regeneration"
+            ],
+            "ally": [
+                "Earnie"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 1,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Critical Damage"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Critical Damage"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Critical Damage"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Lunar Lancer": {
+        "light": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Earnie"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Solarion",
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Beamer"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Pyrodisc",
+                "Cubic Curtain",
+                "Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Critical Damage"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Critical Damage"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Pyrodisc",
+                "Cubic Curtain/Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    },
+    "Solarion": {
+        "light": {
+            "enabled": true,
+            "tier": 1,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Critical Damage",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Critical Damage",
+                "Physical Damage",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Earnie"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Attack Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Death-Defying Vial"
+            ],
+            "emblem": [
+                "Martial",
+                "Zealous"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain",
+                "Explosive Epilogue",
+                "Berserk Battler (Cosmic)"
+            ]
+        },
+        "farm": {
+            "enabled": true,
+            "tier": 2,
+            "hat": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "weapon": [
+                "Physical Damage",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "face": [
+                "Maximum Health",
+                "Light",
+                "Movement Speed",
+                "Preference",
+                "Attack Speed"
+            ],
+            "ring": [
+                "Physical Damage",
+                "Light",
+                "Preference"
+            ],
+            "ally": [
+                "Scorpius"
+            ],
+            "banner": [
+                "Light",
+                "Physical Damage",
+                "Flask",
+                "Movement Speed"
+            ],
+            "subclass": [
+                "Bard"
+            ],
+            "flask": [
+                "Conjurer's Crucible Vial"
+            ],
+            "emblem": [
+                "Zealous",
+                "Trailblazing"
+            ],
+            "food": [
+                "Freerange Electrolytic Crystals",
+                "Premium Fish Fillet"
+            ],
+            "gems": [
+                "Class Gem",
+                "Pyrodisc",
+                "Cubic Curtain",
+                "Explosive Epilogue",
+                "Vampirian Vanquisher (Cosmic)"
+            ]
+        },
+        "tank": {
+            "enabled": false
+        }
+    }
+}
