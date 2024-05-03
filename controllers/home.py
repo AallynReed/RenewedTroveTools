@@ -397,12 +397,21 @@ class HomeController(Controller):
         )
         await self.streams_widget.update_async()
 
-    @tasks.loop(seconds=60)
+    @tasks.loop(seconds=60, log_errors=True)
     async def update_mastery(self):
         is_admin = self.page.user_data["is_admin"] if self.page.user_data else False
         mastery_data = await self.api.get_mastery()
+        now = datetime.now(UTC)
+        mastery_updated = humanize.naturaltime(
+            now
+            - datetime.fromisoformat(mastery_data["normal"]["updated"]).astimezone(UTC)
+        )
         live_mastery = mastery_data["normal"]["live"]
         pts_mastery = mastery_data["normal"]["pts"]
+        geode_updated = humanize.naturaltime(
+            now
+            - datetime.fromisoformat(mastery_data["normal"]["updated"]).astimezone(UTC)
+        )
         live_g_mastery = mastery_data["geode"]["live"]
         pts_g_mastery = mastery_data["geode"]["pts"]
         x, y, z = points_to_mr(live_mastery)
@@ -427,7 +436,12 @@ class HomeController(Controller):
                     content=Container(
                         Column(
                             controls=[
-                                Text("Live Trove Mastery", size=20),
+                                Row(
+                                    controls=[
+                                        Icon(icons.UPDATE, tooltip=mastery_updated),
+                                        Text("Live Trove Mastery", size=20),
+                                    ]
+                                ),
                                 Row(
                                     controls=[
                                         Text(
@@ -476,7 +490,12 @@ class HomeController(Controller):
                     content=Container(
                         Column(
                             controls=[
-                                Text("Live Geode Mastery", size=20),
+                                Row(
+                                    controls=[
+                                        Icon(icons.UPDATE, tooltip=geode_updated),
+                                        Text("Live Geode Mastery", size=20),
+                                    ]
+                                ),
                                 Row(
                                     controls=[
                                         Text(
