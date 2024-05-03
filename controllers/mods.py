@@ -227,6 +227,11 @@ class ModsController(Controller):
             if picked_dir
             else "No picked directory (Pick your mods folder)"
         )
+        self.commit_custom_dir_button = IconButton(
+            icon=icons.ADD,
+            on_click=self.settings_add_custom_directory,
+            disabled=not (picked_dir and picked_name),
+        )
         self.settings.controls.append(
             ResponsiveRow(
                 controls=[
@@ -288,11 +293,7 @@ class ModsController(Controller):
                                                 self.settings_picked_dir,
                                             ]
                                         ),
-                                        IconButton(
-                                            icon=icons.ADD,
-                                            on_click=self.settings_add_custom_directory,
-                                            disabled=not (picked_dir and picked_name),
-                                        ),
+                                        self.commit_custom_dir_button,
                                     ]
                                 ),
                                 ListView(
@@ -359,7 +360,10 @@ class ModsController(Controller):
 
     async def settings_set_custom_dir_name(self, event):
         self.memory["settings"]["picked_custom_dir_name"] = event.control.value or None
-        await self.load_settings()
+        picked_dir = self.memory["settings"]["picked_custom_dir"]
+        picked_name = self.memory["settings"]["picked_custom_dir_name"]
+        self.commit_custom_dir_button.disabled = not (picked_dir and picked_name)
+        await self.commit_custom_dir_button.update_async()
 
     async def settings_add_custom_directory(self, event):
         custom_directories = self.page.preferences.mod_manager.custom_directories
