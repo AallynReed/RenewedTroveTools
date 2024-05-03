@@ -397,7 +397,7 @@ class HomeController(Controller):
         )
         await self.streams_widget.update_async()
 
-    @tasks.loop(seconds=60, log_errors=True)
+    @tasks.loop(seconds=60)
     async def update_mastery(self):
         is_admin = self.page.user_data["is_admin"] if self.page.user_data else False
         mastery_data = await self.api.get_mastery()
