@@ -49,11 +49,10 @@ class HomeController(Controller):
     def setup_controls(self):
         if not hasattr(self, "widgets"):
             self.api = KiwiAPI()
-            self.main = Column()
+            self.main = ResponsiveRow()
             self.daily_data = files_cache["daily_buffs.json"]
             self.weekly_data = files_cache["weekly_buffs.json"]
             self.date = Text("Trove Time", size=20, col={"xxl": 6})
-
         asyncio.create_task(self.post_setup())
 
     async def post_setup(self):
