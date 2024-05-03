@@ -12,7 +12,6 @@ from flet import (
     IconButton,
     icons,
     ProgressRing,
-    ScrollMode,
     AlertDialog,
     SnackBar,
     Stack,
@@ -42,6 +41,7 @@ class PathViewer(UserControl):
             label="Search",
             hint_text="Search for files in archives (Minimum characters: 5)",
             on_submit=self.search,
+            autofocus=True,
         )
         self.directories = {}
 
@@ -86,13 +86,17 @@ class PathViewer(UserControl):
         return tile
 
     async def get_viewer(self):
-        viewer = Column(scroll=ScrollMode.ADAPTIVE)
+        viewer = Column(scroll=True, expand=True, expand_loose=True)
         if self.query is not None:
             viewer.controls.clear()
             await self._load_files()
             for directory, data in self.directories.items():
                 viewer.controls.append(self.get_folder_tile(directory, data))
-        return Column(controls=[self.search_bar, viewer])
+        return Column(
+            controls=[self.search_bar, viewer],
+            expand=True,
+            expand_loose=True,
+        )
 
     async def _load_files(self):
         self.directories = {}

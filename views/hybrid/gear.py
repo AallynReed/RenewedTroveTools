@@ -15,8 +15,6 @@ class GearBuildsView(View):
         super().__init__(
             route=self.route,
             controls=[
-                Column(
-                    controls=[ctrl.main], expand=True, scroll=ScrollMode.ADAPTIVE
-                )
+                Column(controls=[ctrl.main], expand=True, scroll=ScrollMode.ADAPTIVE)
             ],
         )

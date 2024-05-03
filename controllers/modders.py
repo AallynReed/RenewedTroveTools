@@ -1790,9 +1790,11 @@ class ModdersController(Controller):
         await self.page.dialog.set_data(
             modal=True,
             title=Text("Extract from archives"),
-            content=Column(
+            content=ResponsiveRow(
                 controls=[PathViewer(installation_path, project_path=project_path)],
                 width=500,
+                expand=True,
+                expand_loose=True,
             ),
             actions=[ElevatedButton("Done", on_click=self.page.RTT.close_dialog)],
         )
