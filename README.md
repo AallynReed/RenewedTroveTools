@@ -5,6 +5,8 @@ This project aims at remaking the tools present in Trove Tools by Dazo using mod
 
 ## Features:
 - Mod Manager
+- Modder Tools
+- Gear Builds
 - Gem Builds Calculator
 - Star Chart Simulator
 - Mastery Calculator
