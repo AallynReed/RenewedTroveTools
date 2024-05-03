@@ -38,9 +38,9 @@ from flet_core.icons import (
     FEEDBACK,
     PEST_CONTROL,
     HISTORY_EDU,
+    DESKTOP_WINDOWS,
 )
 
-from models.interface.controls import Modal
 from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.localization import Locale
@@ -89,6 +89,17 @@ class CustomAppBar(AppBar):
         actions = []
         actions.extend(
             [
+                *(
+                    [
+                        IconButton(
+                            icon=DESKTOP_WINDOWS,
+                            url="https://kiwiapi.slynx.xyz/v1/misc/latest_release/download/redirect",
+                            tooltip="Get Windows Application",
+                        )
+                    ]
+                    if self.page.web
+                    else []
+                ),
                 IconButton(
                     icon=DOWNLOAD,
                     on_click=self.go_to_update_page,
