@@ -1,4 +1,5 @@
 from .builds import GemBuildsController
+from .gear import GearBuildsController
 from .config import ConfigController
 from .extractor import ExtractorController
 from .gem import GemController
