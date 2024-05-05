@@ -68,6 +68,7 @@ class Mod(BaseModel):
     file_objs: list[ModFile] = Field(alias="downloads", default_factory=list)
     installed: bool = False
     installed_file: ModFile = None
+    installed_version: str = None
 
     def __contains__(self, item):
         return item in self.hashes

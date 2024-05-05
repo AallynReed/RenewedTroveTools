@@ -706,6 +706,9 @@ class TroveModList:
                             for file in mod.trovesaurus_data.file_objs:
                                 if file.hash == mod.hash:
                                     mod.trovesaurus_data.installed_file = file
+                                    mod.trovesaurus_data.installed_version = (
+                                        file.version
+                                    )
                                     break
                             break
 

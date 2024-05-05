@@ -605,6 +605,7 @@ class ModsController(Controller):
                         style=ButtonStyle(padding=padding.symmetric(4, 4)),
                         url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
                     ),
+                    RTTChip(label=Text(mod.trovesaurus_data.installed_version)),
                     *(
                         [
                             Tooltip(
