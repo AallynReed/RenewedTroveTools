@@ -1090,12 +1090,17 @@ class ModsController(Controller):
                                     ),
                                     *(
                                         [
+                                            RTTChip(
+                                                label=Text(
+                                                    ts_mod.trovesaurus_data.installed_version
+                                                )
+                                            ),
                                             Tooltip(
                                                 message="Installed",
                                                 content=Icon(
                                                     icons.CHECK, color="green"
                                                 ),
-                                            )
+                                            ),
                                         ]
                                         if installed
                                         else []
