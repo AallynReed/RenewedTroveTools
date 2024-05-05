@@ -653,7 +653,7 @@ class ModdersController(Controller):
             title=Text("Clear all overrides"),
             content=Text(message),
             actions=[
-                ElevatedButton("No", on_click=self.close_dialog),
+                ElevatedButton("No", on_click=self.page.RTT.close_dialog),
                 ElevatedButton("Yes", on_click=self.clear_overrides_folders),
             ],
             actions_alignment=MainAxisAlignment.END,
@@ -679,9 +679,6 @@ class ModdersController(Controller):
                     pass
         await self.page.dialog.hide()
         await self.page.snack_bar.show("Overrides cleared")
-
-    async def close_dialog(self, _):
-        await self.page.dialog.hide()
 
     async def detect_overrides(self, event):
         directories = [d.value for d in Directories]

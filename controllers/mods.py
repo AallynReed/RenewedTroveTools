@@ -38,6 +38,7 @@ from flet import (
     PopupMenuButton,
     PopupMenuItem,
     WebView,
+    ElevatedButton,
 )
 from models.interface import RTTChip, RTTIconDecoButton
 from models.interface import Controller
@@ -211,27 +212,6 @@ class ModsController(Controller):
         await self.lock_ui()
         self.settings.controls.clear()
         custom_directories = self.page.preferences.mod_manager.custom_directories
-        picked_dir = self.memory["settings"]["picked_custom_dir"]
-        picked_name = self.memory["settings"]["picked_custom_dir_name"]
-        self.settings_custom_dir_name = TextField(
-            value=picked_name,
-            hint_text="Name",
-            on_change=self.settings_set_custom_dir_name,
-            autofocus=True,
-        )
-        self.settings_custom_dir_pick = FilePicker(
-            on_result=self.settings_set_custom_dir
-        )
-        self.settings_picked_dir = Text(
-            str(picked_dir)
-            if picked_dir
-            else "No picked directory (Pick your mods folder)"
-        )
-        self.commit_custom_dir_button = IconButton(
-            icon=icons.ADD,
-            on_click=self.settings_add_custom_directory,
-            disabled=not (picked_dir and picked_name),
-        )
         self.settings.controls.append(
             ResponsiveRow(
                 controls=[
@@ -282,18 +262,10 @@ class ModsController(Controller):
                                 Divider(),
                                 Row(
                                     controls=[
-                                        self.settings_custom_dir_name,
-                                        self.settings_custom_dir_pick,
-                                        Row(
-                                            controls=[
-                                                IconButton(
-                                                    icon=icons.FOLDER,
-                                                    on_click=self.settings_pick_custom_dir,
-                                                ),
-                                                self.settings_picked_dir,
-                                            ]
-                                        ),
-                                        self.commit_custom_dir_button,
+                                        TextButton(
+                                            text="Add custom directory",
+                                            on_click=self.settings_add_custom_directory,
+                                        )
                                     ]
                                 ),
                                 ListView(
@@ -356,16 +328,54 @@ class ModsController(Controller):
 
     async def settings_set_custom_dir(self, event):
         self.memory["settings"]["picked_custom_dir"] = Path(event.path)
-        await self.load_settings()
+        self.settings_picked_dir.value = (
+            self.memory["settings"]["picked_custom_dir"]
+            or "No picked directory (Pick your mods folder)"
+        )
+        await self.settings_picked_dir.update_async()
 
     async def settings_set_custom_dir_name(self, event):
         self.memory["settings"]["picked_custom_dir_name"] = event.control.value or None
-        picked_dir = self.memory["settings"]["picked_custom_dir"]
-        picked_name = self.memory["settings"]["picked_custom_dir_name"]
-        self.commit_custom_dir_button.disabled = not (picked_dir and picked_name)
-        await self.commit_custom_dir_button.update_async()
 
     async def settings_add_custom_directory(self, event):
+        self.settings_custom_dir_name = TextField(
+            hint_text="Name",
+            on_change=self.settings_set_custom_dir_name,
+            autofocus=True,
+        )
+        self.settings_custom_dir_pick = FilePicker(
+            on_result=self.settings_set_custom_dir
+        )
+        self.settings_picked_dir = Text("No picked directory (Pick your mods folder)")
+        self.commit_custom_dir_button = IconButton(
+            icon=icons.FOLDER,
+            on_click=self.settings_pick_custom_dir,
+        )
+        await self.page.dialog.set_data(
+            modal=False,
+            title=Text("Add custom directory"),
+            content=Column(
+                controls=[
+                    self.settings_custom_dir_name,
+                    self.settings_custom_dir_pick,
+                    Row(
+                        controls=[
+                            self.commit_custom_dir_button,
+                            self.settings_picked_dir,
+                        ]
+                    ),
+                ]
+            ),
+            actions=[
+                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
+                ElevatedButton(
+                    "Confirm", on_click=self.settings_add_custom_directory_confirm
+                ),
+            ],
+            actions_alignment=MainAxisAlignment.END,
+        )
+
+    async def settings_add_custom_directory_confirm(self, event):
         custom_directories = self.page.preferences.mod_manager.custom_directories
         picked_dir = self.memory["settings"]["picked_custom_dir"]
         picked_name = self.memory["settings"]["picked_custom_dir_name"]
@@ -377,6 +387,7 @@ class ModsController(Controller):
         self.memory["settings"]["picked_custom_dir"] = None
         self.memory["settings"]["picked_custom_dir_name"] = None
         await self.load_settings()
+        await self.page.dialog.hide()
 
     async def settings_delete_custom_directory(self, event):
         custom_directories = deepcopy(
