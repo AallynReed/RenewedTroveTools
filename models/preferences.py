@@ -48,6 +48,7 @@ class ModManagerPreferences(BaseModel):
     show_previews: bool = False
     auto_fix_mod_names: bool = True
     auto_generate_and_fix_cfg: bool = True
+    tile_toggle: bool = True
 
     @validator("custom_directories")
     def clean_custom_directories(cls, value):

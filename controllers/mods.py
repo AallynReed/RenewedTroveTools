@@ -222,34 +222,44 @@ class ModsController(Controller):
                                 Divider(),
                                 Row(
                                     controls=[
-                                        Text("Show Previews"),
                                         Switch(
                                             value=self.page.preferences.mod_manager.show_previews,
                                             on_change=self.settings_toggle_show_previews,
                                             tooltip="Show mod image previews",
                                         ),
+                                        Text("Show Previews"),
                                     ]
                                 ),
                                 Row(
                                     controls=[
-                                        Text("Auto Fix Mod Names"),
                                         Switch(
                                             value=self.page.preferences.mod_manager.auto_fix_mod_names,
                                             on_change=self.settings_toggle_auto_fix_mod_names,
                                             tooltip="Automatically fix mod names on directory reading",
                                         ),
+                                        Text("Auto Fix Mod Names"),
                                     ]
                                 ),
                                 Row(
                                     controls=[
-                                        Text(
-                                            "Auto Generate and Fix CFG files for UI mods"
-                                        ),
                                         Switch(
                                             value=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
                                             on_change=self.settings_toggle_auto_generate_and_fix_cfg,
                                             tooltip="Automatically generate and fix cfg files for UI mods",
                                         ),
+                                        Text(
+                                            "Auto Generate and Fix CFG files for UI mods"
+                                        ),
+                                    ]
+                                ),
+                                Row(
+                                    controls=[
+                                        Switch(
+                                            value=self.page.preferences.mod_manager.tile_toggle,
+                                            on_change=self.settings_toggle_tile_toggle_cfg,
+                                            tooltip="Whether mod tiles in My Mods enable/disable mods",
+                                        ),
+                                        Text("My Mods tiles toggle mods"),
                                     ]
                                 ),
                             ]
@@ -321,6 +331,10 @@ class ModsController(Controller):
         self.page.preferences.mod_manager.auto_generate_and_fix_cfg = (
             event.control.value
         )
+        self.page.preferences.save()
+
+    async def settings_toggle_tile_toggle_cfg(self, event):
+        self.page.preferences.mod_manager.tile_toggle = event.control.value
         self.page.preferences.save()
 
     async def settings_pick_custom_dir(self, event):
@@ -583,10 +597,11 @@ class ModsController(Controller):
         mod_tile = ListTile(
             data=mod,
             content_padding=padding.symmetric(0, 5),
-            on_click=self.toggle_mod,
             expand=True,
             dense=True,
         )
+        if self.page.preferences.mod_manager.tile_toggle:
+            mod_tile.on_click = self.toggle_mod
         if mod.trovesaurus_data:
             if self.page.preferences.mod_manager.show_previews:
                 mod_tile.leading = IconButton(
