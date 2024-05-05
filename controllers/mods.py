@@ -690,7 +690,16 @@ class ModsController(Controller):
             mod_tile.title.controls.append(
                 Tooltip(
                     data="conflicts",
-                    message="\n".join([conflict.name for conflict in mod.conflicts]),
+                    message=(
+                        "One or more mods conflict with this mod:\n"
+                        + (
+                            f"(Conflicts may happen in game)\n\n"
+                            if bool([c for c in mod.conflicts if c.enabled])
+                            and mod.enabled
+                            else "(Conflicts won't happen in game)\n\n"
+                        )
+                        + "\n".join([conflict.name for conflict in mod.conflicts])
+                    ),
                     content=IconButton(
                         icons.WARNING,
                         icon_color=(
@@ -737,7 +746,7 @@ class ModsController(Controller):
     async def go_to_image_preview(self, event):
         mod = event.control.data
         await self.page.dialog.set_data(
-            modal=True,
+            modal=False,
             actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
             content=Image(
                 src=self.api.get_resized_image_url(
