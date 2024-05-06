@@ -654,7 +654,7 @@ class HomeController(Controller):
         self.mastery_widget.set_controls(mastery_widgets)
         await self.mastery_widget.update_async()
 
-    @tasks.loop(seconds=60)
+    @tasks.loop(seconds=60, log_errors=True)
     async def update_events(self):
         async with ClientSession() as session:
             async with session.get("https://trovesaurus.com/calendar/feed") as response:
@@ -702,6 +702,16 @@ class HomeController(Controller):
                         for event in events
                     ]
                 )
+                if not events:
+                    self.events_widget.set_controls(
+                        [
+                            ListTile(
+                                title=Row(
+                                    controls=[Text("No events are currently going on.")]
+                                )
+                            )
+                        ]
+                    )
                 await self.events_widget.update_async()
 
     async def edit_mastery(self, event):
