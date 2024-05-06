@@ -1359,6 +1359,7 @@ class ModdersController(Controller):
                     Card(
                         content=Container(
                             content=Column(
+                                spacing=4,
                                 controls=[
                                     ElevatedButton(
                                         "Open version folder",
