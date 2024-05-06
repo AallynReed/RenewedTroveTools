@@ -131,7 +131,7 @@ class ModsController(Controller):
     def setup_memory(self):
         self.memory = {
             "settings": {"picked_custom_dir_name": None, "picked_custom_dir": None},
-            "my_mods": {"installation_path": None},
+            "my_mods": {"installation_path": None, "filter": None},
             "trovesaurus": {
                 "page": 0,
                 "page_size": self.page.preferences.mod_manager.page_size,
@@ -452,6 +452,12 @@ class ModsController(Controller):
                             for mod_list in self.mod_folders
                         ]
                     ),
+                    TextField(
+                        value=self.memory["my_mods"]["filter"],
+                        label="Filter mods",
+                        on_submit=self.filter_my_mods,
+                        content_padding=padding.symmetric(0, 20),
+                    ),
                 ]
             )
         )
@@ -580,7 +586,13 @@ class ModsController(Controller):
             )
         )
         self.my_mod_tiles = []
+        filter = self.memory["my_mods"]["filter"]
         for mod in self.my_mod_list.mods:
+            if (
+                filter is not None
+                and filter.lower() not in (mod.name + mod.author).lower()
+            ):
+                continue
             mod_frame = (
                 self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
             )
@@ -592,6 +604,10 @@ class ModsController(Controller):
             self.my_mod_tiles.append(mt)
         self.my_mods.controls.append(my_mods_list)
         await self.release_ui()
+
+    async def filter_my_mods(self, event):
+        self.memory["my_mods"]["filter"] = event.control.value or None
+        await self.load_my_mods()
 
     def get_mod_tile(self, mod):
         mod_tile = ListTile(
