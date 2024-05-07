@@ -13,9 +13,11 @@ class Locale(Enum):
 
 class LocaleEngine:
     _translations: dict
-    def __init__(self):
+    def __init__(self, debug=False):
         self._translations = {}
         self._locale = Locale.en_US
+        self.debug_mode = debug
+
 
     @property
     def translations(self):
@@ -28,7 +30,7 @@ class LocaleEngine:
         return self._translations[locale]
 
     def translate(self, text: str):
-        return self.translations[self.locale].get(text, "Loc Error!")
+        return self.translations[self.locale].get(text, f"Loc Error: {text}")
 
     def load_locale_translations(self):
         for file, data in files_cache.items():
@@ -38,7 +40,7 @@ class LocaleEngine:
                 for line in data.splitlines():
                     if len(line.split("»»", 2)) == 2:
                         key, value = line.split("»»", 1)
-                        formatted_data[key] = value
+                        formatted_data[key] = ("»" if self.debug_mode else "") + value
                 self.add_translation(Locale[loc], formatted_data)
 
     @property
@@ -50,5 +52,5 @@ class LocaleEngine:
         self._locale = locale
 
 
-ENGINE = LocaleEngine()
+ENGINE = LocaleEngine(debug=True)
 loc = ENGINE.translate

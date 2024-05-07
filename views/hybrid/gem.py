@@ -6,7 +6,7 @@ from controllers import GemController
 
 class GemView(View):
     route = "/gem_simulator"
-    title = "tabs.3"
+    title = "Gem Simulator"
     icon = SCIENCE_SHARP
     has_tab = True
 

@@ -133,7 +133,7 @@ class CustomAppBar(AppBar):
                                     Text(
                                         value=" ".join(
                                             [
-                                                w.capitalize()
+                                                loc(w.capitalize())
                                                 for w in color.value.split("_")
                                             ]
                                         )

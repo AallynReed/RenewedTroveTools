@@ -4,6 +4,7 @@ from models.constants import files_cache
 from models.interface import AutoNumberField, NumberField
 from models.interface import Controller
 from models.trove.star_chart import get_star_chart
+from utils.locale import loc
 
 
 class MagicFindController(Controller):
@@ -23,7 +24,7 @@ class MagicFindController(Controller):
                         min=500,
                         max=1000,
                         on_change=self.mastery_stat,
-                        label="Mastery Level",
+                        label=loc("Mastery Level"),
                         col={"xxl": 6},
                     )
                 ]
@@ -44,7 +45,7 @@ class MagicFindController(Controller):
                         ),
                         Text(
                             (
-                                source["name"]
+                                loc(source["name"])
                                 + " \u2022 "
                                 + str(
                                     source["value"]
@@ -66,7 +67,7 @@ class MagicFindController(Controller):
                             max=source["value"],
                             step=50,
                             on_change=self.slider_stat,
-                            label=source["name"],
+                            label=loc(source["name"]),
                         )
                     ]
                 )
@@ -84,7 +85,8 @@ class MagicFindController(Controller):
                         on_change=self.switch_stat,
                     ),
                     Text(
-                        f"Sunday Loot Day \u2022 {400 if self.control_values['Patron'] else 100}",
+                        loc("Sunday Loot Day")
+                        + f" \u2022 {400 if self.control_values['Patron'] else 100}",
                         col=9,
                     ),
                 ],
@@ -100,14 +102,14 @@ class MagicFindController(Controller):
                         col=3,
                         on_change=self.switch_stat,
                     ),
-                    Text("Patron \u2022 200%", col=9),
+                    Text(loc("Patron") + " \u2022 200%", col=9),
                 ],
                 col={"xxl": 6},
             )
         )
         buttons.append(
             TextField(
-                hint_text='Star Chart Build ID | "none" to remove',
+                hint_text=loc('Star Chart Build ID | "none" to remove'),
                 on_change=self.set_star_chart_build,
                 text_size=14,
                 height=58,
@@ -152,7 +154,7 @@ class MagicFindController(Controller):
         sunday_bonus *= 1 + bonus / 100
         result += sunday_bonus
         self.results = Card(
-            Text(f"Magic Find: {round(result)}", size=50), col={"xxl": 3.5}
+            Text(loc("Magic Find") + f": {round(result)}", size=50), col={"xxl": 3.5}
         )
         self.interface.controls = [
             Card(

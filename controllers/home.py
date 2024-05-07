@@ -3,6 +3,7 @@ from datetime import datetime, UTC
 
 import humanize
 from aiohttp import ClientSession
+from utils.locale import loc
 from flet import (
     ListTile,
     Text,
@@ -52,47 +53,47 @@ class HomeController(Controller):
             self.main = ResponsiveRow()
             self.daily_data = files_cache["daily_buffs.json"]
             self.weekly_data = files_cache["weekly_buffs.json"]
-            self.date = Text("Trove Time", size=20, col={"xxl": 6})
+            self.date = Text(loc("Trove Time"), size=20, col={"xxl": 6})
         asyncio.create_task(self.post_setup())
 
     async def post_setup(self):
         self.streams_widget = HomeWidget(
             image="assets/icons/brands/twitch.png",
-            title="Twitch Streams",
+            title=loc("Twitch Streams"),
             title_size=20,
             title_url="https://www.twitch.tv/directory/category/trove",
             controls=[Text("Loading...")],
         )
         self.daily_widget = HomeWidget(
             icon=icons.CALENDAR_VIEW_DAY,
-            title="Daily Bonuses",
+            title=loc("Daily Bonuses"),
             title_size=20,
-            controls=[Text("Loading...")],
+            controls=[Text(loc("Loading..."))],
             column_spacing=0,
         )
         self.weekly_widget = HomeWidget(
             icon=icons.CALENDAR_VIEW_WEEK,
-            title="Weekly Bonuses",
+            title=loc("Weekly Bonuses"),
             title_size=20,
-            controls=[Text("Loading...")],
+            controls=[Text(loc("Loading..."))],
         )
         self.events_widget = HomeWidget(
             icon=icons.EVENT,
-            title="Events",
+            title=loc("Events"),
             title_size=20,
-            controls=[Text("Loading...")],
+            controls=[Text(loc("Loading..."))],
         )
         self.dragons_widget = HomeWidget(
             icon=icons.STORE,
-            title="Dragon Merchants",
+            title=loc("Dragon Merchants"),
             title_size=20,
-            controls=[Text("Loading...")],
+            controls=[Text(loc("Loading..."))],
         )
         self.mastery_widget = HomeWidget(
             icon=icons.QUERY_STATS,
-            title="Max Mastery",
+            title=loc("Max Mastery"),
             title_size=20,
-            controls=[Text("Loading...")],
+            controls=[Text(loc("Loading..."))],
         )
         self.main.controls = [
             Column(
@@ -149,10 +150,10 @@ class HomeController(Controller):
                     vertical_offset=50,
                     message="\n".join(
                         [
-                            "Normal",
-                            *[" \u2022 " + b for b in v["normal_buffs"]],
-                            "Patreon",
-                            *[" \u2022 " + b for b in v["premium_buffs"]],
+                            loc("Normal"),
+                            *[" \u2022 " + loc(b) for b in v["normal_buffs"]],
+                            loc("Patron"),
+                            *[" \u2022 " + loc(b) for b in v["premium_buffs"]],
                         ]
                     ),
                     content=Stack(
@@ -176,9 +177,13 @@ class HomeController(Controller):
                                 height=55,
                             ),
                             Text(
-                                v["weekday"], color="#cccccc", left=10, top=3, size=16
+                                loc(v["weekday"]),
+                                color="#cccccc",
+                                left=10,
+                                top=3,
+                                size=16,
                             ),
-                            Text(v["name"], color="#cccccc", left=10, top=23),
+                            Text(loc(v["name"]), color="#cccccc", left=10, top=23),
                         ]
                     ),
                     border_radius=10,
@@ -208,7 +213,7 @@ class HomeController(Controller):
                     Tooltip(
                         data=k,
                         message="\n".join(
-                            ["Buffs", *[" \u2022 " + b for b in v["buffs"]]]
+                            [loc("Buffs"), *[" \u2022 " + loc(b) for b in v["buffs"]]]
                         ),
                         content=Stack(
                             controls=[
@@ -230,7 +235,11 @@ class HomeController(Controller):
                                     height=113,
                                 ),
                                 Text(
-                                    v["name"], color="#cccccc", size=16, left=10, top=3
+                                    loc(v["name"]),
+                                    color="#cccccc",
+                                    size=16,
+                                    left=10,
+                                    top=3,
                                 ),
                             ]
                         ),
@@ -256,26 +265,28 @@ class HomeController(Controller):
     async def update_dragons(self):
         trove_time = self.page.trove_time
         dragons = (
-            ("Luxion", trove_time.first_luxion, "lux"),
-            ("Corruxion", trove_time.first_corruxion, "nlux"),
+            (loc("Luxion"), trove_time.first_luxion, "lux"),
+            (loc("Corruxion"), trove_time.first_corruxion, "nlux"),
         )
         dragon_controls = []
         for name, first, image_name in dragons:
             if trove_time.is_dragon(first):
                 image_src = f"assets/images/dragons/{image_name}.png"
                 text = Text(
-                    "Leaving in "
+                    loc("Leaving in")
+                    + " "
                     + humanize.naturaltime(-trove_time.until_end_dragon(first)).replace(
-                        " from now", ""
+                        " " + loc("from now"), ""
                     )
                 )
             else:
                 image_src = f"assets/images/dragons/{image_name}_out.png"
                 text = Text(
-                    "Arriving in "
+                    loc("Arriving in")
+                    + " "
                     + humanize.naturaltime(
                         -trove_time.until_next_dragon(first)
-                    ).replace(" from now", "")
+                    ).replace(" " + loc("from now"), "")
                 )
             image = Image(src=image_src, width=40, height=40)
             dragon_control = Card(
@@ -299,20 +310,26 @@ class HomeController(Controller):
             dragon_controls.append(dragon_control)
         if trove_time.is_fluxion():
             image_src = "assets/images/dragons/fluxion.png"
-            phase_text = "Voting" if trove_time.is_fluxion_voting() else "Selling"
+            phase_text = (
+                loc("Voting") if trove_time.is_fluxion_voting() else loc("Selling")
+            )
             text = Text(
-                "Leaving in "
+                loc("Leaving in")
+                + " "
                 + humanize.naturaltime(-trove_time.until_end_fluxion()).replace(
-                    " from now", ""
+                    " " + loc("from now"), ""
                 )
             )
         else:
             image_src = "assets/images/dragons/fluxion_out.png"
-            phase_text = "Voting" if trove_time.is_fluxion_selling() else "Selling"
+            phase_text = (
+                loc("Voting") if trove_time.is_fluxion_selling() else loc("Selling")
+            )
             text = Text(
-                "Arriving in "
+                loc("Arriving in")
+                + " "
                 + humanize.naturaltime(-trove_time.until_next_fluxion()).replace(
-                    " from now", ""
+                    " " + loc("from now"), ""
                 )
             )
         image = Image(src=image_src, width=40, height=40)
@@ -322,7 +339,7 @@ class HomeController(Controller):
                     controls=[
                         image,
                         TextButton(
-                            content=Text(f"[{phase_text}] Fluxion", size=20),
+                            content=Text(f"[{phase_text}] " + loc("Fluxion"), size=20),
                             url="https://trovesaurus.com/fluxion/list",
                             style=ButtonStyle(padding=padding.symmetric(0, 0)),
                         ),
@@ -439,7 +456,7 @@ class HomeController(Controller):
                                 Row(
                                     controls=[
                                         Icon(icons.UPDATE, tooltip=mastery_updated),
-                                        Text("Live Trove Mastery", size=20),
+                                        Text(loc("Live Trove Mastery"), size=20),
                                     ]
                                 ),
                                 Row(
@@ -493,7 +510,7 @@ class HomeController(Controller):
                                 Row(
                                     controls=[
                                         Icon(icons.UPDATE, tooltip=geode_updated),
-                                        Text("Live Geode Mastery", size=20),
+                                        Text(loc("Live Geode Mastery"), size=20),
                                     ]
                                 ),
                                 Row(
@@ -566,7 +583,7 @@ class HomeController(Controller):
             mastery_widgets.controls[0].content.content.controls.extend(
                 [
                     Divider(height=1),
-                    Text("PTS Trove Mastery", size=20),
+                    Text(loc("PTS Trove Mastery"), size=20),
                     Row(
                         controls=[
                             Text(
@@ -610,7 +627,7 @@ class HomeController(Controller):
             mastery_widgets.controls[1].content.content.controls.extend(
                 [
                     Divider(height=1),
-                    Text("PTS Geode Mastery", size=20),
+                    Text(loc("PTS Geode Mastery"), size=20),
                     Row(
                         controls=[
                             Text(
@@ -707,7 +724,9 @@ class HomeController(Controller):
                         [
                             ListTile(
                                 title=Row(
-                                    controls=[Text("No events are currently going on.")]
+                                    controls=[
+                                        Text(loc("No events are currently going on."))
+                                    ]
                                 )
                             )
                         ]
@@ -717,17 +736,23 @@ class HomeController(Controller):
     async def edit_mastery(self, event):
         server, mastery_type, points = event.control.data
         await self.page.dialog.set_data(
-            title=Text("Edit Mastery"),
+            title=Text(loc("Edit Mastery")),
             modal=True,
             actions=[
-                TextButton("Save", data=event.control.data, on_click=self.save_mastery),
-                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+                TextButton(
+                    loc("Save"), data=event.control.data, on_click=self.save_mastery
+                ),
+                TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
             ],
             content=Column(
                 controls=[
-                    Text("Server: " + server.upper()),
-                    Text("Type: " + ("Trove" if mastery_type == "normal" else "Geode")),
-                    TextField(label="Points", value=points),
+                    Text(loc("Server") + ": " + server.upper()),
+                    Text(
+                        loc("Type")
+                        + ": "
+                        + ("Trove" if mastery_type == "normal" else "Geode")
+                    ),
+                    TextField(label=loc("Points"), value=points),
                 ],
                 expand=True,
             ),

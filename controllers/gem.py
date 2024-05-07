@@ -17,7 +17,7 @@ from flet import (
     DragTarget,
     Stack,
 )
-from i18n import t
+from utils.locale import loc
 
 from models.interface import Controller
 from models.trove.gem import (
@@ -46,39 +46,39 @@ class GemController(Controller):
                     Row(
                         controls=[
                             ElevatedButton(
-                                text=t("gem_tiers.Radiant"),
+                                text=loc("Radiant"),
                                 on_click=self.reroll_radiant,
                                 bgcolor=GemTierColor.radiant.value,
                                 color="black",
                             ),
                             ElevatedButton(
-                                text=t("gem_tiers.Stellar"),
+                                text=loc("Stellar"),
                                 on_click=self.reroll_stellar,
                                 bgcolor=GemTierColor.stellar.value,
                                 color="black",
                             ),
                             ElevatedButton(
-                                text=t("gem_tiers.Crystal"),
+                                text=loc("Crystal"),
                                 on_click=self.reroll_crystal,
                                 bgcolor=GemTierColor.crystal.value,
                                 color="black",
                             ),
-                            Text(t("gem_types.Lesser")),
+                            Text(loc("Lesser")),
                             Switch(value=self.empower, on_change=self.switch_empower),
-                            Text(t("gem_types.Empowered")),
+                            Text(loc("Empowered")),
                         ],
                         alignment="center",
                     ),
                     Text(
-                        value=self.selected_gem.name
+                        value=loc(self.selected_gem.name)
                         + ": "
-                        + t("strings.Level")
+                        + loc("Level")
                         + f" {self.selected_gem.level}",
                         size=22,
                         color=f"#{self.selected_gem.color.value}",
                     ),
                     Text(
-                        value=t("stats.Power Rank")
+                        value=loc("Power Rank")
                         + f": {round(self.selected_gem.power_rank)}",
                         size=19,
                     ),
@@ -109,28 +109,28 @@ class GemController(Controller):
                     Row(
                         controls=[
                             ElevatedButton(
-                                t("buttons.min_level"),
+                                loc("Min"),
                                 on_click=self.max_level_down,
                                 disabled=self.selected_gem.level == 1,
                             ),
                             ElevatedButton(
-                                t("buttons.level_down"),
+                                loc("Level Down"),
                                 on_click=self.level_down,
                                 disabled=self.selected_gem.level == 1,
                             ),
                             ElevatedButton(
-                                t("buttons.level_fifteen"),
+                                loc("Level 15"),
                                 on_click=self.level_fifteen,
                                 disabled=self.selected_gem.level == 15,
                             ),
                             ElevatedButton(
-                                t("buttons.level_up"),
+                                loc("Level Up"),
                                 on_click=self.level_up,
                                 disabled=self.selected_gem.level
                                 == self.selected_gem.max_level,
                             ),
                             ElevatedButton(
-                                t("buttons.max_level"),
+                                loc("Max"),
                                 on_click=self.max_level_up,
                                 disabled=self.selected_gem.level
                                 == self.selected_gem.max_level,
@@ -155,8 +155,8 @@ class GemController(Controller):
                                                                 color="green",
                                                             ),
                                                             Text(
-                                                                t(
-                                                                    f"stats.{stat.name.value}"
+                                                                loc(
+                                                                    f"{stat.name.value}"
                                                                 ),
                                                                 weight="bold",
                                                             ),
@@ -277,7 +277,7 @@ class GemController(Controller):
                                         controls=[
                                             Container(col={"xs": 3}),
                                             Text(
-                                                t("strings.Improve Stat"),
+                                                loc("Improve Stat"),
                                                 text_align="center",
                                                 col={"xs": 5},
                                             ),
@@ -360,7 +360,7 @@ class GemController(Controller):
                                     ResponsiveRow(
                                         controls=[
                                             Text(
-                                                t("strings.Reroll Stat"),
+                                                loc("Reroll Stat"),
                                                 text_align="center",
                                                 col={"xs": 5},
                                             ),
@@ -402,7 +402,7 @@ class GemController(Controller):
                                         controls=[
                                             Container(
                                                 content=Text(
-                                                    t("strings.Change Stat"),
+                                                    loc("Change Stat"),
                                                     size=11,
                                                     text_align="center",
                                                 ),
@@ -410,7 +410,7 @@ class GemController(Controller):
                                             ),
                                             Container(
                                                 content=Text(
-                                                    t("strings.Move Boost"),
+                                                    loc("Move Boost"),
                                                     size=11,
                                                     text_align="center",
                                                 ),

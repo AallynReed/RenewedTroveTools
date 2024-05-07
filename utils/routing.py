@@ -12,7 +12,7 @@ from flet import (
     NavigationRailLabelType,
     NavigationRailDestination,
 )
-from i18n import t
+from utils.locale import loc
 
 from utils.functions import get_attr
 
@@ -62,7 +62,7 @@ class Routing:
                         min_width=100,
                         min_extended_width=200,
                         destinations=[
-                            NavigationRailDestination(icon=v.icon, label=t(v.title))
+                            NavigationRailDestination(icon=v.icon, label=loc(v.title))
                             for v in self.current_views
                         ],
                         on_change=self.change_navigation,

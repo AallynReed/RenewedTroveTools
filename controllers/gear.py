@@ -10,6 +10,7 @@ from flet import (
     icons,
     Icon,
 )
+from utils.locale import loc
 
 from models.interface import Controller
 from models.constants import files_cache
@@ -34,13 +35,13 @@ class GearBuildsController(Controller):
             self.class_select = Dropdown(
                 label="Class",
                 value=classes[0],
-                options=[dropdown.Option(key=cl, text=cl) for cl in classes],
+                options=[dropdown.Option(key=cl, text=loc(cl)) for cl in classes],
                 on_change=self.set_class,
             )
             self.build_type_select = Dropdown(
                 label="Build Type",
                 options=[
-                    dropdown.Option(key=build, text=build.capitalize())
+                    dropdown.Option(key=build, text=loc(build.capitalize()))
                     for build, data in self.gear_builds[classes[0]].items()
                     if data["enabled"]
                 ],
@@ -81,7 +82,7 @@ class GearBuildsController(Controller):
         outlines = data["tier"] - 1
         interface.append(
             Row(
-                controls=[Text("Rating:", size=24)]
+                controls=[Text(loc("Rating") + ":", size=24)]
                 + [Icon(icons.STAR) for i in range(stars)]
                 + [Icon(icons.STAR_OUTLINE) for i in range(outlines)]
             )
@@ -104,10 +105,19 @@ class GearBuildsController(Controller):
                     content=Container(
                         ResponsiveRow(
                             controls=[
-                                Text(equip.capitalize(), text_align="center", size=28),
+                                Text(
+                                    loc(equip.capitalize()),
+                                    text_align="center",
+                                    size=28,
+                                ),
                                 ResponsiveRow(
                                     controls=[
-                                        *([Text(stat) for stat in data[equip]]),
+                                        *(
+                                            [
+                                                Text(loc(stat), selectable=True)
+                                                for stat in data[equip]
+                                            ]
+                                        ),
                                     ],
                                 ),
                             ],

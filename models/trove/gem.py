@@ -24,7 +24,6 @@ from random import randint, choice
 from typing import Any
 from uuid import UUID, uuid4
 
-from i18n import t
 from pydantic import BaseModel, Field
 
 from models.trove.gems import (
@@ -379,9 +378,7 @@ class Gem(BaseModel):
 
     @property
     def pseudo_name(self):
-        return t(
-            "gem_full_names." + " ".join([self.type.value, self.element.value, "Gem"])
-        )
+        return " ".join([self.type.value, self.element.value, "Gem"])
 
     @property
     def max_level(self):
@@ -427,10 +424,7 @@ class LesserGem(Gem):
 
     @property
     def name(self):
-        return t(
-            "gem_full_names."
-            + " ".join([self.restriction.value, self.element.value, "Gem"])
-        )
+        return " ".join([self.restriction.value, self.element.value, "Gem"])
 
     @classmethod
     def random_gem(cls, tier: GemTier = None, element: GemElement = None):
@@ -481,7 +475,7 @@ class EmpoweredGem(Gem):
 
     @property
     def name(self):
-        return t("gem_abilities." + self.ability.value)
+        return self.ability.value
 
     @property
     def possible_abilities(self):

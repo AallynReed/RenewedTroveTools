@@ -1,6 +1,5 @@
 from flet import Text, TextField, TextStyle
 from utils.locale import loc
-from i18n import t
 
 from models.interface import Controller
 from utils.functions import throttle
@@ -33,14 +32,14 @@ class MasteryController(Controller):
                 try:
                     points = int(self.points_input.value)
                 except ValueError:
-                    self.points_input.helper_text = loc("Invalid Number")
+                    self.points_input.helper_text = loc("Please provide a valid number")
                 else:
                     level, points, increment = points_to_mr(points)
                     if level > 1000 or (level == 1000 and points):
                         level = 1000
                         increment, points = mr_to_points(level)
                         self.points_input.value = str(points)
-                        self.points_input.helper_text = t("errors.max_mastery_1000")
+                        self.points_input.helper_text = loc("Max mastery is 1000")
                     self.level_input.value = str(level)
                     self.get_buffs()
         elif event.control == self.level_input:
@@ -50,11 +49,11 @@ class MasteryController(Controller):
                 try:
                     levels = int(self.level_input.value)
                 except ValueError:
-                    self.level_input.helper_text = t("errors.invalid_number")
+                    self.level_input.helper_text = loc("Please provide a valid number")
                 else:
                     if levels > 1000:
                         levels = 1000
-                        self.level_input.helper_text = t("errors.max_mastery_1000")
+                        self.level_input.helper_text = loc("Max mastery is 1000")
                     self.level_input.value = str(levels)
                     increment, points = mr_to_points(levels)
                     self.points_input.value = points
@@ -65,11 +64,11 @@ class MasteryController(Controller):
         mastery_limit = 500
         geode_limit = 100
         if not self.level_input.value:
-            self.mastery_buffs.value = f"{t('mastery.mastery_buffs')}\n"
-            self.geode_buffs.value = f"{t('mastery.geode_mastery_buffs')}\n"
+            self.mastery_buffs.value = f"{loc('Mastery Buffs')}\n"
+            self.geode_buffs.value = f"{loc('Geode Mastery Buffs')}\n"
             return
-        mastery_text = f"{t('mastery.mastery_buffs')}\n"
-        geode_text = f"{t('mastery.geode_mastery_buffs')}\n"
+        mastery_text = f"{loc('Mastery Buffs')}\n"
+        geode_text = f"{loc('Geode Mastery Buffs')}\n"
         level = int(self.level_input.value)
         health = 0
         damage = 0
@@ -83,16 +82,16 @@ class MasteryController(Controller):
             for _ in range(level - 500):
                 power_rank += 1
                 magic_find += 1
-        mastery_text += f"\n{t('stats.Health Bonus')}: {round(health, 2)}%"
-        mastery_text += f"\n{t('stats.Damage Bonus')}: {round(damage, 2)}%"
-        mastery_text += f"\n{t('stats.Power Rank')}: {power_rank}"
-        mastery_text += f"\n{t('stats.Magic Find')}: {magic_find}"
+        mastery_text += f"\n{loc('Health Bonus')}: {round(health, 2)}%"
+        mastery_text += f"\n{loc('Damage Bonus')}: {round(damage, 2)}%"
+        mastery_text += f"\n{loc('Power Rank')}: {power_rank}"
+        mastery_text += f"\n{loc('Magic Find')}: {magic_find}"
         self.mastery_buffs.value = mastery_text
         light = 0
         power_rank = 0
         for _ in range(level if level <= geode_limit else geode_limit):
             light += 10
             power_rank += 5
-        geode_text += f"\n{t('stats.Light')}: {round(light, 2)}"
-        geode_text += f"\n{t('stats.Power Rank')}: {round(power_rank, 2)}"
+        geode_text += f"\n{loc('Light')}: {round(light, 2)}"
+        geode_text += f"\n{loc('Power Rank')}: {round(power_rank, 2)}"
         self.geode_buffs.value = geode_text

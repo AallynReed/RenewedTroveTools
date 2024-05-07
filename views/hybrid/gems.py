@@ -6,7 +6,7 @@ from controllers import GemSetController
 
 class GemSetView(View):
     route = "/gem_calculator"
-    title = "tabs.0"
+    title = "Gem Set Calculator"
     icon = DIAMOND_SHARP
     has_tab = True
 
