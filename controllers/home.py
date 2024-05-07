@@ -654,7 +654,7 @@ class HomeController(Controller):
         self.mastery_widget.set_controls(mastery_widgets)
         await self.mastery_widget.update_async()
 
-    @tasks.loop(seconds=60, log_errors=True)
+    @tasks.loop(seconds=60)
     async def update_events(self):
         async with ClientSession() as session:
             async with session.get("https://trovesaurus.com/calendar/feed") as response:
