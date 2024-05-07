@@ -940,6 +940,10 @@ class ModsController(Controller):
             end_mod_frame_tile.controls.append(tile)
             tile.controls[icon_index].content.icon = icon
             tile.controls.reverse()
+            if mod.enabled:
+                tile.controls[-1].message = "Disable"
+            else:
+                tile.controls[0].message = "Enable"
 
     async def delete_mod(self, event):
         mod = event.control.data
