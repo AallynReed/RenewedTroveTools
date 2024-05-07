@@ -43,7 +43,6 @@ from flet_core.icons import (
 
 from models.preferences import AccentColor
 from utils.functions import check_update
-from utils.localization import Locale
 from utils.tasks import loop
 
 
@@ -143,28 +142,28 @@ class CustomAppBar(AppBar):
                         for color in AccentColor
                     ],
                 ),
-                PopupMenuButton(
-                    content=Container(
-                        Row(
-                            controls=[
-                                Icon(LANGUAGE),
-                                # Text(
-                                #     self.page.app_config.locale.name.replace("_", " ")
-                                # ),
-                            ]
-                        )
-                    ),
-                    items=[
-                        PopupMenuItem(
-                            data=loc,
-                            text=loc.name.replace("_", " "),
-                            on_click=self.change_locale,
-                        )
-                        for loc in Locale
-                    ],
-                    visible=False,
-                    tooltip="Change language (Broken)",
-                ),
+                # PopupMenuButton(
+                #     content=Container(
+                #         Row(
+                #             controls=[
+                #                 Icon(LANGUAGE),
+                #                 # Text(
+                #                 #     self.page.app_config.locale.name.replace("_", " ")
+                #                 # ),
+                #             ]
+                #         )
+                #     ),
+                #     items=[
+                #         PopupMenuItem(
+                #             data=loc,
+                #             text=loc.name.replace("_", " "),
+                #             on_click=self.change_locale,
+                #         )
+                #         for loc in Locale
+                #     ],
+                #     visible=False,
+                #     tooltip="Change language (Broken)",
+                # ),
                 PopupMenuButton(
                     data="donate-buttons",
                     icon=SAVINGS,

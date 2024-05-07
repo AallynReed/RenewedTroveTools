@@ -15,7 +15,6 @@ from models.constants import fetch_files
 from models.interface import CustomAppBar
 from models.interface.controls import Snackbar, Modal
 from utils import tasks
-from utils.localization import LocalizationManager
 from utils.logger import Logger
 from utils.path import BasePath
 from utils.protocol import set_protocol
@@ -23,6 +22,7 @@ from utils.routing import Routing
 from utils.trove.server_time import ServerTime
 from views import all_views
 from utils.kiwiapi import KiwiAPI
+from utils import locale
 
 
 class App:
@@ -145,7 +145,7 @@ class App:
                 file.unlink()
 
     def setup_localization(self):
-        LocalizationManager(self.page).update_all_translations()
+        locale.ENGINE.load_locale_translations()
         self.page.logger.info("Updated localization strings")
 
     async def setup_page(self):
