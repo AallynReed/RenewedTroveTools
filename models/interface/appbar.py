@@ -44,6 +44,7 @@ from flet_core.icons import (
 from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.tasks import loop
+from utils.locale import loc
 
 
 async def check_update(current_version, debug=False, force=False):
@@ -93,7 +94,7 @@ class CustomAppBar(AppBar):
                         IconButton(
                             icon=DESKTOP_WINDOWS,
                             url="https://kiwiapi.slynx.xyz/v1/misc/latest_release/download/redirect",
-                            tooltip="Get Windows Application",
+                            tooltip=loc("Get Windows Application"),
                         )
                     ]
                     if self.page.web
@@ -103,21 +104,23 @@ class CustomAppBar(AppBar):
                     icon=DOWNLOAD,
                     on_click=self.go_to_update_page,
                     visible=False,
-                    tooltip="A newer version is available.",
+                    tooltip=loc("A newer version is available."),
                 ),
                 IconButton(
                     icon=HISTORY_EDU,
                     on_click=self.display_changelog,
-                    tooltip="Changelog",
+                    tooltip=loc("Change Log"),
                 ),
                 IconButton(
-                    icon=FEEDBACK, on_click=self.feedback_modal, tooltip="Send feedback"
+                    icon=FEEDBACK,
+                    on_click=self.feedback_modal,
+                    tooltip=loc("Send feedback"),
                 ),
                 IconButton(
                     data="theme_switcher",
                     icon=DARK_MODE if self.page.dark_theme else LIGHT_MODE,
                     on_click=self.change_theme,
-                    tooltip="Change theme",
+                    tooltip=loc("Change theme"),
                 ),
                 PopupMenuButton(
                     icon=PALETTE,
@@ -167,7 +170,7 @@ class CustomAppBar(AppBar):
                 PopupMenuButton(
                     data="donate-buttons",
                     icon=SAVINGS,
-                    tooltip="Donate",
+                    tooltip=loc("Donate"),
                     items=[
                         PopupMenuItem(
                             data="paypal",
@@ -224,7 +227,7 @@ class CustomAppBar(AppBar):
                                     else [
                                         TextButton(
                                             icon=PERSON,
-                                            text="Login",
+                                            text=loc("Login"),
                                             style=ButtonStyle(color="secondary"),
                                             on_click=self.page.RTT.display_login_screen,
                                         )
@@ -235,7 +238,7 @@ class CustomAppBar(AppBar):
                                 [
                                     PopupMenuItem(
                                         data="logout",
-                                        text="Logout",
+                                        text=loc("Logout"),
                                         on_click=self.page.RTT.execute_logout,
                                     )
                                 ]
@@ -288,7 +291,7 @@ class CustomAppBar(AppBar):
                         PopupMenuItem(
                             icon=BUG_REPORT,
                             data="discord",
-                            text="Report a bug",
+                            text=loc("Report a bug"),
                             on_click=self.go_url,
                         ),
                         *(
@@ -296,9 +299,11 @@ class CustomAppBar(AppBar):
                                 PopupMenuItem(
                                     icon=PEST_CONTROL,
                                     text=(
-                                        "Switch to debug version"
-                                        if not self.page.metadata.dev
-                                        else "Switch to release version"
+                                        loc(
+                                            "Switch to debug version"
+                                            if not self.page.metadata.dev
+                                            else "Switch to release version"
+                                        )
                                     ),
                                     on_click=self.switch_debug,
                                 )
@@ -307,10 +312,10 @@ class CustomAppBar(AppBar):
                             else []
                         ),
                         PopupMenuItem(
-                            icon=HELP, text="About", on_click=self.open_about
+                            icon=HELP, text=loc("About"), on_click=self.open_about
                         ),
                     ],
-                    tooltip="Others",
+                    tooltip=loc("Others"),
                 ),
             ]
         )
@@ -350,7 +355,7 @@ class CustomAppBar(AppBar):
                     content.controls.append(
                         Column(
                             controls=[
-                                Text(f"Version {version}", size=20),
+                                Text(loc("Version {}").format(version), size=20),
                                 *(
                                     [
                                         Text(
@@ -366,8 +371,8 @@ class CustomAppBar(AppBar):
                     )
         await self.page.dialog.set_data(
             modal=True,
-            title=Text("Changelog"),
-            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
+            title=Text(loc("Change Log")),
+            actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             actions_alignment=MainAxisAlignment.END,
             content=content,
         )
@@ -379,23 +384,32 @@ class CustomAppBar(AppBar):
             if not self.update_notified:
                 await self.page.dialog.set_data(
                     modal=True,
-                    title=Text("Update available"),
+                    title=Text(loc("Update available")),
                     content=Text(
-                        "A new update is available, do you want to download it?\n"
-                        "The application will download update and close itself to install it.\n"
-                        "After the installation is complete, the application will be automatically restarted.\n\n"
-                        "Keeping the app up to date is important to ensure that you have the latest features and bug fixes."
+                        loc("A new update is available, do you want to download it?")
+                        + "\n"
+                        + loc(
+                            "The application will download update and close itself to install it."
+                        )
+                        + "\n"
+                        + loc(
+                            "After the installation is complete, the application will be automatically restarted."
+                        )
+                        + "\n\n"
+                        + loc(
+                            "Keeping the app up to date is important to ensure that you have the latest features and bug fixes."
+                        )
                     ),
                     actions=[
-                        TextButton("Later", on_click=self.page.RTT.close_dialog),
-                        TextButton("Update", on_click=self.go_to_update_page),
+                        TextButton(loc("Later"), on_click=self.page.RTT.close_dialog),
+                        TextButton(loc("Update"), on_click=self.go_to_update_page),
                     ],
                     actions_alignment=MainAxisAlignment.END,
                 )
                 self.update_notified = True
             self.page.appbar.actions[0].visible = True
             await self.page.snack_bar.show(
-                "A new update is available, click on the download icon to update.",
+                loc("A new update is available, click on the download icon to update."),
                 "yellow",
             )
             await self.page.appbar.update_async()
@@ -406,10 +420,10 @@ class CustomAppBar(AppBar):
         )
         await self.page.dialog.set_data(
             modal=True,
-            title=Text("Feedback"),
+            title=Text(loc("Feedback")),
             actions=[
-                TextButton("Close", on_click=self.page.RTT.close_dialog),
-                TextButton("Send", on_click=self.send_feedback),
+                TextButton(loc("Close"), on_click=self.page.RTT.close_dialog),
+                TextButton(loc("Send"), on_click=self.send_feedback),
             ],
             actions_alignment=MainAxisAlignment.END,
             content=self.feedback_text,
@@ -421,6 +435,7 @@ class CustomAppBar(AppBar):
             data = {"message": self.feedback_text.value}
             await session.post("https://kiwiapi.slynx.xyz/v1/misc/feedback", json=data)
         await self.page.dialog.hide()
+        await self.page.snack_bar.show(loc("Feedback sent"))
 
     async def switch_debug(self, event):
         await self.go_to_update_page(event, True)
@@ -438,7 +453,7 @@ class CustomAppBar(AppBar):
                 Column(
                     controls=[
                         Text(
-                            "Downloading update, please wait...",
+                            loc("Downloading update, please wait..."),
                             text_align="center",
                             size=40,
                         )
@@ -513,8 +528,8 @@ class CustomAppBar(AppBar):
     async def open_about(self, event):
         await self.page.dialog.set_data(
             modal=True,
-            title=Text("About"),
-            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
+            title=Text(loc("About")),
+            actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             actions_alignment=MainAxisAlignment.END,
             content=Text(
                 "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.\n\nI am coding this as an hobby with the goal of"

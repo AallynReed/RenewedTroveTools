@@ -1,4 +1,5 @@
 from flet import Text, TextField, TextStyle
+from utils.locale import loc
 from i18n import t
 
 from models.interface import Controller
@@ -9,13 +10,13 @@ from utils.trove.mastery import mr_to_points, points_to_mr
 class MasteryController(Controller):
     def setup_controls(self):
         self.points_input = TextField(
-            label=t("mastery.mastery_points"), helper_style=TextStyle(color="red")
+            label=loc("Mastery Points"), helper_style=TextStyle(color="red")
         )
         self.level_input = TextField(
-            label=t("mastery.mastery_levels"), helper_style=TextStyle(color="red")
+            label=loc("Mastery Levels"), helper_style=TextStyle(color="red")
         )
-        self.mastery_buffs = Text(t("mastery.mastery_buffs"))
-        self.geode_buffs = Text(t("mastery.geode_mastery_buffs"))
+        self.mastery_buffs = Text(loc("Mastery Buffs"))
+        self.geode_buffs = Text(loc("Geode Mastery Buffs"))
 
     def setup_events(self):
         self.points_input.on_change = self.calculate_mastery
@@ -32,7 +33,7 @@ class MasteryController(Controller):
                 try:
                     points = int(self.points_input.value)
                 except ValueError:
-                    self.points_input.helper_text = t("errors.invalid_number")
+                    self.points_input.helper_text = loc("Invalid Number")
                 else:
                     level, points, increment = points_to_mr(points)
                     if level > 1000 or (level == 1000 and points):

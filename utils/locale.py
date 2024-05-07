@@ -1,6 +1,7 @@
 from enum import Enum
 from models.constants import files_cache
 
+
 class Locale(Enum):
     """Supported locales."""
     en_US = "American English"
