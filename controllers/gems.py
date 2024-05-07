@@ -28,8 +28,7 @@ from flet import (
     Tab,
     Stack,
 )
-from i18n import t
-
+from utils.locale import loc
 from models.interface import Controller
 from models.trove.gem import (
     LesserGem,
@@ -80,17 +79,17 @@ class GemSetController(Controller):
                                 controls=[
                                     Text("Gem Tier", size=18),
                                     ElevatedButton(
-                                        t("buttons.all_radiant"),
+                                        loc("Radiant"),
                                         on_click=self.on_full_radiant,
                                         col=4,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.all_stellar"),
+                                        loc("Stellar"),
                                         on_click=self.on_full_stellar,
                                         col=4,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.all_crystal"),
+                                        loc("Crystal"),
                                         on_click=self.on_full_crystal,
                                         col=4,
                                     ),
@@ -101,12 +100,12 @@ class GemSetController(Controller):
                                 controls=[
                                     Text("Gem Levels", size=18),
                                     ElevatedButton(
-                                        t("buttons.min_level"),
+                                        loc("Min"),
                                         on_click=self.on_min_level,
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.max_level"),
+                                        loc("Max"),
                                         on_click=self.on_max_level,
                                         col=6,
                                     ),
@@ -126,17 +125,17 @@ class GemSetController(Controller):
                                 controls=[
                                     Text("Augmentation", size=18),
                                     ElevatedButton(
-                                        t("buttons.zero_augmentation"),
+                                        loc("Zero"),
                                         on_click=self.zero_augmentation,
                                         col=4,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.min_augmentation"),
+                                        loc("Min"),
                                         on_click=self.on_min_augmentation,
                                         col=4,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.max_augmentation"),
+                                        loc("Max"),
                                         on_click=self.on_max_augmentation,
                                         col=4,
                                     ),
@@ -147,22 +146,22 @@ class GemSetController(Controller):
                                 controls=[
                                     Text("Stats", size=18),
                                     ElevatedButton(
-                                        t("buttons.all_magic"),
+                                        loc("Magic"),
                                         on_click=self.on_all_magic,
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.all_physical"),
+                                        loc("Physical"),
                                         on_click=self.on_all_physical,
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.all_damage"),
+                                        loc("Damage"),
                                         on_click=self.on_full_damage,
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        t("buttons.all_health"),
+                                        loc("Health"),
                                         on_click=self.on_full_health,
                                         col=6,
                                     ),
@@ -176,7 +175,7 @@ class GemSetController(Controller):
                         controls=[
                             Switch(
                                 value=True,
-                                label=t("gem_dragons." + element.value),
+                                label=loc(element.value + " Primordial"),
                                 data=element,
                                 on_change=self.on_primordial_change,
                                 col={"xxl": 3},
@@ -219,7 +218,7 @@ class GemSetController(Controller):
                                                 ],
                                             ),
                                             Text(
-                                                t("strings.Lvl")
+                                                loc("Lvl")
                                                 + f": {gem.level} "
                                                 + gem.name,
                                                 size=15,
@@ -302,14 +301,13 @@ class GemSetController(Controller):
             ]
             unused_abilities.append(self.selected_gem.ability)
             options = [
-                dropdown.Option(key=a.name, text=t("gem_abilities." + a.value))
-                for a in unused_abilities
+                dropdown.Option(key=a.name, text=loc(a.value)) for a in unused_abilities
             ]
             ability_editor.controls.append(
                 Dropdown(
                     value=self.selected_gem.ability.name,
                     options=options,
-                    label=t("strings.Change Ability"),
+                    label=loc("Change Ability"),
                     on_change=self.on_gem_ability_change,
                     col=3,
                 )
@@ -319,18 +317,16 @@ class GemSetController(Controller):
                 Dropdown(
                     value=self.selected_gem.restriction.value,
                     options=[
-                        dropdown.Option(r.value, t(f"gem_restrictions.{r.value}"))
+                        dropdown.Option(r.value, loc(f"{r.value}"))
                         for r in GemRestriction
                     ],
-                    label=t("strings.Change Restriction"),
+                    label=loc("Change Restriction"),
                     on_change=self.on_restriction_change,
                     col=3,
                 )
             )
         else:
-            ability_editor.controls.append(
-                Dropdown(label=t("strings.Change Restriction"))
-            )
+            ability_editor.controls.append(Dropdown(label=loc("Change Restriction")))
         if self.selected_gem:
             level_editor.controls.append(
                 Slider(
@@ -338,7 +334,7 @@ class GemSetController(Controller):
                     max=self.selected_gem.max_level,
                     value=self.selected_gem.level,
                     divisions=self.selected_gem.max_level - 1,
-                    label=t("strings.Level") + " {value}",
+                    label=loc("Level") + " {value}",
                     on_change_end=self.on_gem_level_change,
                     col=8,
                 )
@@ -350,12 +346,13 @@ class GemSetController(Controller):
                             value=stat.name.value,
                             data=stat,
                             options=[
-                                dropdown.Option(s.value, text=t(f"stats.{s.value}"))
+                                dropdown.Option(s.value, text=loc(f"{s.value}"))
                                 for s in self.selected_gem.possible_change_stats(stat)
                             ]
                             + [
                                 dropdown.Option(
-                                    stat.name.value, text=t(f"stats.{stat.name.value}")
+                                    stat.name.value,
+                                    text=loc(stat.name.value),
                                 )
                             ],
                             disabled=stat.name == Stat.light,
@@ -365,7 +362,7 @@ class GemSetController(Controller):
                         Text(
                             data=stat,
                             value=f"{stat.display_percentage}"
-                            + t("strings.% Augmentation Progress"),
+                            + loc("% Augmentation Progress"),
                             col={"xxl": 3, "xs": 5},
                         ),
                         Row(
@@ -378,7 +375,7 @@ class GemSetController(Controller):
                                         width=25,
                                     ),
                                     data=stat,
-                                    tooltip=t("augments.rough"),
+                                    tooltip=loc("Builder's Rough Focus"),
                                     on_click=self.on_rough_augment,
                                     disabled=stat.is_maxed,
                                 ),
@@ -390,7 +387,7 @@ class GemSetController(Controller):
                                         width=23,
                                     ),
                                     data=stat,
-                                    tooltip=t("augments.precise"),
+                                    tooltip=loc("Builder's Precise Focus"),
                                     on_click=self.on_precise_augment,
                                     disabled=stat.is_maxed,
                                 ),
@@ -402,7 +399,7 @@ class GemSetController(Controller):
                                         width=23,
                                     ),
                                     data=stat,
-                                    tooltip=t("augments.superior"),
+                                    tooltip=loc("Builder's Superior Focus"),
                                     on_click=self.on_superior_augment,
                                     disabled=stat.is_maxed,
                                 ),
@@ -414,7 +411,7 @@ class GemSetController(Controller):
                                         width=23,
                                     ),
                                     data=stat.uuid,
-                                    tooltip=t("augments.chaos_contained_spark"),
+                                    tooltip=loc("Chaos Contained Spark"),
                                     on_click=self.on_stat_random_change,
                                     disabled=stat.name == Stat.light,
                                 ),
@@ -426,7 +423,7 @@ class GemSetController(Controller):
                                         width=23,
                                     ),
                                     data=stat,
-                                    tooltip=t("augments.chaos_contained_flare"),
+                                    tooltip=loc("Chaos Contained Flare"),
                                     on_click=self.on_stat_boost_change,
                                     disabled=not bool(stat.boosts),
                                 ),
@@ -480,9 +477,9 @@ class GemSetController(Controller):
             for i in range(3):
                 stat_row = ResponsiveRow(
                     controls=[
-                        Dropdown(label=t("strings.Change Stat"), col={"xxl": 4}),
+                        Dropdown(label=loc("Change Stat"), col={"xxl": 4}),
                         Text(
-                            value=f"0" + t("strings.% Augmentation Progress"),
+                            value=f"0" + loc("% Augmentation Progress"),
                             col={"xxl": 3, "xs": 6},
                         ),
                         Row(
@@ -581,13 +578,13 @@ class GemSetController(Controller):
                 controls=[
                     DataTable(
                         columns=[
-                            DataColumn(Text(t("strings.Stats"), size=18)),
-                            DataColumn(Text(t("strings.Value"), size=18), numeric=True),
+                            DataColumn(Text(loc("Stats"), size=18)),
+                            DataColumn(Text(loc("Value"), size=18), numeric=True),
                         ],
                         rows=[
                             DataRow(
                                 cells=[
-                                    DataCell(Text(t("stats." + stat), size=13)),
+                                    DataCell(Text(loc(stat), size=13)),
                                     DataCell(
                                         Text(str(round(value[0], 2)), size=13),
                                         on_tap=self.copy_to_clipboard,
@@ -642,7 +639,7 @@ class GemSetController(Controller):
                 costs["high"][key] = value * high[augment]
         costs_card = Column(
             controls=[
-                Text(t("strings.Augmentation Costs"), size=18),
+                Text(loc("Augmentation Costs"), size=18),
                 Tabs(
                     tabs=[
                         Tab(
@@ -690,7 +687,7 @@ class GemSetController(Controller):
             for gem in gs:
                 gem.set_level(1)
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.mined_gem_levels"))
+        await self.page.snack_bar.show(loc("All gems have had their level set to 1."))
         await self.page.update_async()
 
     @throttle
@@ -698,7 +695,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(5)
-        await self.page.snack_bar.show(t("messages.fived_levels"))
+        await self.page.snack_bar.show(loc("All gems have had their level set to 5."))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -707,7 +704,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(10)
-        await self.page.snack_bar.show(t("messages.tened_levels"))
+        await self.page.snack_bar.show(loc("All gems have had their level set to 10."))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -716,7 +713,7 @@ class GemSetController(Controller):
         for gs in self.gem_set:
             for gem in gs:
                 gem.set_level(15)
-        await self.page.snack_bar.show(t("messages.fifteened_levels"))
+        await self.page.snack_bar.show(loc("All gems have had their level set to 15."))
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
 
@@ -726,7 +723,7 @@ class GemSetController(Controller):
             for gem in gs:
                 gem.set_level(max_levels[gem.tier.name])
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.maxed_gem_levels"))
+        await self.page.snack_bar.show(loc("All gems have had their level maxed out."))
 
     @throttle
     async def zero_augmentation(self, _):
@@ -735,7 +732,11 @@ class GemSetController(Controller):
                 for stat in gem.stats:
                     stat.zero_augments()
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.zeroed_all_gems"))
+        await self.page.snack_bar.show(
+            loc(
+                "All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones)"
+            )
+        )
 
     @throttle
     async def on_min_augmentation(self, _):
@@ -744,7 +745,7 @@ class GemSetController(Controller):
                 for stat in gem.stats:
                     stat.reset_augments()
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.deaugmented_all_gems"))
+        await self.page.snack_bar.show(loc("All gems have been de-augmented."))
 
     @throttle
     async def on_max_augmentation(self, _):
@@ -754,7 +755,7 @@ class GemSetController(Controller):
                     while not stat.is_maxed:
                         stat.add_superior_focus()
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.augmented_all_gems"))
+        await self.page.snack_bar.show(loc("All gems have fully augmented."))
 
     @throttle
     async def on_all_magic(self, _):
@@ -767,7 +768,9 @@ class GemSetController(Controller):
                         if stat.name == Stat.physical_damage:
                             stat.name = Stat.magic_damage
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.changed_all_magic"))
+        await self.page.snack_bar.show(
+            loc("All gems have had their Physical damage stat changed to Magic Damage")
+        )
 
     @throttle
     async def on_all_physical(self, _):
@@ -780,7 +783,9 @@ class GemSetController(Controller):
                         if stat.name == Stat.magic_damage:
                             stat.name = Stat.physical_damage
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.changed_all_physical"))
+        await self.page.snack_bar.show(
+            loc("All gems have had their Magic damage stat changed to Physical Damage")
+        )
 
     @throttle
     async def on_full_damage(self, _):
@@ -819,7 +824,9 @@ class GemSetController(Controller):
                     for stat, new_stat in zipped_stats:
                         stat.name = new_stat
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.changed_all_damage"))
+        await self.page.snack_bar.show(
+            loc("All gems have had their stats tuned for damage.")
+        )
 
     @throttle
     async def on_full_health(self, _):
@@ -840,7 +847,9 @@ class GemSetController(Controller):
                     for stat, new_stat in zipped_stats:
                         stat.name = new_stat
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.changed_all_health"))
+        await self.page.snack_bar.show(
+            loc("All gems have had their stats tuned for health.")
+        )
 
     async def on_full_radiant(self, event):
         for gs in self.gem_set:
@@ -904,7 +913,7 @@ class GemSetController(Controller):
     async def on_gem_level_change(self, event):
         self.selected_gem.set_level(int(event.control.value))
         await self.page.snack_bar.show(
-            t("messages.updated_gem_level").format(level=self.selected_gem.level)
+            loc("Gem level changed to {level}").format(level=self.selected_gem.level)
         )
         self.setup_controls(self.selected_gem)
         await self.page.update_async()
@@ -921,7 +930,7 @@ class GemSetController(Controller):
             if a.name == event.control.value
         ][0]
         self.setup_controls(self.selected_gem)
-        await self.page.snack_bar.show(t("messages.updated_ability"))
+        await self.page.snack_bar.show(loc("Updated Ability"))
         await self.page.update_async()
 
     async def on_stat_change(self, event):
@@ -961,5 +970,5 @@ class GemSetController(Controller):
     async def copy_to_clipboard(self, event):
         if value := event.control.content.value:
             await self.page.set_clipboard_async(str(value))
-            await self.page.snack_bar.show("Copied to clipboard")
+            await self.page.snack_bar.show(loc("Copied to clipboard"))
         await self.page.update_async()

@@ -1,6 +1,7 @@
 import asyncio
 import itertools
 import json
+from utils.locale import loc
 
 from aiohttp import ClientSession
 from flet import (
@@ -75,40 +76,40 @@ class GemBuildsController(Controller):
         self.selected_class = self.classes.get(self.config.character.value, None)
         self.selected_subclass = self.classes.get(self.config.subclass.value, None)
         preset_builds = [
-            ["zkIdCjZy", "MD/Light"],
-            ["Jlc4iMaP", "PD/Light"],
-            ["gBus7rhC", "MD+PD/Light"],
-            ["Hsjychqv", "MS/MD/Light"],
-            ["SbJ5AoPg", "MS/PD/Light"],
-            ["0XJI18N3", "MS/MD+PD/Light"],
+            ["zkIdCjZy", loc("MD/Light")],
+            ["Jlc4iMaP", loc("PD/Light")],
+            ["gBus7rhC", loc("MD+PD/Light")],
+            ["Hsjychqv", loc("MS/MD/Light")],
+            ["SbJ5AoPg", loc("MS/PD/Light")],
+            ["0XJI18N3", loc("MS/MD+PD/Light")],
         ]
         self.coeff_table = DataTable(
             columns=[
                 DataColumn(label=Text("#")),
-                DataColumn(label=Text("Build")),
-                DataColumn(label=Text("Light")),
-                DataColumn(label=Text("Base Damage")),
-                DataColumn(label=Text("Bonus Damage")),
-                DataColumn(label=Text("Damage")),
-                DataColumn(label=Text("Critical")),
-                DataColumn(label=Text("Coefficient")),
-                DataColumn(label=Text("Deviation")),
-                DataColumn(label=Text("Actions")),
+                DataColumn(label=Text(loc("Build"))),
+                DataColumn(label=Text(loc("Light"))),
+                DataColumn(label=Text(loc("Base Damage"))),
+                DataColumn(label=Text(loc("Bonus Damage"))),
+                DataColumn(label=Text(loc("Damage"))),
+                DataColumn(label=Text(loc("Critical"))),
+                DataColumn(label=Text(loc("Coefficient"))),
+                DataColumn(label=Text(loc("Deviation"))),
+                DataColumn(label=Text(loc("Actions"))),
             ],
             heading_row_height=40,
             data_row_min_height=40,
             bgcolor="#212223",
         )
-        format_tooltip = "Build format:\n  "
+        format_tooltip = loc("Build format") + ":\n  "
         if self.selected_class.damage_type == DamageType.magic:
-            format_tooltip += "MD/CD/MD/CD"
+            format_tooltip += loc("MD/CD/MD/CD")
         else:
-            format_tooltip += "PD/CD/PD/CD"
+            format_tooltip += loc("PD/CD/PD/CD")
         if self.config.build_type not in [BuildType.light]:
             if self.selected_class.damage_type == DamageType.magic:
-                format_tooltip += " + MD/CD/LT/MD/CD/LT"
+                format_tooltip += " + " + loc("MD/CD/LT/MD/CD/LT")
             else:
-                format_tooltip += " + PD/CD/LT/PD/CD/LT"
+                format_tooltip += " + " + loc("PD/CD/LT/PD/CD/LT")
         self.interface.controls = [
             Column(
                 controls=[
@@ -134,12 +135,12 @@ class GemBuildsController(Controller):
                                 Column(
                                     controls=[
                                         Dropdown(
-                                            label="Class",
+                                            label=loc("Class"),
                                             value=self.selected_class.name.name,
                                             options=[
                                                 dropdown.Option(
                                                     key=c.name,
-                                                    text=c.value,
+                                                    text=loc(c.value),
                                                     disabled=c.name
                                                     == self.config.character.name,
                                                 )
@@ -150,14 +151,14 @@ class GemBuildsController(Controller):
                                             on_change=self.set_class,
                                         ),
                                         Tooltip(
-                                            message="WIP",
+                                            message=loc("WIP"),
                                             content=Dropdown(
-                                                label="Subclass",
+                                                label=loc("Subclass"),
                                                 value=self.selected_subclass.name.name,
                                                 options=[
                                                     dropdown.Option(
                                                         key=c.name,
-                                                        text=c.value,
+                                                        text=loc(c.value),
                                                         disabled=c.name
                                                         == self.config.subclass.name,
                                                     )
@@ -178,12 +179,12 @@ class GemBuildsController(Controller):
                                             ),
                                         ),
                                         Dropdown(
-                                            label="Build Type",
+                                            label=loc("Build Type"),
                                             value=self.config.build_type.name,
                                             options=[
                                                 dropdown.Option(
                                                     key=b.name,
-                                                    text=b.value,
+                                                    text=loc(b.value),
                                                     disabled=b.name
                                                     == self.config.build_type.name,
                                                 )
@@ -197,7 +198,7 @@ class GemBuildsController(Controller):
                                         Tooltip(
                                             message="\n".join(
                                                 [
-                                                    "Stats",
+                                                    loc("Stats"),
                                                     *[
                                                         " - "
                                                         + str(round(s["value"], 2))
@@ -216,14 +217,16 @@ class GemBuildsController(Controller):
                                             content=Column(
                                                 controls=[
                                                     Dropdown(
-                                                        label="Food",
+                                                        label=loc("Food"),
                                                         value=self.config.food,
                                                         options=[
                                                             dropdown.Option(
                                                                 key=name,
-                                                                text=food[
-                                                                    "qualified_name"
-                                                                ],
+                                                                text=loc(
+                                                                    food[
+                                                                        "qualified_name"
+                                                                    ]
+                                                                ),
                                                                 disabled=name
                                                                 == self.config.food,
                                                             )
@@ -248,7 +251,7 @@ class GemBuildsController(Controller):
                                         Tooltip(
                                             message="\n".join(
                                                 [
-                                                    "Stats",
+                                                    loc("Stats"),
                                                     *[
                                                         " - "
                                                         + str(round(s["value"], 2))
@@ -257,14 +260,14 @@ class GemBuildsController(Controller):
                                                             if s["percentage"]
                                                             else " "
                                                         )
-                                                        + s["name"]
+                                                        + loc(s["name"])
                                                         for s in self.allies[
                                                             self.config.ally
                                                         ]["stats"]
                                                     ],
-                                                    "Abilities",
+                                                    loc("Abilities"),
                                                     *[
-                                                        " - " + a
+                                                        " - " + loc(a)
                                                         for a in self.allies[
                                                             self.config.ally
                                                         ]["abilities"]
@@ -274,7 +277,7 @@ class GemBuildsController(Controller):
                                             content=Column(
                                                 controls=[
                                                     Dropdown(
-                                                        label="Ally",
+                                                        label=loc("Ally"),
                                                         value=self.config.ally,
                                                         options=[
                                                             dropdown.Option(
@@ -329,7 +332,12 @@ class GemBuildsController(Controller):
                                                 else ([])
                                             ),
                                             (
-                                                ([self.star_chart.build_id, "Custom"])
+                                                (
+                                                    [
+                                                        self.star_chart.build_id,
+                                                        loc("Custom"),
+                                                    ]
+                                                )
                                                 if self.star_chart.build_id
                                                 else ([])
                                             ),
@@ -339,11 +347,11 @@ class GemBuildsController(Controller):
                                     ],
                                     text_size=14,
                                     height=58,
-                                    label="StarChart",
+                                    label=loc("Star Chart"),
                                     on_change=self.set_star_chart_build,
                                 ),
                                 TextField(
-                                    hint_text="Star Chart Build ID",
+                                    hint_text=loc("Star Chart Build ID"),
                                     on_change=self.set_star_chart_build,
                                     text_size=14,
                                     height=58,
@@ -354,7 +362,7 @@ class GemBuildsController(Controller):
                                 ],
                                 *[
                                     AutoNumberField(
-                                        label="Light",
+                                        label=loc("Light"),
                                         value=str(self.config.light),
                                         on_change=self.set_light,
                                     )
@@ -365,8 +373,10 @@ class GemBuildsController(Controller):
                                     controls=[
                                         Column(
                                             controls=[
-                                                Text(ability["name"], size=14),
-                                                Text(ability["description"], size=10),
+                                                Text(loc(ability["name"]), size=14),
+                                                Text(
+                                                    loc(ability["description"]), size=10
+                                                ),
                                                 Switch(
                                                     data=ability,
                                                     value=ability["active"],
@@ -388,7 +398,8 @@ class GemBuildsController(Controller):
                                 ResponsiveRow(
                                     controls=[
                                         Text(
-                                            f"Gear Critical Damage: {self.config.critical_damage_count}",
+                                            loc("Gear Critical Damage")
+                                            + f": {self.config.critical_damage_count}",
                                             col={"xxl": 4},
                                         ),
                                         Slider(
@@ -412,7 +423,8 @@ class GemBuildsController(Controller):
                                                     on_change=self.toggle_face,
                                                 ),
                                                 Text(
-                                                    "Face Damage", text_align="center"
+                                                    loc("Face Damage"),
+                                                    text_align="center",
                                                 ),
                                             ],
                                             alignment="center",
@@ -425,7 +437,7 @@ class GemBuildsController(Controller):
                                                     on_change=self.toggle_subclass_active,
                                                 ),
                                                 Text(
-                                                    "Subclass active",
+                                                    loc("Subclass active"),
                                                     text_align="center",
                                                 ),
                                             ],
@@ -439,7 +451,7 @@ class GemBuildsController(Controller):
                                                     on_change=self.toggle_berserker_battler,
                                                 ),
                                                 Text(
-                                                    "Berserker Battler",
+                                                    loc("Berserker Battler"),
                                                     text_align="center",
                                                 ),
                                             ],
@@ -453,7 +465,7 @@ class GemBuildsController(Controller):
                                                     on_change=self.toggle_litany,
                                                 ),
                                                 Text(
-                                                    "Enlightened",
+                                                    loc("Enlightened"),
                                                     text_align="center",
                                                 ),
                                             ],
@@ -480,37 +492,37 @@ class GemBuildsController(Controller):
         self.features.controls.clear()
         self.features.controls = [
             ElevatedButton(
-                "First",
+                loc("First"),
                 data=0,
                 on_click=self.change_build_page,
                 col={"xs": 3, "xxl": 2},
             ),
             ElevatedButton(
-                "Previous",
+                loc("Previous"),
                 data=self.build_page - 1,
                 on_click=self.change_build_page,
                 col={"xs": 3, "xxl": 2},
             ),
             ElevatedButton(
-                "Next page",
+                loc("Next"),
                 data=self.build_page + 1,
                 on_click=self.change_build_page,
                 col={"xs": 3, "xxl": 2},
             ),
             ElevatedButton(
-                "Last",
+                loc("Last"),
                 data=self.max_pages - 1,
                 on_click=self.change_build_page,
                 col={"xs": 3, "xxl": 2},
             ),
             TextField(
-                label="Insert Gem Build ID",
+                label=loc("Insert Gem Build ID"),
                 on_change=self.set_build_string,
                 col={"xs": 6, "xxl": 2},
                 visible=True,
             ),
             Container(
-                content=Row(controls=[Icon(COPY), Text("Copy Gem Build")]),
+                content=Row(controls=[Icon(COPY), Text(loc("Copy Gem Build"))]),
                 on_click=self.copy_build_string,
                 on_hover=self.copy_build_hover,
                 padding=15,
@@ -527,9 +539,11 @@ class GemBuildsController(Controller):
                     Row(
                         [
                             Text("", width=70, size=10),
-                            Text("Critical", width=70, size=10, text_align="center"),
                             Text(
-                                "Emblem 2.5x",
+                                loc("Critical"), width=70, size=10, text_align="center"
+                            ),
+                            Text(
+                                loc("Emblem 2.5x"),
                                 width=70,
                                 size=10,
                                 text_align="center",
@@ -545,7 +559,7 @@ class GemBuildsController(Controller):
         if not hasattr(self, "data_table"):
             self.abilities_table = Card(
                 content=Column(
-                    controls=[Text("Abilities", size=22), self.abilities],
+                    controls=[Text(loc("Abilities"), size=22), self.abilities],
                     horizontal_alignment="center",
                 ),
                 col={"xxl": 4},
@@ -645,7 +659,7 @@ class GemBuildsController(Controller):
                                 content=Text(
                                     f"{round(abs(coefficient - best[-1]) / best[-1] * 100, 3)}%"
                                     if rank != 1
-                                    else "Best"
+                                    else loc("Best")
                                 )
                             ),
                             DataCell(
@@ -1053,7 +1067,7 @@ class GemBuildsController(Controller):
                 f"https://kiwiapi.slynx.xyz/v1/gem_builds/build/{build_id}"
             ) as response:
                 if response.status != 200:
-                    await self.page.snack_bar.show("Invalid build ID")
+                    await self.page.snack_bar.show(loc("Invalid build ID"))
                     return
                 data = await response.json()
                 self.config = BuildConfig(**json.loads(data)["config"])
@@ -1069,7 +1083,7 @@ class GemBuildsController(Controller):
                 build_id = json.loads(data)["build"]
                 await self.page.set_clipboard_async("GB-" + build_id)
                 await self.page.snack_bar.show(
-                    f"Copied build GB-{build_id} to clipboard"
+                    loc("Copied build GB-{} to clipboard".format(build_id))
                 )
 
     async def select_build(self, event):
@@ -1077,31 +1091,31 @@ class GemBuildsController(Controller):
             self.selected_build = None
         else:
             self.selected_build = event.control.data
-        await self.page.snack_bar.show("Ability build changed")
+        await self.page.snack_bar.show(loc("Ability build changed"))
         await self.update_builds()
 
     async def copy_to_clipboard(self, event):
         if value := event.control.content.value:
             await self.page.set_clipboard_async(str(value))
-            await self.page.snack_bar.show("Copied to clipboard")
+            await self.page.snack_bar.show(loc("Copied to clipboard"))
         await self.page.update_async()
 
     def get_build_string(self, data):
         string = ""
-        string += f"Build: {data[0]}\n"
-        string += f"Light: {data[3]}\n"
-        string += f"Base Damage: {round(data[1], 2)}\n"
-        string += f"Bonus Damage: {data[4]}\n"
-        string += f"Damage: {round(data[5], 2)}\n"
-        string += f"Critical Damage: {data[2]}\n"
+        string += loc("Build") + f": {data[0]}\n"
+        string += loc("Light") + f": {data[3]}\n"
+        string += loc("Base Damage") + f": {round(data[1], 2)}\n"
+        string += loc("Bonus Damage") + f": {data[4]}\n"
+        string += loc("Damage") + f": {round(data[5], 2)}\n"
+        string += loc("Critical Damage") + f": {data[2]}\n"
         if data[6] is not None:
-            string += f"Class Bonus: {data[6]}\n"
-        string += f"Coefficient: {data[7]}"
+            string += loc("Class Bonus") + f": {data[6]}\n"
+        string += loc("Coefficient") + f": {data[7]}"
         return string
 
     async def copy_build_clipboard(self, event):
         await self.page.set_clipboard_async(event.control.data)
-        await self.page.snack_bar.show("Copied to clipboard")
+        await self.page.snack_bar.show(loc("Copied to clipboard"))
 
     async def copy_build_hover(self, event):
         event.control.ink = True
@@ -1116,7 +1130,9 @@ class GemBuildsController(Controller):
             await self.update_builds()
             return
         if await self.star_chart.from_string(build_id):
-            await self.page.snack_bar.show(f"Loaded build with id {build_id}")
+            await self.page.snack_bar.show(
+                loc("Loaded build with id {}").format(build_id)
+            )
             self.config.star_chart = build_id
             self.star_chart_abilities = self.star_chart.activated_abilities_stats
             await self.update_builds()
