@@ -111,15 +111,19 @@ class App:
         await fetch_files()
 
     async def setup_protocol_socket(self):
+        opened = False
         for port in range(13010, 13020):
             try:
                 self.page.protocol_socket = await asyncio.start_server(
                     self.protocol_handler, "127.0.0.1", port
                 )
                 asyncio.create_task(self.page.protocol_socket.serve_forever())
+                opened = True
                 break
             except OSError:
                 continue
+        if not opened:
+            await self.page.window_close_async()
 
     async def protocol_handler(self, reader, _):
         raw_data = await reader.read(2048)
