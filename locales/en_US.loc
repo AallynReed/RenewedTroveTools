@@ -177,8 +177,8 @@ Double Star Bar»»Double Star Bar
 Bonus XP»»Bonus XP
 Second Stat Reroll»»Second Stat Reroll
 Fast Invasions»»Fast Invasions
-Leaving in»»Leaving in
-Arriving in»»Arriving in
+Leaving in {}»»Leaving in {}
+Arriving in {}»»Arriving in {}
 Luxion»»Luxion
 Corruxion»»Corruxion
 Fluxion»»Fluxion
@@ -292,7 +292,6 @@ Brown»»Brown
 Loading...»»Loading...
 Trove Time»»Trove Time
 Loading...»»Loading...
-from now»»from now
 Buffs»»Buffs
 Bonus Star Bar»»Bonus Star Bar
 Edit Mastery»»Edit Mastery
@@ -406,3 +405,9 @@ Zero»»Zero
 Magic»»Magic
 Physical»»Physical
 Health»»Health
+Change language»»Change language
+This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.»»This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.
+I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills.»»I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills.
+I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content.»»I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content.
+I don't promise to keep this up to date forever, but as long as I am around I should be able to.»»I don't promise to keep this up to date forever, but as long as I am around I should be able to.
+Thanks for using my application. <3»»Thanks for using my application. <3
