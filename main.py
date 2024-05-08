@@ -44,11 +44,11 @@ class App:
         self.page = page
         self.page.RTT = self
         if page.web:
-            await self.start_web(page)
+            await self.start_web()
         else:
-            await self.start_app(page)
+            await self.start_app()
 
-    async def start_app(self, _):
+    async def start_app(self):
         set_protocol()
         self.setup_folders()
         await self.load_configurations()
@@ -61,7 +61,7 @@ class App:
         await self.handshake_api()
         await self.process_login()
 
-    async def start_web(self, _):
+    async def start_web(self):
         self.setup_folders()
         await self.load_configurations()
         await self.load_constants()
@@ -146,6 +146,7 @@ class App:
 
     def setup_localization(self):
         locale.ENGINE.load_locale_translations()
+        locale.ENGINE.locale = self.page.preferences.locale
         self.page.logger.info("Updated localization strings")
 
     async def setup_page(self):
@@ -289,6 +290,12 @@ class App:
     async def sync_clock(self):
         now = datetime.now()
         await asyncio.sleep(60 - now.second)
+
+    async def restart(self):
+        await self.stop_tasks()
+        await self.setup_appbar()
+        await self.page.go_async("/test")
+        await self.page.go_async("/")
 
 
 if __name__ == "__main__":

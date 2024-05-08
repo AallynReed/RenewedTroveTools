@@ -273,20 +273,20 @@ class HomeController(Controller):
             if trove_time.is_dragon(first):
                 image_src = f"assets/images/dragons/{image_name}.png"
                 text = Text(
-                    loc("Leaving in")
-                    + " "
-                    + humanize.naturaltime(-trove_time.until_end_dragon(first)).replace(
-                        " " + loc("from now"), ""
+                    loc("Leaving in {}").format(
+                        humanize.naturaltime(
+                            -trove_time.until_end_dragon(first)
+                        ).replace(" from now", "")
                     )
                 )
             else:
                 image_src = f"assets/images/dragons/{image_name}_out.png"
                 text = Text(
-                    loc("Arriving in")
-                    + " "
-                    + humanize.naturaltime(
-                        -trove_time.until_next_dragon(first)
-                    ).replace(" " + loc("from now"), "")
+                    loc("Arriving in {}").format(
+                        humanize.naturaltime(
+                            -trove_time.until_next_dragon(first)
+                        ).replace(" from now", "")
+                    )
                 )
             image = Image(src=image_src, width=40, height=40)
             dragon_control = Card(
@@ -314,10 +314,10 @@ class HomeController(Controller):
                 loc("Voting") if trove_time.is_fluxion_voting() else loc("Selling")
             )
             text = Text(
-                loc("Leaving in")
-                + " "
-                + humanize.naturaltime(-trove_time.until_end_fluxion()).replace(
-                    " " + loc("from now"), ""
+                loc("Leaving in {}").format(
+                    humanize.naturaltime(-trove_time.until_end_fluxion()).replace(
+                        " from now", ""
+                    )
                 )
             )
         else:
@@ -326,10 +326,10 @@ class HomeController(Controller):
                 loc("Voting") if trove_time.is_fluxion_selling() else loc("Selling")
             )
             text = Text(
-                loc("Arriving in")
-                + " "
-                + humanize.naturaltime(-trove_time.until_next_fluxion()).replace(
-                    " " + loc("from now"), ""
+                loc("Arriving in {}").format(
+                    humanize.naturaltime(-trove_time.until_next_fluxion()).replace(
+                        " from now", ""
+                    )
                 )
             )
         image = Image(src=image_src, width=40, height=40)

@@ -7,7 +7,7 @@ from typing import Optional
 from flet import ThemeMode
 from pydantic import BaseModel, Field, PrivateAttr, validator
 
-from models.config import Locale
+from utils.locale import Locale
 
 
 class AccentColor(Enum):
@@ -63,7 +63,7 @@ class Preferences(BaseModel):
     _page = PrivateAttr()
     path: Path
     web: bool = False
-    locale: Locale = Locale.American_English
+    locale: Locale = Locale.en_US
     theme: ThemeMode = Field(default=ThemeMode.DARK)
     accent_color: AccentColor = AccentColor.amber
     fullscreen: bool = False

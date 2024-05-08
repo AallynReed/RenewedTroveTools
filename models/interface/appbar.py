@@ -44,7 +44,7 @@ from flet_core.icons import (
 from models.preferences import AccentColor
 from utils.functions import check_update
 from utils.tasks import loop
-from utils.locale import loc
+from utils.locale import ENGINE, loc, Locale
 
 
 async def check_update(current_version, debug=False, force=False):
@@ -145,28 +145,26 @@ class CustomAppBar(AppBar):
                         for color in AccentColor
                     ],
                 ),
-                # PopupMenuButton(
-                #     content=Container(
-                #         Row(
-                #             controls=[
-                #                 Icon(LANGUAGE),
-                #                 # Text(
-                #                 #     self.page.app_config.locale.name.replace("_", " ")
-                #                 # ),
-                #             ]
-                #         )
-                #     ),
-                #     items=[
-                #         PopupMenuItem(
-                #             data=loc,
-                #             text=loc.name.replace("_", " "),
-                #             on_click=self.change_locale,
-                #         )
-                #         for loc in Locale
-                #     ],
-                #     visible=False,
-                #     tooltip="Change language (Broken)",
-                # ),
+                PopupMenuButton(
+                    content=Container(
+                        Row(
+                            controls=[
+                                Icon(LANGUAGE),
+                                Text(loc(self.page.preferences.locale.value)),
+                            ]
+                        )
+                    ),
+                    items=[
+                        PopupMenuItem(
+                            data=loc,
+                            text=loc.value,
+                            on_click=self.change_locale,
+                        )
+                        for loc in Locale
+                        if loc in ENGINE.available_translations
+                    ],
+                    tooltip=loc("Change language"),
+                ),
                 PopupMenuButton(
                     data="donate-buttons",
                     icon=SAVINGS,
@@ -507,9 +505,10 @@ class CustomAppBar(AppBar):
         await self.page.update_async()
 
     async def change_locale(self, event):
-        self.page.constants.app_config.locale = event.control.data
+        self.page.preferences.locale = event.control.data
+        ENGINE.locale = event.control.data
         await self.page.client_storage.set_async("locale", event.control.data.value)
-        await self.page.restart(True)
+        await self.page.RTT.restart()
 
     async def update_appbar(self):
         self.actions = self.build_actions(dict())
@@ -532,13 +531,23 @@ class CustomAppBar(AppBar):
             actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             actions_alignment=MainAxisAlignment.END,
             content=Text(
-                "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.\n\nI am coding this as an hobby with the goal of"
-                " achieving greater front-end building skills, at the same time I also improve code"
-                " making and organization skills\n\nI have the goal to not only build something"
-                " that is usable but mostly updatable with little effort or code knowledge"
-                " this however may be a challenge if newer updates come with changes on behavior of"
-                " previous content.\n\nI don't promise to keep this up to date forever, but as long as"
-                " I am around I should be able to.\n\nThanks for using my application. <3"
+                loc(
+                    "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r."
+                )
+                + "\n\n"
+                + loc(
+                    "I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills."
+                )
+                + "\n\n"
+                + loc(
+                    "I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content."
+                )
+                + "\n\n"
+                + loc(
+                    "I don't promise to keep this up to date forever, but as long as I am around I should be able to."
+                )
+                + "\n\n"
+                + loc("Thanks for using my application. <3")
             ),
         )
 

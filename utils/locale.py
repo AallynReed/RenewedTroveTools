@@ -4,6 +4,7 @@ from models.constants import files_cache
 
 class Locale(Enum):
     """Supported locales."""
+
     en_US = "American English"
     pt_PT = "Portuguese"
     de_DE = "German"
@@ -13,15 +14,19 @@ class Locale(Enum):
 
 class LocaleEngine:
     _translations: dict
+
     def __init__(self, debug=False):
         self._translations = {}
         self._locale = Locale.en_US
         self.debug_mode = debug
 
-
     @property
     def translations(self):
         return self._translations
+
+    @property
+    def available_translations(self):
+        return list(self.translations.keys())
 
     def add_translation(self, locale, translation):
         self._translations[locale] = translation
