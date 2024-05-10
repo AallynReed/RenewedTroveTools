@@ -21,6 +21,7 @@ from flet import (
     BorderSide,
     TextField,
 )
+from utils.locale import loc
 
 from models.constants import files_cache
 from models.interface import Controller, ScrollingFrame
@@ -53,7 +54,7 @@ class StarChartController(Controller):
                     size=40,
                     left=30,
                 ),
-                ElevatedButton("Reset", top=50, left=40, on_click=self.reset_chart),
+                ElevatedButton(loc("Reset"), top=50, left=40, on_click=self.reset_chart),
                 *[
                     RoundButton(
                         style=ButtonStyle(
@@ -114,15 +115,15 @@ class StarChartController(Controller):
                 ),
                 Column(
                     controls=[
-                        Text("Abilities", size=22),
+                        Text(loc("Abilities"), size=22),
                         *(
-                            [Text(a) for a in self.star_chart.activated_abilities]
+                            [Text(loc(a)) for a in self.star_chart.activated_abilities]
                             or [Text("-")]
                         ),
-                        Text("Obtainables", size=22),
+                        Text(loc("Obtainables"), size=22),
                         *(
                             [
-                                Text(f"{v}x  {k}")
+                                Text(f"{v}x  {loc(k)}")
                                 for k, v in self.star_chart.activated_obtainables.items()
                             ]
                             or [Text("-")]
@@ -134,23 +135,23 @@ class StarChartController(Controller):
                                     options=[
                                         dropdown.Option(key="none", text="[None]"),
                                         *[
-                                            dropdown.Option(key=stat, text=stat)
+                                            dropdown.Option(key=stat, text=loc(stat))
                                             for stat in self.star_chart.stats_list
                                         ],
                                     ],
-                                    label="Find stats",
+                                    label=loc("Find stats"),
                                     on_change=self.change_selected_stat,
                                     width=250,
                                     col={"xxl": 4},
                                 ),
                                 TextField(
-                                    hint_text="Insert build string",
+                                    hint_text=loc("Insert build string"),
                                     width=250,
                                     on_change=self.set_star_chart_build,
                                     col={"xxl": 4},
                                 ),
                                 ElevatedButton(
-                                    "Copy build",
+                                    loc("Copy build"),
                                     width=250,
                                     disabled=not bool(
                                         self.star_chart.activated_stars_count
@@ -162,7 +163,7 @@ class StarChartController(Controller):
                                     controls=[
                                         Column(
                                             controls=[
-                                                Text("Stats", size=22),
+                                                Text(loc("Stats"), size=22),
                                                 *(
                                                     [
                                                         DataTable(
@@ -177,7 +178,7 @@ class StarChartController(Controller):
                                                                     cells=[
                                                                         DataCell(
                                                                             Text(
-                                                                                k,
+                                                                                loc(k),
                                                                                 size=13,
                                                                             )
                                                                         ),
@@ -228,8 +229,8 @@ class StarChartController(Controller):
             event.control.data.switch_lock()
         else:
             await self.page.snack_bar.show(
-                f"Activating this star exceeds max of {self.star_chart.max_nodes}"
-                f" by {staged_lock}",
+                loc("Activating this star exceeds max of {MaxNode} by {StagedLock}")
+                    .format(MaxNode=self.star_chart.max_nodes,StagedLock=staged_lock),
                 color="red",
             )
         self.setup_controls()
@@ -248,7 +249,7 @@ class StarChartController(Controller):
                     controls=[
                         Column(
                             controls=[
-                                Text(star.full_name, text_align="center", size=20)
+                                Text(loc(star.full_name), text_align="center", size=20)
                             ],
                             alignment="center",
                             horizontal_alignment="center",
@@ -258,7 +259,7 @@ class StarChartController(Controller):
                                 *(
                                     [
                                         Divider(),
-                                        Text("Stats", size=14),
+                                        Text(loc("Stats"), size=14),
                                         DataTable(
                                             heading_row_height=0,
                                             data_row_min_height=30,
@@ -269,7 +270,7 @@ class StarChartController(Controller):
                                             rows=[
                                                 DataRow(
                                                     cells=[
-                                                        DataCell(Text(k)),
+                                                        DataCell(Text(loc(k))),
                                                         DataCell(
                                                             Text(
                                                                 str(v[0])
@@ -288,13 +289,13 @@ class StarChartController(Controller):
                                 *(
                                     [
                                         Divider(),
-                                        Text("Abilities", size=14),
+                                        Text(loc("Abilities"), size=14),
                                         DataTable(
                                             heading_row_height=0,
                                             data_row_min_height=80,
                                             columns=[DataColumn(Text())],
                                             rows=[
-                                                DataRow(cells=[DataCell(Text(v))])
+                                                DataRow(cells=[DataCell(Text(loc(v)))])
                                                 for v in star.abilities
                                             ],
                                         ),
@@ -305,13 +306,13 @@ class StarChartController(Controller):
                                 *(
                                     [
                                         Divider(),
-                                        Text("Obtainables", size=14),
+                                        Text(loc("Obtainables"), size=14),
                                         DataTable(
                                             heading_row_height=0,
                                             data_row_min_height=50,
                                             columns=[DataColumn(Text())],
                                             rows=[
-                                                DataRow(cells=[DataCell(Text(v))])
+                                                DataRow(cells=[DataCell(Text(loc(v)))])
                                                 for v in star.obtainables
                                             ],
                                         ),
@@ -364,7 +365,7 @@ class StarChartController(Controller):
     async def copy_star_chart_build(self, _):
         build_id = await self.star_chart.get_build()
         await self.page.set_clipboard_async("SC-" + build_id)
-        await self.page.snack_bar.show("Copied to clipboard")
+        await self.page.snack_bar.show(loc("Copied to clipboard"))
 
     async def set_star_chart_build(self, event):
         build_id = event.control.value

@@ -33,13 +33,13 @@ class GearBuildsController(Controller):
             classes = sorted(self.gear_builds.keys())
             self.memory["class"] = classes[0]
             self.class_select = Dropdown(
-                label="Class",
+                label=loc("Class"),
                 value=classes[0],
                 options=[dropdown.Option(key=cl, text=loc(cl)) for cl in classes],
                 on_change=self.set_class,
             )
             self.build_type_select = Dropdown(
-                label="Build Type",
+                label=loc("Build Type"),
                 options=[
                     dropdown.Option(key=build, text=loc(build.capitalize()))
                     for build, data in self.gear_builds[classes[0]].items()
@@ -59,7 +59,7 @@ class GearBuildsController(Controller):
         self.build_type_select.options.clear()
         self.build_type_select.options.extend(
             [
-                dropdown.Option(key=build, text=build.capitalize())
+                dropdown.Option(key=build, text=loc(build.capitalize()))
                 for build, data in self.gear_builds[event.control.value].items()
                 if data["enabled"]
             ]

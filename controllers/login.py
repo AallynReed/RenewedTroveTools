@@ -12,6 +12,7 @@ from flet import (
     TextField,
     Container,
 )
+from utils.locale import loc
 from flet_core import padding, MainAxisAlignment
 
 
@@ -19,7 +20,7 @@ class LoginController(Controller):
     def setup_controls(self):
         self.token_input = TextField(
             data="input",
-            label="Insert pass key here",
+            label=loc("Insert pass key here"),
             text_align="center",
             password=True,
             can_reveal_password=True,
@@ -32,9 +33,9 @@ class LoginController(Controller):
             Container(
                 Column(
                     controls=[
-                        Text(value="Login", size=40, width=460, text_align="center"),
+                        Text(value=loc("Login"), size=40, width=460, text_align="center"),
                         self.token_input,
-                        Text("Get pass key from:", width=460, text_align="center"),
+                        Text(loc("👇Get pass key from👇"), width=460, text_align="center"),
                         Row(
                             controls=[
                                 Chip(
@@ -56,7 +57,7 @@ class LoginController(Controller):
                         ),
                         Divider(),
                         Chip(
-                            label=Text("Go back"),
+                            label=Text(loc("Go back")),
                             on_click=self.cancel_login,
                             width=460,
                         ),
@@ -77,7 +78,7 @@ class LoginController(Controller):
                 self.token_input.value.strip()
             )
             if self.page.user_data is None:
-                self.token_input.helper_text = "Invalid pass key"
+                self.token_input.helper_text = loc("Invalid pass key")
                 return await self.token_input.update_async()
             else:
                 await self.page.RTT.setup_appbar()

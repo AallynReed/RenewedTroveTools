@@ -23,7 +23,8 @@ from flet import (
     DataCell,
     MainAxisAlignment,
     FilePicker,
-)
+) 
+from utils.locale import loc
 from flet_core import icons
 from humanize import naturalsize
 from yaml import dump
@@ -56,14 +57,14 @@ class ExtractorController(Controller):
                 self.locations.changes_from = directory.path.joinpath("extracted")
         self.extract_from = PathField(
             data="extract_from",
-            label="Trove directory:",
+            label=f"{loc('Trove directory')}:",
             value=self.locations.extract_from,
             on_change=self.avoid_text_edit,
             col=10,
         )
         self.extract_to = PathField(
             data="extract_to",
-            label="Extract to:",
+            label=f"{loc('Extract to')}:",
             value=self.locations.extract_to,
             on_change=self.avoid_text_edit,
             # on_submit=self.set_text_directory,
@@ -71,7 +72,7 @@ class ExtractorController(Controller):
         )
         self.changes_from = PathField(
             data="changes_from",
-            label="Compare changes with:",
+            label=f"{loc('Compare changes with')}:",
             value=self.locations.changes_from,
             on_change=self.avoid_text_edit,
             disabled=not self.page.preferences.advanced_mode,
@@ -79,7 +80,7 @@ class ExtractorController(Controller):
         )
         self.changes_to = PathField(
             data="changes_to",
-            label="Save changes to:",
+            label=f"{loc('Save changes to')}:",
             value=self.locations.changes_to,
             on_change=self.avoid_text_edit,
             disabled=not self.page.preferences.advanced_mode,
@@ -106,19 +107,19 @@ class ExtractorController(Controller):
             disabled=not self.page.preferences.advanced_mode,
         )
         self.extract_changes_button = ElevatedButton(
-            "Extract changed files", on_click=self.extract_changes, disabled=True, col=6
+            loc("Extract changed files"), on_click=self.extract_changes, disabled=True, col=6
         )
         self.extract_selected_button = ElevatedButton(
-            "Extract selected directories",
+            loc("Extract selected directories"),
             on_click=self.extract_selected,
             disabled=True,
             col=6,
         )
         self.extract_all_button = ElevatedButton(
-            "Extract all", on_click=self.extract_all, disabled=True, col=6
+            loc("Extract all"), on_click=self.extract_all, disabled=True, col=6
         )
         self.cancel_extraction_button = ElevatedButton(
-            "Cancel extraction",
+            loc("Cancel extraction"),
             on_click=self.cancel_ongoing_extraction,
             visible=False,
             col=2,
@@ -138,7 +139,7 @@ class ExtractorController(Controller):
             col=6,
         )
         self.refresh_with_changes_button = ElevatedButton(
-            "Refresh changed/added files list",
+            loc("Refresh changed/added files list"),
             on_click=self.refresh_changes,
             disabled=not self.page.preferences.advanced_mode,
             col=6,
@@ -179,7 +180,7 @@ class ExtractorController(Controller):
                             col=12,
                         ),
                         ElevatedButton(
-                            "Refresh directory list",
+                            loc("Refresh directory list"),
                             on_click=self.refresh_directories,
                             col=6,
                         ),
@@ -190,7 +191,7 @@ class ExtractorController(Controller):
                                     value=self.page.preferences.advanced_mode,
                                     on_change=self.switch_advanced_mode,
                                 ),
-                                Text("Advanced Settings"),
+                                Text(loc("Advanced Settings")),
                             ],
                             col=6,
                         ),
@@ -200,7 +201,7 @@ class ExtractorController(Controller):
                                     value=self.page.preferences.performance_mode,
                                     on_change=self.switch_performance_mode,
                                 ),
-                                Text("Performance Mode"),
+                                Text(loc("Performance Mode")),
                             ],
                             col=6,
                         ),
@@ -234,16 +235,16 @@ class ExtractorController(Controller):
         )
         self.directory_progress = Column(
             controls=[
-                Row(controls=[Text("Loading files..."), Text("")]),
+                Row(controls=[Text(loc("Loading files...")), Text("")]),
                 ProgressBar(value=0, expand=False),
             ],
             visible=False,
         )
         self.directory_list = DataTable(
             columns=[
-                DataColumn(Text("Path"), on_sort=self.sort_by_path),
-                DataColumn(Text("Size"), on_sort=self.sort_by_size),
-                DataColumn(Text("Changed files"), on_sort=self.sort_by_changes),
+                DataColumn(Text(loc("Path")), on_sort=self.sort_by_path),
+                DataColumn(Text(loc("Size")), on_sort=self.sort_by_size),
+                DataColumn(Text(loc("Changed files")), on_sort=self.sort_by_changes),
             ],
             column_spacing=15,
             heading_row_height=35,
@@ -252,7 +253,7 @@ class ExtractorController(Controller):
             visible=False,
         )
         self.files_list = DataTable(
-            columns=[DataColumn(Text("Path")), DataColumn(Text("Size"))],
+            columns=[DataColumn(Text(loc("Path"))), DataColumn(Text(loc("Size")))],
             column_spacing=15,
             heading_row_height=35,
             data_row_min_height=25,
@@ -260,12 +261,12 @@ class ExtractorController(Controller):
         )
         self.metrics = Column(
             controls=[
-                Row(controls=[Text("Update Size:"), Text(naturalsize(0, gnu=True))])
+                Row(controls=[Text(f"{loc('Update Size')}:"), Text(naturalsize(0, gnu=True))])
             ]
         )
         self.extraction_progress = Column(
             controls=[
-                Row(controls=[Text("Extractor Idle"), Text("")], expand=False),
+                Row(controls=[Text(loc("Extractor Idle")), Text("")], expand=False),
                 ResponsiveRow(
                     controls=[
                         ProgressBar(height=30, value=0, col=10),
@@ -276,10 +277,10 @@ class ExtractorController(Controller):
             horizontal_alignment="center",
         )
         self.select_all_button = ElevatedButton(
-            "Select all", on_click=self.select_all, disabled=True
+            loc("Select all"), on_click=self.select_all, disabled=True
         )
         self.unselect_all_button = ElevatedButton(
-            "Unselect all", on_click=self.unselect_all, disabled=True
+            loc("Unselect all"), on_click=self.unselect_all, disabled=True
         )
         self.main.controls = [
             Column(controls=[self.main_controls]),
@@ -288,7 +289,7 @@ class ExtractorController(Controller):
                 controls=[
                     Row(
                         controls=[
-                            Text(f"Directory List", size=20),
+                            Text(loc("Directory List"), size=20),
                             self.select_all_button,
                             self.unselect_all_button,
                         ]
@@ -302,7 +303,7 @@ class ExtractorController(Controller):
             ),
             Column(
                 controls=[
-                    Text("Changed/Added Files List", size=20),
+                    Text(loc("Changed/Added Files List"), size=20),
                     Column(controls=[self.files_list], height=475, scroll="auto"),
                 ],
                 height=475,
@@ -318,7 +319,7 @@ class ExtractorController(Controller):
         self.page.preferences.changes_name_format = event.control.value
         self.page.preferences.save()
         return await self.page.snack_bar.show(
-            "Changed the format for changes folder", color="green"
+            loc("Changed the format for changes folder"), color="green"
         )
 
     async def cancel_ongoing_extraction(self, _):
@@ -337,7 +338,7 @@ class ExtractorController(Controller):
             ]
         )
         self.extract_selected_button.text = (
-            f"Extract Selected [{naturalsize(selected_size, gnu=True)}]"
+            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
         )
         await self.page.update_async()
 
@@ -354,7 +355,7 @@ class ExtractorController(Controller):
             ]
         )
         self.extract_selected_button.text = (
-            f"Extract Selected [{naturalsize(selected_size, gnu=True)}]"
+            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
         )
         await self.page.update_async()
 
@@ -362,7 +363,7 @@ class ExtractorController(Controller):
     async def avoid_text_edit(self, event):
         event.control.value = getattr(self.locations, event.control.data)
         event.control.border_color = "red"
-        event.control.error_text = "Please use directory selection button"
+        event.control.error_text = loc("Please use directory selection button")
         await event.control.update_async()
         await asyncio.sleep(3)
         event.control.border_color = None
@@ -436,7 +437,7 @@ class ExtractorController(Controller):
             for directory in known_directories:
                 if not Path(event.path).joinpath(directory).exists():
                     return await self.page.snack_bar.show(
-                        "Please select a valid trove directory", color="red"
+                        loc("Please select a valid trove directory"), color="red"
                     )
             trove_path = Path(event.path)
             self.directory_dropdown.value = (
@@ -517,13 +518,13 @@ class ExtractorController(Controller):
             ]
         )
         self.extract_changes_button.text = (
-            f"Extract Changes [{naturalsize(changes_size, gnu=True)}]"
+            loc("Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True)))
         )
         self.extract_selected_button.text = (
-            f"Extract Selected [{naturalsize(selected_size, gnu=True)}]"
+            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
         )
         self.extract_all_button.text = (
-            f"Extract All [{naturalsize(all_size, gnu=True)}]"
+            loc("Extract All [{Value}]".format(naturalsize(all_size, gnu=True)))
         )
         self.extract_selected_button.disabled = not bool(
             [r for r in self.directory_list.rows if r.selected]
@@ -557,7 +558,7 @@ class ExtractorController(Controller):
                     try:
                         self.hashes = json.loads(hashes_path.read_text())
                     except json.JSONDecodeError:
-                        print("Failed to load hashes, malformed file.")
+                        print(loc("Failed to load hashes, malformed file."))
             self.changed_files = []
             indexes = []
             i = 0
@@ -674,7 +675,7 @@ class ExtractorController(Controller):
                     DataRow(
                         cells=[
                             DataCell(
-                                Text("Too many changes to be displayed.", color="red")
+                                Text(loc("Too many changes to be displayed."), color="red")
                             ),
                             DataCell(Text("")),
                         ]
@@ -684,7 +685,7 @@ class ExtractorController(Controller):
                 self.files_list.rows.append(
                     DataRow(
                         cells=[
-                            DataCell(Text("No changes were queried.")),
+                            DataCell(Text(loc("No changes were queried."))),
                             DataCell(Text("")),
                         ]
                     )
@@ -694,7 +695,7 @@ class ExtractorController(Controller):
                 self.files_list.rows.append(
                     DataRow(
                         cells=[
-                            DataCell(Text("No changed files found.")),
+                            DataCell(Text(loc("No changed files found."))),
                             DataCell(Text("")),
                         ]
                     )
@@ -747,13 +748,13 @@ class ExtractorController(Controller):
                 ]
             )
             self.extract_changes_button.text = (
-                f"Extract Changes [{naturalsize(changes_size, gnu=True)}]"
+                loc("Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True)))
             )
             self.extract_selected_button.text = (
-                f"Extract Selected [{naturalsize(selected_size, gnu=True)}]"
+                loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
             )
             self.extract_all_button.text = (
-                f"Extract All [{naturalsize(all_size, gnu=True)}]"
+                loc("Extract All [{Value}]".format(naturalsize(all_size, gnu=True)))
             )
             self.metrics.controls[0].controls[1].value = naturalsize(
                 sum([f.size for f in self.changed_files]), gnu=True
@@ -777,18 +778,18 @@ class ExtractorController(Controller):
 
     async def warn_advanced_mode(self):
         task_lines = [
-            "Advanced mode allows for people to have old vs new changed files in a separate directory",
-            "This will provide a better way to compare updates whilst having no real hustle to separate these changes",
-            "Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes",
+            loc("Advanced mode allows for people to have old vs new changed files in a separate directory"),
+            loc("This will provide a better way to compare updates whilst having no real hustle to separate these changes"),
+            loc("Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes"),
         ]
         task = "\n\n".join(task_lines)
         await self.page.dialog.set_data(
             modal=False,
-            title=Text("Advanced mode enabled"),
+            title=Text(loc("Advanced mode enabled")),
             content=Text(task),
             actions=[
-                ElevatedButton("Don't show again", on_click=self.am_dont_show),
-                ElevatedButton("Ok", on_click=self.page.RTT.close_dialog),
+                ElevatedButton(loc("Don't show again"), on_click=self.am_dont_show),
+                ElevatedButton(loc("Ok"), on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
@@ -809,11 +810,11 @@ class ExtractorController(Controller):
         task = "\n\n".join(task_lines)
         await self.page.dialog.set_data(
             modal=False,
-            title=Text("Performance mode enabled"),
+            title=Text(loc("Performance mode enabled")),
             content=Text(task),
             actions=[
-                ElevatedButton("Don't show again", on_click=self.pm_dont_show),
-                ElevatedButton("Ok", on_click=self.page.RTT.close_dialog),
+                ElevatedButton(loc("Don't show again"), on_click=self.pm_dont_show),
+                ElevatedButton(loc("Ok"), on_click=self.page.RTT.close_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
@@ -829,17 +830,17 @@ class ExtractorController(Controller):
         await self.page.dialog.hide()
 
     async def warn_extraction(self, extraction_type: str):
-        task = f"Do you really wish to extract {extraction_type} from {self.locations.extract_from} into {self.locations.extract_to}"
+        task = loc("Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}".format(ExtractionType=extraction_type,ExtractFrom=self.locations.extract_from,ExtractTo=self.locations.extract_to))
         if self.page.preferences.advanced_mode:
-            task += f"\nWhilst keeping track of changes in a versioned folder in {self.locations.changes_to}"
+            task += loc("\nWhilst keeping track of changes in a versioned folder in {Value}".format(self.locations.changes_to))
         await self.page.dialog.set_data(
             modal=False,
-            title=Text("Extraction confirmation"),
+            title=Text(loc("Extraction confirmation")),
             content=Text(task),
             actions=[
-                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
+                ElevatedButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
                 ElevatedButton(
-                    "Confirm extraction", data=extraction_type, on_click=self.extract
+                    loc("Confirm extraction"), data=extraction_type, on_click=self.extract
                 ),
             ],
             actions_alignment=MainAxisAlignment.END,
@@ -1010,7 +1011,7 @@ class ExtractorController(Controller):
                             self.extraction_progress.controls[0].controls[1].value = ""
                             self.extraction_progress.controls[1].controls[0].value = 0
                             return await self.page.snack_bar.show(
-                                "Extraction cancelled", color="red"
+                                loc("Extraction cancelled"), color="red"
                             )
                         old_pro = self.extraction_progress.controls[1].controls[0].value
                         i += 1
@@ -1039,5 +1040,5 @@ class ExtractorController(Controller):
         self.extraction_progress.controls[0].controls[0].value = "Extractor Idle"
         self.extraction_progress.controls[0].controls[1].value = ""
         self.extraction_progress.controls[1].controls[0].value = 0
-        await self.page.snack_bar.show("Extraction Complete")
+        await self.page.snack_bar.show(loc("Extraction Complete"))
         self.refresh_lists.start()

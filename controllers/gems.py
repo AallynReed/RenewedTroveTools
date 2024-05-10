@@ -77,7 +77,7 @@ class GemSetController(Controller):
                         controls=[
                             ResponsiveRow(
                                 controls=[
-                                    Text("Gem Tier", size=18),
+                                    Text(loc("Gem Tier"), size=18),
                                     ElevatedButton(
                                         loc("Radiant"),
                                         on_click=self.on_full_radiant,
@@ -98,7 +98,7 @@ class GemSetController(Controller):
                             ),
                             ResponsiveRow(
                                 controls=[
-                                    Text("Gem Levels", size=18),
+                                    Text(loc("Gem Levels"), size=18),
                                     ElevatedButton(
                                         loc("Min"),
                                         on_click=self.on_min_level,
@@ -110,20 +110,20 @@ class GemSetController(Controller):
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        "5", on_click=self.on_five_level, col=4
+                                        loc("5 Level"), on_click=self.on_five_level, col=4
                                     ),
                                     ElevatedButton(
-                                        "10", on_click=self.on_ten_level, col=4
+                                        loc("10 Level"), on_click=self.on_ten_level, col=4
                                     ),
                                     ElevatedButton(
-                                        "15", on_click=self.on_fifteen_level, col=4
+                                        loc("15 Level"), on_click=self.on_fifteen_level, col=4
                                     ),
                                 ],
                                 col={"xxl": 3},
                             ),
                             ResponsiveRow(
                                 controls=[
-                                    Text("Augmentation", size=18),
+                                    Text(loc("Augmentation"), size=18),
                                     ElevatedButton(
                                         loc("Zero"),
                                         on_click=self.zero_augmentation,
@@ -144,7 +144,7 @@ class GemSetController(Controller):
                             ),
                             ResponsiveRow(
                                 controls=[
-                                    Text("Stats", size=18),
+                                    Text(loc("Stats"), size=18),
                                     ElevatedButton(
                                         loc("Magic"),
                                         on_click=self.on_all_magic,
@@ -220,7 +220,7 @@ class GemSetController(Controller):
                                             Text(
                                                 loc("Lvl")
                                                 + f": {gem.level} "
-                                                + gem.name,
+                                                + loc(gem.name),
                                                 size=15,
                                             ),
                                         ],
@@ -362,7 +362,7 @@ class GemSetController(Controller):
                         Text(
                             data=stat,
                             value=f"{stat.display_percentage}"
-                            + loc("% Augmentation Progress"),
+                            + loc("% Augmentation"),
                             col={"xxl": 3, "xs": 5},
                         ),
                         Row(
@@ -479,7 +479,7 @@ class GemSetController(Controller):
                     controls=[
                         Dropdown(label=loc("Change Stat"), col={"xxl": 4}),
                         Text(
-                            value=f"0" + loc("% Augmentation Progress"),
+                            value=f"0" + loc("% Augmentation"),
                             col={"xxl": 3, "xs": 6},
                         ),
                         Row(
@@ -643,7 +643,7 @@ class GemSetController(Controller):
                 Tabs(
                     tabs=[
                         Tab(
-                            text="Low Cost",
+                            text=loc("Low Cost"),
                             # content=DataTable(
                             #     columns=[
                             #         DataColumn(Text("Item")),
@@ -661,10 +661,10 @@ class GemSetController(Controller):
                             # )
                         ),
                         Tab(
-                            text="Medium Cost",
+                            text=loc("Medium Cost"),
                         ),
                         Tab(
-                            text="High Cost",
+                            text=loc("High Cost"),
                         ),
                     ],
                 ),
@@ -676,7 +676,7 @@ class GemSetController(Controller):
             [
                 stats_card,
                 costs_card,
-                Card(Text("WIP", size=18), col={"xxl": 4}),
+                Card(Text(loc("WIP"), size=18), col={"xxl": 4}),
             ]
         )
         asyncio.create_task(self.page.update_async())

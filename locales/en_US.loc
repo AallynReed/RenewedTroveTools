@@ -1,413 +1,614 @@
-Renewed Trove Tools»»Renewed Trove Tools
-American English»»American English
-Portuguese»»Portuguese
-German»»German
-French»»French
-Russian»»Russian
-Get Windows Application»»Get Windows Application
-A newer version is available»»A newer version is available
-Change Log»»Change Log
-Send feedback»»Send feedback
-Change theme»»Change theme
-Donate»»Donate
-Login»»Login
-Logout»»Logout
-Report a bug»»Report a bug
-Switch to debug version»»Switch to debug version
-Switch to release version»»Switch to release version
-About»»About
-Others»»Others
-Version {}»»Version {}
-Close»»Close
-Update available»»Update available
-A new update is available, do you want to download it?»»A new update is available, do you want to download it?
-The application will download update and close itself to install it.»»The application will download update and close itself to install it.
-After the installation is complete, the application will be automatically restarted.»»After the installation is complete, the application will be automatically restarted.
-Keeping the app up to date is important to ensure that you have the latest features and bug fixes.»»Keeping the app up to date is important to ensure that you have the latest features and bug fixes.
-Later»»Later
-Update»»Update
-A new update is available, click on the download icon to update.»»A new update is available, click on the download icon to update.
-Feedback»»Feedback
-Send»»Send
-Feedback sent»»Feedback sent
-Downloading update, please wait...»»Downloading update, please wait...
-Mastery Points»»Mastery Points
-Mastery Levels»»Mastery Levels
-Mastery Buffs»»Mastery Buffs
-Geode Mastery Buffs»»Geode Mastery Buffs
-Mastery»»Mastery
-Please provide a valid number»»Please provide a valid number
-Gem Set Calculator»»Gem Set Calculator
-Star Chart»»Star Chart
-Gem Simulator»»Gem Simulator
-Fire»»Fire
-Water»»Water
-Air»»Air
-Cosmic»»Cosmic
-Empowered»»Empowered
-Lesser»»Lesser
-Arcane»»Arcane
-Fierce»»Fierce
-Radiant»»Radiant
-Stellar»»Stellar
-Crystal»»Crystal
-Fire Primordial»»Fire Primordial
-Water Primordial»»Water Primordial
-Air Primordial»»Air Primordial
-Cosmic Primordial»»Cosmic Primordial
-Explosive Epilogue»»Explosive Epilogue
-Volatile Velocity»»Volatile Velocity
-Cubic Curtain»»Cubic Curtain
-Mired Mojo»»Mired Mojo
-Pyrodisc»»Pyrodisc
-Stunburst»»Stunburst
-Spirit Surge»»Spirit Surge
-Stinging Curse»»Stinging Curse
-Berserker Battler»»Berserker Battler
-Flower Power»»Flower Power
-Empyrean Barrier»»Empyrean Barrier
-Vampirian Vanquisher»»Vampirian Vanquisher
-Builder's Rough Focus»»Builder's Rough Focus
-Builder's Precise Focus»»Builder's Precise Focus
-Builder's Superior Focus»»Builder's Superior Focus
-Chaos Contained Spark»»Chaos Contained Spark
-Chaos Contained Flare»»Chaos Contained Flare
-Flux»»Flux
-Bound Brilliance»»Bound Brilliance
-Heart of Darkness»»Heart of Darkness
-Fire Gem Dust»»Fire Gem Dust
-Water Gem Dust»»Water Gem Dust
-Air Gem Dust»»Air Gem Dust
-Cosmic Gem Dust»»Cosmic Gem Dust
-Diamond Dragonite»»Diamond Dragonite
-Titan Soul»»Titan Soul
-Level»»Level
-Lvl»»Lvl
-Ability»»Ability
-Gem Ability»»Gem Ability
-Stats»»Stats
-Stat»»Stat
-Value»»Value
-Augmentation Cost»»Augmentation Cost
 % Augmentation»»% Augmentation
-Change Ability»»Change Ability
-Change Restricition»»Change Restricition
-Change Stat»»Change Stat
-Improve Stat»»Improve Stat
-Reroll Stat»»Reroll Stat
-Move Boost»»Move Boost
-Arcane Fire Gem»»Arcane Fire Gem
-Arcane Water Gem»»Arcane Water Gem
-Arcane Air Gem»»Arcane Air Gem
-Arcane Cosmic Gem»»Arcane Cosmic Gem
-Fierce Fire Gem»»Fierce Fire Gem
-Fierce Water Gem»»Fierce Water Gem
-Fierce Air Gem»»Fierce Air Gem
-Fierce Cosmic Gem»»Fierce Cosmic Gem
-Lesser Fire Gem»»Lesser Fire Gem
-Lesser Water Gem»»Lesser Water Gem
-Lesser Air Gem»»Lesser Air Gem
-Lesser Cosmic Gem»»Lesser Cosmic Gem
-Empowered Fire Gem»»Empowered Fire Gem
-Empowered Water Gem»»Empowered Water Gem
-Empowered Air Gem»»Empowered Air Gem
-Empowered Cosmic Gem»»Empowered Cosmic Gem
-All gems have had their level maxed out.»»All gems have had their level maxed out.
-All gems have had their level set to 5.»»All gems have had their level set to 5.
-All gems have had their level set to 10.»»All gems have had their level set to 10.
-All gems have had their level set to 15.»»All gems have had their level set to 15.
-All gems have had their level set to 1.»»All gems have had their level set to 1.
-All gems have fully augmented.»»All gems have fully augmented.
-All gems have been de-augmented.»»All gems have been de-augmented.
-All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).»»All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).
-All gems have had their Physical damage stat changed to Magic Damage»»All gems have had their Physical damage stat changed to Magic Damage
-All gems have had their Magic damage stat changed to Physical Damage»»All gems have had their Magic damage stat changed to Physical Damage
-All gems have had their stats tuned for damage.»»All gems have had their stats tuned for damage.
-All gems have had their stats tuned for health.»»All gems have had their stats tuned for health.
-Gem level changed to {level}»»Gem level changed to {level}
-Updated Stats»»Updated Stats
-Updated Stat's Augmentation»»Updated Stat's Augmentation
-Updated Ability»»Updated Ability
-Max mastery is 1000»»Max mastery is 1000
-Health Bonus»»Health Bonus
-Damage Bonus»»Damage Bonus
-Power Rank»»Power Rank
-Magic Find»»Magic Find
-Light»»Light
-Physical Damage»»Physical Damage
-Magic Damage»»Magic Damage
-Critical Damage»»Critical Damage
-Critical Hit»»Critical Hit
-Maximum Health»»Maximum Health
-Maximum Health %»»Maximum Health %
-Low Cost»»Low Cost
-Medium Cost»»Medium Cost
-High Cost»»High Cost
-Gem Tier»»Gem Tier
-Gem Levels»»Gem Levels
-Augmentation»»Augmentation
-Stats»»Stats
-Home»»Home
-Twitch Streams»»Twitch Streams
-Weekly Bonuses»»Weekly Bonuses
-Daily Bonuses»»Daily Bonuses
-Events»»Events
-No events are currently going on.»»No events are currently going on.
-Dragon Merchants»»Dragon Merchants
-Max Mastery»»Max Mastery
-Live Trove Mastery»»Live Trove Mastery
-Live Geode Mastery»»Live Geode Mastery
-PTS Trove Mastery»»PTS Trove Mastery
-PTS Geode Mastery»»PTS Geode Mastery
-Monday»»Monday
-Tuesday»»Tuesday
-Wednesday»»Wednesday
-Thursday»»Thursday
-Friday»»Friday
-Saturday»»Saturday
-Sunday»»Sunday
-Delve Day»»Delve Day
-Gathering Day»»Gathering Day
-Gem Day»»Gem Day
-Adventure Day»»Adventure Day
-Dragon Day»»Dragon Day
-XP Day»»XP Day
-Loot Day»»Loot Day
-Double Star Bar»»Double Star Bar
-Bonus XP»»Bonus XP
-Second Stat Reroll»»Second Stat Reroll
-Fast Invasions»»Fast Invasions
-Leaving in {}»»Leaving in {}
-Arriving in {}»»Arriving in {}
-Luxion»»Luxion
-Corruxion»»Corruxion
-Fluxion»»Fluxion
-Selling»»Selling
-Voting»»Voting
-File Extractor»»File Extractor
-Modder Tools»»Modder Tools
-Mods Manager»»Mods Manager
-Gear Builds»»Gear Builds
-Gem Builds»»Gem Builds
-Normal»»Normal
-Patron»»Patron
-My Mods»»My Mods
-Mod Profiles»»Mod Profiles
-Not working yet»»Not working yet
-Filter Mods»»Filter Mods
-Enabled»»Enabled
-Disabled»»Disabled
-Local»»Local
-Settings»»Settings
-Show Previews»»Show Previews
-Show mod image previews»»Show mod image previews
-Auto Fix Mod Names»»Auto Fix Mod Names
-Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
-Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files for UI mods
-My Mods tiles toggle mods»»My Mods tiles toggle mods
-Custom Directories»»Custom Directories
-Add Custom directory»»Add Custom directory
-No custom directories»»No custom directories
-MD/CD/MD/CD»»MD/CD/MD/CD
-PD/CD/PD/CD»»PD/CD/PD/CD
-MD/CD/LT/MD/CD/LT»»MD/CD/LT/MD/CD/LT
-PD/CD/LT/PD/CD/LT»»PD/CD/LT/PD/CD/LT
-Build»»Build
-Light»»Light
-Base Damage»»Base Damage
-Bonus Damage»»Bonus Damage
-Damage»»Damage
-Deviation»»Deviation
-Critical»»Critical
-Coefficient»»Coefficient
-Deviation»»Deviation
-Actions»»Actions
-Build format»»Build format
-MD/Light»»MD/Light
-PD/Light»»PD/Light
-MD+PD/Light»»MD+PD/Light
-MS/MD/Light»»MS/MD/Light
-MS/PD/Light»»MS/PD/Light
-MS/MD+PD/Light»»MS/MD+PD/Light
-WIP»»WIP
-Class»»Class
-Subclass»»Subclass
-Build Type»»Build Type
-Food»»Food
-Abilities»»Abilities
-Ally»»Ally
-Star Chart Build ID»»Star Chart Build ID
-Face Damage»»Face Damage
-Subclass active»»Subclass active
-Enlightened»»Enlightened
-First»»First
-Previous»»Previous
-Next»»Next
-Last»»Last
-Copied build GB-{} to clipboard»»Copied build GB-{} to clipboard
-Insert Gem Build ID»»Insert Gem Build ID
-Copy Gem Build»»Copy Gem Build
-Gear Critical Damage»»Gear Critical Damage
-Copied to clipboard»»Copied to clipboard
-Best»»Best
-Ability Build Changed»»Ability Build Changed
-Bard»»Bard
-Boomeranger»»Boomeranger
-Candy Barbarian»»Candy Barbarian
-Chloromancer»»Chloromancer
-Dino Tamer»»Dino Tamer
-Dracolyte»»Dracolyte
-Fae Trickster»»Fae Trickster
-Gunslinger»»Gunslinger
-Ice Sage»»Ice Sage
-Knight»»Knight
-Lunar Lancer»»Lunar Lancer
-Neon Ninja»»Neon Ninja
-Pirate Captain»»Pirate Captain
-Revenant»»Revenant
-Shadow Hunter»»Shadow Hunter
-Solarion»»Solarion
-Tomb Raiser»»Tomb Raiser
-Vanguardian»»Vanguardian
-Freerange Electrolytic Crystals»»Freerange Electrolytic Crystals
-Premium Fish Soup»»Premium Fish Soup
-Premium Fish Fillet»»Premium Fish Fillet
-Premium Fish Kabobs»»Premium Fish Kabobs
-Jump»»Jump
-Movement Speed»»Movement Speed
-Class Bonus»»Class Bonus
-Blue»»Blue
-Red»»Red
-Pink»»Pink
-Purple»»Purple
-Indigo»»Indigo
-Cyan»»Cyan
-Teal»»Teal
-Green»»Green
-Lime»»Lime
-Yellow»»Yellow
-Amber»»Amber
-Orange»»Orange
-Brown»»Brown
-Loading...»»Loading...
-Trove Time»»Trove Time
-Loading...»»Loading...
-Buffs»»Buffs
-Bonus Star Bar»»Bonus Star Bar
-Edit Mastery»»Edit Mastery
-Server»»Server
-Type»»Type
-Points»»Points
-Save»»Save
-Cancel»»Cancel
-Max»»Max
-Min»»Min
-Level Down»»Level Down
-Level Up»»Level Up
-Level 15»»Level 15
-Double Cubits and Flux from Star Bar completion!»»Double Cubits and Flux from Star Bar completion!
++100 Magic Find»»+100 Magic Find
 +100% Base Experience!»»+100% Base Experience!
-Chaos Forge can reroll the second stat on equipment!»»Chaos Forge can reroll the second stat on equipment!
-Increased rate of Shadow Invasions!»»Increased rate of Shadow Invasions!
-Double Crystal Drops»»Double Crystal Drops
-Double Shadow Shard Drops»»Double Shadow Shard Drops
-Double Inert Geode Drops»»Double Inert Geode Drops
-Triple Crystal Drops»»Triple Crystal Drops
-Triple Shadow Shard Drops»»Triple Shadow Shard Drops
-Triple Inert Geode Drops»»Triple Inert Geode Drops
-Double Radiant Shard Drops»»Double Radiant Shard Drops
-20% Bonus Harvest Chance»»20% Bonus Harvest Chance
-50% Bonus Ore Chance»»50% Bonus Ore Chance
-20% Bonus Fish Chance»»20% Bonus Fish Chance
-Triple Radiant Shard Drops»»Triple Radiant Shard Drops
-40% Bonus Harvest Chance»»40% Bonus Harvest Chance
++400 Magic Find»»+400 Magic Find
+10 Level»»10 Level
+10% chance to gain a flask charge when using a Flask.»»10% chance to gain a flask charge when using a Flask.
+10% chance to gain a random emblem effect when using a flask.»»10% chance to gain a random emblem effect when using a flask.
+10% chance when critical hitting to increase Critical Hit by 30% for 10 seconds.»»10% chance when critical hitting to increase Critical Hit by 30% for 10 seconds.
+10% chance when critical hitting to increases Critical Damage by 25% for 10 seconds.»»10% chance when critical hitting to increases Critical Damage by 25% for 10 seconds.
 100% Bonus Ore Chance»»100% Bonus Ore Chance
-40% Bonus Fish Chance»»40% Bonus Fish Chance
-Gem Upgrade Dust Cost Reduced By 10%»»Gem Upgrade Dust Cost Reduced By 10%
+100% chance when using a Flask to gain either a 25% Bonus Damage, 200 Stability, or 200% Bonus Health Regen.»»100% chance when using a Flask to gain either a 25% Bonus Damage, 200 Stability, or 200% Bonus Health Regen.
+100% More Adventure Experience»»100% More Adventure Experience
+100% More Arena Win Experience»»100% More Arena Win Experience
+100% More Club Experience»»100% More Club Experience
+15 Level»»15 Level
+20% Bonus Fish Chance»»20% Bonus Fish Chance
+20% Bonus Harvest Chance»»20% Bonus Harvest Chance
 25% Bonus Gem Box Drop Chance»»25% Bonus Gem Box Drop Chance
-Dungeons Can Drop Up To 3 Lustrous Gem Boxes»»Dungeons Can Drop Up To 3 Lustrous Gem Boxes
-Gem Upgrade Dust Cost Reduced By 20%»»Gem Upgrade Dust Cost Reduced By 20%
-50% Bonus Gem Box Drop Chance»»50% Bonus Gem Box Drop Chance
-Dungeons Can Drop Up To 6 Lustrous Gem Boxes»»Dungeons Can Drop Up To 6 Lustrous Gem Boxes
-Earn 50% More Adventurine»»Earn 50% More Adventurine
-Double Chance to Find Adventure Boxes»»Double Chance to Find Adventure Boxes
-Double Chance To Find Talismans»»Double Chance To Find Talismans
-Earn 100% More Adventurine»»Earn 100% More Adventurine
-Triple Chance to Find Adventure Boxes»»Triple Chance to Find Adventure Boxes
-Triple Chance To Find Talismans»»Triple Chance To Find Talismans
+2x Chance Of Finding Dragon Fragments»»2x Chance Of Finding Dragon Fragments
 2x Dragon Coins from Challenges»»2x Dragon Coins from Challenges
 2x Lesser Dragon Caches from Challenges»»2x Lesser Dragon Caches from Challenges
-2x Chance Of Finding Dragon Fragments»»2x Chance Of Finding Dragon Fragments
+3x Chance Of Finding Dragon Fragments»»3x Chance Of Finding Dragon Fragments
 3x Dragon Coins from Challenges»»3x Dragon Coins from Challenges
 3x Lesser Dragon Caches from Challenges»»3x Lesser Dragon Caches from Challenges
-3x Chance Of Finding Dragon Fragments»»3x Chance Of Finding Dragon Fragments
+40% Bonus Fish Chance»»40% Bonus Fish Chance
+40% Bonus Harvest Chance»»40% Bonus Harvest Chance
+5 Level»»5 Level
+5% chance to gain a flask charge when using a Flask.»»5% chance to gain a flask charge when using a Flask.
+5% chance when critical hitting to increase Critical Damage by 15% for 10 seconds.»»5% chance when critical hitting to increase Critical Damage by 15% for 10 seconds.
+5% chance when critical hitting to increase Critical Hit by 20% for 10 seconds.»»5% chance when critical hitting to increase Critical Hit by 20% for 10 seconds.
+50% Bonus Gem Box Drop Chance»»50% Bonus Gem Box Drop Chance
+50% Bonus Ore Chance»»50% Bonus Ore Chance
+50% chance when using a Flask to gain either a 25% Bonus Damage, 200 Stability, or 200% Bonus Health Regen.»»50% chance when using a Flask to gain either a 25% Bonus Damage, 200 Stability, or 200% Bonus Health Regen.
 50% More Adventure Experience»»50% More Adventure Experience
-50% More Club Experience»»50% More Club Experience
 50% More Arena Win Experience»»50% More Arena Win Experience
-100% More Adventure Experience»»100% More Adventure Experience
-100% More Club Experience»»100% More Club Experience
-100% More Arena Win Experience»»100% More Arena Win Experience
-+100 Magic Find»»+100 Magic Find
-Double Chance To Find Flux Artifacts»»Double Chance To Find Flux Artifacts
-Increased Chaos Chest Drop Chance»»Increased Chaos Chest Drop Chance
-+400 Magic Find»»+400 Magic Find
-Triple Chance To Find Flux Artifacts»»Triple Chance To Find Flux Artifacts
-Increased Chaos Chest Drop Chance»»Increased Chaos Chest Drop Chance
-Star Chart Build ID | "none" to remove»»Star Chart Build ID | "none" to remove
-Mastery Level»»Mastery Level
-Dragons»»Dragons
-Dragon Badges»»Dragon Badges
-Weapon»»Weapon
-Ring»»Ring
-Borrowed Luck»»Borrowed Luck
-Elixir»»Elixir
+50% More Club Experience»»50% More Club Experience
+[BETA] Trove Calculation Tool»»[BETA] Trove Calculation Tool
+[LT|MS] Staruable»»[LT|MS] Staruable
+[MD] Chronomancer Qubesly»»[MD] Chronomancer Qubesly
+[MD] Prefect Penguin»»[MD] Prefect Penguin
+[MD|LT] Aevyr»»[MD|LT] Aevyr
+[MD|LT] Orchian»»[MD|LT] Orchian
+[MD|LT] Puck»»[MD|LT] Puck
+[MD|LT] Starry Skyfire»»[MD|LT] Starry Skyfire
+[MS|JP] Clownish Kicker»»[MS|JP] Clownish Kicker
+[PD] Lil Burgie»»[PD] Lil Burgie
+[PD] Rapt Berserker»»[PD] Rapt Berserker
+[PD|LT] Animated Jug»»[PD|LT] Animated Jug
+[PD|LT] Earnie»»[PD|LT] Earnie
+[PD|LT] Jingles»»[PD|LT] Jingles
+[PD|LT] Scorpius»»[PD|LT] Scorpius
+A newer version is available.»»A newer version is available.
+Abilities»»Abilities
+Ability build changed»»Ability build changed
+Ability»»Ability
+About»»About
+Accuracy and Critical»»Accuracy and Critical
+Accuracy and Heartiness»»Accuracy and Heartiness
+Accuracy, Intellect and Strength»»Accuracy, Intellect and Strength
+Accuracy»»Accuracy
+Actions»»Actions
+Activating this star exceeds max of {MaxNode} by {StagedLock}»»Activating this star exceeds max of {MaxNode} by {StagedLock}
+Advanced mode allows for people to have old vs new changed files in a separate directory»»Advanced mode allows for people to have old vs new changed files in a separate directory
+Advanced mode enabled»»Advanced mode enabled
+Advanced Settings»»Advanced Settings
+Adventure Day»»Adventure Day
+After defeating a delve boss, gain 20% damage reduction for 30 minutes. »»After defeating a delve boss, gain 20% damage reduction for 30 minutes. 
+After defeating a Sundered Uplands 5 Star Boss, gain 10% increased Physical and Magic Damage for 4 hours.»»After defeating a Sundered Uplands 5 Star Boss, gain 10% increased Physical and Magic Damage for 4 hours.
+After defeating a Sundered Uplands 5 Star Boss, gain 15% increased Physical and Magic Damage for 4 hours.»»After defeating a Sundered Uplands 5 Star Boss, gain 15% increased Physical and Magic Damage for 4 hours.
+Air Gem Dust»»Air Gem Dust
+Air Primordial»»Air Primordial
+Air»»Air
+Alchemy and Healing»»Alchemy and Healing
+Alchemy, Heartiness and Leaping»»Alchemy, Heartiness and Leaping
+Alchemy»»Alchemy
+All gems have been de-augmented.»»All gems have been de-augmented.
+All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).»»All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).
+All gems have fully augmented.»»All gems have fully augmented.
+All gems have had their level maxed out.»»All gems have had their level maxed out.
+All gems have had their level set to 1.»»All gems have had their level set to 1.
+All gems have had their level set to 10.»»All gems have had their level set to 10.
+All gems have had their level set to 15.»»All gems have had their level set to 15.
+All gems have had their level set to 5.»»All gems have had their level set to 5.
+All gems have had their Magic damage stat changed to Physical Damage»»All gems have had their Magic damage stat changed to Physical Damage
+All gems have had their Physical damage stat changed to Magic Damage»»All gems have had their Physical damage stat changed to Magic Damage
+All gems have had their stats tuned for damage.»»All gems have had their stats tuned for damage.
+All gems have had their stats tuned for health.»»All gems have had their stats tuned for health.
+Ally»»Ally
+Amber»»Amber
+American English»»American English
+Anti-Knockback»»Anti-Knockback
+Application developed by Sly»»Application developed by Sly
+Arcane Air Gem»»Arcane Air Gem
+Arcane Cosmic Gem»»Arcane Cosmic Gem
+Arcane Fire Gem»»Arcane Fire Gem
+Arcane Water Gem»»Arcane Water Gem
+Arcane»»Arcane
+Arriving in {}»»Arriving in {}
+Attack Speed Bonus»»Attack Speed Bonus
+Attack Speed»»Attack Speed
+Attack»»Attack
+Augmentation Costs»»Augmentation Costs
+Augmentation»»Augmentation
+Banner»»Banner
+Bard»»Bard
+Base Damage»»Base Damage
+Beamer»»Beamer
+Berserk Battler (Cosmic)»»Berserk Battler (Cosmic)
+Berserker Battler»»Berserker Battler
+Best»»Best
+Blue»»Blue
+Bonus Damage»»Bonus Damage
 Bonus MF (No deaths)»»Bonus MF (No deaths)
-Sunday Loot Day»»Sunday Loot Day
-Store Boost»»Store Boost
+Bonus XP»»Bonus XP
+Boomeranger»»Boomeranger
+Borrowed Luck»»Borrowed Luck
+Bound Brilliance»»Bound Brilliance
+Bountiful»»Bountiful
+Bounty Hunt Boon»»Bounty Hunt Boon
+Bounty Hunt»»Bounty Hunt
+Brown»»Brown
+Buffs»»Buffs
+Build format»»Build format
+Build Type»»Build Type
+Builder's Precise Focus»»Builder's Precise Focus
+Builder's Rough Focus»»Builder's Rough Focus
+Builder's Superior Focus»»Builder's Superior Focus
+Build»»Build
+Cancel extraction»»Cancel extraction
+Candy Barbarian»»Candy Barbarian
+CB»»CB
+Change Ability»»Change Ability
+Change language»»Change language
+Change Log»»Change Log
+Change Restriction»»Change Restriction
+Change Stat»»Change Stat
+Change theme»»Change theme
+Changed files»»Changed files
+Changed/Added Files List»»Changed/Added Files List
+Chaos Contained Flare»»Chaos Contained Flare
+Chaos Contained Spark»»Chaos Contained Spark
+Chaos Forge can reroll the second stat on equipment!»»Chaos Forge can reroll the second stat on equipment!
+Chinese(Simplified)»»简体中文
+Chloromancer»»Chloromancer
+Chronomantic»»Chronomantic
+Class Bonus»»Class Bonus
+Class Gem»»Class Gem
+Class»»Class
 Clover»»Clover
 Club Fixture»»Club Fixture
-Rating»»Rating
-Face»»Face
-Hat»»Hat
-Preference»»Preference
-Attack Speed»»Attack Speed
-Orchian»»Orchian
-Flask»»Flask
-Cubic Curtain/Explosive Epilogue»»Cubic Curtain/Explosive Epilogue
-Vampirian Vanquisher (Cosmic)»»Vampirian Vanquisher (Cosmic)
-Berserk Battler (Cosmic)»»Berserk Battler (Cosmic)
-Farm»»Farm
-Emblem»»Emblem
-Gems»»Gems
-Class Gem»»Class Gem
-Evil Eye»»Evil Eye
-Death-Defying Vial»»Death-Defying Vial
-Starry Skyfire»»Starry Skyfire
-Trailblazing»»Trailblazing
+Coefficient»»Coefficient
+Combat»»Combat
+Compare changes with»»Compare changes with
 Conjurer's Crucible Vial»»Conjurer's Crucible Vial
-Martial»»Martial
-Chronomantic»»Chronomantic
-Jingles»»Jingles
-Scorpius»»Scorpius
-Unyielding»»Unyielding
-Bountiful»»Bountiful
+Copied build GB-{buildid} to clipboard»»Copied build GB-{buildid} to clipboard
+Copied to clipboard»»Copied to clipboard
+Copy build»»Copy build
+Copy Gem Build»»Copy Gem Build
+Copyright (c) 2023 - Sly»»Copyright (c) 2023 - Sly
+Corruxion»»Corruxion
+Cosmic Primordial»»Cosmic Primordial
+Cosmic»»Cosmic
+Crafting Speed»»Crafting Speed
+Critical Damage»»Critical Damage
+Critical Hit»»Critical Hit
+Critical»»Critical
+Crystal»»Crystal
+Cubic Curtain/Explosive Epilogue»»Cubic Curtain/Explosive Epilogue
 Cubic Curtain/Mired Mojo»»Cubic Curtain/Mired Mojo
-Empyrean Barrier (Cosmic)»»Empyrean Barrier (Cosmic)
-Lil' Whiptop»»Lil' Whiptop
+Cubic Curtain»»Cubic Curtain
+Custom»»Custom
+Cyan»»Cyan
+Daily Bonuses»»Daily Bonuses
+Damage Bonus»»Damage Bonus
+Damage Reduction»»Damage Reduction
+Damage»»Damage
+Damaging enemies grants 10% Life Leech.»»Damaging enemies grants 10% Life Leech.
+Damaging enemies grants 20% Life Leech. »»Damaging enemies grants 20% Life Leech. 
+Death-Defying Vial»»Death-Defying Vial
+Delve Day»»Delve Day
+Depths Boon 2.0»»Depths Boon 2.0
+Depths Boon»»Depths Boon
+Deviation»»Deviation
+Diamond Dragonite»»Diamond Dragonite
+Dino Tamer»»Dino Tamer
+Directory List»»Directory List
+Don't show again»»Don't show again
+Donate»»Donate
+Double Chance to Find Adventure Boxes»»Double Chance to Find Adventure Boxes
+Double Chance To Find Flux Artifacts»»Double Chance To Find Flux Artifacts
+Double Chance To Find Talismans»»Double Chance To Find Talismans
+Double Crystal Drops»»Double Crystal Drops
+Double Cubits and Flux from Star Bar completion!»»Double Cubits and Flux from Star Bar completion!
+Double Inert Geode Drops»»Double Inert Geode Drops
+Double Radiant Shard Drops»»Double Radiant Shard Drops
+Double Shadow Shard Drops»»Double Shadow Shard Drops
+Double Star Bar»»Double Star Bar
+Dracolyte»»Dracolyte
+Dragon Badges»»Dragon Badges
+Dragon Day»»Dragon Day
+Dragon Merchants»»Dragon Merchants
+Dragons»»Dragons
+Draining Kiss»»Draining Kiss
+Dungeons Can Drop Up To 3 Lustrous Gem Boxes»»Dungeons Can Drop Up To 3 Lustrous Gem Boxes
+Dungeons Can Drop Up To 6 Lustrous Gem Boxes»»Dungeons Can Drop Up To 6 Lustrous Gem Boxes
+Earn 100% More Adventurine»»Earn 100% More Adventurine
+Earn 50% More Adventurine»»Earn 50% More Adventurine
+Earnie»»Earnie
+Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes»»Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes
+Elixir»»Elixir
 Elysian Bandolier»»Elysian Bandolier
-Beamer»»Beamer
+Emblem 2.5x»»Emblem 2.5x
+Emblem»»Emblem
+Empowered Air Gem»»Empowered Air Gem
+Empowered Cosmic Gem»»Empowered Cosmic Gem
+Empowered Fire Gem»»Empowered Fire Gem
+Empowered Water Gem»»Empowered Water Gem
+Empowered»»Empowered
+Empyrean Barrier (Cosmic)»»Empyrean Barrier (Cosmic)
+Empyrean Barrier»»Empyrean Barrier
+Energy Regen Bonus»»Energy Regen Bonus
 Energy Regeneration»»Energy Regeneration
-Zealous»»Zealous
-Augmentation Costs»»Augmentation Costs
-Change Restriction»»Change Restriction
-% Augmentation Progress»»% Augmentation Progress
-Zero»»Zero
-Magic»»Magic
-Physical»»Physical
+Energy Regen»»Energy Regen
+Enlightened»»Enlightened
+Events»»Events
+Evil Eye»»Evil Eye
+Experience Gain Bonus»»Experience Gain Bonus
+Experience Gain»»Experience Gain
+Explosive Epilogue»»Explosive Epilogue
+Extract all»»Extract all
+Extract changed files»»Extract changed files
+Extract selected directories»»Extract selected directories
+Extract to»»Extract to
+Extractor Idle»»Extractor Idle
+Face Damage»»Face Damage
+Face»»Face
+Fae Trickster»»Fae Trickster
+Farm»»Farm
+Fast Invasions»»Fast Invasions
+Fierce Air Gem»»Fierce Air Gem
+Fierce Cosmic Gem»»Fierce Cosmic Gem
+Fierce Fire Gem»»Fierce Fire Gem
+Fierce Water Gem»»Fierce Water Gem
+Fierce»»Fierce
+File Extractor»»File Extractor
+Find stats»»Find stats
+Fire Gem Dust»»Fire Gem Dust
+Fire Primordial»»Fire Primordial
+Fire»»Fire
+First»»First
+Flask Capacity»»Flask Capacity
+Flask Renewal 2.0»»Flask Renewal 2.0
+Flask Renewal»»Flask Renewal
+Flask»»Flask
+Flower Power»»Flower Power
+Fluxion»»Fluxion
+fluxion»»fluxion
+Flux»»Flux
+Food»»Food
+Freerange Electrolytic Crystals»»Freerange Electrolytic Crystals
+Friday»»Friday
+Gain 15% health when a nearby enemy dies.»»Gain 15% health when a nearby enemy dies.
+Gain a movement speed boost when a nearby enemy dies.»»Gain a movement speed boost when a nearby enemy dies.
+Gain a protective shield when a nearby enemy dies.»»Gain a protective shield when a nearby enemy dies.
+Gathering Day»»Gathering Day
+Gathering»»Gathering
+Gear Builds»»Gear Builds
+Gear Critical Damage»»Gear Critical Damage
+Gem Ability»»Gem Ability
+Gem Builds»»Gem Builds
+Gem Day»»Gem Day
+Gem level changed to {level}»»Gem level changed to {level}
+Gem Levels»»Gem Levels
+Gem Set Calculator»»Gem Set Calculator
+Gem Simulator»»Gem Simulator
+Gem Tier»»Gem Tier
+Gem Upgrade Dust Cost Reduced By 10%»»Gem Upgrade Dust Cost Reduced By 10%
+Gem Upgrade Dust Cost Reduced By 20%»»Gem Upgrade Dust Cost Reduced By 20%
+Gems»»Gems
+Geode Mastery Buffs»»Geode Mastery Buffs
+Go back»»Go back
+Grants a Balefire Dragon Egg Fragment when unlocked»»Grants a Balefire Dragon Egg Fragment when unlocked
+Grants a Caprian Dragon Egg Fragment when upgrading»»Grants a Caprian Dragon Egg Fragment when upgrading
+Grants Charter's Chair when upgrading»»Grants Charter's Chair when upgrading
+Grants Scorpius when upgrading»»Grants Scorpius when upgrading
+Grants Star Dust when upgrading»»Grants Star Dust when upgrading
+Grants Star Sebastian when upgrading»»Grants Star Sebastian when upgrading
+Grants Starry Skyfire when upgrading»»Grants Starry Skyfire when upgrading
+Grants Staruable when upgrading»»Grants Staruable when upgrading
+Grants Ursa Major when upgrading»»Grants Ursa Major when upgrading
+Grants Ursa Minor when upgrading»»Grants Ursa Minor when upgrading
+Greater Alchemic Power 2.0»»Greater Alchemic Power 2.0
+Greater Alchemic Power 3.0»»Greater Alchemic Power 3.0
+Greater Alchemic Power»»Greater Alchemic Power
+Greatly increases gathering range when mounted.»»Greatly increases gathering range when mounted.
+Green»»Green
+Gunslinger»»Gunslinger
+Harvest 2.0»»Harvest 2.0
+Harvest»»Harvest
+Haste and Critical»»Haste and Critical
+Haste»»Haste
+Hat»»Hat
+Healing and Caffeine»»Healing and Caffeine
+Healing and Heartiness»»Healing and Heartiness
+Healing»»Healing
+Health Bonus»»Health Bonus
+Health Regen Bonus»»Health Regen Bonus
+Health Regen»»Health Regen
 Health»»Health
-Change language»»Change language
-This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.»»This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.
-I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills.»»I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills.
-I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content.»»I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content.
-I don't promise to keep this up to date forever, but as long as I am around I should be able to.»»I don't promise to keep this up to date forever, but as long as I am around I should be able to.
-Thanks for using my application. <3»»Thanks for using my application. <3
+Heart of Darkness»»Heart of Darkness
+Heartiness and Healing»»Heartiness and Healing
+Heartiness, Haste and Mining»»Heartiness, Haste and Mining
+Heartiness»»Heartiness
+High Cost»»High Cost
+Home»»Home
+I have made the code for this application open-source simply to keep transparency about the code, I use a very dirty method of compiling the application into a executable using a Python library and that may trigger some antivirus softwares»»I have made the code for this application open-source simply to keep transparency about the code, I use a very dirty method of compiling the application into a executable using a Python library and that may trigger some antivirus softwares
+I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.»»I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.
+Ice Sage»»Ice Sage
+Improve Stat»»Improve Stat
+Incoming Damage»»Incoming Damage
+Increased Chaos Chest Drop Chance»»Increased Chaos Chest Drop Chance
+Increased rate of Shadow Invasions!»»Increased rate of Shadow Invasions!
+Increases amount of ore mined by 10%. »»Increases amount of ore mined by 10%. 
+Increases amount of ore mined by 15%. »»Increases amount of ore mined by 15%. 
+Increases cooldown recovery speed by 25%.»»Increases cooldown recovery speed by 25%.
+Increases experience gain by 5%. »»Increases experience gain by 5%. 
+Increases harvesting by 10%. »»Increases harvesting by 10%. 
+Increases harvesting by 15%. »»Increases harvesting by 15%. 
+Increases the Depths boon damage reduction to 25% and duration to 1 hour.»»Increases the Depths boon damage reduction to 25% and duration to 1 hour.
+Indigo»»Indigo
+Insert build string»»Insert build string
+Insert Gem Build ID»»Insert Gem Build ID
+Insert pass key here»»Insert pass key here
+Intellect»»Intellect
+Invalid pass key»»Invalid pass key
+Jingles»»Jingles
+Jump»»Jump
+Knight»»Knight
+Knowledge and Accuracy»»Knowledge and Accuracy
+Knowledge and Critical»»Knowledge and Critical
+Knowledge and Luck»»Knowledge and Luck
+Knowledge»»Knowledge
+Lasermancy»»Lasermancy
+Last»»Last
+Leaping and Anti-Knockback»»Leaping and Anti-Knockback
+Leaving in {}»»Leaving in {}
+Lesser Air Gem»»Lesser Air Gem
+Lesser Cosmic Gem»»Lesser Cosmic Gem
+Lesser Fire Gem»»Lesser Fire Gem
+Lesser Water Gem»»Lesser Water Gem
+Lesser»»Lesser
+Level 15»»Level 15
+Level Down»»Level Down
+Level Up»»Level Up
+Level»»Level
+Light»»Light
+Lil' Whiptop»»Lil' Whiptop
+Lime»»Lime
+Live Geode Mastery»»Live Geode Mastery
+Live Trove Mastery»»Live Trove Mastery
+Loaded build with id {}»»Loaded build with id {}
+Loading files...»»Loading files...
+Loading...»»Loading...
+Login»»Login
+Long Reach 2.0»»Long Reach 2.0
+Long Reach 3.0»»Long Reach 3.0
+Long Reach»»Long Reach
+Loot Day»»Loot Day
+Low Cost»»Low Cost
+Luck and DYI»»Luck and DYI
+Lucky Strikes 2.0»»Lucky Strikes 2.0
+Lucky Strikes»»Lucky Strikes
+Luck»»Luck
+Lunar Lancer»»Lunar Lancer
+Luxion»»Luxion
+Lvl»»Lvl
+Magic Damage Bonus»»Magic Damage Bonus
+Magic Damage»»Magic Damage
+Magic Find Bonus»»Magic Find Bonus
+Magic Find»»Magic Find
+Magic»»Magic
+Major star of Bounty Hunt Boon»»Major star of Bounty Hunt Boon
+Major star of Depths Boon»»Major star of Depths Boon
+Major star of Draining Kiss»»Major star of Draining Kiss
+Major star of Flask Renewal»»Major star of Flask Renewal
+Major star of Harvest 2.0»»Major star of Harvest 2.0
+Major star of Heartiness, Haste and Mining»»Major star of Heartiness, Haste and Mining
+Major star of Light»»Major star of Light
+Major star of Long Reach»»Major star of Long Reach
+Major star of Lucky Strikes 2.0»»Major star of Lucky Strikes 2.0
+Major star of Lucky Strikes»»Major star of Lucky Strikes
+Major star of Minor Buffing Always»»Major star of Minor Buffing Always
+Major star of Minor Buffing»»Major star of Minor Buffing
+Major star of Rage 1.5»»Major star of Rage 1.5
+Major star of Rage 2.5»»Major star of Rage 2.5
+Major star of Rage 3.0»»Major star of Rage 3.0
+Major star of Rage»»Major star of Rage
+Major star of Reflection 2.0»»Major star of Reflection 2.0
+Major star of Reflection 3.0»»Major star of Reflection 3.0
+Major star of Reflection»»Major star of Reflection
+Major star of Shard Searcher»»Major star of Shard Searcher
+Major star of Weakness»»Major star of Weakness
+Martial»»Martial
+Mastery Buffs»»Mastery Buffs
+Mastery Levels»»Mastery Levels
+Mastery Level»»Mastery Level
+Mastery Points»»Mastery Points
+Mastery»»Mastery
+Max mastery is 1000»»Max mastery is 1000
+Max Mastery»»Max Mastery
+Maximum Health %»»Maximum Health %
+Maximum Health%»»Maximum Health%
+Maximum Health»»Maximum Health
+Max»»Max
+MD+PD/Light»»MD+PD/Light
+MD/CD/MD/CD»»MD/CD/MD/CD
+MD/Light»»MD/Light
+Medium Cost»»Medium Cost
+Mining and Heartiness»»Mining and Heartiness
+Mining and Leaps»»Mining and Leaps
+Mining»»Mining
+Minor Buffing Always»»Minor Buffing Always
+Minor Buffing»»Minor Buffing
+Minor star of Accuracy and Critical»»Minor star of Accuracy and Critical
+Minor star of Accuracy and Heartiness»»Minor star of Accuracy and Heartiness
+Minor star of Accuracy, Intellect and Strength»»Minor star of Accuracy, Intellect and Strength
+Minor star of Accuracy»»Minor star of Accuracy
+Minor star of Alchemy, Heartiness and Leaping»»Minor star of Alchemy, Heartiness and Leaping
+Minor star of Alchemy»»Minor star of Alchemy
+Minor star of Anti-Knockback»»Minor star of Anti-Knockback
+Minor star of Bounty Hunt»»Minor star of Bounty Hunt
+Minor star of Critical»»Minor star of Critical
+Minor star of Depths Boon 2.0»»Minor star of Depths Boon 2.0
+Minor star of Greater Alchemic Power 3.0»»Minor star of Greater Alchemic Power 3.0
+Minor star of Haste and Critical»»Minor star of Haste and Critical
+Minor star of Haste»»Minor star of Haste
+Minor star of Healing and Caffeine»»Minor star of Healing and Caffeine
+Minor star of Healing»»Minor star of Healing
+Minor star of Heartiness»»Minor star of Heartiness
+Minor star of Intellect»»Minor star of Intellect
+Minor star of Knowledge and Critical»»Minor star of Knowledge and Critical
+Minor star of Knowledge and Luck»»Minor star of Knowledge and Luck
+Minor star of Knowledge»»Minor star of Knowledge
+Minor star of Leaping and Anti-Knockback»»Minor star of Leaping and Anti-Knockback
+Minor star of Light»»Minor star of Light
+Minor star of Luck and DYI»»Minor star of Luck and DYI
+Minor star of Luck»»Minor star of Luck
+Minor star of Mining and Heartiness»»Minor star of Mining and Heartiness
+Minor star of Protection»»Minor star of Protection
+Minor star of Speed»»Minor star of Speed
+Minor star of Strength and Intellect»»Minor star of Strength and Intellect
+Minor star of Strength»»Minor star of Strength
+Minor star of Sundered Flight 3.0»»Minor star of Sundered Flight 3.0
+Minor star of Weakness 1.5»»Minor star of Weakness 1.5
+Min»»Min
+Mired Mojo»»Mired Mojo
+MIT License»»MIT License
+Modder Tools»»Modder Tools
+Moderately increases gathering range when mounted. »»Moderately increases gathering range when mounted. 
+Mods Manager»»Mods Manager
+Monday»»Monday
+Move Boost»»Move Boost
+Movement Speed»»Movement Speed
+MS/MD+PD/Light»»MS/MD+PD/Light
+MS/MD/Light»»MS/MD/Light
+MS/PD/Light»»MS/PD/Light
+Neon Ninja»»Neon Ninja
+Next»»Next
+No events are currently going on.»»No events are currently going on.
+none»»none
+Normal»»Normal
+Obtainables»»Obtainables
+Ok»»Ok
+Orange»»Orange
+Orchian»»Orchian
+Others»»Others
+Outgoing Damage»»Outgoing Damage
+Path»»Path
+Patreon»»Patreon
+Patron»»Patron
+PD/Light»»PD/Light
+Performance mode enabled»»Performance mode enabled
+Performance Mode»»Performance Mode
+Physical Damage Bonus»»Physical Damage Bonus
+Physical Damage»»Physical Damage
+Physical»»Physical
+Pink»»Pink
+Pirate Captain»»Pirate Captain
+Please provide a valid number»»Please provide a valid number
+Power Rank»»Power Rank
+Preference»»Preference
+Premium Fish Fillet»»Premium Fish Fillet
+Premium Fish Kabobs»»Premium Fish Kabobs
+Premium Fish Soup»»Premium Fish Soup
+Previous»»Previous
+Protection»»Protection
+PTS Geode Mastery»»PTS Geode Mastery
+PTS Trove Mastery»»PTS Trove Mastery
+Purple»»Purple
+Pve»»Pve
+Pyrodisc»»Pyrodisc
+Radiant»»Radiant
+Rage 1.5»»Rage 1.5
+Rage 2.5»»Rage 2.5
+Rage 3.0»»Rage 3.0
+Rage»»Rage
+Random Flask Emblem»»Random Flask Emblem
+Rating»»Rating
+Reduces glide reduction in all Sundered Uplands.»»Reduces glide reduction in all Sundered Uplands.
+Reduces glide reduction in Uber 10 and lower of Sundered Uplands.»»Reduces glide reduction in Uber 10 and lower of Sundered Uplands.
+Reduces glide reduction in Uber 7 of Sundered Uplands.»»Reduces glide reduction in Uber 7 of Sundered Uplands.
+Red»»Red
+Reflection 2.0»»Reflection 2.0
+Reflection 3.0»»Reflection 3.0
+Reflection»»Reflection
+Refresh changed/added files list»»Refresh changed/added files list
+Refresh directory list»»Refresh directory list
+Report a bug»»Report a bug
+Reroll Stat»»Reroll Stat
+Reset»»Reset
+Revenant»»Revenant
+Ring»»Ring
+Role Class»»Role Class
+Role SubClass»»Role SubClass
+Root star of Pve»»Root star of Pve
+Saturday»»Saturday
+Save changes to»»Save changes to
+Scorpius»»Scorpius
+Second Stat Reroll»»Second Stat Reroll
+Select all»»Select all
+Selling»»Selling
+Send feedback»»Send feedback
+Shadow Hunter»»Shadow Hunter
+Shard Searcher 2.0»»Shard Searcher 2.0
+Shard Searcher»»Shard Searcher
+Size»»Size
+Slightly increases gathering range when mounted. »»Slightly increases gathering range when mounted. 
+Solarion»»Solarion
+Speed»»Speed
+Spirit Surge»»Spirit Surge
+Stability»»Stability
+Star Chart Build ID | "none" to remove»»Star Chart Build ID | \"none\" to remove
+Star Chart Build ID»»Star Chart Build ID
+Star Chart»»Star Chart
+StarChart»»StarChart
+Starry Skyfire»»Starry Skyfire
+Stats»»Stats
+Stat»»Stat
+Stellar»»Stellar
+Stinging Curse»»Stinging Curse
+Store Boost»»Store Boost
+Strength and Intellect»»Strength and Intellect
+Strength»»Strength
+Stunburst»»Stunburst
+Subclass active»»Subclass active
+Subclass»»Subclass
+Sundard Flight»»Sundard Flight
+Sunday Loot Day»»Sunday Loot Day
+Sunday»»Sunday
+Sundered Flight 2.0»»Sundered Flight 2.0
+Sundered Flight 3.0»»Sundered Flight 3.0
+Switch to debug version»»Switch to debug version
+Tank»»Tank
+Teal»»Teal
+This application has the goal of bringing the calculations that Trove does server side over to the user. It mimics how the systems work at their core and brings them into one piece of fan-made software.»»This application has the goal of bringing the calculations that Trove does server side over to the user. It mimics how the systems work at their core and brings them into one piece of fan-made software.
+This will provide a better way to compare updates whilst having no real hustle to separate these changes»»This will provide a better way to compare updates whilst having no real hustle to separate these changes
+Thursday»»Thursday
+Titan Soul»»Titan Soul
+Tomb Raiser»»Tomb Raiser
+Trailblazing»»Trailblazing
+Triple Chance to Find Adventure Boxes»»Triple Chance to Find Adventure Boxes
+Triple Chance To Find Flux Artifacts»»Triple Chance To Find Flux Artifacts
+Triple Chance To Find Talismans»»Triple Chance To Find Talismans
+Triple Crystal Drops»»Triple Crystal Drops
+Triple Inert Geode Drops»»Triple Inert Geode Drops
+Triple Radiant Shard Drops»»Triple Radiant Shard Drops
+Triple Shadow Shard Drops»»Triple Shadow Shard Drops
+Trove directory»»Trove directory
+Trove Time»»Trove Time
+Tuesday»»Tuesday
+Twitch Streams»»Twitch Streams
+Unselect all»»Unselect all
+Unyielding»»Unyielding
+Update Size»»Update Size
+Updated Ability»»Updated Ability
+Updated Stat's Augmentation»»Updated Stat's Augmentation
+Updated Stats»»Updated Stats
+Value»»Value
+Vampirian Vanquisher (Cosmic)»»Vampirian Vanquisher (Cosmic)
+Vampirian Vanquisher»»Vampirian Vanquisher
+Vanguardian»»Vanguardian
+Volatile Velocity»»Volatile Velocity
+Voting»»Voting
+Water Gem Dust»»Water Gem Dust
+Water Primordial»»Water Primordial
+Water»»Water
+Weakness 1.5»»Weakness 1.5
+Weakness»»Weakness
+Weapon»»Weapon
+Wednesday»»Wednesday
+Weekly Bonuses»»Weekly Bonuses
+When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.»»When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.
+When dropping below 40% health, gain a 8% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.»»When dropping below 40% health, gain a 8% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.
+When dropping below 45% health, gain a 10% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.»»When dropping below 45% health, gain a 10% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.
+When dropping below 45% health, gain a 12% Outgoing damage buff and 10% Attack Speed for 15 seconds. 120 second cooldown.»»When dropping below 45% health, gain a 12% Outgoing damage buff and 10% Attack Speed for 15 seconds. 120 second cooldown.
+When taking damage, you have a 10% chance to gain a 20% reflect shield for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 10% chance to gain a 20% reflect shield for 10 seconds. Has a 1 minute cooldown.
+When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 seconds. Has a 1 minute cooldown.
+When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.
+WIP»»WIP
+XP Day»»XP Day
+Yellow»»Yellow
+Zealous»»Zealous
+Zero»»Zero
+👇Get pass key from👇»»👇Get pass key from👇"

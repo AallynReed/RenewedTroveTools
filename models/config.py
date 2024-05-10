@@ -7,3 +7,4 @@ class Locale(Enum):
     Portuguese = "pt_PT"
     Russian = "ru_RU"
     French = "fr_FR"
+    Chinese_Simplified = "zh_CN"

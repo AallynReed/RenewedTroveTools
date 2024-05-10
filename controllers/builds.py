@@ -357,7 +357,7 @@ class GemBuildsController(Controller):
                                     height=58,
                                 ),
                                 *[
-                                    Text(f"{k}: {v[0]}" + ("%" if v[1] else ""))
+                                    Text(f"{loc(k)}: {v[0]}" + ("%" if v[1] else ""))
                                     for k, v in self.star_chart.activated_gem_stats.items()
                                 ],
                                 *[
