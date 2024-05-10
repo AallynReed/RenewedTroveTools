@@ -44,26 +44,38 @@ class LocaleEngine:
                 translated.append("")
                 continue
             loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
-            translated.append(l if "❓" in loc_text else loc_text)
+            loc_text = l if "❓" in l and loc_text.startswith("Loc Error: ") else loc_text
+            translated.append(loc_text)
         return "\n".join(translated)
 
     def array_translate(self, text_lines: list):
         translated = []
         for l in text_lines:
             loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
-            translated.append(l if "❓" in loc_text else loc_text)
+            translated.append(loc_text if "❓" in loc_text else l)
         return translated
 
     def load_locale_translations(self):
-        for file, data in files_cache.items():
-            loc, ext = file.split(".")
-            if loc in [l.name for l in Locale] and ext == "loc":
-                formatted_data = {}
-                for line in data.splitlines():
-                    if len(line.split("»»", 2)) == 2:
-                        key, value = line.split("»»", 1)
-                        formatted_data[key] = ("»" if self.debug_mode else "") + value
-                self.add_translation(Locale[loc], formatted_data)
+        for loc in Locale:
+            data = files_cache.get(f"{loc.name}.loc")
+            if data is None:
+                continue
+            formatted_data = {}
+            for line in data.splitlines():
+                if len(line.split("»»", 2)) == 2:
+                    key, value = line.split("»»", 1)
+                    formatted_data[key] = ("»" if self.debug_mode else "") + value
+            if loc.name != Locale.en_US.name:
+                # Make it so it dynamically adds translations to fix missing ones in loc files
+                for k, v in self.translations[Locale.en_US].items():
+                    if not formatted_data.get(k):
+                        formatted_data[k] = v
+            text = ""
+            for k, v in sorted(formatted_data.items(), key=lambda x: x[0]):
+                text += f"{k}»»{v}\n"
+            with open(f"locales/{loc.name}.loc", "w+", encoding="utf-8") as f:
+                f.write(text)
+            self.add_translation(loc, formatted_data)
 
     @property
     def locale(self):
