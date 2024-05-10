@@ -207,7 +207,7 @@ class GemBuildsController(Controller):
                                                             if s["percentage"]
                                                             else " "
                                                         )
-                                                        + s["name"]
+                                                        + loc(s["name"])
                                                         for s in self.foods[
                                                             self.config.food
                                                         ]["stats"]
