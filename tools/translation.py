@@ -16,5 +16,5 @@ for line in data.splitlines():
         result += f"{key}»»{value}\n"
     print(f"{len(result.splitlines())}/{len(data.splitlines())}")
 
-with open("tools/temp.loc",'w',encoding='utf-8') as dataf:
+with open("Temp/temp.loc",'w',encoding='utf-8') as dataf:
     dataf.write(result)

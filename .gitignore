@@ -5,5 +5,5 @@ mods
 test*
 build
 dist
-venv
+venv*
 Temp

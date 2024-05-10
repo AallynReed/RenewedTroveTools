@@ -41,7 +41,7 @@ async def fetch_files():
             ]
             files_cache.update(
                 {
-                    path.replace("\\", "/"): open(locales_path.joinpath(path), encoding="utf-8").read()
+                    path.replace("\\", "/"): locales_path.joinpath(path).read_text(encoding="utf-8")
                     for path in files_data
                 }
             )

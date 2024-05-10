@@ -57,14 +57,14 @@ class ExtractorController(Controller):
                 self.locations.changes_from = directory.path.joinpath("extracted")
         self.extract_from = PathField(
             data="extract_from",
-            label=f"{loc("Trove directory")}:",
+            label=f"{loc('Trove directory')}:",
             value=self.locations.extract_from,
             on_change=self.avoid_text_edit,
             col=10,
         )
         self.extract_to = PathField(
             data="extract_to",
-            label=f"{loc("Extract to")}:",
+            label=f"{loc('Extract to')}:",
             value=self.locations.extract_to,
             on_change=self.avoid_text_edit,
             # on_submit=self.set_text_directory,
@@ -72,7 +72,7 @@ class ExtractorController(Controller):
         )
         self.changes_from = PathField(
             data="changes_from",
-            label=f"{loc("Compare changes with")}:",
+            label=f"{loc('Compare changes with')}:",
             value=self.locations.changes_from,
             on_change=self.avoid_text_edit,
             disabled=not self.page.preferences.advanced_mode,
@@ -80,7 +80,7 @@ class ExtractorController(Controller):
         )
         self.changes_to = PathField(
             data="changes_to",
-            label=f"{loc("Save changes to")}:",
+            label=f"{loc('Save changes to')}:",
             value=self.locations.changes_to,
             on_change=self.avoid_text_edit,
             disabled=not self.page.preferences.advanced_mode,
@@ -261,7 +261,7 @@ class ExtractorController(Controller):
         )
         self.metrics = Column(
             controls=[
-                Row(controls=[Text(f"{loc("Update Size")}:"), Text(naturalsize(0, gnu=True))])
+                Row(controls=[Text(f"{loc('Update Size')}:"), Text(naturalsize(0, gnu=True))])
             ]
         )
         self.extraction_progress = Column(
