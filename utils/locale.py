@@ -53,8 +53,7 @@ class LocaleEngine:
     def array_translate(self, text_lines: list):
         translated = []
         for l in text_lines:
-            loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
-            translated.append(loc_text if "❓" in loc_text else l)
+            translated.append(self.translate(l))
         return translated
 
     def load_locale_translations(self):
