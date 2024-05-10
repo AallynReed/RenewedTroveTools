@@ -10,6 +10,7 @@ class Locale(Enum):
     de_DE = "German"
     fr_FR = "French"
     ru_RU = "Russian"
+    zh_CN = "Chinese(Simplified)"
 
 
 class LocaleEngine:
@@ -35,6 +36,9 @@ class LocaleEngine:
         return self._translations[locale]
 
     def translate(self, text: str):
+        # if not text in self.translations[self.locale]:
+        #     with open("Temp/noLoc.loc",mode="a",encoding="utf-8") as file:
+        #         file.write(f"{text}»»{text}\n")
         return self.translations[self.locale].get(text, f"Loc Error: {text}")
 
     def load_locale_translations(self):

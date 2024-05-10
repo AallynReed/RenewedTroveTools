@@ -580,8 +580,8 @@ class TMod(TroveMod):
                 configs.append(f"[{file_name}]")
             config_file.write_text("\n".join(configs))
         else:
-            regex = re.compile(r"^\[(.*?\.swf)]$")
-            current = config_file.read_text()
+            regex = re.compile(r"^\[(.*?\.swf)]$",re.MULTILINE)
+            current = config_file.read_text(encoding="utf-8")
             configs = regex.findall(current)
             missing = []
             for file in swf_files:
@@ -590,7 +590,7 @@ class TMod(TroveMod):
             if missing:
                 missing_text = "\n\n".join([f"[{file}]" for file in missing])
                 current += "\n\n" + missing_text
-                config_file.write_text(current)
+                config_file.write_text(current,encoding="utf-8")
 
 
 class ZMod(TroveMod):

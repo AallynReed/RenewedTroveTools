@@ -39,6 +39,7 @@ from flet import (
     PopupMenuItem,
     WebView,
     ElevatedButton,
+    TextStyle,
 )
 from models.interface import RTTChip, RTTIconDecoButton
 from models.interface import Controller
@@ -354,6 +355,7 @@ class ModsController(Controller):
     async def settings_add_custom_directory(self, event):
         self.settings_custom_dir_name = TextField(
             hint_text="Name",
+            helper_style=TextStyle(color="red"),
             on_change=self.settings_set_custom_dir_name,
             autofocus=True,
         )
@@ -393,6 +395,13 @@ class ModsController(Controller):
         custom_directories = self.page.preferences.mod_manager.custom_directories
         picked_dir = self.memory["settings"]["picked_custom_dir"]
         picked_name = self.memory["settings"]["picked_custom_dir_name"]
+        self.settings_custom_dir_name.helper_text = None
+        if not picked_name or not picked_dir:
+            self.settings_custom_dir_name.helper_text = (
+                "A name and a directory are required"
+            )
+            await self.settings_custom_dir_name.update_async()
+            return
         custom_dirs = [d for n, d in custom_directories]
         if picked_dir not in custom_dirs:
             custom_directories.append((picked_name, picked_dir))

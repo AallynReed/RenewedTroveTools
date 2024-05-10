@@ -8,4 +8,4 @@ cd ../..
 
 CALL requirements.bat
 
-CALL py app.py
+CALL python app.py
