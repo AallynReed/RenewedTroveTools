@@ -532,22 +532,16 @@ class CustomAppBar(AppBar):
             actions_alignment=MainAxisAlignment.END,
             content=Text(
                 loc(
-                    "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r."
+                    (
+                        "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.\n\n"
+                        "I am coding this as an hobby with the goal of achieving greater front-end building skills,"
+                        " at the same time I also improve code making and organization skills.\n\nI have the goal to"
+                        " not only build something that is usable but mostly updatable with little effort or code"
+                        " knowledge this however may be a challenge if newer updates come with changes on behavior"
+                        " of previous content.\n\nI don't promise to keep this up to date forever, but as long as I"
+                        " am around I should be able to.\n\nThanks for using my application. <3"
+                    )
                 )
-                + "\n\n"
-                + loc(
-                    "I am coding this as an hobby with the goal of achieving greater front-end building skills, at the same time I also improve code making and organization skills."
-                )
-                + "\n\n"
-                + loc(
-                    "I have the goal to not only build something that is usable but mostly updatable with little effort or code knowledge this however may be a challenge if newer updates come with changes on behavior of previous content."
-                )
-                + "\n\n"
-                + loc(
-                    "I don't promise to keep this up to date forever, but as long as I am around I should be able to."
-                )
-                + "\n\n"
-                + loc("Thanks for using my application. <3")
             ),
         )
 

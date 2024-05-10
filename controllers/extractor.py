@@ -23,7 +23,7 @@ from flet import (
     DataCell,
     MainAxisAlignment,
     FilePicker,
-) 
+)
 from utils.locale import loc
 from flet_core import icons
 from humanize import naturalsize
@@ -107,7 +107,10 @@ class ExtractorController(Controller):
             disabled=not self.page.preferences.advanced_mode,
         )
         self.extract_changes_button = ElevatedButton(
-            loc("Extract changed files"), on_click=self.extract_changes, disabled=True, col=6
+            loc("Extract changed files"),
+            on_click=self.extract_changes,
+            disabled=True,
+            col=6,
         )
         self.extract_selected_button = ElevatedButton(
             loc("Extract selected directories"),
@@ -261,7 +264,12 @@ class ExtractorController(Controller):
         )
         self.metrics = Column(
             controls=[
-                Row(controls=[Text(f"{loc('Update Size')}:"), Text(naturalsize(0, gnu=True))])
+                Row(
+                    controls=[
+                        Text(f"{loc('Update Size')}:"),
+                        Text(naturalsize(0, gnu=True)),
+                    ]
+                )
             ]
         )
         self.extraction_progress = Column(
@@ -337,8 +345,8 @@ class ExtractorController(Controller):
                 if r.selected
             ]
         )
-        self.extract_selected_button.text = (
-            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
+        self.extract_selected_button.text = loc(
+            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
         )
         await self.page.update_async()
 
@@ -354,8 +362,8 @@ class ExtractorController(Controller):
                 if r.selected
             ]
         )
-        self.extract_selected_button.text = (
-            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
+        self.extract_selected_button.text = loc(
+            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
         )
         await self.page.update_async()
 
@@ -517,14 +525,14 @@ class ExtractorController(Controller):
                 for f in await r.data.files_list
             ]
         )
-        self.extract_changes_button.text = (
-            loc("Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True)))
+        self.extract_changes_button.text = loc(
+            "Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True))
         )
-        self.extract_selected_button.text = (
-            loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
+        self.extract_selected_button.text = loc(
+            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
         )
-        self.extract_all_button.text = (
-            loc("Extract All [{Value}]".format(naturalsize(all_size, gnu=True)))
+        self.extract_all_button.text = loc(
+            "Extract All [{Value}]".format(naturalsize(all_size, gnu=True))
         )
         self.extract_selected_button.disabled = not bool(
             [r for r in self.directory_list.rows if r.selected]
@@ -675,7 +683,10 @@ class ExtractorController(Controller):
                     DataRow(
                         cells=[
                             DataCell(
-                                Text(loc("Too many changes to be displayed."), color="red")
+                                Text(
+                                    loc("Too many changes to be displayed."),
+                                    color="red",
+                                )
                             ),
                             DataCell(Text("")),
                         ]
@@ -747,14 +758,16 @@ class ExtractorController(Controller):
                     for f in await r.data.files_list
                 ]
             )
-            self.extract_changes_button.text = (
-                loc("Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True)))
+            self.extract_changes_button.text = loc(
+                "Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True))
             )
-            self.extract_selected_button.text = (
-                loc("Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True)))
+            self.extract_selected_button.text = loc(
+                "Extract Selected [{Value}]".format(
+                    naturalsize(selected_size, gnu=True)
+                )
             )
-            self.extract_all_button.text = (
-                loc("Extract All [{Value}]".format(naturalsize(all_size, gnu=True)))
+            self.extract_all_button.text = loc(
+                "Extract All [{Value}]".format(naturalsize(all_size, gnu=True))
             )
             self.metrics.controls[0].controls[1].value = naturalsize(
                 sum([f.size for f in self.changed_files]), gnu=True
@@ -778,9 +791,15 @@ class ExtractorController(Controller):
 
     async def warn_advanced_mode(self):
         task_lines = [
-            loc("Advanced mode allows for people to have old vs new changed files in a separate directory"),
-            loc("This will provide a better way to compare updates whilst having no real hustle to separate these changes"),
-            loc("Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes"),
+            loc(
+                "Advanced mode allows for people to have old vs new changed files in a separate directory"
+            ),
+            loc(
+                "This will provide a better way to compare updates whilst having no real hustle to separate these changes"
+            ),
+            loc(
+                "Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes"
+            ),
         ]
         task = "\n\n".join(task_lines)
         await self.page.dialog.set_data(
@@ -830,9 +849,19 @@ class ExtractorController(Controller):
         await self.page.dialog.hide()
 
     async def warn_extraction(self, extraction_type: str):
-        task = loc("Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}".format(ExtractionType=extraction_type,ExtractFrom=self.locations.extract_from,ExtractTo=self.locations.extract_to))
+        task = loc(
+            "Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}".format(
+                ExtractionType=extraction_type,
+                ExtractFrom=self.locations.extract_from,
+                ExtractTo=self.locations.extract_to,
+            )
+        )
         if self.page.preferences.advanced_mode:
-            task += loc("\nWhilst keeping track of changes in a versioned folder in {Value}".format(self.locations.changes_to))
+            task += loc(
+                "\nWhilst keeping track of changes in a versioned folder in {Value}".format(
+                    self.locations.changes_to
+                )
+            )
         await self.page.dialog.set_data(
             modal=False,
             title=Text(loc("Extraction confirmation")),
@@ -840,7 +869,9 @@ class ExtractorController(Controller):
             actions=[
                 ElevatedButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
                 ElevatedButton(
-                    loc("Confirm extraction"), data=extraction_type, on_click=self.extract
+                    loc("Confirm extraction"),
+                    data=extraction_type,
+                    on_click=self.extract,
                 ),
             ],
             actions_alignment=MainAxisAlignment.END,

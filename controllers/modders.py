@@ -962,7 +962,9 @@ class ModdersController(Controller):
         trove_path = Path(app_data).joinpath("Trove")
         config = trove_path.joinpath("Trove.cfg")
         version = re.findall(
-            r"lastmodversion = (\d+)", config.read_text(encoding="utf-8").lower(), re.MULTILINE
+            r"lastmodversion = (\d+)",
+            config.read_text(encoding="utf-8").lower(),
+            re.MULTILINE,
         )
         return version[0]
 

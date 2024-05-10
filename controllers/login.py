@@ -33,9 +33,13 @@ class LoginController(Controller):
             Container(
                 Column(
                     controls=[
-                        Text(value=loc("Login"), size=40, width=460, text_align="center"),
+                        Text(
+                            value=loc("Login"), size=40, width=460, text_align="center"
+                        ),
                         self.token_input,
-                        Text(loc("👇Get pass key from👇"), width=460, text_align="center"),
+                        Text(
+                            loc("👇Get pass key from👇"), width=460, text_align="center"
+                        ),
                         Row(
                             controls=[
                                 Chip(

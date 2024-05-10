@@ -54,7 +54,9 @@ class StarChartController(Controller):
                     size=40,
                     left=30,
                 ),
-                ElevatedButton(loc("Reset"), top=50, left=40, on_click=self.reset_chart),
+                ElevatedButton(
+                    loc("Reset"), top=50, left=40, on_click=self.reset_chart
+                ),
                 *[
                     RoundButton(
                         style=ButtonStyle(
@@ -229,8 +231,9 @@ class StarChartController(Controller):
             event.control.data.switch_lock()
         else:
             await self.page.snack_bar.show(
-                loc("Activating this star exceeds max of {MaxNode} by {StagedLock}")
-                    .format(MaxNode=self.star_chart.max_nodes,StagedLock=staged_lock),
+                loc(
+                    "Activating this star exceeds max of {MaxNode} by {StagedLock}"
+                ).format(MaxNode=self.star_chart.max_nodes, StagedLock=staged_lock),
                 color="red",
             )
         self.setup_controls()

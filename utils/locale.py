@@ -44,7 +44,9 @@ class LocaleEngine:
                 translated.append("")
                 continue
             loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
-            loc_text = l if "❓" in l and loc_text.startswith("Loc Error: ") else loc_text
+            loc_text = (
+                l if "❓" in l and loc_text.startswith("Loc Error: ") else loc_text
+            )
             translated.append(loc_text)
         return "\n".join(translated)
 

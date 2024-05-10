@@ -110,13 +110,19 @@ class GemSetController(Controller):
                                         col=6,
                                     ),
                                     ElevatedButton(
-                                        loc("5 Level"), on_click=self.on_five_level, col=4
+                                        loc("5 Level"),
+                                        on_click=self.on_five_level,
+                                        col=4,
                                     ),
                                     ElevatedButton(
-                                        loc("10 Level"), on_click=self.on_ten_level, col=4
+                                        loc("10 Level"),
+                                        on_click=self.on_ten_level,
+                                        col=4,
                                     ),
                                     ElevatedButton(
-                                        loc("15 Level"), on_click=self.on_fifteen_level, col=4
+                                        loc("15 Level"),
+                                        on_click=self.on_fifteen_level,
+                                        col=4,
                                     ),
                                 ],
                                 col={"xxl": 3},
@@ -361,8 +367,7 @@ class GemSetController(Controller):
                         ),
                         Text(
                             data=stat,
-                            value=f"{stat.display_percentage}"
-                            + loc("% Augmentation"),
+                            value=f"{stat.display_percentage}" + loc("% Augmentation"),
                             col={"xxl": 3, "xs": 5},
                         ),
                         Row(

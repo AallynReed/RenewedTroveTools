@@ -748,8 +748,7 @@ class HomeController(Controller):
                 controls=[
                     Text(loc("Server") + ": " + server.upper()),
                     Text(
-                        loc("Type")
-                        + ": "
+                        f"{loc('Type')}:"
                         + ("Trove" if mastery_type == "normal" else "Geode")
                     ),
                     TextField(label=loc("Points"), value=points),
