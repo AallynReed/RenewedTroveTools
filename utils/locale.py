@@ -73,8 +73,14 @@ class LocaleEngine:
             text = ""
             for k, v in sorted(formatted_data.items(), key=lambda x: x[0]):
                 text += f"{k}»»{v}\n"
-            with open(f"locales/{loc.name}.loc", "w+", encoding="utf-8") as f:
-                f.write(text)
+            # In dev, we can use this to output latest loc files from server
+            try:
+                with open(f"locales/{loc.name}.loc", "w+", encoding="utf-8") as f:
+                    f.write(text)
+            except PermissionError:
+                # This might fail in production due to privileged directories
+                # Better to handle it now
+                ...
             self.add_translation(loc, formatted_data)
 
     @property
