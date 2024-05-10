@@ -39,8 +39,12 @@ class LocaleEngine:
         # if not text in self.translations[self.locale]:
         #     with open("Temp/noLoc.loc",mode="a",encoding="utf-8") as file:
         #         file.write(f"{text}»»{text}\n")
-        loc_text = self.translations[self.locale].get(text, f"Loc Error: {text}")
-        return text if "❓"in loc_text else loc_text 
+        text_lines = text.splitlines()
+        translated = []
+        for l in text_lines:
+            loc_text = self.translations[self.locale].get(text, f"Loc Error: {text}")
+            translated.append(text if "❓" in loc_text else loc_text)
+        return "\n".join(translated)
 
     def load_locale_translations(self):
         for file, data in files_cache.items():
