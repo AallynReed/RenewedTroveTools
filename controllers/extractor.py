@@ -791,17 +791,11 @@ class ExtractorController(Controller):
 
     async def warn_advanced_mode(self):
         task_lines = [
-            loc(
-                "Advanced mode allows for people to have old vs new changed files in a separate directory"
-            ),
-            loc(
-                "This will provide a better way to compare updates whilst having no real hustle to separate these changes"
-            ),
-            loc(
-                "Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes"
-            ),
+            "Advanced mode allows for people to have old vs new changed files in a separate directory",
+            "This will provide a better way to compare updates whilst having no real hustle to separate these changes",
+            "Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes",
         ]
-        task = "\n\n".join(task_lines)
+        task = loc("\n\n".join(task_lines))
         await self.page.dialog.set_data(
             modal=False,
             title=Text(loc("Advanced mode enabled")),
