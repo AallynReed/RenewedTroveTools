@@ -46,6 +46,13 @@ class LocaleEngine:
             translated.append(text if "❓" in loc_text else loc_text)
         return "\n".join(translated)
 
+    def array_translate(self, text_lines: list):
+        translated = []
+        for l in text_lines:
+            loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
+            translated.append(l if "❓" in loc_text else loc_text)
+        return translated
+
     def load_locale_translations(self):
         for file, data in files_cache.items():
             loc, ext = file.split(".")
@@ -68,3 +75,4 @@ class LocaleEngine:
 
 ENGINE = LocaleEngine(debug=False)
 loc = ENGINE.translate
+aloc = ENGINE.array_translate
