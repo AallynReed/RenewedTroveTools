@@ -43,8 +43,8 @@ class LocaleEngine:
                 # Make sure double new lines don't trigger bad translations
                 translated.append("")
                 continue
-            loc_text = self.translations[self.locale].get(text, f"Loc Error: {text}")
-            translated.append(text if "❓" in loc_text else loc_text)
+            loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
+            translated.append(l if "❓" in loc_text else loc_text)
         return "\n".join(translated)
 
     def array_translate(self, text_lines: list):
