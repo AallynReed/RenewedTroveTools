@@ -36,12 +36,13 @@ class LocaleEngine:
         return self._translations[locale]
 
     def translate(self, text: str):
-        # if not text in self.translations[self.locale]:
-        #     with open("Temp/noLoc.loc",mode="a",encoding="utf-8") as file:
-        #         file.write(f"{text}»»{text}\n")
         text_lines = text.splitlines()
         translated = []
         for l in text_lines:
+            if not l:
+                # Make sure double new lines don't trigger bad translations
+                translated.append("")
+                continue
             loc_text = self.translations[self.locale].get(text, f"Loc Error: {text}")
             translated.append(text if "❓" in loc_text else loc_text)
         return "\n".join(translated)
