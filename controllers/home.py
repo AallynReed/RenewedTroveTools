@@ -676,6 +676,7 @@ class HomeController(Controller):
         async with ClientSession() as session:
             async with session.get("https://trovesaurus.com/calendar/feed") as response:
                 events = await response.json()
+                print(events)
                 self.events_widget.set_controls(
                     [
                         ListTile(
@@ -714,7 +715,11 @@ class HomeController(Controller):
                                     ),
                                 ]
                             ),
-                            leading=Image(src=event["image"], height=150, width=150),
+                            leading=Image(
+                                src=event["image"] or event["icon"] or None,
+                                height=150,
+                                width=150,
+                            ),
                         )
                         for event in events
                     ]
