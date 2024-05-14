@@ -2,16 +2,22 @@ import logging
 import logging.handlers
 from datetime import datetime
 
+
+LOGGERS = {}
+
+
 timestamped_log = "logs/{logger_level}_{logger_name}_" + datetime.utcnow().strftime(
     "%Y-%m-%d_%H-%M-%S-%f.log"
 )
 
+
 class ColourFormatter(logging.Formatter):
-    MAX_NAME_SIZE = 0
     """This class formats logs with a color in stdout.
 
     The goal is to provide logs with color coding for easier readability
     as well as properly format string size for a more table like display"""
+
+    MAX_NAME_SIZE = 0
 
     LEVEL_COLOURS = [
         (logging.DEBUG, "\x1b[40;1m"),
@@ -44,6 +50,7 @@ class ColourFormatter(logging.Formatter):
 
 COLOR_FORMATTER = ColourFormatter()
 
+
 class Logger:
     """Custom logger object for streamlined logging.
 
@@ -60,6 +67,7 @@ class Logger:
         self.stream_handler.setLevel(level)
         self.stream_handler.setFormatter(COLOR_FORMATTER)
         self.logger.addHandler(self.stream_handler)
+        LOGGERS[name] = self
 
     def debug(self, message):
         self.logger.debug(message)
@@ -75,3 +83,7 @@ class Logger:
 
     def critical(self, message):
         self.logger.critical(message)
+
+
+def log(name):
+    return LOGGERS.get(name)

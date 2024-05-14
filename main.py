@@ -15,7 +15,7 @@ from models.constants import fetch_files
 from models.interface import CustomAppBar
 from models.interface.controls import Snackbar, Modal
 from utils import tasks
-from utils.logger import Logger
+from utils.logger import Logger, log
 from utils.path import BasePath
 from utils.protocol import set_protocol
 from utils.routing import Routing
@@ -42,6 +42,7 @@ class App:
 
     async def start(self, page):
         self.page = page
+        self.setup_logging()
         self.page.RTT = self
         if page.web:
             await self.start_web()
@@ -54,7 +55,6 @@ class App:
         await self.load_configurations()
         await self.load_constants()
         await self.setup_protocol_socket()
-        self.setup_logging()
         self.setup_localization()
         await self.setup_page()
         await self.gather_views()
@@ -65,7 +65,6 @@ class App:
         self.setup_folders()
         await self.load_configurations()
         await self.load_constants()
-        self.setup_logging(True)
         self.setup_localization()
         await self.setup_page()
         await self.gather_views()
@@ -139,15 +138,17 @@ class App:
                 await self.page.go_async(uri.path, **params)
 
     def setup_logging(self, web=False):
-        self.page.logger = Logger("Trove Builds Core")
-        if not web:
-            for file in self.logs_folder.glob("*.log"):
-                file.unlink()
+        Logger("Core")
+        Logger("Routing")
+        Logger("Traffic")
+        Logger("Network")
+        Logger("Tasks")
+        Logger("TMod Parser")
 
     def setup_localization(self):
         locale.ENGINE.load_locale_translations()
         locale.ENGINE.locale = self.page.preferences.locale
-        self.page.logger.info("Updated localization strings")
+        log("TMod Parser").info("Updated localization strings")
 
     async def setup_page(self):
         self.page.title = self.page.metadata.name
@@ -183,7 +184,7 @@ class App:
         self.page.preferences.save()
 
     async def renderer_error_logger(self, e):
-        self.page.logger.error(e.data)
+        log("Core").error(e.data)
 
     async def process_login(self, logout=False):
         token = await self.page.client_storage.get_async("rnt-token")
