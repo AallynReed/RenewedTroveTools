@@ -676,7 +676,6 @@ class HomeController(Controller):
         async with ClientSession() as session:
             async with session.get("https://trovesaurus.com/calendar/feed") as response:
                 events = await response.json()
-                print(events)
                 self.events_widget.set_controls(
                     [
                         ListTile(
