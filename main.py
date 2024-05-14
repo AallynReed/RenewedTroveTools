@@ -144,11 +144,12 @@ class App:
         Logger("Network")
         Logger("Tasks")
         Logger("TMod Parser")
+        Logger("Testing")
 
     def setup_localization(self):
         locale.ENGINE.load_locale_translations()
         locale.ENGINE.locale = self.page.preferences.locale
-        log("TMod Parser").info("Updated localization strings")
+        log("Core").info("Updated localization strings")
 
     async def setup_page(self):
         self.page.title = self.page.metadata.name
