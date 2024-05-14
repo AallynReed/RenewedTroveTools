@@ -6,8 +6,8 @@ timestamped_log = "logs/{logger_level}_{logger_name}_" + datetime.utcnow().strft
     "%Y-%m-%d_%H-%M-%S-%f.log"
 )
 
-
 class ColourFormatter(logging.Formatter):
+    MAX_NAME_SIZE = 0
     """This class formats logs with a color in stdout.
 
     The goal is to provide logs with color coding for easier readability
@@ -22,10 +22,7 @@ class ColourFormatter(logging.Formatter):
     ]
 
     FORMATS = {
-        level: logging.Formatter(
-            f"\x1b[30;1m%(asctime)s\x1b[0m {colour}%(levelname)-8s\x1b[0m \x1b[32m%(name)-24s\x1b[0m \x1b[37m%(message)s\x1b[0m ",
-            "%Y-%m-%d %H:%M:%S",
-        )
+        level: f"\x1b[30;1m%(asctime)s\x1b[0m {colour}%(levelname)-8s\x1b[0m \x1b[32m%(name)-MAX_NAME_SIZEs\x1b[0m \x1b[37m%(message)s\x1b[0m "
         for level, colour in LEVEL_COLOURS
     }
 
@@ -33,6 +30,10 @@ class ColourFormatter(logging.Formatter):
         formatter = self.FORMATS.get(record.levelno)
         if formatter is None:
             formatter = self.FORMATS[logging.DEBUG]
+        formatter = logging.Formatter(
+            formatter.replace("MAX_NAME_SIZE", str(self.MAX_NAME_SIZE + 4)),
+            "%Y-%m-%d %H:%M:%S",
+        )
         if record.exc_info:
             text = formatter.formatException(record.exc_info)
             record.exc_text = f"\x1b[31m{text}\x1b[0m"
@@ -40,6 +41,8 @@ class ColourFormatter(logging.Formatter):
         record.exc_text = None
         return output
 
+
+COLOR_FORMATTER = ColourFormatter()
 
 class Logger:
     """Custom logger object for streamlined logging.
@@ -49,17 +52,13 @@ class Logger:
     """
 
     def __init__(self, name, level=logging.INFO):
-        formatter = logging.Formatter(
-            "[{asctime}] [{levelname:<8}] {name:<24}: {message}",
-            "%Y-%m-%d %H:%M:%S",
-            style="{",
-        )
+        COLOR_FORMATTER.MAX_NAME_SIZE = max(COLOR_FORMATTER.MAX_NAME_SIZE, len(name))
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.DEBUG)
         self.logger.propagate = False
         self.stream_handler = logging.StreamHandler()
         self.stream_handler.setLevel(level)
-        self.stream_handler.setFormatter(ColourFormatter())
+        self.stream_handler.setFormatter(COLOR_FORMATTER)
         self.logger.addHandler(self.stream_handler)
 
     def debug(self, message):
