@@ -2,10 +2,6 @@ from enum import Enum
 from models.constants import files_cache
 
 
-with open("locales/en_US.mloc", "w+") as f:
-    f.write(f"")
-
-
 class Locale(Enum):
     """Supported locales."""
 
@@ -24,6 +20,15 @@ class LocaleEngine:
         self._translations = {}
         self._locale = Locale.en_US
         self.debug_mode = debug
+        if self.debug_mode:
+            self._clear_missing_translations()
+
+    def _clear_missing_translations(self):
+        try:
+            with open("locales/en_US.mloc", "w+") as f:
+                f.write(f"")
+        except PermissionError:
+            ...
 
     @property
     def translations(self):
@@ -52,8 +57,11 @@ class LocaleEngine:
             # logging, nonetheless better than 1 by 1
             if self.debug_mode:
                 if l and l not in self.translations[self.locale].keys():
-                    with open("locales/en_US.mloc", "a", encoding="utf-8") as f:
-                        f.write(f"{l}»»{l}\n")
+                    try:
+                        with open("locales/en_US.mloc", "a", encoding="utf-8") as f:
+                            f.write(f"{l}»»{l}\n")
+                    except PermissionError:
+                        ...
             loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
             loc_text = (
                 l if "❓" in l and loc_text.startswith("Loc Error: ") else loc_text
