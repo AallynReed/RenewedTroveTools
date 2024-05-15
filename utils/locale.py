@@ -50,9 +50,10 @@ class LocaleEngine:
             # Auto log into a file missing translations (it has to be triggered in app to translate)
             # This means it's not totally automatic, it must spawn the string in the app in order to trigger this
             # logging, nonetheless better than 1 by 1
-            # if l and l not in self.translations[self.locale].keys():
-            #     with open("locales/en_US.mloc", "a", encoding="utf-8") as f:
-            #         f.write(f"{l}»»{l}\n")
+            if self.debug_mode:
+                if l and l not in self.translations[self.locale].keys():
+                    with open("locales/en_US.mloc", "a", encoding="utf-8") as f:
+                        f.write(f"{l}»»{l}\n")
             loc_text = self.translations[self.locale].get(l, f"Loc Error: {l}")
             loc_text = (
                 l if "❓" in l and loc_text.startswith("Loc Error: ") else loc_text
