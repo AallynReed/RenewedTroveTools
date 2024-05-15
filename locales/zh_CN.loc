@@ -1,5 +1,6 @@
 % Augmentation»»% 属性强化
 % Augmentation Progress»»% Augmentation Progress
+(Conflicts may happen in game)»»(Conflicts may happen in game)
 +100 Magic Find»»+100魔寻
 +100% Base Experience!»»+100%基础经验
 +400 Magic Find»»+400魔寻
@@ -62,6 +63,9 @@ Accurately read the stars.»»❓准确地读取星星.
 Actions»»动作
 Activating this star exceeds max of {MaxNode} by {StagedLock}»»超出星图的最大值 {MaxNode} 加点 {StagedLock}
 Add Custom directory»»Add Custom directory
+Add custom directory»»Add custom directory
+Add to Profile»»Add to Profile
+Add to profile»»Add to profile
 Additional shields will be needed for future bosses.»»❓未来的BOSS需要额 外的护盾.
 Advanced Settings»»❓优先的设�?
 Advanced mode allows for people to have old vs new changed files in a separate directory»»❓高级模式允许用户在单独的目 录中拥有旧文件和新更改的文件
@@ -79,6 +83,7 @@ Air Primordial»»原初天空龙
 Alchemy»»❓炼丹术
 Alchemy and Healing»»❓炼金术和治疗
 Alchemy, Heartiness and Leaping»»❓炼金术、热情和跳跃
+All»»All
 All gems have been de-augmented.»»所有宝石都已减弱
 All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).»»所有宝石都已被强制归零(这是不可逆转的, 重新生成宝石以获得新宝石)
 All gems have fully augmented.»»所有宝石都已增强
@@ -91,6 +96,7 @@ All gems have had their level set to 15.»»所有宝石的等级都设置为15
 All gems have had their level set to 5.»»所 有宝石的等级都设置为5
 All gems have had their stats tuned for damage.»»所有宝石的属性都针对伤害进行了调整
 All gems have had their stats tuned for health.»»所有宝石的属性都针对生命进行了调整
+Allies»»Allies
 Ally»»宠物
 Amber»»❓琥珀色
 American English»»American English
@@ -115,7 +121,9 @@ Augmentation Costs»»增强成本
 Auto Fix Mod Names»»Auto Fix Mod Names
 Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files for UI mods
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
+Automatically generate and fix cfg files for UI mods»»Automatically generate and fix cfg files for UI mods
 Banner»»旗帜
+Banners»»Banners
 Bard»»吟游诗人
 Base Damage»»基础伤害
 Beamer»»射线徽章
@@ -123,6 +131,7 @@ Berserk Battler (Cosmic)»»狂暴勇士
 Berserker Battler»»狂暴勇士
 Best»»最佳
 Blue»»❓兰
+Boats and Sails»»Boats and Sails
 Bonus Damage»»伤害加成
 Bonus MF (No deaths)»»MF奖励(无死亡)
 Bonus Star Bar»»Bonus Star Bar
@@ -169,19 +178,24 @@ Club Fixture»»公会装置加成
 Coefficient»»伤害系数(Coe)
 Combat»»❓v.斗争 ,反,反对
 Compare changes with»»❓比较更改
+Confirm»»Confirm
 Conjurer's Crucible Vial»»巫师的提炼药瓶
 Continue to grow your strength and prove Might is better then brains.»»❓继续增强你的力量, 并证明Might比大脑更好.
 Copied build GB-{buildid} to clipboard»»复制构建 GB-{buildid} 到剪贴板
 Copied build GB-{} to clipboard»»Copied build GB-{} to clipboard
 Copied to clipboard»»已复制到剪贴板
 Copy Gem Build»»复制宝石构建ID
+Copy ID»»Copy ID
 Copy build»»复制构建
 Copyright (c) 2023 - Sly»»Copyright (c) 2023 - Sly
 Corruxion»»奢龙
+Cosmetics»»Cosmetics
 Cosmic»»宇宙
 Cosmic Gem Dust»»Cosmic Gem Dust
 Cosmic Primordial»»原初宇宙龙
+Costumes»»Costumes
 Crafting Speed»»制作速度
+Create new profile»»Create new profile
 Critical»»暴击伤害
 Critical Damage»»暴击伤害
 Critical Hit»»暴击率
@@ -199,6 +213,7 @@ Damage Reduction»»伤害减免
 Damaging enemies grants 10% Life Leech.»»对敌人造成伤害时, 会获得10%吸血效果.
 Damaging enemies grants 20% Life Leech. »»对敌人造成伤害会使敌人获得20%吸血效果.
 Death-Defying Vial»»还魂瓶
+Delete»»Delete
 Delve Day»»秘境日
 Delving just got a little bit easier.»»❓钻研变得简单了一点.
 Depths Boon»»❓深度恩赐
@@ -207,7 +222,9 @@ Deviation»»偏差
 Diamond Dragonite»»钻龙石
 Dino Tamer»»驯龙师
 Directory List»»❓目录列表
+Disable»»Disable
 Disabled»»Disabled
+Disabled ({amount})»»Disabled ({amount})
 Don't show again»»❓不再显示
 Donate»»❓v.捐赠 ,馈赠,捐献 ,捐助
 Double Chance To Find Flux Artifacts»»掉落原晶法器的几率提升2倍
@@ -220,6 +237,7 @@ Double Radiant Shard Drops»»光辉碎片掉落数量为原来的2倍
 Double Shadow Shard Drops»»掉落的暗影碎片数量提升2倍
 Double Star Bar»»双倍星条
 Downloading update, please wait...»»Downloading update, please wait...
+Downloads»»Downloads
 Dracolyte»»火龙法师
 Dragon Badges»»龙升天
 Dragon Day»»龙日
@@ -233,6 +251,7 @@ Dungeons Can Drop Up To 6 Lustrous Gem Boxes»»地下城最多可获得6个光�
 Earn 100% More Adventurine»»冒险币获取数量提升100%
 Earn 50% More Adventurine»»冒险币获取数量提升50%
 Earnie»»厄尼
+Edit»»Edit
 Edit Mastery»»Edit Mastery
 Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes»»❓消除每次更新对1gb文件夹的需求，并保持其简化以实现真正的更改
 Elixir»»寻日者灵药
@@ -246,7 +265,9 @@ Empowered Fire Gem»»附魔火焰宝石
 Empowered Water Gem»»附魔水蓝宝石
 Empyrean Barrier»»苍天屏障
 Empyrean Barrier (Cosmic)»»苍天屏障
+Enable»»Enable
 Enabled»»Enabled
+Enabled ({amount})»»Enabled ({amount})
 Energy Regen»»能量回复
 Energy Regen Bonus»»❓能量再生加成
 Energy Regeneration»»充能徽章
@@ -279,12 +300,14 @@ Fierce Water Gem»»物理 水蓝宝石
 Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.»»❓在Trove的战斗使你有智慧随机 为烧瓶充电.
 File Extractor»»资源提取
 Filter Mods»»Filter Mods
+Filter mods»»Filter mods
 Find stats»»标记属性
 Finding this star could grant more then just Health and Critical Hit.»»❓找到这 颗星星可以获得比生命值和暴击更多的奖励.
 Fire»»火焰
 Fire Gem Dust»»火焰宝石尘
 Fire Primordial»»原初火焰龙
 First»»首页
+Fishing»»Fishing
 Flask»»瓶子
 Flask Capacity»»❓烧瓶容量
 Flask Renewal»»❓烧瓶更新
@@ -299,6 +322,7 @@ Food»»食物
 Freerange Electrolytic Crystals»» 自由变化电解晶体
 French»»French
 Friday»»星期五
+GUI»»GUI
 Gain 15% health when a nearby enemy dies.»»附近敌人死亡时获得15%吸血.
 Gain a movement speed boost when a nearby enemy dies.»»附近敌人死亡时获得移动速度提升.
 Gain a protective shield when a nearby enemy dies.»»附近敌人死亡时获得一个护盾.
@@ -363,6 +387,7 @@ Heartiness»»❓热情
 Heartiness and Healing»»❓热情和疗愈
 Heartiness, Haste and Mining»»❓热情、匆忙和开采
 Hee Hee this star gives more health.»»❓嘻嘻, 这颗星星给了更多的生命值.
+Helmets»»Helmets
 High Cost»»高成本
 Hitting more often means more Critical Hits.»»❓更频繁的命中意味着更多的暴击.
 Home»»主页
@@ -392,6 +417,8 @@ Indigo»»❓靛蓝色
 Insert Gem Build ID»»宝石构建ID
 Insert build string»»生成ID
 Insert pass key here»»在此输入密钥
+Install»»Install
+Installed»»Installed
 Intellect»»❓智力
 Intense searching has led you to greater speed and adaptability.»»❓激烈的搜索使您获得了更快的速度和更强的适应性.
 Invalid pass key»»无效的密钥
@@ -406,6 +433,7 @@ Knowledge and Accuracy»»❓知识和准确性
 Knowledge and Critical»»❓知识和关键
 Knowledge and Luck»»❓知识和运气
 Knowledge is power - with this you will gain even more.»»❓知识就是力量--有了它, 你将获得更多.
+Language»»Language
 Lasermancy»»❓Lasermancy
 Last»»尾页
 Later»»Later
@@ -422,6 +450,7 @@ Level 15»»15级
 Level Down»»降级
 Level Up»»升级
 Light»»光明
+Likes»»Likes
 Lil' Whiptop»»小糕鞭
 Lime»»❓青柠色
 Little bit of luck on this side of the stars as well.»»❓星星的这一边也有一点运气.
@@ -461,6 +490,7 @@ MIT License»»MIT License
 MS/MD+PD/Light»»❓MS/MD + PD/Light
 MS/MD/Light»»❓MS/MD/Light
 MS/PD/Light»»❓MS/PD/Light
+Mag Riders»»Mag Riders
 Magic»»魔法
 Magic Damage»»魔法伤害
 Magic Damage Bonus»»❓魔法伤害加成
@@ -541,21 +571,28 @@ Minor star of Sundered Flight 3.0»»❓SUNDERED Flight 3.0的小明星
 Minor star of Weakness 1.5»»❓弱点小星1.5
 Mired Mojo»»深陷符咒
 Mod Profiles»»Mod Profiles
+Mod Profiles (Not working yet)»»Mod Profiles (Not working yet)
+Modder»»Modder
 Modder Tools»»模组开发
 Moderately increases gathering range when mounted. »»❓安装时适度增加聚集范围.
 Mods Manager»»模组管理
+Mods per page»»Mods per page
 Monday»»星期一
 Moooooooooooreeeeeeeee Healing PLEASE!!!»»❓Moooooooooooreeeeeee疗愈请! ! !
 More Strikes then equals less pins to hit.»»❓更多的打击等于更少的钉击.
 More random effects. MOOOOORREEEEE!!!!»»❓更多随机效果.MOOOORREEEEE!!!!
+Mounts»»Mounts
 Move Boost»»随机跳点
 Movement Speed»»移动速度
 My Mods»»My Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
+NPCs»»NPCs
 Neon Ninja»»霓虹忍者
 Next»»下一页
+No authors»»No authors
 No custom directories»»No custom directories
 No events are currently going on.»»❓当前没有正在进行的活动。
+No picked directory (Pick your mods folder)»»No picked directory (Pick your mods folder)
 Normal»»普通
 Not going to push around the brawler.»»❓不会在争吵者周围推来推去.
 Not working yet»»Not working yet
@@ -563,6 +600,7 @@ Now that flasks are powered up, heres a few more.»»❓现在烧瓶已通电, �
 Obtainables»»可获得物品
 Ok»»❓没问题
 One day it will be super important to have a lot of this. Wink Wink»»❓有一天, 拥有很多这样的东西是非常重要的.眨眼眨眼
+One or more mods conflict with this mod»»One or more mods conflict with this mod
 Oops, did I leave a flask over on this side of the cosmos.»»❓哎呀, 我在宇宙的这一边留下了一个烧瓶.
 Oops, didn't I mean to make this a health star?»»❓哎呀, 我不是想让这成为健康之星吗?
 Orange»»❓橙
@@ -574,6 +612,7 @@ PD/CD/PD/CD»»PD/CD/PD/CD
 PD/Light»»❓PD/灯
 PTS Geode Mastery»»体验服晶洞专精
 PTS Trove Mastery»»体验服宝藏专精
+Page»»Page
 Path»»❓路径
 Patreon»»VIP加成
 Patron»»VIP加成
@@ -593,6 +632,7 @@ Premium Fish Fillet»»优质鱼汤
 Premium Fish Kabobs»»优质鱼肉串
 Premium Fish Soup»»优质鱼汤
 Previous»»上一页
+Private»»Private
 Protection»»❓防护
 Purple»»❓紫色
 Pve»»❓Pve
@@ -624,12 +664,15 @@ Revenant»»无头骑士
 Ring»»戒指
 Role Class»»角色
 Role SubClass»»副职业
+Root star of Combat»»Root star of Combat
+Root star of Gathering»»Root star of Gathering
 Root star of Pve»»❓Pve的根星
 Russian»»Russian
 Saturday»»星期六
 Save»»Save
 Save changes to»»❓是否保存对 | 所做的修改?
 Scorpius»»天蝎座
+Search»»Search
 Search the lands for greater goods.»»❓在陆地上寻找更大的商品.
 Second Stat Reroll»»混沌属性
 See the weakness of your enemies and know how to exploit it.»»❓看到敌人的弱点并知道如何利用它.
@@ -681,6 +724,7 @@ Sunday»»星期日
 Sunday Loot Day»»收获日
 Sundered Flight 2.0»»❓SENDERED FLIGHT 2.0
 Sundered Flight 3.0»»❓SENDERED FLIGHT 3.0
+Swap»»Swap
 Switch to debug version»»❓切换到调试版本
 Switch to release version»»Switch to release version
 Tank»»肉坦
@@ -721,15 +765,19 @@ Two damage types, maybe someday we will search the stars and find the 3rd one.»
 Type»»Type
 Ultimate Harvest upgrade for any gathering min/maxer.»»❓任何最低/最高采集量 的终极收获升级.
 Ultimate Strength star is better than a Magic Star.»»❓终极力量之星胜过魔法之星.
+Uninstall»»Uninstall
 Unlimited Magic... unless you run out of energy regen.»»❓无限魔法……除非你的能量消耗殆尽.
 Unselect all»»❓取消全选
 Unyielding»»不屈徽章
 Update»»Update
 Update Size»»❓更新大小
 Update available»»Update available
+Update {amount} mods»»Update {amount} mods
 Updated Ability»»已更新能力
 Updated Stat's Augmentation»»更新了状态的增强
 Updated Stats»»更新的统计数据
+User»»User
+Utility»»Utility
 Value»»值
 Vampirian Vanquisher»»吸血鬼征服者
 Vampirian Vanquisher (Cosmic)»»吸血鬼征服者
@@ -741,6 +789,7 @@ WIP»»功能开发中
 Water»»水蓝
 Water Gem Dust»»水蓝宝石尘
 Water Primordial»»原初水蓝龙
+Waypoint»»Waypoint
 Weakness»»❓感到虚弱
 Weakness 1.5»»❓弱点1.5
 Weapon»»武器
@@ -758,8 +807,10 @@ When taking damage, you have a 10% chance to gain a 20% reflect shield for 10 se
 When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 seconds. Has a 1 minute cooldown.»»❓ 受到伤害时, 有20%的概率获得30%的反射护盾, 持续10秒.有1分钟的冷却时间.
 When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.»»❓受到伤害时, 有30%的概率获得45%的反射护盾和30%的伤害减免, 持续10秒.有1分钟 的冷却时间.
 When visiting the final frontier, it's always good to have speed.»»❓在游览最后的边疆时, 速度总是好的.
+Whether mod tiles in My Mods enable/disable mods»»Whether mod tiles in My Mods enable/disable mods
 Why are flasks so OP... here is a random one.»»❓为什么烧瓶是OP...这里是一个随机的.
 Will need to double check numbers to make sure this is not too much strength.»»❓将需要仔细检查数字, 以确保这不是太多的强度.
+Wings»»Wings
 Wink Wink...»»❓眨眼眨眼……
 With a little luck and brains you can do anything.»»❓只要一点运气和大脑, 你可以做任何事情.
 With faster attack and higher life leech you may someday be invincible.»»❓有了更快的攻击和更高的生命水蛭, 你总有一天会成为无敌的.
@@ -792,4 +843,5 @@ Zero»»归零
 [PD|LT] Scorpius»»❓[PD | LT]天蝎座
 fluxion»»原晶
 none»»❓无
+{amount} mods»»{amount} mods
 👇Get pass key from👇»»👇可以从这里获取密钥👇

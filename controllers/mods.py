@@ -47,6 +47,7 @@ from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
 from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
 from utils.trove.registry import get_trove_locations, TroveGamePath
+from utils.locale import loc
 
 
 class ModsController(Controller):
@@ -61,7 +62,9 @@ class ModsController(Controller):
                 tab_content=Row(controls=[Icon(icons.SETTINGS, size=24)])
             )
             self.my_mods_tab = Tab(
-                tab_content=Row(controls=[Icon(icons.FOLDER, size=24), Text("My Mods")])
+                tab_content=Row(
+                    controls=[Icon(icons.FOLDER, size=24), Text(loc("My Mods"))]
+                )
             )
             self.trovesaurus_tab = Tab(
                 tab_content=Row(
@@ -80,7 +83,7 @@ class ModsController(Controller):
                             color="red" if not self.page.user_data else "default",
                         ),
                         Text(
-                            "Mod Profiles (Not working yet)",
+                            loc("Mod Profiles (Not working yet)"),
                             color="red" if not self.page.user_data else "default",
                         ),
                     ]
@@ -219,16 +222,16 @@ class ModsController(Controller):
                     Card(
                         content=Column(
                             controls=[
-                                Text("Settings"),
+                                Text(loc("Settings")),
                                 Divider(),
                                 Row(
                                     controls=[
                                         Switch(
                                             value=self.page.preferences.mod_manager.show_previews,
                                             on_change=self.settings_toggle_show_previews,
-                                            tooltip="Show mod image previews",
+                                            tooltip=loc("Show mod image previews"),
                                         ),
-                                        Text("Show Previews"),
+                                        Text(loc("Show Previews")),
                                     ]
                                 ),
                                 Row(
@@ -236,9 +239,11 @@ class ModsController(Controller):
                                         Switch(
                                             value=self.page.preferences.mod_manager.auto_fix_mod_names,
                                             on_change=self.settings_toggle_auto_fix_mod_names,
-                                            tooltip="Automatically fix mod names on directory reading",
+                                            tooltip=loc(
+                                                "Automatically fix mod names on directory reading"
+                                            ),
                                         ),
-                                        Text("Auto Fix Mod Names"),
+                                        Text(loc("Auto Fix Mod Names")),
                                     ]
                                 ),
                                 Row(
@@ -246,10 +251,14 @@ class ModsController(Controller):
                                         Switch(
                                             value=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
                                             on_change=self.settings_toggle_auto_generate_and_fix_cfg,
-                                            tooltip="Automatically generate and fix cfg files for UI mods",
+                                            tooltip=loc(
+                                                "Automatically generate and fix cfg files for UI mods"
+                                            ),
                                         ),
                                         Text(
-                                            "Auto Generate and Fix CFG files for UI mods"
+                                            loc(
+                                                "Auto Generate and Fix CFG files for UI mods"
+                                            )
                                         ),
                                     ]
                                 ),
@@ -258,9 +267,11 @@ class ModsController(Controller):
                                         Switch(
                                             value=self.page.preferences.mod_manager.tile_toggle,
                                             on_change=self.settings_toggle_tile_toggle_cfg,
-                                            tooltip="Whether mod tiles in My Mods enable/disable mods",
+                                            tooltip=loc(
+                                                "Whether mod tiles in My Mods enable/disable mods"
+                                            ),
                                         ),
-                                        Text("My Mods tiles toggle mods"),
+                                        Text(loc("My Mods tiles toggle mods")),
                                     ]
                                 ),
                             ]
@@ -269,12 +280,12 @@ class ModsController(Controller):
                     Card(
                         content=Column(
                             controls=[
-                                Text("Custom Directories"),
+                                Text(loc("Custom Directories")),
                                 Divider(),
                                 Row(
                                     controls=[
                                         TextButton(
-                                            text="Add custom directory",
+                                            text=loc("Add custom directory"),
                                             on_click=self.settings_add_custom_directory,
                                         )
                                     ]
@@ -306,7 +317,9 @@ class ModsController(Controller):
                                             else [
                                                 ListTile(
                                                     leading=Icon(icons.FOLDER),
-                                                    title=Text("No custom directories"),
+                                                    title=Text(
+                                                        loc("No custom directories")
+                                                    ),
                                                 )
                                             ]
                                         )
@@ -343,10 +356,9 @@ class ModsController(Controller):
 
     async def settings_set_custom_dir(self, event):
         self.memory["settings"]["picked_custom_dir"] = Path(event.path)
-        self.settings_picked_dir.value = (
-            self.memory["settings"]["picked_custom_dir"]
-            or "No picked directory (Pick your mods folder)"
-        )
+        self.settings_picked_dir.value = self.memory["settings"][
+            "picked_custom_dir"
+        ] or loc("No picked directory (Pick your mods folder)")
         await self.settings_picked_dir.update_async()
 
     async def settings_set_custom_dir_name(self, event):
@@ -362,14 +374,16 @@ class ModsController(Controller):
         self.settings_custom_dir_pick = FilePicker(
             on_result=self.settings_set_custom_dir
         )
-        self.settings_picked_dir = Text("No picked directory (Pick your mods folder)")
+        self.settings_picked_dir = Text(
+            loc("No picked directory (Pick your mods folder)")
+        )
         self.commit_custom_dir_button = IconButton(
             icon=icons.FOLDER,
             on_click=self.settings_pick_custom_dir,
         )
         await self.page.dialog.set_data(
             modal=False,
-            title=Text("Add custom directory"),
+            title=Text(loc("Add custom directory")),
             content=Column(
                 controls=[
                     self.settings_custom_dir_name,
@@ -383,9 +397,9 @@ class ModsController(Controller):
                 ]
             ),
             actions=[
-                ElevatedButton("Cancel", on_click=self.page.RTT.close_dialog),
+                ElevatedButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
                 ElevatedButton(
-                    "Confirm", on_click=self.settings_add_custom_directory_confirm
+                    loc("Confirm"), on_click=self.settings_add_custom_directory_confirm
                 ),
             ],
             actions_alignment=MainAxisAlignment.END,
@@ -397,7 +411,7 @@ class ModsController(Controller):
         picked_name = self.memory["settings"]["picked_custom_dir_name"]
         self.settings_custom_dir_name.helper_text = None
         if not picked_name or not picked_dir:
-            self.settings_custom_dir_name.helper_text = (
+            self.settings_custom_dir_name.helper_text = loc(
                 "A name and a directory are required"
             )
             await self.settings_custom_dir_name.update_async()
@@ -433,8 +447,10 @@ class ModsController(Controller):
         if not self.mod_folders:
             self.my_mods.controls.append(
                 Text(
-                    "No Trove installation found"
-                    "\nTry running program as administrator or go to settings and add the directory manually."
+                    loc(
+                        "No Trove installation found"
+                        "\nTry running program as administrator or go to settings and add the directory manually."
+                    )
                 )
             )
             await self.release_ui()
@@ -463,7 +479,7 @@ class ModsController(Controller):
                     ),
                     TextField(
                         value=self.memory["my_mods"]["filter"],
-                        label="Filter mods",
+                        label=loc("Filter mods"),
                         on_submit=self.filter_my_mods,
                         content_padding=padding.symmetric(0, 20),
                     ),
@@ -479,7 +495,7 @@ class ModsController(Controller):
         await self.my_mod_list.update_trovesaurus_data()
         await self.my_mod_list.cloud_check()
         if not self.my_mod_list.mods:
-            self.my_mods.controls.append(Text("No mods in this directory"))
+            self.my_mods.controls.append(Text(loc("No mods in this directory")))
             await self.release_ui()
             return
         updates = [mod for mod in self.my_mod_list.mods if mod.has_update]
@@ -488,7 +504,7 @@ class ModsController(Controller):
             IconButton(
                 data=updates,
                 icon=icons.DOWNLOAD,
-                tooltip=f"Update {len(updates)} mods",
+                tooltip=loc("Update {amount} mods").format(amount=len(updates)),
                 on_click=self.update_mods,
                 disabled=not bool(updates),
             ),
@@ -510,7 +526,7 @@ class ModsController(Controller):
                     dense=True,
                 ),
                 ExpansionTile(
-                    title=Row(controls=[Icon(icons.FOLDER), Text("Local")]),
+                    title=Row(controls=[Icon(icons.FOLDER), Text(loc("Local"))]),
                     tile_padding=padding.symmetric(0, 10),
                     initially_expanded=True,
                     dense=True,
@@ -557,8 +573,12 @@ class ModsController(Controller):
         )
         enabled_count = len(self.my_mod_list.enabled)
         disabled_count = len(self.my_mod_list.disabled)
-        self.enabled_counter = Text(f"Enabled ({enabled_count})")
-        self.disabled_counter = Text(f"Disabled ({disabled_count})")
+        self.enabled_counter = Text(
+            loc("Enabled ({amount})").format(amount=enabled_count)
+        )
+        self.disabled_counter = Text(
+            loc("Disabled ({amount})").format(amount=disabled_count)
+        )
         my_mods_list.controls.append(
             Column(
                 controls=[
@@ -642,7 +662,7 @@ class ModsController(Controller):
                         fit=ImageFit.FIT_HEIGHT,
                         expand=True,
                     ),
-                    tooltip="Click to preview image",
+                    tooltip=loc("Click to preview image"),
                     style=ButtonStyle(padding=padding.symmetric(0, 0)),
                     on_click=self.go_to_image_preview,
                     width=64,
@@ -661,7 +681,7 @@ class ModsController(Controller):
                         [
                             Tooltip(
                                 data="update",
-                                message="Update available",
+                                message=loc("Update available"),
                                 content=IconButton(
                                     icons.DOWNLOAD,
                                     data=mod,
@@ -720,7 +740,7 @@ class ModsController(Controller):
                         fit=ImageFit.FIT_HEIGHT,
                         expand=True,
                     ),
-                    tooltip="Click to preview image",
+                    tooltip=loc("Click to preview image"),
                     style=ButtonStyle(padding=padding.symmetric(0, 0)),
                     on_click=self.go_to_image_preview,
                     width=64,
@@ -742,12 +762,13 @@ class ModsController(Controller):
                 Tooltip(
                     data="conflicts",
                     message=(
-                        "One or more mods conflict with this mod:\n"
+                        loc("One or more mods conflict with this mod")
+                        + ":\n"
                         + (
-                            f"(Conflicts may happen in game)\n\n"
+                            loc("(Conflicts may happen in game)\n\n")
                             if bool([c for c in mod.conflicts if c.enabled])
                             and mod.enabled
-                            else "(Conflicts won't happen in game)\n\n"
+                            else loc("(Conflicts won't happen in game)\n\n")
                         )
                         + "\n".join([conflict.name for conflict in mod.conflicts])
                     ),
@@ -767,7 +788,7 @@ class ModsController(Controller):
             controls=[
                 mod_tile,
                 Tooltip(
-                    message="Add to Profile",
+                    message=loc("Add to Profile"),
                     content=IconButton(
                         icons.ADD,
                         on_click=self.add_my_mod_to_profile,
@@ -776,13 +797,13 @@ class ModsController(Controller):
                     ),
                 ),
                 Tooltip(
-                    message="Uninstall",
+                    message=loc("Uninstall"),
                     content=IconButton(
                         icons.DELETE, on_click=self.delete_mod, data=mod
                     ),
                 ),
                 Tooltip(
-                    message="Enable" if not mod.enabled else "Disable",
+                    message=loc("Enable") if not mod.enabled else loc("Disable"),
                     content=IconButton(
                         icons.ARROW_RIGHT if mod.enabled else icons.ARROW_LEFT,
                         on_click=self.toggle_mod,
@@ -798,7 +819,7 @@ class ModsController(Controller):
         mod = event.control.data
         await self.page.dialog.set_data(
             modal=False,
-            actions=[TextButton("Close", on_click=self.page.RTT.close_dialog)],
+            actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             content=Image(
                 src=self.api.get_resized_image_url(
                     (f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"),
@@ -814,16 +835,16 @@ class ModsController(Controller):
         profiles = await self.api.list_profiles(self.page.user_data["internal_token"])
         if not profiles:
             return await self.page.snack_bar.show(
-                "You don't have any profiles yet", color="red"
+                loc("You don't have any profiles yet"), color="red"
             )
         await self.page.dialog.set_data(
             modal=True,
             actions=[
-                TextButton("Close", on_click=self.page.RTT.close_dialog),
+                TextButton(loc("Close"), on_click=self.page.RTT.close_dialog),
             ],
             content=Column(
                 controls=[
-                    Text("Add to Profile"),
+                    Text(loc("Add to Profile")),
                     ListView(
                         controls=[
                             *(
@@ -857,7 +878,9 @@ class ModsController(Controller):
             [mod.hash],
         )
         await self.page.dialog.hide()
-        await self.page.snack_bar.show(f"Added {mod.name} to {profile['name']}")
+        await self.page.snack_bar.show(
+            loc("Added {name} to {pname}").format(name=mod.name, pname=profile["name"])
+        )
 
     async def update_mods(self, event):
         await self.lock_ui()
@@ -866,7 +889,9 @@ class ModsController(Controller):
             await mod.update()
             await mod.update()
         await self.tab_loader(boot=True)
-        await self.page.snack_bar.show(f"Updated {len(mods)} mods")
+        await self.page.snack_bar.show(
+            loc("Updated {amount} mods").format(amount=len(mods))
+        )
 
     async def update_my_mods_mod(self, event=None, mod=None):
         await self.lock_ui()
@@ -914,10 +939,16 @@ class ModsController(Controller):
         )
         mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
         mod_frame_tile.controls.sort(key=lambda x: self.my_mod_list.mods.index(x.data))
-        self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
-        self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
+        self.enabled_counter.value = loc("Enabled ({amount})").format(
+            amount=len(self.my_mod_list.enabled)
+        )
+        self.disabled_counter.value = loc("Disabled ({amount})").format(
+            amount=len(self.my_mod_list.disabled)
+        )
         await self.page.snack_bar.show(
-            f"{mod.name} {'enabled' if mod.enabled else 'disabled'}"
+            "{name} {mode}".format(
+                name=mod.name, mode=loc("enabled") if mod.enabled else loc("disabled")
+            )
         )
         return await self.release_ui()
 
@@ -950,9 +981,9 @@ class ModsController(Controller):
             tile.controls[icon_index].content.icon = icon
             tile.controls.reverse()
             if mod.enabled:
-                tile.controls[-1].message = "Disable"
+                tile.controls[-1].message = loc("Disable")
             else:
-                tile.controls[0].message = "Enable"
+                tile.controls[0].message = loc("Enable")
 
     async def delete_mod(self, event):
         mod = event.control.data
@@ -965,10 +996,16 @@ class ModsController(Controller):
         mod_frame_tile.controls.remove(tile)
         self.my_mod_tiles.remove(tile)
         self.my_mod_list.mods.remove(mod)
-        self.enabled_counter.value = f"Enabled ({len(self.my_mod_list.enabled)})"
-        self.disabled_counter.value = f"Disabled ({len(self.my_mod_list.disabled)})"
+        self.enabled_counter.value = loc("Enabled ({amount})").format(
+            amount=len(self.my_mod_list.enabled)
+        )
+        self.disabled_counter.value = loc("Disabled ({amount})").format(
+            amount=len(self.my_mod_list.disabled)
+        )
         await self.release_ui()
-        await self.page.snack_bar.show(f"Uninstalled {mod.name}", color="red")
+        await self.page.snack_bar.show(
+            loc("Uninstalled {name}").format(name=mod.name), color="red"
+        )
 
     async def set_my_mods_installation_path(self, event):
         self.memory["my_mods"]["installation_path"] = event.control.data
@@ -982,8 +1019,10 @@ class ModsController(Controller):
         if not self.mod_folders:
             self.trovesaurus.controls.append(
                 Text(
-                    "No Trove installation found"
-                    "\nTry running program as administrator or go to settings and add the directory manually."
+                    loc(
+                        "No Trove installation found"
+                        "\nTry running program as administrator or go to settings and add the directory manually."
+                    )
                 )
             )
             await self.release_ui()
@@ -1016,7 +1055,7 @@ class ModsController(Controller):
         )
         self.trovesaurus_search_bar = TextField(
             value=self.memory["trovesaurus"]["search"]["query"],
-            hint_text="Search",
+            hint_text=loc("Search"),
             on_submit=self.trovesaurus_search_bar_submit,
             height=48,
             content_padding=padding.symmetric(0, 20),
@@ -1035,22 +1074,22 @@ class ModsController(Controller):
                         icon=icons.SEARCH, on_click=self.trovesaurus_search_bar_submit
                     ),
                     VerticalDivider(visible=True),
-                    Text("Type:"),
+                    Text(f"{loc('Type')}:"),
                     Dropdown(
                         value=self.memory["trovesaurus"]["search"]["type"],
                         options=[dropdown.Option(key=None, text="All")]
-                        + [dropdown.Option(key=t, text=t) for t in mod_types],
+                        + [dropdown.Option(key=t, text=loc(t)) for t in mod_types],
                         width=200,
                         height=48,
                         content_padding=padding.symmetric(4, 4),
                         on_change=self.set_trovesaurus_search_type,
                     ),
                     VerticalDivider(visible=True),
-                    Text("Class:"),
+                    Text(f"{loc('Class')}:"),
                     Dropdown(
                         value=self.memory["trovesaurus"]["search"]["sub_type"],
-                        options=[dropdown.Option(key=None, text="All")]
-                        + [dropdown.Option(key=t, text=t) for t in mod_sub_types],
+                        options=[dropdown.Option(key=None, text=loc("All"))]
+                        + [dropdown.Option(key=t, text=loc(t)) for t in mod_sub_types],
                         on_change=self.set_trovesaurus_search_sub_type,
                         width=200,
                         height=48,
@@ -1160,7 +1199,7 @@ class ModsController(Controller):
                                                 )
                                             ),
                                             Tooltip(
-                                                message="Installed",
+                                                message=loc("Installed"),
                                                 content=Icon(
                                                     icons.CHECK, color="green"
                                                 ),
@@ -1178,13 +1217,13 @@ class ModsController(Controller):
                                         icon=icons.DOWNLOAD,
                                         text=Text(f"{mod.downloads:,}"),
                                         icon_color="primary",
-                                        tooltip="Downloads",
+                                        tooltip=loc("Downloads"),
                                     ),
                                     RTTIconDecoButton(
                                         icon=icons.FAVORITE,
                                         text=Text(f"{mod.likes:,}"),
                                         icon_color="pink",
-                                        tooltip="Likes",
+                                        tooltip=loc("Likes"),
                                     ),
                                 ],
                                 alignment="end",
@@ -1214,7 +1253,7 @@ class ModsController(Controller):
                                                             message=(
                                                                 author.Role.value
                                                                 if author.Role.value
-                                                                else "User"
+                                                                else loc("User")
                                                             ),
                                                             content=Text(
                                                                 author.Username,
@@ -1236,7 +1275,9 @@ class ModsController(Controller):
                                         ]
                                         else [
                                             TextButton(
-                                                content=Text("No authors", color="red"),
+                                                content=Text(
+                                                    loc("No authors"), color="red"
+                                                ),
                                                 disabled=True,
                                             )
                                         ]
@@ -1248,7 +1289,7 @@ class ModsController(Controller):
                     controls=[
                         Column(
                             controls=[
-                                Text(mod.description) or Text("No description"),
+                                Text(mod.description) or Text(loc("No description")),
                                 ResponsiveRow(
                                     controls=[
                                         Dropdown(
@@ -1274,7 +1315,7 @@ class ModsController(Controller):
                                             content=Row(
                                                 controls=[
                                                     Icon(icons.DOWNLOAD),
-                                                    Text("Install"),
+                                                    Text(loc("Install")),
                                                 ],
                                                 alignment="center",
                                             ),
@@ -1287,7 +1328,7 @@ class ModsController(Controller):
                                             content=Row(
                                                 controls=[
                                                     Icon(icons.ADD),
-                                                    Text("Add to profile"),
+                                                    Text(loc("Add to profile")),
                                                 ],
                                                 alignment="center",
                                             ),
@@ -1314,7 +1355,7 @@ class ModsController(Controller):
                     ),
                     Row(
                         controls=[
-                            Text(f"Page"),
+                            Text(loc("Page")),
                             TextField(
                                 value=str(self.memory["trovesaurus"]["page"] + 1),
                                 on_submit=self.set_trovesaurus_page,
@@ -1332,10 +1373,10 @@ class ModsController(Controller):
                         disabled=page_count <= 1,
                     ),
                     VerticalDivider(visible=True),
-                    Text("Mods per page:"),
+                    Text(f"{loc('Mods per page')}:"),
                     NumberField(
                         value=self.memory["trovesaurus"]["page_size"],
-                        hint_text="Mods per page",
+                        hint_text=loc("Mods per page"),
                         on_submit=self.set_trovesaurus_page_size,
                         width=80,
                         height=48,
@@ -1345,7 +1386,7 @@ class ModsController(Controller):
             )
         )
         if not boot:
-            await self.page.snack_bar.show(f"Refreshed Trovesaurus")
+            await self.page.snack_bar.show(loc("Refreshed Trovesaurus"))
         await self.release_ui()
 
     async def set_trovesaurus_sorter_reorder(self, event):
@@ -1485,11 +1526,11 @@ class ModsController(Controller):
             return
         profiles = await self.api.list_profiles(self.page.user_data["internal_token"])
         if not profiles:
-            return await self.page.snack_bar.show("No profiles found", color="red")
+            return await self.page.snack_bar.show(loc("No profiles found"), color="red")
         await self.page.dialog.set_data(
-            title=Text("Add to profile"),
+            title=Text(loc("Add to profile")),
             modal=True,
-            actions=[TextButton("Cancel", on_click=self.page.RTT.close_dialog)],
+            actions=[TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog)],
             content=Column(
                 controls=[
                     ListTile(
@@ -1519,7 +1560,11 @@ class ModsController(Controller):
         )
         await self.page.dialog.hide()
         await self.tab_loader(index=self.mod_submenus.selected_index)
-        await self.page.snack_bar.show(f"Added {mod_data.name} to {profile['name']}")
+        await self.page.snack_bar.show(
+            loc("Added {mname} to {pname}").format(
+                mname=mod_data.name, pname=profile["name"]
+            )
+        )
 
     async def install_mod(self, _):
         selected_file = self.memory["trovesaurus"]["selected_file"]
@@ -1545,7 +1590,7 @@ class ModsController(Controller):
                 file_path = installation_path.mods_path.joinpath(file_name)
                 file_path.write_bytes(data)
         await self.tab_loader(index=self.mod_submenus.selected_index)
-        await self.page.snack_bar.show(f"Installed {mod_name}")
+        await self.page.snack_bar.show(loc("Installed {name}").format(name=mod_name))
 
     # Mod Profiles Tab
 
@@ -1554,20 +1599,21 @@ class ModsController(Controller):
         self.mod_profiles.controls.clear()
         if not self.page.user_data:
             self.mod_profiles.controls.append(
-                Text("You need to be logged in to use this feature")
+                Text(loc("You need to be logged in to use this feature"))
             )
             await self.release_ui()
             return
         self.mod_profiles.controls.append(
             TextButton(
-                content=Text("Create new profile"), on_click=self.create_new_profile
+                content=Text(loc("Create new profile")),
+                on_click=self.create_new_profile,
             )
         )
         mod_profiles = await self.api.list_profiles(
             self.page.user_data["internal_token"]
         )
         if not mod_profiles:
-            self.mod_profiles.controls.append(Text("No profiles found"))
+            self.mod_profiles.controls.append(Text(loc("No profiles found")))
             await self.release_ui()
             return
         for profile in mod_profiles:
@@ -1585,11 +1631,17 @@ class ModsController(Controller):
                             Text(profile["name"], size=22),
                             Chip(
                                 data=profile["profile_id"],
-                                label=Text(f"Copy ID"),
+                                label=Text(loc("Copy ID")),
                                 visible=profile["shared"],
                                 on_click=self.copy_profile_id,
                             ),
-                            RTTChip(label=Text(f"{len(profile['mods'])} mods")),
+                            RTTChip(
+                                label=Text(
+                                    loc("{amount} mods").format(
+                                        amount=len(profile["mods"])
+                                    )
+                                )
+                            ),
                         ]
                     ),
                     Row(
@@ -1617,19 +1669,19 @@ class ModsController(Controller):
                 items=[
                     PopupMenuItem(
                         icon=(icons.SHARE if not profile["shared"] else icons.LOCK),
-                        text="Share" if not profile["shared"] else "Private",
+                        text=loc("Share") if not profile["shared"] else loc("Private"),
                         data=profile,
                         on_click=self.toggle_share_profile,
                     ),
                     PopupMenuItem(
                         icon=icons.EDIT,
-                        text="Edit",
+                        text=loc("Edit"),
                         data=profile,
                         on_click=self.edit_profile,
                     ),
                     PopupMenuItem(
                         icon=icons.DELETE,
-                        text="Delete",
+                        text=loc("Delete"),
                         data=profile,
                         on_click=self.delete_profile,
                     ),
@@ -1664,7 +1716,8 @@ class ModsController(Controller):
                                 if mod.get("mod_id") is not None
                                 else [
                                     RTTChip(
-                                        leading=Icon(icons.FOLDER), label=Text("Local")
+                                        leading=Icon(icons.FOLDER),
+                                        label=Text(loc("Local")),
                                     )
                                 ]
                             ),
@@ -1687,9 +1740,9 @@ class ModsController(Controller):
                                                         ),
                                                         Tooltip(
                                                             message=(
-                                                                author["Role"]
+                                                                loc(author["Role"])
                                                                 if author["Role"]
-                                                                else "User"
+                                                                else loc("User")
                                                             ),
                                                             content=Text(
                                                                 author["Username"],
@@ -1747,12 +1800,16 @@ class ModsController(Controller):
                 holder.controls = new_holder.controls
                 break
         await event.control.update_async()
-        await self.page.snack_bar.show(f"Removed {mod['name']} from {profile['name']}")
+        await self.page.snack_bar.show(
+            loc("Removed {name} from {pname}").format(
+                name=mod["name"], pname=profile["name"]
+            )
+        )
 
     async def copy_profile_id(self, event):
         profile_id = event.control.data
         await self.page.set_clipboard_async(profile_id)
-        await self.page.snack_bar.show("Profile ID copied to clipboard")
+        await self.page.snack_bar.show(loc("Profile ID copied to clipboard"))
 
     async def toggle_share_profile(self, event):
         profile = event.control.data
@@ -1769,16 +1826,16 @@ class ModsController(Controller):
 
     async def create_new_profile(self, event):
         await self.page.dialog.set_data(
-            title=Text("Create new mod profile"),
+            title=Text(loc("Create new mod profile")),
             modal=True,
             actions=[
-                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
-                TextButton("Create", on_click=self.create_profile),
+                TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
+                TextButton(loc("Create"), on_click=self.create_profile),
             ],
             content=Column(
                 controls=[
-                    TextField(label="Profile name"),
-                    TextField(label="Profile description"),
+                    TextField(label=loc("Profile name")),
+                    TextField(label=loc("Profile description")),
                 ],
                 spacing=20,
             ),
@@ -1796,19 +1853,21 @@ class ModsController(Controller):
     async def edit_profile(self, event):
         profile = event.control.data
         await self.page.dialog.set_data(
-            title=Text("Edit mod profile"),
+            title=Text(loc("Edit mod profile")),
             modal=True,
             actions=[
-                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
-                TextButton("Save", data=profile, on_click=self.edit_profile_save),
+                TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
+                TextButton(loc("Save"), data=profile, on_click=self.edit_profile_save),
             ],
             content=Column(
                 controls=[
-                    TextField(label="Profile name", value=profile["name"]),
+                    TextField(label=loc("Profile name"), value=profile["name"]),
                     TextField(
-                        label="Profile description", value=profile["description"]
+                        label=loc("Profile description"), value=profile["description"]
                     ),
-                    TextField(label="Profile Image URL", value=profile["image_url"]),
+                    TextField(
+                        label=loc("Profile Image URL"), value=profile["image_url"]
+                    ),
                 ],
                 spacing=20,
             ),
@@ -1834,21 +1893,21 @@ class ModsController(Controller):
         )
         await self.load_mod_profiles()
         await self.page.dialog.hide()
-        await self.page.snack_bar.show("Profile updated")
+        await self.page.snack_bar.show(loc("Profile updated"))
 
     async def delete_profile(self, event):
         await self.page.dialog.set_data(
-            title=Text("Delete profile"),
+            title=Text(loc("Delete profile")),
             modal=True,
             actions=[
-                TextButton("Cancel", on_click=self.page.RTT.close_dialog),
+                TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog),
                 TextButton(
-                    "Delete",
+                    loc("Delete"),
                     data=event.control.data,
                     on_click=self.delete_profile_confirm,
                 ),
             ],
-            content=Text("Are you sure you want to delete this profile?"),
+            content=Text(loc("Are you sure you want to delete this profile?")),
         )
 
     async def delete_profile_confirm(self, event):

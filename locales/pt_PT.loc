@@ -1,5 +1,6 @@
 % Augmentation»»% de Aumentação
 % Augmentation Progress»»% Augmentation Progress
+(Conflicts may happen in game)»»(Conflicts may happen in game)
 +100 Magic Find»»+100 Magic Find
 +100% Base Experience!»»+100% Base Experience!
 +400 Magic Find»»+400 Magic Find
@@ -62,6 +63,9 @@ Accurately read the stars.»»Accurately read the stars.
 Actions»»Ações
 Activating this star exceeds max of {MaxNode} by {StagedLock}»»Activating this star exceeds max of {MaxNode} by {StagedLock}
 Add Custom directory»»Adicionar diretoria personalizada
+Add custom directory»»Add custom directory
+Add to Profile»»Add to Profile
+Add to profile»»Add to profile
 Additional shields will be needed for future bosses.»»Additional shields will be needed for future bosses.
 Advanced Settings»»Advanced Settings
 Advanced mode allows for people to have old vs new changed files in a separate directory»»Advanced mode allows for people to have old vs new changed files in a separate directory
@@ -79,6 +83,7 @@ Air Primordial»»Primordial de Ar
 Alchemy»»Alchemy
 Alchemy and Healing»»Alchemy and Healing
 Alchemy, Heartiness and Leaping»»Alchemy, Heartiness and Leaping
+All»»All
 All gems have been de-augmented.»»Todas as gemas tiveram as suas aumentações reduzidas.
 All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).»»Todas as gemas tiveram a sua aumentação zerada (Isto é irreversível, role as gemas de novo para ter novas).
 All gems have fully augmented.»»Todas as gemas foram totalmente aumentadas.
@@ -91,6 +96,7 @@ All gems have had their level set to 15.»»Todas as gemas tiveram o seu nível 
 All gems have had their level set to 5.»»Todas as gemas tiveram o seu nível definido para 5.
 All gems have had their stats tuned for damage.»»Todas as gemas tiveram suas estatísticas ajustadas para dano.
 All gems have had their stats tuned for health.»»Todas as gemas tiveram suas estatísticas ajustadas para vida máxima.
+Allies»»Allies
 Ally»»Aliado
 Amber»»Âmbar
 American English»»Inglês Americano
@@ -115,7 +121,9 @@ Augmentation Costs»»Augmentation Costs
 Auto Fix Mod Names»»Reparo de nomes de Mod automático
 Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files for UI mods
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
+Automatically generate and fix cfg files for UI mods»»Automatically generate and fix cfg files for UI mods
 Banner»»Banner
+Banners»»Banners
 Bard»»Bardo
 Base Damage»»Dano Base
 Beamer»»Beamer
@@ -123,6 +131,7 @@ Berserk Battler (Cosmic)»»Berserk Battler (Cosmic)
 Berserker Battler»»Guerreiro Furioso
 Best»»Melhor
 Blue»»Azul
+Boats and Sails»»Boats and Sails
 Bonus Damage»»Dano Bónus
 Bonus MF (No deaths)»»PM Bónus (Sem mortes)
 Bonus Star Bar»»Barra de Estrela Dupla
@@ -169,19 +178,24 @@ Club Fixture»»Imóvel de Clube
 Coefficient»»Coeficiente
 Combat»»Combat
 Compare changes with»»Compare changes with
+Confirm»»Confirm
 Conjurer's Crucible Vial»»Conjurer's Crucible Vial
 Continue to grow your strength and prove Might is better then brains.»»Continue to grow your strength and prove Might is better then brains.
 Copied build GB-{buildid} to clipboard»»Copied build GB-{buildid} to clipboard
 Copied build GB-{} to clipboard»»Copied build GB-{} to clipboard
 Copied to clipboard»»Copiado para a área de transferência
 Copy Gem Build»»Copy Gem Build
+Copy ID»»Copy ID
 Copy build»»Copy build
 Copyright (c) 2023 - Sly»»Copyright (c) 2023 - Sly
 Corruxion»»Corruxion
+Cosmetics»»Cosmetics
 Cosmic»»Cósmico
 Cosmic Gem Dust»»Pó de Gema Cósmica
 Cosmic Primordial»»Primordial do Cosmos
+Costumes»»Costumes
 Crafting Speed»»Crafting Speed
+Create new profile»»Create new profile
 Critical»»Crítico
 Critical Damage»»Dano Crítico
 Critical Hit»»Chance Crítica
@@ -199,6 +213,7 @@ Damage Reduction»»Damage Reduction
 Damaging enemies grants 10% Life Leech.»»Damaging enemies grants 10% Life Leech.
 Damaging enemies grants 20% Life Leech. »»Damaging enemies grants 20% Life Leech. 
 Death-Defying Vial»»Frasco desafiante da Morte
+Delete»»Delete
 Delve Day»»Dia de Delve
 Delving just got a little bit easier.»»Delving just got a little bit easier.
 Depths Boon»»Depths Boon
@@ -207,7 +222,9 @@ Deviation»»Deviação
 Diamond Dragonite»»Diamond Dragonite
 Dino Tamer»»Domador de Dinossauros
 Directory List»»Directory List
+Disable»»Disable
 Disabled»»Inativo
+Disabled ({amount})»»Disabled ({amount})
 Don't show again»»Don't show again
 Donate»»Doar
 Double Chance To Find Flux Artifacts»»Double Chance To Find Flux Artifacts
@@ -220,6 +237,7 @@ Double Radiant Shard Drops»»Double Radiant Shard Drops
 Double Shadow Shard Drops»»Double Shadow Shard Drops
 Double Star Bar»»Barra de Estrela Dupla
 Downloading update, please wait...»»A descarregar a atualização, por favor aguarde
+Downloads»»Downloads
 Dracolyte»»Dracolyte
 Dragon Badges»»Divisas de Dragão
 Dragon Day»»Dia do Dragão
@@ -233,6 +251,7 @@ Dungeons Can Drop Up To 6 Lustrous Gem Boxes»»Dungeons Can Drop Up To 6 Lustro
 Earn 100% More Adventurine»»Earn 100% More Adventurine
 Earn 50% More Adventurine»»Earn 50% More Adventurine
 Earnie»»Earnie
+Edit»»Edit
 Edit Mastery»»Editar Maestria
 Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes»»Eliminating the need of 1gb folders for each update and keeping it streamlined to the true changes
 Elixir»»Elixir
@@ -246,7 +265,9 @@ Empowered Fire Gem»»Gema de Fogo Maior
 Empowered Water Gem»»Gema de Água Maior
 Empyrean Barrier»»Barreira Empírea
 Empyrean Barrier (Cosmic)»»Empyrean Barrier (Cosmic)
+Enable»»Enable
 Enabled»»Ativo
+Enabled ({amount})»»Enabled ({amount})
 Energy Regen»»Energy Regen
 Energy Regen Bonus»»Energy Regen Bonus
 Energy Regeneration»»Energy Regeneration
@@ -279,12 +300,14 @@ Fierce Water Gem»»Gema Feroz de Água
 Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.»»Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.
 File Extractor»»Extrator de Ficheiros
 Filter Mods»»Filtrar Mods
+Filter mods»»Filter mods
 Find stats»»Find stats
 Finding this star could grant more then just Health and Critical Hit.»»Finding this star could grant more then just Health and Critical Hit.
 Fire»»Fogo
 Fire Gem Dust»»Pó de Gema de Fogo
 Fire Primordial»»Primordial de Fogo
 First»»Primeira
+Fishing»»Fishing
 Flask»»Poção
 Flask Capacity»»Flask Capacity
 Flask Renewal»»Flask Renewal
@@ -299,6 +322,7 @@ Food»»Comida
 Freerange Electrolytic Crystals»»Freerange Electrolytic Crystals
 French»»Françês
 Friday»»Sexta
+GUI»»GUI
 Gain 15% health when a nearby enemy dies.»»Gain 15% health when a nearby enemy dies.
 Gain a movement speed boost when a nearby enemy dies.»»Gain a movement speed boost when a nearby enemy dies.
 Gain a protective shield when a nearby enemy dies.»»Gain a protective shield when a nearby enemy dies.
@@ -363,6 +387,7 @@ Heartiness»»Heartiness
 Heartiness and Healing»»Heartiness and Healing
 Heartiness, Haste and Mining»»Heartiness, Haste and Mining
 Hee Hee this star gives more health.»»Hee Hee this star gives more health.
+Helmets»»Helmets
 High Cost»»Custo alto
 Hitting more often means more Critical Hits.»»Hitting more often means more Critical Hits.
 Home»»Ínicio
@@ -392,6 +417,8 @@ Indigo»»Índigo
 Insert Gem Build ID»»Insert Gem Build ID
 Insert build string»»Insert build string
 Insert pass key here»»Insert pass key here
+Install»»Install
+Installed»»Installed
 Intellect»»Intellect
 Intense searching has led you to greater speed and adaptability.»»Intense searching has led you to greater speed and adaptability.
 Invalid pass key»»Invalid pass key
@@ -406,6 +433,7 @@ Knowledge and Accuracy»»Knowledge and Accuracy
 Knowledge and Critical»»Knowledge and Critical
 Knowledge and Luck»»Knowledge and Luck
 Knowledge is power - with this you will gain even more.»»Knowledge is power - with this you will gain even more.
+Language»»Language
 Lasermancy»»Lasermancy
 Last»»Última
 Later»»Mais tarde
@@ -422,6 +450,7 @@ Level 15»»Nível 15
 Level Down»»Baixar Nível
 Level Up»»Subir Nível
 Light»»Luz
+Likes»»Likes
 Lil' Whiptop»»Lil' Whiptop
 Lime»»Lima
 Little bit of luck on this side of the stars as well.»»Little bit of luck on this side of the stars as well.
@@ -461,6 +490,7 @@ MIT License»»MIT License
 MS/MD+PD/Light»»MS/MD+PD/Light
 MS/MD/Light»»MS/MD/Light
 MS/PD/Light»»MS/PD/Light
+Mag Riders»»Mag Riders
 Magic»»Mágico
 Magic Damage»»Dano Mágico
 Magic Damage Bonus»»Magic Damage Bonus
@@ -541,21 +571,28 @@ Minor star of Sundered Flight 3.0»»Minor star of Sundered Flight 3.0
 Minor star of Weakness 1.5»»Minor star of Weakness 1.5
 Mired Mojo»»Mired Mojo
 Mod Profiles»»Perfis de Mods
+Mod Profiles (Not working yet)»»Mod Profiles (Not working yet)
+Modder»»Modder
 Modder Tools»»Ferramentas de modder
 Moderately increases gathering range when mounted. »»Moderately increases gathering range when mounted. 
 Mods Manager»»Gestor de mods
+Mods per page»»Mods per page
 Monday»»Segunda
 Moooooooooooreeeeeeeee Healing PLEASE!!!»»Moooooooooooreeeeeeeee Healing PLEASE!!!
 More Strikes then equals less pins to hit.»»More Strikes then equals less pins to hit.
 More random effects. MOOOOORREEEEE!!!!»»More random effects. MOOOOORREEEEE!!!!
+Mounts»»Mounts
 Move Boost»»Mover melhoramento
 Movement Speed»»Movement Speed
 My Mods»»Meus Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
+NPCs»»NPCs
 Neon Ninja»»Ninja Néon
 Next»»Próxima
+No authors»»No authors
 No custom directories»»Não ha diretorias personalizadas
 No events are currently going on.»»Não existem eventos de momento.
+No picked directory (Pick your mods folder)»»No picked directory (Pick your mods folder)
 Normal»»Normal
 Not going to push around the brawler.»»Not going to push around the brawler.
 Not working yet»»Ainda não funciona
@@ -563,6 +600,7 @@ Now that flasks are powered up, heres a few more.»»Now that flasks are powered
 Obtainables»»Obtainables
 Ok»»Ok
 One day it will be super important to have a lot of this. Wink Wink»»One day it will be super important to have a lot of this. Wink Wink
+One or more mods conflict with this mod»»One or more mods conflict with this mod
 Oops, did I leave a flask over on this side of the cosmos.»»Oops, did I leave a flask over on this side of the cosmos.
 Oops, didn't I mean to make this a health star?»»Oops, didn't I mean to make this a health star?
 Orange»»Laranja
@@ -574,6 +612,7 @@ PD/CD/PD/CD»»PD/CD/PD/CD
 PD/Light»»DF/Luz
 PTS Geode Mastery»»Maestria de Geodo PTS
 PTS Trove Mastery»»Maestria de Trove PTS
+Page»»Page
 Path»»Path
 Patreon»»Patreon
 Patron»»Patron
@@ -593,6 +632,7 @@ Premium Fish Fillet»»Premium Fish Fillet
 Premium Fish Kabobs»»Premium Fish Kabobs
 Premium Fish Soup»»Premium Fish Soup
 Previous»»Anterior
+Private»»Private
 Protection»»Protection
 Purple»»Roxo
 Pve»»Pve
@@ -624,12 +664,15 @@ Revenant»»Revenante
 Ring»»Anel
 Role Class»»Role Class
 Role SubClass»»Role SubClass
+Root star of Combat»»Root star of Combat
+Root star of Gathering»»Root star of Gathering
 Root star of Pve»»Root star of Pve
 Russian»»Russo
 Saturday»»Sábado
 Save»»Guardar
 Save changes to»»Save changes to
 Scorpius»»Scorpius
+Search»»Search
 Search the lands for greater goods.»»Search the lands for greater goods.
 Second Stat Reroll»»Rolamento de Segunda Estatística
 See the weakness of your enemies and know how to exploit it.»»See the weakness of your enemies and know how to exploit it.
@@ -681,6 +724,7 @@ Sunday»»Domingo
 Sunday Loot Day»»Domingo de Saque
 Sundered Flight 2.0»»Sundered Flight 2.0
 Sundered Flight 3.0»»Sundered Flight 3.0
+Swap»»Swap
 Switch to debug version»»Ir para versão de depuração
 Switch to release version»»Ir para versão de lançamento
 Tank»»Tank
@@ -721,15 +765,19 @@ Two damage types, maybe someday we will search the stars and find the 3rd one.»
 Type»»Tipo
 Ultimate Harvest upgrade for any gathering min/maxer.»»Ultimate Harvest upgrade for any gathering min/maxer.
 Ultimate Strength star is better than a Magic Star.»»Ultimate Strength star is better than a Magic Star.
+Uninstall»»Uninstall
 Unlimited Magic... unless you run out of energy regen.»»Unlimited Magic... unless you run out of energy regen.
 Unselect all»»Unselect all
 Unyielding»»Unyielding
 Update»»Atualizar
 Update Size»»Update Size
 Update available»»Atualização disponível
+Update {amount} mods»»Update {amount} mods
 Updated Ability»»Habilidade atualizada
 Updated Stat's Augmentation»»Aumentação da estatística atualizada
 Updated Stats»»Estatísticas atualizadas
+User»»User
+Utility»»Utility
 Value»»Valor
 Vampirian Vanquisher»»Vampirian Vanquisher
 Vampirian Vanquisher (Cosmic)»»Vampirian Vanquisher (Cosmic)
@@ -741,6 +789,7 @@ WIP»»TEP
 Water»»Água
 Water Gem Dust»»Pó de Gema de Água
 Water Primordial»»Primordial de Água
+Waypoint»»Waypoint
 Weakness»»Weakness
 Weakness 1.5»»Weakness 1.5
 Weapon»»Arma
@@ -758,8 +807,10 @@ When taking damage, you have a 10% chance to gain a 20% reflect shield for 10 se
 When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 seconds. Has a 1 minute cooldown.
 When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.
 When visiting the final frontier, it's always good to have speed.»»When visiting the final frontier, it's always good to have speed.
+Whether mod tiles in My Mods enable/disable mods»»Whether mod tiles in My Mods enable/disable mods
 Why are flasks so OP... here is a random one.»»Why are flasks so OP... here is a random one.
 Will need to double check numbers to make sure this is not too much strength.»»Will need to double check numbers to make sure this is not too much strength.
+Wings»»Wings
 Wink Wink...»»Wink Wink...
 With a little luck and brains you can do anything.»»With a little luck and brains you can do anything.
 With faster attack and higher life leech you may someday be invincible.»»With faster attack and higher life leech you may someday be invincible.
@@ -792,4 +843,5 @@ Zero»»Zero
 [PD|LT] Scorpius»»[PD|LT] Scorpius
 fluxion»»fluxion
 none»»none
+{amount} mods»»{amount} mods
 👇Get pass key from👇»»👇Get pass key from👇"
