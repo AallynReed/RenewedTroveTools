@@ -676,7 +676,11 @@ class ModsController(Controller):
                         style=ButtonStyle(padding=padding.symmetric(4, 4)),
                         url=f"https://trovesaurus.com/mod={mod.trovesaurus_data.id}",
                     ),
-                    RTTChip(label=Text(mod.trovesaurus_data.installed_version)),
+                    RTTChip(
+                        data=mod,
+                        label=Text(mod.trovesaurus_data.installed_version),
+                        on_click=self.change_mod_version,
+                    ),
                     *(
                         [
                             Tooltip(
@@ -1194,9 +1198,11 @@ class ModsController(Controller):
                                     *(
                                         [
                                             RTTChip(
+                                                data=ts_mod,
                                                 label=Text(
                                                     ts_mod.trovesaurus_data.installed_version
-                                                )
+                                                ),
+                                                on_click=self.change_mod_version,
                                             ),
                                             Tooltip(
                                                 message=loc("Installed"),
@@ -1497,6 +1503,55 @@ class ModsController(Controller):
     async def set_trovesaurus_installation_path(self, event):
         self.memory["trovesaurus"]["installation_path"] = event.control.data
         await self.load_trovesaurus_mods()
+
+    async def change_mod_version(self, event):
+        mod = event.control.data
+        installed_version = next(
+            (
+                file
+                for file in mod.trovesaurus_data.file_objs
+                if file.version == mod.trovesaurus_data.installed_version
+            ),
+            None,
+        )
+        await self.page.dialog.set_data(
+            modal=False,
+            title=Text(loc("Change mod version")),
+            actions=[TextButton(loc("Cancel"), on_click=self.page.RTT.close_dialog)],
+            content=Column(
+                controls=[
+                    ListTile(
+                        data=(mod, file),
+                        leading=Icon(icons.ARCHIVE),
+                        title=Row(
+                            controls=[
+                                Text(file.version),
+                                *(
+                                    [Icon(icons.CHECK, color="green")]
+                                    if installed_version == file
+                                    else []
+                                ),
+                            ]
+                        ),
+                        on_click=self.commit_change_mod_version,
+                    )
+                    for file in mod.trovesaurus_data.file_objs
+                ]
+            ),
+        )
+
+    async def commit_change_mod_version(self, event):
+        mod, file = event.control.data
+        url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file.file_id}"
+        async with ClientSession() as session:
+            async with session.get(url) as response:
+                data = await response.read()
+                mod.mod_path.write_bytes(data)
+        await self.page.dialog.hide()
+        await self.reload_tab(event)
+        await self.page.snack_bar.show(
+            loc("Mod version changed to {version}".format(version=file.version))
+        )
 
     async def update_selected_tile(self, event):
         selected = int(event.data)
