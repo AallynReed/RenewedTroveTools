@@ -41,6 +41,7 @@ from flet import (
     Stack,
     PopupMenuButton,
     PopupMenuItem,
+    Tooltip,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -54,6 +55,8 @@ from utils.kiwiapi import KiwiAPI
 from utils.trove.extractor import find_all_indexes
 from utils.trove.registry import get_trove_locations, TroveGamePath
 from utils.trove.yaml_mod import ModYaml
+from PIL import Image as Img
+from io import BytesIO
 
 
 class ModdersController(Controller):
@@ -1184,8 +1187,12 @@ class ModdersController(Controller):
             version_path.glob("*.jpg"),
             version_path.glob("*.jpeg"),
         ):
-            preview = str(file)
+            preview = file.as_posix()
             break
+        if preview is not None:
+            preview_image = Img.open(preview)
+            preview_size = len(Path(preview).read_bytes()) / 1024 / 1024
+            preview_dimensions = preview_image.size
         config_file = None
         for file in version_path.glob("*.cfg"):
             config_file = file
@@ -1200,15 +1207,39 @@ class ModdersController(Controller):
                                 *(
                                     [
                                         IconButton(
-                                            icons.ADD, on_click=self.add_project_preview
+                                            icons.ADD,
+                                            on_click=self.add_project_preview,
+                                            top=20,
+                                            left=20,
                                         )
                                     ]
-                                    if not preview
+                                    if preview is None
                                     else [
                                         IconButton(
                                             icons.CLEAR,
+                                            top=20,
+                                            left=20,
                                             on_click=self.clear_project_preview,
-                                        )
+                                        ),
+                                        Column(
+                                            controls=[
+                                                Icon(
+                                                    icons.WARNING,
+                                                    color="yellow",
+                                                    tooltip="Image size exceeds 1MB, it may not be uploadable to Steam",
+                                                    visible=preview_size > 1,
+                                                ),
+                                                Icon(
+                                                    icons.WARNING,
+                                                    color="yellow",
+                                                    tooltip="Image dimensions don't match game's recommended resolution of 400x230",
+                                                    visible=preview_dimensions
+                                                    != (400, 230),
+                                                ),
+                                            ],
+                                            top=20,
+                                            right=20,
+                                        ),
                                     ]
                                 )
                             ]
