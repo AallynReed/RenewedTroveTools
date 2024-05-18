@@ -64,8 +64,10 @@ Actions»»Ações
 Activating this star exceeds max of {MaxNode} by {StagedLock}»»Activating this star exceeds max of {MaxNode} by {StagedLock}
 Add Custom directory»»Adicionar diretoria personalizada
 Add custom directory»»Add custom directory
+Add files»»Add files
 Add to Profile»»Add to Profile
 Add to profile»»Add to profile
+Added {file_name}»»Added {file_name}
 Additional shields will be needed for future bosses.»»Additional shields will be needed for future bosses.
 Advanced Settings»»Advanced Settings
 Advanced mode allows for people to have old vs new changed files in a separate directory»»Advanced mode allows for people to have old vs new changed files in a separate directory
@@ -108,6 +110,7 @@ Arcane Air Gem»»Gema Arcana de Ar
 Arcane Cosmic Gem»»Gema Arcana Cósmica
 Arcane Fire Gem»»Gema Arcana de Fogo
 Arcane Water Gem»»Gema Arcana de Água
+Are you sure you want to clear all overrides?»»Are you sure you want to clear all overrides?
 Arriving in {}»»A chegar em {}
 Attack»»Attack
 Attack Speed»»Velocidade de ataque
@@ -115,9 +118,11 @@ Attack Speed Bonus»»Attack Speed Bonus
 Attack and defend is what these stars are about.»»Attack and defend is what these stars are about.
 Attack speed is all some classes need.»»Attack speed is all some classes need.
 Attacks so fast you can not even animate fast enough.»»Attacks so fast you can not even animate fast enough.
+Audio»»Audio
 Augmentation»»Aumentação
 Augmentation Cost»»Custo de Aumentação
 Augmentation Costs»»Augmentation Costs
+Author»»Author
 Auto Fix Mod Names»»Reparo de nomes de Mod automático
 Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files for UI mods
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
@@ -131,6 +136,7 @@ Berserk Battler (Cosmic)»»Berserk Battler (Cosmic)
 Berserker Battler»»Guerreiro Furioso
 Best»»Melhor
 Blue»»Azul
+Blueprints»»Blueprints
 Boats and Sails»»Boats and Sails
 Bonus Damage»»Dano Bónus
 Bonus MF (No deaths)»»PM Bónus (Sem mortes)
@@ -145,15 +151,18 @@ Bounty Hunt Boon»»Bounty Hunt Boon
 Brown»»Castanho
 Buffs»»Bónus
 Build»»Build
+Build TMod»»Build TMod
 Build Type»»Build Type
 Build format»»Build format
 Builder's Precise Focus»»Foco preciso do Construtor
 Builder's Rough Focus»»Foco aproximado do Construtor
 Builder's Superior Focus»»Foco superior do Construtor
+Built TMod {name}»»Built TMod {name}
 CB»»CB
 Cancel»»Cancelar
 Cancel extraction»»Cancel extraction
 Candy Barbarian»»Candy Barbarian
+Category»»Category
 Change Ability»»Alterar habilidade
 Change Log»»Registo de Alterações
 Change Restricition»»Alterar restrição
@@ -164,6 +173,7 @@ Change mod version»»Change mod version
 Change theme»»Alterar tema
 Changed files»»Changed files
 Changed/Added Files List»»Changed/Added Files List
+Changes»»Changes
 Chaos Contained Flare»»Labareda Contida do Caos
 Chaos Contained Spark»»Faísca Contida do Caos
 Chaos Forge can reroll the second stat on equipment!»»Chaos Forge can reroll the second stat on equipment!
@@ -173,12 +183,21 @@ Chronomantic»»Chronomantic
 Class»»Classe
 Class Bonus»»Bónus de Classe
 Class Gem»»Gema de Classe
+Clear»»Clear
+Clear all overrides»»Clear all overrides
+Clear config»»Clear config
+Clear files»»Clear files
+Clear overrides»»Clear overrides
+Clear preview»»Clear preview
+Clear project folder»»Clear project folder
 Close»»Fechar
 Clover»»Trevo
 Club Fixture»»Imóvel de Clube
 Coefficient»»Coeficiente
 Combat»»Combat
 Compare changes with»»Compare changes with
+Config»»Config
+Config file»»Config file
 Confirm»»Confirm
 Conjurer's Crucible Vial»»Conjurer's Crucible Vial
 Continue to grow your strength and prove Might is better then brains.»»Continue to grow your strength and prove Might is better then brains.
@@ -197,6 +216,8 @@ Cosmic Primordial»»Primordial do Cosmos
 Costumes»»Costumes
 Crafting Speed»»Crafting Speed
 Create new profile»»Create new profile
+Create project»»Create project
+Create version»»Create version
 Critical»»Crítico
 Critical Damage»»Dano Crítico
 Critical Hit»»Chance Crítica
@@ -219,6 +240,8 @@ Delve Day»»Dia de Delve
 Delving just got a little bit easier.»»Delving just got a little bit easier.
 Depths Boon»»Depths Boon
 Depths Boon 2.0»»Depths Boon 2.0
+Description»»Description
+Detect overrides»»Detect overrides
 Deviation»»Deviação
 Diamond Dragonite»»Diamond Dragonite
 Dino Tamer»»Domador de Dinossauros
@@ -273,6 +296,7 @@ Energy Regen»»Energy Regen
 Energy Regen Bonus»»Energy Regen Bonus
 Energy Regeneration»»Energy Regeneration
 Enlightened»»Iluminado
+Enter changes»»Enter changes
 Even though most magic classes have good range, here is some stability so you don't go flying.»»Even though most magic classes have good range, here is some stability so you don't go flying.
 Events»»Eventos
 Evil Eye»»Evil Eye
@@ -281,14 +305,18 @@ Experience Gain Bonus»»Experience Gain Bonus
 Exploring and armoring up.»»Exploring and armoring up.
 Explosive Epilogue»»Epílogo Explosivo
 Extra flasks are always good.»»Extra flasks are always good.
+Extract TMod»»Extract TMod
 Extract all»»Extract all
 Extract changed files»»Extract changed files
+Extract from archives»»Extract from archives
+Extract overrides»»Extract overrides
 Extract selected directories»»Extract selected directories
 Extract to»»Extract to
 Extractor Idle»»Extractor Idle
 Face»»Máscara
 Face Damage»»Dano de máscara
 Fae Trickster»»Fae Trickster
+Failed to get game version, please open trove at least once»»Failed to get game version, please open trove at least once
 Farm»»Farm
 Fast Invasions»»Invasões Rápidas
 Feedback»»Opinião
@@ -300,6 +328,8 @@ Fierce Fire Gem»»Gema Feroz de Fogo
 Fierce Water Gem»»Gema Feroz de Água
 Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.»»Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.
 File Extractor»»Extrator de Ficheiros
+File Path»»File Path
+File is not within the Trove directory selected»»File is not within the Trove directory selected
 Filter Mods»»Filtrar Mods
 Filter mods»»Filter mods
 Find stats»»Find stats
@@ -309,6 +339,7 @@ Fire Gem Dust»»Pó de Gema de Fogo
 Fire Primordial»»Primordial de Fogo
 First»»Primeira
 Fishing»»Fishing
+Fix files paths»»Fix files paths
 Flask»»Poção
 Flask Capacity»»Flask Capacity
 Flask Renewal»»Flask Renewal
@@ -347,6 +378,7 @@ Gem level changed to {level}»»Nível de gema alterada para {level}
 Gems»»Gems
 Geode Mastery Buffs»»Bónus de Maestria de Geodo
 German»»Alemão
+Get Modding Software»»Get Modding Software
 Get Windows Application»»Obter Aplicação Windows
 Give in to your anger.»»Give in to your anger.
 Go back»»Go back
@@ -401,6 +433,8 @@ I have the goal to not only build something that is usable but mostly updatable 
 I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.»»I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.
 Ice Sage»»Sábio de Gelo
 If you get knocked back, you cannot critically hit as much.»»If you get knocked back, you cannot critically hit as much.
+Image dimensions don't match game's recommended resolution of 400x230»»Image dimensions don't match game's recommended resolution of 400x230
+Image size exceeds 1MB, it may not be uploadable to Steam»»Image size exceeds 1MB, it may not be uploadable to Steam
 Improve Stat»»Melhorar estatística
 In this constellation of dungeon seeking we greet thee with more health.»»In this constellation of dungeon seeking we greet thee with more health.
 Incoming Damage»»Incoming Damage
@@ -573,6 +607,7 @@ Minor star of Weakness 1.5»»Minor star of Weakness 1.5
 Mired Mojo»»Mired Mojo
 Mod Profiles»»Perfis de Mods
 Mod Profiles (Not working yet)»»Mod Profiles (Not working yet)
+Mod data is not valid»»Mod data is not valid
 Mod version changed to {version}»»Mod version changed to {version}
 Modder»»Modder
 Modder Tools»»Ferramentas de modder
@@ -590,11 +625,19 @@ My Mods»»Meus Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
 NPCs»»NPCs
 Neon Ninja»»Ninja Néon
+New version»»New version
 Next»»Próxima
+No»»No
+No Trove installation found»»No Trove installation found
 No authors»»No authors
 No custom directories»»Não ha diretorias personalizadas
 No events are currently going on.»»Não existem eventos de momento.
+No files added»»No files added
+No files found»»No files found
 No picked directory (Pick your mods folder)»»No picked directory (Pick your mods folder)
+No project folder selected, please select one in the settings tab»»No project folder selected, please select one in the settings tab
+No projects found in selected folder»»No projects found in selected folder
+No versions found»»No versions found
 Normal»»Normal
 Not going to push around the brawler.»»Not going to push around the brawler.
 Not working yet»»Ainda não funciona
@@ -605,16 +648,21 @@ One day it will be super important to have a lot of this. Wink Wink»»One day i
 One or more mods conflict with this mod»»One or more mods conflict with this mod
 Oops, did I leave a flask over on this side of the cosmos.»»Oops, did I leave a flask over on this side of the cosmos.
 Oops, didn't I mean to make this a health star?»»Oops, didn't I mean to make this a health star?
+Open version folder»»Open version folder
 Orange»»Laranja
 Orchian»»Orchian
 Others»»Outros
 Outgoing Damage»»Outgoing Damage
+Output Directory»»Output Directory
+Output directory is required»»Output directory is required
+Overrides cleared»»Overrides cleared
 PD/CD/LT/PD/CD/LT»»PD/CD/LT PD/CD/LT
 PD/CD/PD/CD»»PD/CD PD/CD
 PD/Light»»DF/Luz
 PTS Geode Mastery»»Maestria de Geodo PTS
 PTS Trove Mastery»»Maestria de Trove PTS
 Page»»Page
+Particles»»Particles
 Path»»Path
 Patreon»»Patreon
 Patron»»Patron
@@ -633,8 +681,13 @@ Preference»»Preferência
 Premium Fish Fillet»»Premium Fish Fillet
 Premium Fish Kabobs»»Premium Fish Kabobs
 Premium Fish Soup»»Premium Fish Soup
+Preview»»Preview
 Previous»»Anterior
 Private»»Private
+Project folder»»Project folder
+Project folder cleared»»Project folder cleared
+Project folder selected»»Project folder selected
+Projects (BETA)»»Projects (BETA)
 Protection»»Protection
 Purple»»Roxo
 Pve»»Pve
@@ -658,6 +711,7 @@ Reflection 2.0»»Reflection 2.0
 Reflection 3.0»»Reflection 3.0
 Refresh changed/added files list»»Refresh changed/added files list
 Refresh directory list»»Refresh directory list
+Refresh files list»»Refresh files list
 Renewed Trove Tools»»Renewed Trove Tools
 Report a bug»»Reportar um erro
 Reroll Stat»»Rolar estatística
@@ -679,7 +733,16 @@ Search the lands for greater goods.»»Search the lands for greater goods.
 Second Stat Reroll»»Rolamento de Segunda Estatística
 See the weakness of your enemies and know how to exploit it.»»See the weakness of your enemies and know how to exploit it.
 Seeing the final frontier has left you tough.»»Seeing the final frontier has left you tough.
+Select Config file»»Select Config file
+Select Output Directory»»Select Output Directory
+Select Preview image»»Select Preview image
+Select Project Folder»»Select Project Folder
+Select TMod file»»Select TMod file
+Select a project folder»»Select a project folder
 Select all»»Select all
+Select config file»»Select config file
+Select files to add to mod»»Select files to add to mod
+Select preview image»»Select preview image
 Selling»»Vender
 Send»»Enviar
 Send feedback»»Enviar opinião
@@ -696,6 +759,7 @@ Slightly increases gathering range when mounted. »»Slightly increases gatherin
 Slot machine of extra damage. I like it.»»Slot machine of extra damage. I like it.
 So Many Flasks!!!!!»»So Many Flasks!!!!!
 So glad to see you all the way out here, the star focuses on finding better gear.»»So glad to see you all the way out here, the star focuses on finding better gear.
+Software»»Software
 Solarion»»Solarion
 Speed»»Speed
 Speed through the stars for greater power.»»Speed through the stars for greater power.
@@ -729,8 +793,14 @@ Sundered Flight 3.0»»Sundered Flight 3.0
 Swap»»Swap
 Switch to debug version»»Ir para versão de depuração
 Switch to release version»»Ir para versão de lançamento
+TMod File»»TMod File
+TMod extracted»»TMod extracted
+TMod file is required»»TMod file is required
+TMod overrides extracted»»TMod overrides extracted
 Tank»»Tank
 Teal»»Teal
+Test overrides»»Test overrides
+Textures»»Textures
 Thanks for using my application. <3»»Obrigado por usar a minha aplicação. <3
 The Star Chart was critically well received by the players.\\nThey had nothing negative to say about it.»»The Star Chart was critically well received by the players.\\nThey had nothing negative to say about it.
 The application will download update and close itself to install it.»»A aplicação irá descarregar a atualização e fechar-se a si própria para a instalar.
@@ -748,8 +818,10 @@ This star gains the boon of health and mining.»»This star gains the boon of he
 This star should help balance melee a little more.»»This star should help balance melee a little more.
 This star's blessing hopes you live a long and healthy life.»»This star's blessing hopes you live a long and healthy life.
 This will provide a better way to compare updates whilst having no real hustle to separate these changes»»This will provide a better way to compare updates whilst having no real hustle to separate these changes
+This will remove all files in the 'override' directories within the Trove directory»»This will remove all files in the 'override' directories within the Trove directory
 Thursday»»Quinta
 Titan Soul»»Alma de Titã
+Title»»Title
 Tomb Raiser»»Tomb Raiser
 Trailblazing»»Trailblazing
 Triple Chance To Find Flux Artifacts»»Triple Chance To Find Flux Artifacts
@@ -761,10 +833,12 @@ Triple Radiant Shard Drops»»Triple Radiant Shard Drops
 Triple Shadow Shard Drops»»Triple Shadow Shard Drops
 Trove Time»»Horário Trove
 Trove directory»»Trove directory
+Try running program as administrator or go to settings and add the directory manually.»»Try running program as administrator or go to settings and add the directory manually.
 Tuesday»»Terça
 Twitch Streams»»Transmissões da Twitch
 Two damage types, maybe someday we will search the stars and find the 3rd one.»»Two damage types, maybe someday we will search the stars and find the 3rd one.
 Type»»Tipo
+UI»»UI
 Ultimate Harvest upgrade for any gathering min/maxer.»»Ultimate Harvest upgrade for any gathering min/maxer.
 Ultimate Strength star is better than a Magic Star.»»Ultimate Strength star is better than a Magic Star.
 Uninstall»»Uninstall
@@ -823,6 +897,7 @@ Wow... Magic and Physical Damage with a little Critical Hit... Maybe this should
 XP Day»»Dia de XP
 YESSSS... MORE STRENGTH!!!!»»YESSSS... MORE STRENGTH!!!!
 Yellow»»Amarelo
+Yes»»Yes
 You did so much Mining it improved your Physical Damage. Noice.»»You did so much Mining it improved your Physical Damage. Noice.
 You get a buff and you get a buff, everybody gets a buff.»»You get a buff and you get a buff, everybody gets a buff.
 You have found the Weakness, now keep on attacking.»»You have found the Weakness, now keep on attacking.
@@ -845,5 +920,6 @@ Zero»»Zero
 [PD|LT] Scorpius»»[PD|LT] Scorpius
 fluxion»»fluxion
 none»»none
+not found»»not found
 {amount} mods»»{amount} mods
 👇Get pass key from👇»»👇Get pass key from👇"

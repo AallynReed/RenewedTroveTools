@@ -9,6 +9,7 @@ from pathlib import Path
 
 import humanize
 import packaging.version as pv
+from PIL import Image as Img
 from flet import (
     Divider,
     Card,
@@ -41,7 +42,6 @@ from flet import (
     Stack,
     PopupMenuButton,
     PopupMenuItem,
-    Tooltip,
 )
 from flet_core import padding, MainAxisAlignment, icons
 
@@ -52,11 +52,10 @@ from models.trove.directory import Directories
 from models.trove.mod import TMod, TroveModFile
 from utils.functions import throttle
 from utils.kiwiapi import KiwiAPI
+from utils.locale import loc
 from utils.trove.extractor import find_all_indexes
 from utils.trove.registry import get_trove_locations, TroveGamePath
 from utils.trove.yaml_mod import ModYaml
-from PIL import Image as Img
-from io import BytesIO
 
 
 class ModdersController(Controller):
@@ -67,9 +66,9 @@ class ModdersController(Controller):
             self.main = Column(expand=True)
             self.tabs = Tabs(selected_index=1, on_change=self.load_tab)
             self.settings_tab = Tab(icon=icons.SETTINGS)
-            self.extract_tab = Tab("Extract TMod")
-            self.compile_tab = Tab("Build TMod")
-            self.projects_tab = Tab("Projects (BETA)")
+            self.extract_tab = Tab(loc("Extract TMod"))
+            self.compile_tab = Tab(loc("Build TMod"))
+            self.projects_tab = Tab(loc("Projects (BETA)"))
             self.settings = Column(expand=True)
             self.extract = Column(expand=True)
             self.compile = Column(expand=True)
@@ -166,13 +165,13 @@ class ModdersController(Controller):
         await self.main.update_async()
 
     async def load_settings(self):
-        self.settings.controls.append(Text("Settings"))
+        self.settings.controls.append(Text(loc("Settings")))
         self.settings.controls.append(Divider())
         path = self.page.preferences.modders_tools.project_path
         self.project_folder_text_field = TextField(
             value=path.as_posix() if path else None,
-            label="Project folder",
-            hint_text="Select a project folder",
+            label=loc("Project folder"),
+            hint_text=loc("Select a project folder"),
             read_only=True,
             expand=True,
             icon=icons.FOLDER,
@@ -181,7 +180,7 @@ class ModdersController(Controller):
         self.clear_project_folder_button = IconButton(
             icons.CLEAR,
             on_click=self.clear_project_folder,
-            tooltip="Clear project folder",
+            tooltip=loc("Clear project folder"),
         )
         self.settings.controls.append(
             Row(
@@ -197,7 +196,7 @@ class ModdersController(Controller):
         picker = FilePicker(on_result=self.select_project_folder_result)
         self.page.overlay.append(picker)
         await self.page.update_async()
-        await picker.get_directory_path_async(dialog_title="Select Project Folder")
+        await picker.get_directory_path_async(dialog_title=loc("Select Project Folder"))
 
     async def select_project_folder_result(self, result):
         if not result.path:
@@ -207,21 +206,25 @@ class ModdersController(Controller):
         self.project_folder_text_field.value = path.as_posix()
         await self.project_folder_text_field.update_async()
         self.page.preferences.save()
-        await self.page.snack_bar.show("Project folder selected: " + path.as_posix())
+        await self.page.snack_bar.show(
+            f"{loc('Project folder selected')}: " + path.as_posix()
+        )
 
     async def clear_project_folder(self, event):
         self.page.preferences.modders_tools.project_path = None
         self.project_folder_text_field.value = None
         await self.project_folder_text_field.update_async()
         self.page.preferences.save()
-        await self.page.snack_bar.show("Project folder cleared")
+        await self.page.snack_bar.show(loc("Project folder cleared"))
 
     async def load_extract(self):
         if not self.mod_folders:
             self.extract.controls = [
                 Text(
-                    "No Trove installation found"
-                    "\nTry running program as administrator or go to settings and add the directory manually."
+                    loc(
+                        "No Trove installation found"
+                        "\nTry running program as administrator or go to settings and add the directory manually."
+                    )
                 )
             ]
             return
@@ -250,7 +253,7 @@ class ModdersController(Controller):
         )
         self.extract.controls.append(directories)
         self.tmod_text_field = TextField(
-            label="TMod File",
+            label=loc("TMod File"),
             icon=icons.FOLDER,
             read_only=True,
             expand=True,
@@ -258,7 +261,7 @@ class ModdersController(Controller):
         )
         self.extract.controls.append(Row(controls=[self.tmod_text_field]))
         self.output_path_text_field = TextField(
-            label="Output Directory",
+            label=loc("Output Directory"),
             read_only=True,
             expand=True,
             icon=icons.FOLDER,
@@ -269,13 +272,15 @@ class ModdersController(Controller):
             Row(
                 controls=[
                     ElevatedButton(
-                        "Clear", icon=icons.CLEAR, on_click=self.clear_extract
+                        loc("Clear"), icon=icons.CLEAR, on_click=self.clear_extract
                     ),
                     ElevatedButton(
-                        "Extract TMod", icon=icons.BUILD, on_click=self.extract_tmod
+                        loc("Extract TMod"),
+                        icon=icons.BUILD,
+                        on_click=self.extract_tmod,
                     ),
                     ElevatedButton(
-                        "Extract overrides",
+                        loc("Extract overrides"),
                         icon=icons.DETAILS,
                         on_click=self.extract_overrides,
                     ),
@@ -293,7 +298,7 @@ class ModdersController(Controller):
         self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
-            dialog_title="Select TMod file",
+            dialog_title=loc("Select TMod file"),
             initial_directory=str(
                 self.memory["extract"]["installation_path"].path.absolute()
             ),
@@ -316,7 +321,7 @@ class ModdersController(Controller):
         self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.get_directory_path_async(
-            dialog_title="Select Output Directory",
+            dialog_title=loc("Select Output Directory"),
             initial_directory=str(
                 self.memory["extract"]["installation_path"].path.absolute()
             ),
@@ -340,10 +345,12 @@ class ModdersController(Controller):
 
     async def extract_tmod(self, _):
         if not self.memory["extract"]["tmod_file"]:
-            return await self.page.snack_bar.show("TMod file is required", color="red")
+            return await self.page.snack_bar.show(
+                loc("TMod file is required"), color="red"
+            )
         if not self.memory["extract"]["output_path"]:
             return await self.page.snack_bar.show(
-                "Output directory is required", color="red"
+                loc("Output directory is required"), color="red"
             )
         tmod_file = self.memory["extract"]["tmod_file"]
         tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
@@ -352,11 +359,13 @@ class ModdersController(Controller):
             file_path = output.joinpath(file.trove_path)
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_bytes(file.data)
-        await self.page.snack_bar.show("TMod extracted")
+        await self.page.snack_bar.show(loc("TMod extracted"))
 
     async def extract_overrides(self, _):
         if not self.memory["extract"]["tmod_file"]:
-            return await self.page.snack_bar.show("TMod file is required", color="red")
+            return await self.page.snack_bar.show(
+                loc("TMod file is required"), color="red"
+            )
         tmod_file = self.memory["extract"]["tmod_file"]
         tmod = TMod.read_bytes(tmod_file, tmod_file.read_bytes())
         game_path = self.memory["extract"]["installation_path"].path
@@ -367,14 +376,16 @@ class ModdersController(Controller):
             )
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_bytes(file.data)
-        await self.page.snack_bar.show("TMod overrides extracted")
+        await self.page.snack_bar.show(loc("TMod overrides extracted"))
 
     async def load_compile(self):
         if not self.mod_folders:
             self.compile.controls = [
                 Text(
-                    "No Trove installation found"
-                    "\nTry running program as administrator or go to settings and add the directory manually."
+                    loc(
+                        "No Trove installation found"
+                        "\nTry running program as administrator or go to settings and add the directory manually."
+                    )
                 )
             ]
             return
@@ -406,7 +417,7 @@ class ModdersController(Controller):
             ]
         )
         self.sub_type_dropdown = Dropdown(
-            label="Class",
+            label=loc("Class"),
             value=self.memory["compile"]["mod_data"].sub_type,
             options=[dropdown.Option(key=t, text=t) for t in mod_sub_types],
             icon=icons.CATEGORY,
@@ -425,9 +436,9 @@ class ModdersController(Controller):
             controls=[
                 TextField(
                     value=self.memory["compile"]["mod_data"].preview[1],
-                    label="Preview",
+                    label=loc("Preview"),
                     icon=icons.IMAGE,
-                    hint_text="Select Preview image",
+                    hint_text=loc("Select Preview image"),
                     read_only=True,
                     expand=True,
                     on_focus=self.add_preview,
@@ -439,9 +450,9 @@ class ModdersController(Controller):
             controls=[
                 TextField(
                     value=self.memory["compile"]["mod_data"].config[1],
-                    label="Config",
+                    label=loc("Config"),
                     icon=icons.SETTINGS,
-                    hint_text="Select Config file",
+                    hint_text=loc("Select Config file"),
                     read_only=True,
                     expand=True,
                     on_focus=self.add_config,
@@ -470,21 +481,21 @@ class ModdersController(Controller):
                     controls=[
                         TextField(
                             value=self.memory["compile"]["mod_data"].title,
-                            label="Title",
+                            label=loc("Title"),
                             icon=icons.TITLE,
                             max_length=100,
                             on_change=self.add_mod_title,
                         ),
                         TextField(
                             value=self.memory["compile"]["mod_data"].authors_string,
-                            label="Author",
+                            label=loc("Author"),
                             icon=icons.PERSON,
                             max_length=256,
                             on_change=self.add_mod_authors,
                         ),
                         TextField(
                             value=self.memory["compile"]["mod_data"].description,
-                            label="Description",
+                            label=loc("Description"),
                             icon=icons.DESCRIPTION,
                             multiline=True,
                             max_lines=5,
@@ -494,9 +505,9 @@ class ModdersController(Controller):
                         Row(
                             controls=[
                                 Dropdown(
-                                    label="Category",
+                                    label=loc("Category"),
                                     value=self.memory["compile"]["mod_data"].type,
-                                    options=[dropdown.Option(key=None, text="All")]
+                                    options=[dropdown.Option(key=None, text=loc("All"))]
                                     + [
                                         dropdown.Option(key=t, text=t)
                                         for t in mod_types
@@ -521,9 +532,9 @@ class ModdersController(Controller):
         )
         self.files_list = DataTable(
             columns=[
-                DataColumn(label=Text("File Path")),
-                DataColumn(label=Text("Size"), numeric=True),
-                DataColumn(label=Text("Actions"), numeric=True),
+                DataColumn(label=Text(loc("File Path"))),
+                DataColumn(label=Text(loc("Size")), numeric=True),
+                DataColumn(label=Text(loc("Actions")), numeric=True),
             ],
             vertical_lines=BorderSide(1, colors.GREY_800),
         )
@@ -540,35 +551,37 @@ class ModdersController(Controller):
                     content=Column(
                         controls=[
                             ElevatedButton(
-                                "Clear all overrides",
+                                loc("Clear all overrides"),
                                 icon=icons.CLEAR_ALL,
                                 on_click=self.clear_overrides,
                             ),
                             ElevatedButton(
-                                "Detect overrides",
+                                loc("Detect overrides"),
                                 icon=icons.SEARCH,
                                 on_click=self.detect_overrides,
                             ),
                             ElevatedButton(
-                                "Add files", icon=icons.ADD, on_click=self.add_file
+                                loc("Add files"), icon=icons.ADD, on_click=self.add_file
                             ),
                             ElevatedButton(
-                                "Clear files",
+                                loc("Clear files"),
                                 icon=icons.CLEAR,
                                 on_click=self.clear_files_list,
                             ),
                             ElevatedButton(
-                                "Clear preview",
+                                loc("Clear preview"),
                                 icon=icons.IMAGE,
                                 on_click=self.clear_preview,
                             ),
                             ElevatedButton(
-                                "Clear config",
+                                loc("Clear config"),
                                 icon=icons.SETTINGS,
                                 on_click=self.clear_config,
                             ),
                             ElevatedButton(
-                                "Build TMod", icon=icons.BUILD, on_click=self.build_tmod
+                                loc("Build TMod"),
+                                icon=icons.BUILD,
+                                on_click=self.build_tmod,
                             ),
                         ],
                         alignment=MainAxisAlignment.CENTER,
@@ -648,16 +661,21 @@ class ModdersController(Controller):
 
     async def clear_overrides(self, event):
         install_path = self.memory["compile"]["installation_path"].path.as_posix()
-        message = "Are you sure you want to clear all overrides?"
-        message += "\n\nThis will remove all files in the 'override' directories within the Trove directory:"
+        message = loc("Are you sure you want to clear all overrides?")
+        message += (
+            loc(
+                "\n\nThis will remove all files in the 'override' directories within the Trove directory"
+            )
+            + ":"
+        )
         message += f"\n -> {install_path}"
         await self.page.dialog.set_data(
             modal=True,
-            title=Text("Clear all overrides"),
+            title=Text(loc("Clear all overrides")),
             content=Text(message),
             actions=[
-                ElevatedButton("No", on_click=self.page.RTT.close_dialog),
-                ElevatedButton("Yes", on_click=self.clear_overrides_folders),
+                ElevatedButton(loc("No"), on_click=self.page.RTT.close_dialog),
+                ElevatedButton(loc("Yes"), on_click=self.clear_overrides_folders),
             ],
             actions_alignment=MainAxisAlignment.END,
         )
@@ -681,7 +699,7 @@ class ModdersController(Controller):
                 except Exception:
                     pass
         await self.page.dialog.hide()
-        await self.page.snack_bar.show("Overrides cleared")
+        await self.page.snack_bar.show(loc("Overrides cleared"))
 
     async def detect_overrides(self, event):
         directories = [d.value for d in Directories]
@@ -737,7 +755,7 @@ class ModdersController(Controller):
         self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
-            dialog_title="Select preview image",
+            dialog_title=loc("Select preview image"),
             initial_directory=str(
                 self.memory["compile"]["installation_path"].path.absolute()
             ),
@@ -760,7 +778,9 @@ class ModdersController(Controller):
                 self.memory["compile"]["mod_data"].mod_files.remove(f)
         await self.update_file_list()
         await self.preview_row.controls[0].update_async()
-        await self.page.snack_bar.show(f"Added {file_name}")
+        await self.page.snack_bar.show(
+            loc("Added {file_name}").format(file_name=file_name)
+        )
 
     async def clear_preview(self, event):
         self.memory["compile"]["mod_data"].preview = (None, None)
@@ -775,7 +795,7 @@ class ModdersController(Controller):
         self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
-            dialog_title="Select config file",
+            dialog_title=loc("Select config file"),
             initial_directory=str(
                 self.memory["compile"]["installation_path"].path.absolute()
             ),
@@ -796,7 +816,7 @@ class ModdersController(Controller):
             if f[0] == file:
                 self.memory["compile"]["mod_data"].mod_files.remove(f)
         await self.update_file_list()
-        await self.page.snack_bar.show(f"Added {file_name}")
+        await self.page.snack_bar.show("Added {file_name}".format(file_name=file_name))
 
     async def clear_config(self, event):
         self.memory["compile"]["mod_data"].config = (None, None)
@@ -809,7 +829,7 @@ class ModdersController(Controller):
         self.page.overlay.append(picker)
         await self.page.update_async()
         await picker.pick_files_async(
-            dialog_title="Select files to add to mod",
+            dialog_title=loc("Select files to add to mod"),
             initial_directory=str(
                 self.memory["compile"]["installation_path"].path.absolute()
             ),
@@ -831,13 +851,15 @@ class ModdersController(Controller):
             except ValueError:
                 trove_directory = self.memory["compile"]["installation_path"].name
                 await self.page.snack_bar.show(
-                    "File is not within the Trove directory selected "
+                    f"{loc('File is not within the Trove directory selected')} "
                     + trove_directory,
                     color="red",
                 )
                 continue
             self.memory["compile"]["mod_data"].add_file(file, true_override)
-            await self.page.snack_bar.show(f"Added {file_name}")
+            await self.page.snack_bar.show(
+                "Added {file_name}".format(file_name=file_name)
+            )
         value = not bool(
             [
                 f[1]
@@ -868,7 +890,7 @@ class ModdersController(Controller):
             self.files_list.rows.append(
                 DataRow(
                     cells=[
-                        DataCell(Text("No files added")),
+                        DataCell(Text(loc("No files added"))),
                         DataCell(Text("")),
                         DataCell(Text("")),
                     ]
@@ -893,7 +915,7 @@ class ModdersController(Controller):
                                         IconButton(
                                             data=f[0],
                                             icon=icons.DELETE,
-                                            tooltip="Delete",
+                                            tooltip=loc("Delete"),
                                             on_click=self.remove_file,
                                         )
                                     ],
@@ -911,9 +933,9 @@ class ModdersController(Controller):
         try:
             self.memory["compile"]["mod_data"].sanity_check()
         except (ValueError, FileNotFoundError) as e:
-            message = Text("Mod data is not valid: " + str(e))
+            message = Text(f"{loc('Mod data is not valid')}: " + str(e))
             if isinstance(e, FileNotFoundError):
-                message += f" not found"
+                message += f" {loc('not found')}"
             return await self.page.snack_bar.show(message, color="red")
         mod.name = self.memory["compile"]["mod_data"].title
         mod.author = self.memory["compile"]["mod_data"].authors_string
@@ -943,7 +965,7 @@ class ModdersController(Controller):
             mod.game_version = self.get_mod_version()
         except Exception:
             return await self.page.snack_bar.show(
-                "Failed to get game version, please open trove at least once",
+                loc("Failed to get game version, please open trove at least once"),
                 color="red",
             )
         type = self.memory["compile"]["mod_data"].type
@@ -958,7 +980,7 @@ class ModdersController(Controller):
         installation_path = self.memory["compile"]["installation_path"].path
         mod_location = installation_path.joinpath(f"mods/{mod.name}.tmod")
         mod_location.write_bytes(mod.tmod_content)
-        await self.page.snack_bar.show(f"Built TMod {mod.name}")
+        await self.page.snack_bar.show(loc("Built TMod {name}").format(name=mod.name))
 
     def get_mod_version(self):
         app_data = os.getenv("APPDATA")
@@ -975,7 +997,9 @@ class ModdersController(Controller):
         if not self.page.preferences.modders_tools.project_path:
             self.projects.controls.append(
                 Text(
-                    "No project folder selected, please select one in the settings tab",
+                    loc(
+                        "No project folder selected, please select one in the settings tab"
+                    ),
                     size=24,
                 )
             )
@@ -990,11 +1014,11 @@ class ModdersController(Controller):
                     projects.append(folder)
         if not projects:
             self.projects.controls.append(
-                Text("No projects found in selected folder", size=24)
+                Text(loc("No projects found in selected folder"), size=24)
             )
             self.projects.controls.append(
                 ElevatedButton(
-                    "Create project", icon=icons.ADD, on_click=self.create_project
+                    loc("Create project"), icon=icons.ADD, on_click=self.create_project
                 )
             )
             return
@@ -1046,7 +1070,9 @@ class ModdersController(Controller):
             Row(
                 controls=[
                     ElevatedButton(
-                        "Create project", icon=icons.ADD, on_click=self.create_project
+                        loc("Create project"),
+                        icon=icons.ADD,
+                        on_click=self.create_project,
                     ),
                     self.projects_list,
                 ]
@@ -1087,10 +1113,12 @@ class ModdersController(Controller):
             if self.memory["projects"]["version"] not in versions:
                 self.memory["projects"]["version"] = versions[0] if versions else None
         if not versions:
-            self.project_control.controls.append(Text("No versions found", size=24))
+            self.project_control.controls.append(
+                Text(loc("No versions found"), size=24)
+            )
             self.project_control.controls.append(
                 ElevatedButton(
-                    "Create version", icon=icons.ADD, on_click=self.create_version
+                    loc("Create version"), icon=icons.ADD, on_click=self.create_version
                 )
             )
             return
@@ -1101,7 +1129,7 @@ class ModdersController(Controller):
                     Row(
                         controls=[
                             ElevatedButton(
-                                "New version",
+                                loc("New version"),
                                 icon=icons.ADD,
                                 on_click=self.create_version,
                             ),
@@ -1122,36 +1150,39 @@ class ModdersController(Controller):
                     ),
                     PopupMenuButton(
                         content=Row(
-                            controls=[Icon(icons.API), Text("Get Modding Software")]
+                            controls=[
+                                Icon(icons.API),
+                                Text(loc("Get Modding Software")),
+                            ]
                         ),
                         items=[
                             PopupMenuItem(
                                 data="blueprints",
-                                text="Blueprints (.blueprint)",
+                                text=f"{loc('Blueprints')} (.blueprint)",
                                 icon=icons.SQUARE_FOOT,
                                 on_click=self.show_software,
                             ),
                             PopupMenuItem(
                                 data="vfx",
-                                text="Particles (.pkfx)",
+                                text=f"{loc('Particles')} (.pkfx)",
                                 icon=icons.LOCAL_FIRE_DEPARTMENT,
                                 on_click=self.show_software,
                             ),
                             PopupMenuItem(
                                 data="textures",
-                                text="Textures (.dds)",
+                                text=f"{loc('Textures')} (.dds)",
                                 icon=icons.BRUSH,
                                 on_click=self.show_software,
                             ),
                             PopupMenuItem(
                                 data="ui",
-                                text="UI (.swf)",
+                                text=f"{loc('UI')} (.swf)",
                                 icon=icons.GRID_VIEW,
                                 on_click=self.show_software,
                             ),
                             PopupMenuItem(
                                 data="sound",
-                                text="Audio (.bnk)",
+                                text=f"{loc('Audio')} (.bnk)",
                                 icon=icons.MUSIC_NOTE,
                                 on_click=self.show_software,
                             ),
@@ -1164,7 +1195,7 @@ class ModdersController(Controller):
         mod_types = await self.api.get_mod_types()
         sub_types = await self.api.get_mod_sub_types(config.type)
         self.version_type_picker = Dropdown(
-            label="Type",
+            label=loc("Type"),
             value=config.type,
             options=[dropdown.Option(key=t, text=t) for t in mod_types],
             icon=icons.CATEGORY,
@@ -1172,7 +1203,7 @@ class ModdersController(Controller):
             on_change=self.version_change_mod_type,
         )
         self.version_sub_type_picker = Dropdown(
-            label="Class",
+            label=loc("Class"),
             value=config.sub_type,
             options=[dropdown.Option(key=t, text=t) for t in sub_types],
             icon=icons.CATEGORY,
@@ -1226,13 +1257,17 @@ class ModdersController(Controller):
                                                 Icon(
                                                     icons.WARNING,
                                                     color="yellow",
-                                                    tooltip="Image size exceeds 1MB, it may not be uploadable to Steam",
+                                                    tooltip=loc(
+                                                        "Image size exceeds 1MB, it may not be uploadable to Steam"
+                                                    ),
                                                     visible=preview_size > 1,
                                                 ),
                                                 Icon(
                                                     icons.WARNING,
                                                     color="yellow",
-                                                    tooltip="Image dimensions don't match game's recommended resolution of 400x230",
+                                                    tooltip=loc(
+                                                        "Image dimensions don't match game's recommended resolution of 400x230"
+                                                    ),
                                                     visible=preview_dimensions
                                                     != (400, 230),
                                                 ),
@@ -1271,7 +1306,7 @@ class ModdersController(Controller):
                             ),
                             TextField(
                                 value=config.description,
-                                label="Description",
+                                label=loc("Description"),
                                 icon=icons.DESCRIPTION,
                                 multiline=True,
                                 max_lines=3,
@@ -1291,7 +1326,7 @@ class ModdersController(Controller):
                                             if config_file
                                             else None
                                         ),
-                                        label="Config file (.cfg)",
+                                        label=f"{loc('Config file')} (.cfg)",
                                         icon=icons.SETTINGS,
                                         read_only=True,
                                         content_padding=padding.symmetric(4, 8),
@@ -1300,8 +1335,8 @@ class ModdersController(Controller):
                             ),
                             TextField(
                                 value=version_config.changes,
-                                label="Changes",
-                                hint_text="Enter changes",
+                                label=loc("Changes"),
+                                hint_text=loc("Enter changes"),
                                 icon=icons.TRACK_CHANGES,
                                 multiline=True,
                                 max_lines=3,
@@ -1337,8 +1372,10 @@ class ModdersController(Controller):
                             controls=[
                                 DataTable(
                                     columns=[
-                                        DataColumn(label=Text("File Path")),
-                                        DataColumn(label=Text("Size"), numeric=True),
+                                        DataColumn(label=Text(loc("File Path"))),
+                                        DataColumn(
+                                            label=Text(loc("Size")), numeric=True
+                                        ),
                                     ],
                                     vertical_lines=BorderSide(1, colors.GREY_800),
                                     rows=[
@@ -1373,7 +1410,7 @@ class ModdersController(Controller):
                                                 DataRow(
                                                     cells=[
                                                         DataCell(
-                                                            Text("No files found")
+                                                            Text(loc("No files found"))
                                                         ),
                                                         DataCell(Text("")),
                                                     ]
@@ -1395,37 +1432,37 @@ class ModdersController(Controller):
                                 spacing=4,
                                 controls=[
                                     ElevatedButton(
-                                        "Open version folder",
+                                        loc("Open version folder"),
                                         icon=icons.FOLDER_OPEN,
                                         on_click=lambda x: os.startfile(version_path),
                                     ),
                                     ElevatedButton(
-                                        "Refresh files list",
+                                        loc("Refresh files list"),
                                         icon=icons.REFRESH,
                                         on_click=self.refresh_files_list,
                                     ),
                                     ElevatedButton(
-                                        "Fix files paths",
+                                        loc("Fix files paths"),
                                         icon=icons.FOLDER,
                                         on_click=self.fix_files_paths,
                                     ),
                                     ElevatedButton(
-                                        "Extract from archives",
+                                        loc("Extract from archives"),
                                         icon=icons.DOWNLOAD,
                                         on_click=self.extract_from_archives,
                                     ),
                                     ElevatedButton(
-                                        "Test overrides",
+                                        loc("Test overrides"),
                                         icon=icons.LOGO_DEV,
                                         on_click=self.test_project_overrides,
                                     ),
                                     ElevatedButton(
-                                        "Clear overrides",
+                                        loc("Clear overrides"),
                                         icon=icons.CLEAR_ALL,
                                         on_click=self.clear_project_overrides,
                                     ),
                                     ElevatedButton(
-                                        "Build TMod",
+                                        loc("Build TMod"),
                                         icon=icons.BUILD,
                                         on_click=self.build_project_tmod,
                                     ),
@@ -1454,7 +1491,7 @@ class ModdersController(Controller):
             content=Column(
                 controls=[
                     Text(types_data[event.control.data]["description"]),
-                    Text("Software:"),
+                    Text(f"{loc('Software')}:"),
                     *(
                         [
                             Column(
@@ -1472,7 +1509,7 @@ class ModdersController(Controller):
                                             ),
                                         ]
                                     ),
-                                    Text(software["description"]),
+                                    Text(loc(software["description"])),
                                 ]
                             )
                             for software in types_data[event.control.data]["software"]
@@ -1481,7 +1518,7 @@ class ModdersController(Controller):
                 ],
                 width=500,
             ),
-            actions=[ElevatedButton("Close", on_click=self.page.RTT.close_dialog)],
+            actions=[ElevatedButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
         )
 
     async def create_project(self, event):
@@ -1489,7 +1526,7 @@ class ModdersController(Controller):
         sub_types = await self.api.get_mod_sub_types(types[0])
         await self.page.dialog.set_data(
             modal=True,
-            title=Text("Create project"),
+            title=Text(loc("Create project")),
             content=Column(
                 controls=[
                     TextField(

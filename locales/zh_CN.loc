@@ -64,8 +64,10 @@ Actions»»动作
 Activating this star exceeds max of {MaxNode} by {StagedLock}»»超出星图的最大值 {MaxNode} 加点 {StagedLock}
 Add Custom directory»»Add Custom directory
 Add custom directory»»Add custom directory
+Add files»»Add files
 Add to Profile»»Add to Profile
 Add to profile»»Add to profile
+Added {file_name}»»Added {file_name}
 Additional shields will be needed for future bosses.»»❓未来的BOSS需要额 外的护盾.
 Advanced Settings»»❓优先的设�?
 Advanced mode allows for people to have old vs new changed files in a separate directory»»❓高级模式允许用户在单独的目 录中拥有旧文件和新更改的文件
@@ -108,6 +110,7 @@ Arcane Air Gem»»魔法天空宝石
 Arcane Cosmic Gem»»魔法宇宙宝石
 Arcane Fire Gem»»魔法火焰宝石
 Arcane Water Gem»»魔法水蓝宝石 
+Are you sure you want to clear all overrides?»»Are you sure you want to clear all overrides?
 Arriving in {}»»抵达时间 {}
 Attack»»❓攻击
 Attack Speed»»攻击速度
@@ -115,9 +118,11 @@ Attack Speed Bonus»»❓攻击速度加成
 Attack and defend is what these stars are about.»»❓进攻和防御是这些星星的意 义所在.
 Attack speed is all some classes need.»»❓攻击速度是某些职业所需要的.
 Attacks so fast you can not even animate fast enough.»»❓攻击速度如此之快, 你甚至无法足够快地动画化.
+Audio»»Audio
 Augmentation»» 属性强化
 Augmentation Cost»»Augmentation Cost
 Augmentation Costs»»增强成本
+Author»»Author
 Auto Fix Mod Names»»Auto Fix Mod Names
 Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files for UI mods
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
@@ -131,6 +136,7 @@ Berserk Battler (Cosmic)»»狂暴勇士
 Berserker Battler»»狂暴勇士
 Best»»最佳
 Blue»»❓兰
+Blueprints»»Blueprints
 Boats and Sails»»Boats and Sails
 Bonus Damage»»伤害加成
 Bonus MF (No deaths)»»MF奖励(无死亡)
@@ -145,15 +151,18 @@ Bounty Hunt Boon»»❓赏金狩猎恩物
 Brown»»❓褐色
 Buffs»» 加成
 Build»»分配
+Build TMod»»Build TMod
 Build Type»»配装类型
 Build format»»❓构建格式
 Builder's Precise Focus»»创造者的精确加成
 Builder's Rough Focus»»创造者的粗糙加成
 Builder's Superior Focus»»创造者的卓越加成
+Built TMod {name}»»Built TMod {name}
 CB»»糖果野蛮人
 Cancel»»Cancel
 Cancel extraction»»❓取消提取
 Candy Barbarian»»糖果野蛮人
+Category»»Category
 Change Ability»»更改能力
 Change Log»»更新日志
 Change Restricition»»Change Restricition
@@ -164,6 +173,7 @@ Change mod version»»Change mod version
 Change theme»»主题
 Changed files»»❓已更改的文件
 Changed/Added Files List»»❓已更改/添加的文件列表
+Changes»»Changes
 Chaos Contained Flare»»能源化混乱闪光
 Chaos Contained Spark»»能源化混乱火花
 Chaos Forge can reroll the second stat on equipment!»»混沌熔炉可重新分配装备的第二属性[水晶装备为第三属性]
@@ -173,12 +183,21 @@ Chronomantic»»碧叶徽章
 Class»»职业
 Class Bonus»»❓职业奖金
 Class Gem»»职业宝石
+Clear»»Clear
+Clear all overrides»»Clear all overrides
+Clear config»»Clear config
+Clear files»»Clear files
+Clear overrides»»Clear overrides
+Clear preview»»Clear preview
+Clear project folder»»Clear project folder
 Close»»Close
 Clover»»幸运三叶草
 Club Fixture»»公会装置加成
 Coefficient»»伤害系数(Coe)
 Combat»»❓v.斗争 ,反,反对
 Compare changes with»»❓比较更改
+Config»»Config
+Config file»»Config file
 Confirm»»Confirm
 Conjurer's Crucible Vial»»巫师的提炼药瓶
 Continue to grow your strength and prove Might is better then brains.»»❓继续增强你的力量, 并证明Might比大脑更好.
@@ -197,6 +216,8 @@ Cosmic Primordial»»原初宇宙龙
 Costumes»»Costumes
 Crafting Speed»»制作速度
 Create new profile»»Create new profile
+Create project»»Create project
+Create version»»Create version
 Critical»»暴击伤害
 Critical Damage»»暴击伤害
 Critical Hit»»暴击率
@@ -219,6 +240,8 @@ Delve Day»»秘境日
 Delving just got a little bit easier.»»❓钻研变得简单了一点.
 Depths Boon»»❓深度恩赐
 Depths Boon 2.0»»❓Depths Boon 2.0
+Description»»Description
+Detect overrides»»Detect overrides
 Deviation»»偏差
 Diamond Dragonite»»钻龙石
 Dino Tamer»»驯龙师
@@ -273,6 +296,7 @@ Energy Regen»»能量回复
 Energy Regen Bonus»»❓能量再生加成
 Energy Regeneration»»充能徽章
 Enlightened»»启迪
+Enter changes»»Enter changes
 Even though most magic classes have good range, here is some stability so you don't go flying.»»❓尽管大多数魔法职业都有良好 的射程, 但这里有一些稳定性, 因此您不会去飞行.
 Events»»事件
 Evil Eye»»邪眼徽章
@@ -281,14 +305,18 @@ Experience Gain Bonus»»❓经验增益加成
 Exploring and armoring up.»»❓探索和装甲.
 Explosive Epilogue»»爆炸性结局
 Extra flasks are always good.»»❓额外的烧瓶总是好的.
+Extract TMod»»Extract TMod
 Extract all»»❓全部解压缩
 Extract changed files»»❓提取已更改的文件
+Extract from archives»»Extract from archives
+Extract overrides»»Extract overrides
 Extract selected directories»»❓提取所选目录
 Extract to»»解压到
 Extractor Idle»»❓提取器空闲
 Face»»面具
 Face Damage»»面具伤害
 Fae Trickster»»妖精诡术师
+Failed to get game version, please open trove at least once»»Failed to get game version, please open trove at least once
 Farm»»刷本
 Fast Invasions»»快速入侵
 Feedback»»Feedback
@@ -300,6 +328,8 @@ Fierce Fire Gem»»物理火焰宝石
 Fierce Water Gem»»物理 水蓝宝石
 Fighting throughout this Trovian world has given you the intellect to randomly recharge flasks.»»❓在Trove的战斗使你有智慧随机 为烧瓶充电.
 File Extractor»»资源提取
+File Path»»File Path
+File is not within the Trove directory selected»»File is not within the Trove directory selected
 Filter Mods»»Filter Mods
 Filter mods»»Filter mods
 Find stats»»标记属性
@@ -309,6 +339,7 @@ Fire Gem Dust»»火焰宝石尘
 Fire Primordial»»原初火焰龙
 First»»首页
 Fishing»»Fishing
+Fix files paths»»Fix files paths
 Flask»»瓶子
 Flask Capacity»»❓烧瓶容量
 Flask Renewal»»❓烧瓶更新
@@ -347,6 +378,7 @@ Gem level changed to {level}»»宝石等级已更改为{level}
 Gems»»宝石
 Geode Mastery Buffs»»晶洞增益
 German»»German
+Get Modding Software»»Get Modding Software
 Get Windows Application»»Get Windows Application
 Give in to your anger.»»❓ 屈服于你的愤怒.
 Go back»»返回
@@ -401,6 +433,8 @@ I have the goal to not only build something that is usable but mostly updatable 
 I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.»»I honestly don't play this game, I legitimately just use this game as a way to learn more about coding and specially with this project, interface development.
 Ice Sage»»寒冰贤者
 If you get knocked back, you cannot critically hit as much.»»❓如果你被击退, 你无法击中那么多.
+Image dimensions don't match game's recommended resolution of 400x230»»Image dimensions don't match game's recommended resolution of 400x230
+Image size exceeds 1MB, it may not be uploadable to Steam»»Image size exceeds 1MB, it may not be uploadable to Steam
 Improve Stat»»提升属性
 In this constellation of dungeon seeking we greet thee with more health.»»❓在这个寻找地牢的星座中, 我们以更多生命值迎接你.
 Incoming Damage»»❓外来伤害
@@ -573,6 +607,7 @@ Minor star of Weakness 1.5»»❓弱点小星1.5
 Mired Mojo»»深陷符咒
 Mod Profiles»»Mod Profiles
 Mod Profiles (Not working yet)»»Mod Profiles (Not working yet)
+Mod data is not valid»»Mod data is not valid
 Mod version changed to {version}»»Mod version changed to {version}
 Modder»»Modder
 Modder Tools»»模组开发
@@ -590,11 +625,19 @@ My Mods»»My Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
 NPCs»»NPCs
 Neon Ninja»»霓虹忍者
+New version»»New version
 Next»»下一页
+No»»No
+No Trove installation found»»No Trove installation found
 No authors»»No authors
 No custom directories»»No custom directories
 No events are currently going on.»»❓当前没有正在进行的活动。
+No files added»»No files added
+No files found»»No files found
 No picked directory (Pick your mods folder)»»No picked directory (Pick your mods folder)
+No project folder selected, please select one in the settings tab»»No project folder selected, please select one in the settings tab
+No projects found in selected folder»»No projects found in selected folder
+No versions found»»No versions found
 Normal»»普通
 Not going to push around the brawler.»»❓不会在争吵者周围推来推去.
 Not working yet»»Not working yet
@@ -605,16 +648,21 @@ One day it will be super important to have a lot of this. Wink Wink»»❓有一
 One or more mods conflict with this mod»»One or more mods conflict with this mod
 Oops, did I leave a flask over on this side of the cosmos.»»❓哎呀, 我在宇宙的这一边留下了一个烧瓶.
 Oops, didn't I mean to make this a health star?»»❓哎呀, 我不是想让这成为健康之星吗?
+Open version folder»»Open version folder
 Orange»»❓橙
 Orchian»»兰花
 Others»»其他
 Outgoing Damage»»❓传出伤害
+Output Directory»»Output Directory
+Output directory is required»»Output directory is required
+Overrides cleared»»Overrides cleared
 PD/CD/LT/PD/CD/LT»»PD/CD/LT PD/CD/LT
 PD/CD/PD/CD»»PD/CD PD/CD
 PD/Light»»❓PD/灯
 PTS Geode Mastery»»体验服晶洞专精
 PTS Trove Mastery»»体验服宝藏专精
 Page»»Page
+Particles»»Particles
 Path»»❓路径
 Patreon»»VIP加成
 Patron»»VIP加成
@@ -633,8 +681,13 @@ Preference»»偏好
 Premium Fish Fillet»»优质鱼汤
 Premium Fish Kabobs»»优质鱼肉串
 Premium Fish Soup»»优质鱼汤
+Preview»»Preview
 Previous»»上一页
 Private»»Private
+Project folder»»Project folder
+Project folder cleared»»Project folder cleared
+Project folder selected»»Project folder selected
+Projects (BETA)»»Projects (BETA)
 Protection»»❓防护
 Purple»»❓紫色
 Pve»»❓Pve
@@ -658,6 +711,7 @@ Reflection 2.0»»❓Reflection 2.0
 Reflection 3.0»»❓Reflection 3.0
 Refresh changed/added files list»»❓刷新更改/添加的文件列表
 Refresh directory list»»❓刷新目录列表
+Refresh files list»»Refresh files list
 Renewed Trove Tools»»Renewed Trove Tools
 Report a bug»»❓报告 Bug
 Reroll Stat»»改变属性
@@ -679,7 +733,16 @@ Search the lands for greater goods.»»❓在陆地上寻找更大的商品.
 Second Stat Reroll»»混沌属性
 See the weakness of your enemies and know how to exploit it.»»❓看到敌人的弱点并知道如何利用它.
 Seeing the final frontier has left you tough.»»❓看到最后的边界让你变得艰难.
+Select Config file»»Select Config file
+Select Output Directory»»Select Output Directory
+Select Preview image»»Select Preview image
+Select Project Folder»»Select Project Folder
+Select TMod file»»Select TMod file
+Select a project folder»»Select a project folder
 Select all»»❓全选
+Select config file»»Select config file
+Select files to add to mod»»Select files to add to mod
+Select preview image»»Select preview image
 Selling»»出售
 Send»»Send
 Send feedback»»❓发送反馈
@@ -696,6 +759,7 @@ Slightly increases gathering range when mounted. »»❓安装时略微增加聚
 Slot machine of extra damage. I like it.»»❓额外损坏的老虎机.我喜欢.
 So Many Flasks!!!!!»»❓好多烧瓶! ! ! ! !
 So glad to see you all the way out here, the star focuses on finding better gear.»»❓很高兴在这里见到你, 这位明星专注于寻找更好的装备.
+Software»»Software
 Solarion»»曜日射手
 Speed»»❓速率
 Speed through the stars for greater power.»»❓加速穿越星空, 获得更强大的力量.
@@ -729,8 +793,14 @@ Sundered Flight 3.0»»❓SENDERED FLIGHT 3.0
 Swap»»Swap
 Switch to debug version»»❓切换到调试版本
 Switch to release version»»Switch to release version
+TMod File»»TMod File
+TMod extracted»»TMod extracted
+TMod file is required»»TMod file is required
+TMod overrides extracted»»TMod overrides extracted
 Tank»»肉坦
 Teal»»❓青色
+Test overrides»»Test overrides
+Textures»»Textures
 Thanks for using my application. <3»»Thanks for using my application. <3
 The Star Chart was critically well received by the players.\\nThey had nothing negative to say about it.»»❓星盘受到玩家的好评, \\ n没有负面评论.
 The application will download update and close itself to install it.»»The application will download update and close itself to install it.
@@ -748,8 +818,10 @@ This star gains the boon of health and mining.»»❓这颗星星获得了生命
 This star should help balance melee a little more.»»❓这颗星应该有助于近战的平衡.
 This star's blessing hopes you live a long and healthy life.»»❓这颗星星的祝福希望你过上健康长寿的生活.
 This will provide a better way to compare updates whilst having no real hustle to separate these changes»»❓这将提供一 种更好的方式来比较更新，同时没有真正的忙于将这些更改分开
+This will remove all files in the 'override' directories within the Trove directory»»This will remove all files in the 'override' directories within the Trove directory
 Thursday»»星期四
 Titan Soul»»泰坦之魂
+Title»»Title
 Tomb Raiser»»墓灵术师
 Trailblazing»»领路徽章
 Triple Chance To Find Flux Artifacts»»掉落原晶法器的几率提升3倍
@@ -761,10 +833,12 @@ Triple Radiant Shard Drops»»光辉碎片掉落数量为原来的3倍
 Triple Shadow Shard Drops»»掉落的暗影碎片数量提升3倍
 Trove Time»»Trove 时间
 Trove directory»»Trove 目录
+Try running program as administrator or go to settings and add the directory manually.»»Try running program as administrator or go to settings and add the directory manually.
 Tuesday»»星期二
 Twitch Streams»»Twitch直播
 Two damage types, maybe someday we will search the stars and find the 3rd one.»»❓两种损坏类型, 也许有一天我们会搜索星星并找到第三种.
 Type»»Type
+UI»»UI
 Ultimate Harvest upgrade for any gathering min/maxer.»»❓任何最低/最高采集量 的终极收获升级.
 Ultimate Strength star is better than a Magic Star.»»❓终极力量之星胜过魔法之星.
 Uninstall»»Uninstall
@@ -823,6 +897,7 @@ Wow... Magic and Physical Damage with a little Critical Hit... Maybe this should
 XP Day»»经验日
 YESSSS... MORE STRENGTH!!!!»»❓哎呀……更强大! ! ! !
 Yellow»»❓黄
+Yes»»Yes
 You did so much Mining it improved your Physical Damage. Noice.»»❓你做了这么多开采, 它提高了你的物理伤害.噪音.
 You get a buff and you get a buff, everybody gets a buff.»»❓你得到一个BUFF, 你得到一个BUFF, 每个人都得到一个BUFF.
 You have found the Weakness, now keep on attacking.»»❓你已经找到了弱点, 现在继续攻击.
@@ -845,5 +920,6 @@ Zero»»归零
 [PD|LT] Scorpius»»❓[PD | LT]天蝎座
 fluxion»»原晶
 none»»❓无
+not found»»not found
 {amount} mods»»{amount} mods
 👇Get pass key from👇»»👇可以从这里获取密钥👇
