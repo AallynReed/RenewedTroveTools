@@ -394,7 +394,7 @@ class HomeController(Controller):
                                 Tooltip(
                                     message=stream["title"],
                                     content=TextButton(
-                                        stream["title"][:30],
+                                        (stream["title"] or "")[:30],
                                         width=160,
                                         url=f"https://twitch.tv/{stream['user_name']}",
                                         style=ButtonStyle(
