@@ -1231,56 +1231,64 @@ class ModdersController(Controller):
         self.project_control.controls.append(
             Row(
                 controls=[
-                    Container(
-                        image_src=preview or "assets/images/no_preview.png",
-                        content=Stack(
-                            controls=[
-                                *(
-                                    [
-                                        IconButton(
-                                            icons.ADD,
-                                            on_click=self.add_project_preview,
-                                            top=20,
-                                            left=20,
+                    Column(
+                        controls=[
+                            Container(
+                                image_src=preview or "assets/images/no_preview.png",
+                                content=Stack(
+                                    controls=[
+                                        *(
+                                            [
+                                                IconButton(
+                                                    icons.ADD,
+                                                    on_click=self.add_project_preview,
+                                                )
+                                            ]
+                                            if preview is None
+                                            else [
+                                                IconButton(
+                                                    icons.CLEAR,
+                                                    on_click=self.clear_project_preview,
+                                                ),
+                                            ]
                                         )
                                     ]
-                                    if preview is None
-                                    else [
-                                        IconButton(
-                                            icons.CLEAR,
-                                            top=20,
-                                            left=20,
-                                            on_click=self.clear_project_preview,
+                                ),
+                                width=400,
+                                height=230,
+                            ),
+                            Row(
+                                controls=[
+                                    Icon(
+                                        icons.WARNING,
+                                        color="yellow",
+                                    ),
+                                    Text(
+                                        loc(
+                                            "Image size exceeds 1MB, it may not be uploadable to Steam"
                                         ),
-                                        Column(
-                                            controls=[
-                                                Icon(
-                                                    icons.WARNING,
-                                                    color="yellow",
-                                                    tooltip=loc(
-                                                        "Image size exceeds 1MB, it may not be uploadable to Steam"
-                                                    ),
-                                                    visible=preview_size > 1,
-                                                ),
-                                                Icon(
-                                                    icons.WARNING,
-                                                    color="yellow",
-                                                    tooltip=loc(
-                                                        "Image dimensions don't match game's recommended resolution of 400x230"
-                                                    ),
-                                                    visible=preview_dimensions
-                                                    != (400, 230),
-                                                ),
-                                            ],
-                                            top=20,
-                                            right=20,
+                                        color="yellow",
+                                    ),
+                                ],
+                                visible=preview is not None and preview_size > 1,
+                            ),
+                            Row(
+                                controls=[
+                                    Icon(
+                                        icons.WARNING,
+                                        color="yellow",
+                                    ),
+                                    Text(
+                                        loc(
+                                            "Image dimensions don't match game's recommended resolution of 400x230"
                                         ),
-                                    ]
-                                )
-                            ]
-                        ),
-                        width=400,
-                        height=230,
+                                        color="yellow",
+                                    ),
+                                ],
+                                visible=preview is not None
+                                and preview_dimensions != (400, 230),
+                            ),
+                        ]
                     ),
                     Column(
                         controls=[
