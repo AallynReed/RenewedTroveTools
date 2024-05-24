@@ -175,7 +175,8 @@ class CustomAppBar(AppBar):
                             content=Row(
                                 controls=[
                                     RTTImage(
-                                        src="icons/brands/paypal-mark.png", width=19
+                                        src="assets/icons/brands/paypal-mark.png",
+                                        width=19,
                                     ),
                                     Text("Paypal"),
                                 ]
@@ -186,7 +187,9 @@ class CustomAppBar(AppBar):
                             data="buy_me_a_coffee",
                             content=Row(
                                 controls=[
-                                    RTTImage(src="icons/brands/bmc.png", width=12),
+                                    RTTImage(
+                                        src="assets/icons/brands/bmc.png", width=12
+                                    ),
                                     Text("Buy me a Coffee"),
                                 ]
                             ),
@@ -197,7 +200,8 @@ class CustomAppBar(AppBar):
                             content=Row(
                                 controls=[
                                     RTTImage(
-                                        src="icons/brands/kofi-mark.png", width=24
+                                        src="assets/icons/brands/kofi-mark.png",
+                                        width=24,
                                     ),
                                     Text("Kofi"),
                                 ]
@@ -257,9 +261,9 @@ class CustomAppBar(AppBar):
                                 controls=[
                                     RTTImage(
                                         src=(
-                                            "icons/brands/discord-mark-black.png"
+                                            "assets/icons/brands/discord-mark-black.png"
                                             if not self.page.dark_theme
-                                            else "icons/brands/discord-mark-white.png"
+                                            else "assets/icons/brands/discord-mark-white.png"
                                         ),
                                         width=19,
                                     ),
@@ -274,9 +278,9 @@ class CustomAppBar(AppBar):
                                 controls=[
                                     RTTImage(
                                         (
-                                            "icons/brands/github-mark-black.png"
+                                            "assets/icons/brands/github-mark-black.png"
                                             if not self.page.dark_theme
-                                            else "icons/brands/github-mark-white.png"
+                                            else "assets/icons/brands/github-mark-white.png"
                                         ),
                                         width=19,
                                     ),
@@ -332,9 +336,9 @@ class CustomAppBar(AppBar):
                 for item in action.items:
                     if item.data in ["discord", "github"] and item.content is not None:
                         item.content.controls[0].src = (
-                            f"icons/brands/{item.data}-mark-black.png"
+                            f"assets/icons/brands/{item.data}-mark-black.png"
                             if self.page.theme_mode == "LIGHT"
-                            else f"icons/brands/{item.data}-mark-white.png"
+                            else f"assets/icons/brands/{item.data}-mark-white.png"
                         )
 
         await self.page.update_async()
@@ -496,9 +500,9 @@ class CustomAppBar(AppBar):
                 for item in action.items:
                     if item.data in ["discord", "github"] and item.content is not None:
                         item.content.controls[0].src = (
-                            f"icons/brands/{item.data}-mark-black.png"
+                            f"assets/icons/brands/{item.data}-mark-black.png"
                             if self.page.theme_mode == "light"
-                            else f"icons/brands/{item.data}-mark-white.png"
+                            else f"assets/icons/brands/{item.data}-mark-white.png"
                         )
         self.page.preferences.theme = self.page.theme_mode
         self.page.preferences.save()
