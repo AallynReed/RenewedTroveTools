@@ -85,7 +85,7 @@ class GemController(Controller):
                         content=Stack(
                             controls=[
                                 RTTImage(
-                                    f"images/rarity/{self.selected_gem.tier.name}_frame.png",
+                                    f"assets/images/rarity/{self.selected_gem.tier.name}_frame.png",
                                     scale=5,
                                     left=89,
                                     top=89,
@@ -93,11 +93,11 @@ class GemController(Controller):
                                 Draggable(
                                     data=self.selected_gem,
                                     content=RTTImage(
-                                        f"images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
+                                        f"assets/images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
                                         scale=1.25,
                                     ),
                                     content_feedback=RTTImage(
-                                        f"images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
+                                        f"assets/images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
                                         scale=0.40,
                                     ),
                                 ),
@@ -257,7 +257,7 @@ class GemController(Controller):
                                 ),
                                 *[
                                     RTTImage(
-                                        "images/gems/boost.png",
+                                        "assets/images/gems/boost.png",
                                         width=18,
                                         left=20 * i,
                                         top=0,
@@ -289,7 +289,7 @@ class GemController(Controller):
                                             Container(col={"xs": 3.3}),
                                             Container(
                                                 content=RTTImage(
-                                                    "images/gems/augment_01.png",
+                                                    "assets/images/gems/augment_01.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -299,7 +299,7 @@ class GemController(Controller):
                                             ),
                                             Container(
                                                 content=RTTImage(
-                                                    "images/gems/augment_02.png",
+                                                    "assets/images/gems/augment_02.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -309,7 +309,7 @@ class GemController(Controller):
                                             ),
                                             Container(
                                                 content=RTTImage(
-                                                    "images/gems/augment_03.png",
+                                                    "assets/images/gems/augment_03.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -371,7 +371,7 @@ class GemController(Controller):
                                         controls=[
                                             Container(
                                                 content=RTTImage(
-                                                    "images/gems/chaosspark.png",
+                                                    "assets/images/gems/chaosspark.png",
                                                     width=43,
                                                 ),
                                                 disabled=(
@@ -387,7 +387,7 @@ class GemController(Controller):
                                             ),
                                             Container(
                                                 content=RTTImage(
-                                                    "images/gems/chaosflare.png",
+                                                    "assets/images/gems/chaosflare.png",
                                                     width=43,
                                                 ),
                                                 disabled=not bool(self.selected_stat)

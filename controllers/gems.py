@@ -202,15 +202,17 @@ class GemSetController(Controller):
                                 Container(
                                     Row(
                                         controls=[
-                                            RTTImage("images/empty.png", width=1),
+                                            RTTImage(
+                                                "assets/images/empty.png", width=1
+                                            ),
                                             Stack(
                                                 controls=[
                                                     RTTImage(
-                                                        f"images/rarity/{gem.tier.name}_frame.png",
+                                                        f"assets/images/rarity/{gem.tier.name}_frame.png",
                                                         width=44,
                                                     ),
                                                     RTTImage(
-                                                        f"images/gems/old_{gem.element.name}_{gem.type.name}.png",
+                                                        f"assets/images/gems/old_{gem.element.name}_{gem.type.name}.png",
                                                         width=32,
                                                         left=6,
                                                         top=7,
@@ -368,7 +370,7 @@ class GemSetController(Controller):
                             controls=[
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_01.png",
+                                        src="assets/images/gems/augment_01.png",
                                         width=25,
                                     ),
                                     data=stat,
@@ -378,7 +380,7 @@ class GemSetController(Controller):
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_02.png",
+                                        src="assets/images/gems/augment_02.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -388,7 +390,7 @@ class GemSetController(Controller):
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_03.png",
+                                        src="assets/images/gems/augment_03.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -398,7 +400,7 @@ class GemSetController(Controller):
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/chaosspark.png",
+                                        src="assets/images/gems/chaosspark.png",
                                         width=23,
                                     ),
                                     data=stat.uuid,
@@ -408,7 +410,7 @@ class GemSetController(Controller):
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/chaosflare.png",
+                                        src="assets/images/gems/chaosflare.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -426,7 +428,7 @@ class GemSetController(Controller):
                                                     data=stat.uuid,
                                                     group=str(gem.uuid),
                                                     content=RTTImage(
-                                                        src="images/gems/boost.png",
+                                                        src="assets/images/gems/boost.png",
                                                         width=18,
                                                     ),
                                                 )
@@ -435,7 +437,7 @@ class GemSetController(Controller):
                                             + [
                                                 Draggable(
                                                     content=RTTImage(
-                                                        src="images/empty.png",
+                                                        src="assets/images/empty.png",
                                                         width=18,
                                                     ),
                                                     disabled=True,
@@ -471,31 +473,31 @@ class GemSetController(Controller):
                             controls=[
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_01.png",
+                                        src="assets/images/gems/augment_01.png",
                                         width=25,
                                     )
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_02.png",
+                                        src="assets/images/gems/augment_02.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/augment_03.png",
+                                        src="assets/images/gems/augment_03.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/chaosspark.png",
+                                        src="assets/images/gems/chaosspark.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
                                     RTTImage(
-                                        src="images/gems/chaosflare.png",
+                                        src="assets/images/gems/chaosflare.png",
                                         width=23,
                                     )
                                 ),

@@ -712,7 +712,7 @@ class GemBuildsController(Controller):
                                             RTTImage(a.icon_path, top=6, left=5),
                                             *[
                                                 RTTImage(
-                                                    "images/abilities/gem_frame.png"
+                                                    "assets/images/abilities/gem_frame.png"
                                                 )
                                                 for i in range(1)
                                                 if a.type == AbilityType.upgrade
