@@ -4,7 +4,7 @@ from flet import Image
 class RTTImage(Image):
     def __init__(self, src=None, is_fallback=False, **kwargs):
         if is_fallback:
-            super().__init__(**kwargs)
+            super().__init__(src, **kwargs)
             return
         if isinstance(src, str) and src.startswith("assets/"):
             src = "https://kiwiapi.slynx.xyz/v1/misc/" + src
