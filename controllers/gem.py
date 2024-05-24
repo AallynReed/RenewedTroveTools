@@ -7,7 +7,6 @@ from flet import (
     Row,
     Container,
     Card,
-    Image,
     Text,
     Border,
     BorderSide,
@@ -19,7 +18,7 @@ from flet import (
 )
 from utils.locale import loc
 
-from models.interface import Controller
+from models.interface import Controller, RTTImage
 from models.trove.gem import (
     LesserGem,
     EmpoweredGem,
@@ -85,20 +84,20 @@ class GemController(Controller):
                     DragTarget(
                         content=Stack(
                             controls=[
-                                Image(
-                                    f"assets/images/rarity/{self.selected_gem.tier.name}_frame.png",
+                                RTTImage(
+                                    f"images/rarity/{self.selected_gem.tier.name}_frame.png",
                                     scale=5,
                                     left=89,
                                     top=89,
                                 ),
                                 Draggable(
                                     data=self.selected_gem,
-                                    content=Image(
-                                        f"assets/images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
+                                    content=RTTImage(
+                                        f"images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
                                         scale=1.25,
                                     ),
-                                    content_feedback=Image(
-                                        f"assets/images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
+                                    content_feedback=RTTImage(
+                                        f"images/gems/old_{self.selected_gem.element.name}_{self.selected_gem.type.name}.png",
                                         scale=0.40,
                                     ),
                                 ),
@@ -257,8 +256,8 @@ class GemController(Controller):
                                     ),
                                 ),
                                 *[
-                                    Image(
-                                        "assets/images/gems/boost.png",
+                                    RTTImage(
+                                        "images/gems/boost.png",
                                         width=18,
                                         left=20 * i,
                                         top=0,
@@ -289,8 +288,8 @@ class GemController(Controller):
                                         controls=[
                                             Container(col={"xs": 3.3}),
                                             Container(
-                                                content=Image(
-                                                    "assets/images/gems/augment_01.png",
+                                                content=RTTImage(
+                                                    "images/gems/augment_01.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -299,8 +298,8 @@ class GemController(Controller):
                                                 col={"xs": 1.5},
                                             ),
                                             Container(
-                                                content=Image(
-                                                    "assets/images/gems/augment_02.png",
+                                                content=RTTImage(
+                                                    "images/gems/augment_02.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -309,8 +308,8 @@ class GemController(Controller):
                                                 col={"xs": 1.5},
                                             ),
                                             Container(
-                                                content=Image(
-                                                    "assets/images/gems/augment_03.png",
+                                                content=RTTImage(
+                                                    "images/gems/augment_03.png",
                                                     width=40,
                                                 ),
                                                 disabled=not bool(self.selected_stat)
@@ -371,8 +370,8 @@ class GemController(Controller):
                                     ResponsiveRow(
                                         controls=[
                                             Container(
-                                                content=Image(
-                                                    "assets/images/gems/chaosspark.png",
+                                                content=RTTImage(
+                                                    "images/gems/chaosspark.png",
                                                     width=43,
                                                 ),
                                                 disabled=(
@@ -387,8 +386,8 @@ class GemController(Controller):
                                                 col={"xs": 3.5},
                                             ),
                                             Container(
-                                                content=Image(
-                                                    "assets/images/gems/chaosflare.png",
+                                                content=RTTImage(
+                                                    "images/gems/chaosflare.png",
                                                     width=43,
                                                 ),
                                                 disabled=not bool(self.selected_stat)

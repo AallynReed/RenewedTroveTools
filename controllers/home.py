@@ -12,7 +12,6 @@ from flet import (
     Divider,
     VerticalDivider,
     Container,
-    Image,
     Stack,
     TextStyle,
     LinearGradient,
@@ -39,8 +38,7 @@ from flet import (
 from sympy import sympify
 
 from models.constants import files_cache
-from models.interface import Controller
-from models.interface import HomeWidget, RTTChip
+from models.interface import Controller, RTTImage, HomeWidget, RTTChip
 from utils import tasks
 from utils.kiwiapi import KiwiAPI
 from utils.trove.mastery import points_to_mr
@@ -58,7 +56,7 @@ class HomeController(Controller):
 
     async def post_setup(self):
         self.streams_widget = HomeWidget(
-            image="assets/icons/brands/twitch.png",
+            image="icons/brands/twitch.png",
             title=loc("Twitch Streams"),
             title_size=20,
             title_url="https://www.twitch.tv/directory/category/trove",
@@ -158,7 +156,7 @@ class HomeController(Controller):
                     ),
                     content=Stack(
                         controls=[
-                            Image(
+                            RTTImage(
                                 scale=1.5,
                                 color="black" if v != current else None,
                                 color_blend_mode=(
@@ -217,7 +215,7 @@ class HomeController(Controller):
                         ),
                         content=Stack(
                             controls=[
-                                Image(
+                                RTTImage(
                                     color="black" if v != current else None,
                                     color_blend_mode=(
                                         BlendMode.SATURATION if v != current else None
@@ -271,7 +269,7 @@ class HomeController(Controller):
         dragon_controls = []
         for name, first, image_name in dragons:
             if trove_time.is_dragon(first):
-                image_src = f"assets/images/dragons/{image_name}.png"
+                image_src = f"images/dragons/{image_name}.png"
                 text = Text(
                     loc("Leaving in {}").format(
                         humanize.naturaltime(
@@ -280,7 +278,7 @@ class HomeController(Controller):
                     )
                 )
             else:
-                image_src = f"assets/images/dragons/{image_name}_out.png"
+                image_src = f"images/dragons/{image_name}_out.png"
                 text = Text(
                     loc("Arriving in {}").format(
                         humanize.naturaltime(
@@ -288,7 +286,7 @@ class HomeController(Controller):
                         ).replace(" from now", "")
                     )
                 )
-            image = Image(src=image_src, width=40, height=40)
+            image = RTTImage(src=image_src, width=40, height=40)
             dragon_control = Card(
                 Container(
                     Column(
@@ -309,7 +307,7 @@ class HomeController(Controller):
             )
             dragon_controls.append(dragon_control)
         if trove_time.is_fluxion():
-            image_src = "assets/images/dragons/fluxion.png"
+            image_src = "images/dragons/fluxion.png"
             phase_text = (
                 loc("Voting") if trove_time.is_fluxion_voting() else loc("Selling")
             )
@@ -321,7 +319,7 @@ class HomeController(Controller):
                 )
             )
         else:
-            image_src = "assets/images/dragons/fluxion_out.png"
+            image_src = "images/dragons/fluxion_out.png"
             phase_text = (
                 loc("Voting") if trove_time.is_fluxion_selling() else loc("Selling")
             )
@@ -332,7 +330,7 @@ class HomeController(Controller):
                     )
                 )
             )
-        image = Image(src=image_src, width=40, height=40)
+        image = RTTImage(src=image_src, width=40, height=40)
         dragon_control = Card(
             Container(
                 Column(
@@ -370,7 +368,7 @@ class HomeController(Controller):
                                 Container(
                                     Stack(
                                         controls=[
-                                            Image(
+                                            RTTImage(
                                                 src=stream["thumbnail_url"]
                                                 .replace("{width}", "160")
                                                 .replace("{height}", "90"),
@@ -714,7 +712,7 @@ class HomeController(Controller):
                                     ),
                                 ]
                             ),
-                            leading=Image(
+                            leading=RTTImage(
                                 src=event["image"] or event["icon"] or None,
                                 height=150,
                                 width=150,

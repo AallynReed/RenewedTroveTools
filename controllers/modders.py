@@ -19,7 +19,6 @@ from flet import (
     Row,
     Chip,
     IconButton,
-    Image,
     TextField,
     ElevatedButton,
     ScrollMode,
@@ -46,7 +45,7 @@ from flet import (
 from flet_core import padding, MainAxisAlignment, icons
 
 from models.custom.projects import ProjectConfig, VersionConfig
-from models.interface import Controller
+from models.interface import Controller, RTTImage
 from models.interface.controls import RegexField, PathViewer
 from models.trove.directory import Directories
 from models.trove.mod import TMod, TroveModFile
@@ -240,7 +239,7 @@ class ModdersController(Controller):
                     [
                         Chip(
                             data=mod_list,
-                            leading=Image(src=mod_list.icon, width=24),
+                            leading=RTTImage(src=mod_list.icon, width=24),
                             label=Text(mod_list.clean_name),
                             disabled=mod_list
                             == self.memory["extract"]["installation_path"],
@@ -405,7 +404,7 @@ class ModdersController(Controller):
                     [
                         Chip(
                             data=mod_list,
-                            leading=Image(src=mod_list.icon, width=24),
+                            leading=RTTImage(src=mod_list.icon, width=24),
                             label=Text(mod_list.clean_name),
                             disabled=mod_list
                             == self.memory["compile"]["installation_path"],
@@ -426,9 +425,9 @@ class ModdersController(Controller):
             on_change=self.change_mod_sub_type,
             expand=True,
         )
-        self.preview_image = Image(
+        self.preview_image = RTTImage(
             src=self.memory["compile"]["mod_data"].preview[0]
-            or "assets/images/no_preview.png",
+            or "images/no_preview.png",
             width=400,
             height=230,
         )
@@ -1035,7 +1034,7 @@ class ModdersController(Controller):
                         [
                             Chip(
                                 data=mod_list,
-                                leading=Image(src=mod_list.icon, width=24),
+                                leading=RTTImage(src=mod_list.icon, width=24),
                                 label=Text(mod_list.clean_name),
                                 disabled=mod_list
                                 == self.memory["extract"]["installation_path"],

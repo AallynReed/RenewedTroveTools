@@ -93,7 +93,7 @@ class Ability(BaseModel):
 
     @property
     def icon_path(self):
-        return f"assets/images/abilities/{self.icon}.png"
+        return f"images/abilities/{self.icon}.png"
 
 
 class TroveClass(BaseModel):
@@ -110,11 +110,11 @@ class TroveClass(BaseModel):
 
     @property
     def image_path(self):
-        return f"assets/images/classes/{self.name.name}.png"
+        return f"images/classes/{self.name.name}.png"
 
     @property
     def icon_path(self):
-        return f"assets/images/classes/icons/{self.name.name}.png"
+        return f"images/classes/icons/{self.name.name}.png"
 
 
 class Food(Enum):

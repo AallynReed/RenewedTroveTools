@@ -1,7 +1,6 @@
 import asyncio
 import itertools
 import json
-from utils.locale import loc
 
 from aiohttp import ClientSession
 from flet import (
@@ -9,7 +8,6 @@ from flet import (
     ResponsiveRow,
     Dropdown,
     dropdown,
-    Image,
     DataTable,
     DataColumn,
     DataRow,
@@ -34,8 +32,7 @@ from flet import (
 from flet_core.icons import COPY, CALCULATE
 
 from models.constants import files_cache
-from models.interface import Controller
-from models.interface import ScrollingFrame, AutoNumberField
+from models.interface import Controller, RTTImage, ScrollingFrame, AutoNumberField
 from models.trove.builds import (
     TroveClass,
     Class,
@@ -47,6 +44,7 @@ from models.trove.builds import (
 )
 from models.trove.star_chart import get_star_chart
 from utils.functions import get_attr, chunks
+from utils.locale import loc
 
 
 class GemBuildsController(Controller):
@@ -118,12 +116,12 @@ class GemBuildsController(Controller):
                             controls=[
                                 Stack(
                                     controls=[
-                                        Image(
+                                        RTTImage(
                                             src=self.selected_class.image_path,
                                             scale=1.2,
                                             height=350,
                                         ),
-                                        Image(
+                                        RTTImage(
                                             src=self.selected_subclass.icon_path,
                                             width=150,
                                             bottom=25,
@@ -711,10 +709,10 @@ class GemBuildsController(Controller):
                                 DataCell(
                                     content=Stack(
                                         controls=[
-                                            Image(a.icon_path, top=6, left=5),
+                                            RTTImage(a.icon_path, top=6, left=5),
                                             *[
-                                                Image(
-                                                    "assets/images/abilities/gem_frame.png"
+                                                RTTImage(
+                                                    "images/abilities/gem_frame.png"
                                                 )
                                                 for i in range(1)
                                                 if a.type == AbilityType.upgrade

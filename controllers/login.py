@@ -8,10 +8,10 @@ from flet import (
     Row,
     Chip,
     Icon,
-    Image,
     TextField,
     Container,
 )
+from models.interface import RTTImage
 from utils.locale import loc
 from flet_core import padding, MainAxisAlignment
 
@@ -48,7 +48,7 @@ class LoginController(Controller):
                                     on_click=self.execute_login_discord,
                                 ),
                                 Chip(
-                                    leading=Image(
+                                    leading=RTTImage(
                                         src="https://trovesaurus.com/images/logos/Sage_64.png?1",
                                         width=24,
                                     ),

@@ -9,7 +9,6 @@ from flet import (
     Row,
     Container,
     Card,
-    Image,
     Text,
     Border,
     BorderSide,
@@ -29,7 +28,7 @@ from flet import (
     Stack,
 )
 from utils.locale import loc
-from models.interface import Controller
+from models.interface import Controller, RTTImage
 from models.trove.gem import (
     LesserGem,
     EmpoweredGem,
@@ -41,7 +40,6 @@ from models.trove.gem import (
 )
 from models.trove.gems import max_levels, augment_costs
 from utils.functions import throttle
-from utils.path import BasePath
 
 
 class GemSetController(Controller):
@@ -204,19 +202,15 @@ class GemSetController(Controller):
                                 Container(
                                     Row(
                                         controls=[
-                                            Image("assets/images/empty.png", width=1),
+                                            RTTImage("images/empty.png", width=1),
                                             Stack(
                                                 controls=[
-                                                    Image(
-                                                        BasePath.joinpath(
-                                                            f"assets/images/rarity/{gem.tier.name}_frame.png"
-                                                        ),
+                                                    RTTImage(
+                                                        f"images/rarity/{gem.tier.name}_frame.png",
                                                         width=44,
                                                     ),
-                                                    Image(
-                                                        BasePath.joinpath(
-                                                            f"assets/images/gems/old_{gem.element.name}_{gem.type.name}.png"
-                                                        ),
+                                                    RTTImage(
+                                                        f"images/gems/old_{gem.element.name}_{gem.type.name}.png",
                                                         width=32,
                                                         left=6,
                                                         top=7,
@@ -373,10 +367,8 @@ class GemSetController(Controller):
                         Row(
                             controls=[
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_01.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_01.png",
                                         width=25,
                                     ),
                                     data=stat,
@@ -385,10 +377,8 @@ class GemSetController(Controller):
                                     disabled=stat.is_maxed,
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_02.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_02.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -397,10 +387,8 @@ class GemSetController(Controller):
                                     disabled=stat.is_maxed,
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_03.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_03.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -409,10 +397,8 @@ class GemSetController(Controller):
                                     disabled=stat.is_maxed,
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/chaosspark.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/chaosspark.png",
                                         width=23,
                                     ),
                                     data=stat.uuid,
@@ -421,10 +407,8 @@ class GemSetController(Controller):
                                     disabled=stat.name == Stat.light,
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/chaosflare.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/chaosflare.png",
                                         width=23,
                                     ),
                                     data=stat,
@@ -441,10 +425,8 @@ class GemSetController(Controller):
                                                 Draggable(
                                                     data=stat.uuid,
                                                     group=str(gem.uuid),
-                                                    content=Image(
-                                                        src=BasePath.joinpath(
-                                                            "assets/images/gems/boost.png"
-                                                        ),
+                                                    content=RTTImage(
+                                                        src="images/gems/boost.png",
                                                         width=18,
                                                     ),
                                                 )
@@ -452,10 +434,8 @@ class GemSetController(Controller):
                                             ]
                                             + [
                                                 Draggable(
-                                                    content=Image(
-                                                        src=BasePath.joinpath(
-                                                            "assets/images/empty.png"
-                                                        ),
+                                                    content=RTTImage(
+                                                        src="images/empty.png",
                                                         width=18,
                                                     ),
                                                     disabled=True,
@@ -490,42 +470,32 @@ class GemSetController(Controller):
                         Row(
                             controls=[
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_01.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_01.png",
                                         width=25,
                                     )
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_02.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_02.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/augment_03.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/augment_03.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/chaosspark.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/chaosspark.png",
                                         width=23,
                                     )
                                 ),
                                 Container(
-                                    Image(
-                                        src=BasePath.joinpath(
-                                            "assets/images/gems/chaosflare.png"
-                                        ),
+                                    RTTImage(
+                                        src="images/gems/chaosflare.png",
                                         width=23,
                                     )
                                 ),

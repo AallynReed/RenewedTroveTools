@@ -10,6 +10,7 @@ from flet import (
     MainAxisAlignment,
     CrossAxisAlignment,
 )
+from models.interface.image import RTTImage
 
 
 class HomeWidget(Column):
@@ -29,7 +30,7 @@ class HomeWidget(Column):
             controls=[
                 Row(
                     controls=[
-                        Image(src=image, width=16, visible=bool(image)),
+                        RTTImage(src=image, width=16, visible=bool(image)),
                         Icon(icon, size=16, visible=bool(icon)),
                         Text(title, size=title_size, visible=title and not title_url),
                         TextButton(

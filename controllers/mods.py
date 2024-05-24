@@ -16,7 +16,6 @@ from flet import (
     TextButton,
     IconButton,
     Icon,
-    Image,
     Text,
     Divider,
     VerticalDivider,
@@ -37,17 +36,16 @@ from flet import (
     ImageFit,
     PopupMenuButton,
     PopupMenuItem,
-    WebView,
     ElevatedButton,
     TextStyle,
 )
-from models.interface import RTTChip, RTTIconDecoButton
-from models.interface import Controller
+
+from models.interface import RTTChip, RTTIconDecoButton, Controller, RTTImage
 from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
 from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
-from utils.trove.registry import get_trove_locations, TroveGamePath
 from utils.locale import loc
+from utils.trove.registry import get_trove_locations, TroveGamePath
 
 
 class ModsController(Controller):
@@ -69,7 +67,7 @@ class ModsController(Controller):
             self.trovesaurus_tab = Tab(
                 tab_content=Row(
                     controls=[
-                        Image(src="https://trovesaurus.com/favicon.ico"),
+                        RTTImage(src="https://trovesaurus.com/favicon.ico"),
                         Text("Trovesaurus"),
                     ]
                 )
@@ -468,7 +466,7 @@ class ModsController(Controller):
                         [
                             Chip(
                                 data=mod_list,
-                                leading=Image(src=mod_list.icon, width=24),
+                                leading=RTTImage(src=mod_list.icon, width=24),
                                 label=Text(mod_list.clean_name),
                                 disabled=mod_list
                                 == self.memory["my_mods"]["installation_path"],
@@ -514,7 +512,7 @@ class ModsController(Controller):
                 ExpansionTile(
                     title=Row(
                         controls=[
-                            Image(
+                            RTTImage(
                                 src="https://trovesaurus.com/images/logos/Sage_64.png?1",
                                 width=24,
                             ),
@@ -651,7 +649,7 @@ class ModsController(Controller):
             if self.page.preferences.mod_manager.show_previews:
                 mod_tile.leading = IconButton(
                     data=mod,
-                    content=Image(
+                    content=RTTImage(
                         src=self.api.get_resized_image_url(
                             (
                                 mod.trovesaurus_data.image_url
@@ -708,7 +706,7 @@ class ModsController(Controller):
                                 content=TextButton(
                                     content=Row(
                                         controls=[
-                                            Image(
+                                            RTTImage(
                                                 src=self.api.get_resized_image_url(
                                                     author.avatar_url, ImageSize.MINI
                                                 ),
@@ -736,7 +734,7 @@ class ModsController(Controller):
             if self.page.preferences.mod_manager.show_previews:
                 mod_tile.leading = IconButton(
                     data=mod,
-                    content=Image(
+                    content=RTTImage(
                         src=self.api.get_resized_image_url(
                             f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
                             ImageSize.SMALL,
@@ -824,7 +822,7 @@ class ModsController(Controller):
         await self.page.dialog.set_data(
             modal=False,
             actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
-            content=Image(
+            content=RTTImage(
                 src=self.api.get_resized_image_url(
                     (f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"),
                     ImageSize.MAX,
@@ -1045,7 +1043,7 @@ class ModsController(Controller):
                         [
                             Chip(
                                 data=mod_list,
-                                leading=Image(src=mod_list.icon, width=24),
+                                leading=RTTImage(src=mod_list.icon, width=24),
                                 label=Text(mod_list.clean_name),
                                 disabled=mod_list
                                 == self.memory["trovesaurus"]["installation_path"],
@@ -1174,7 +1172,7 @@ class ModsController(Controller):
                         break
             self.mods_list.controls.append(
                 ExpansionTile(
-                    leading=Image(
+                    leading=RTTImage(
                         src=(
                             self.api.get_resized_image_url(
                                 mod.image_url, ImageSize.SMALL
@@ -1248,7 +1246,7 @@ class ModsController(Controller):
                                             TextButton(
                                                 content=Row(
                                                     controls=[
-                                                        Image(
+                                                        RTTImage(
                                                             src=self.api.get_resized_image_url(
                                                                 author.avatar_url,
                                                                 ImageSize.MINI,
@@ -1592,7 +1590,7 @@ class ModsController(Controller):
                         data=(selected_file, profile),
                         title=Text(profile["name"]),
                         subtitle=Text(profile["description"]),
-                        leading=Image(
+                        leading=RTTImage(
                             src="https://trovesaurus.com/images/logos/Sage_64.png?1",
                             width=24,
                         ),
@@ -1744,7 +1742,7 @@ class ModsController(Controller):
             ),
             controls=[
                 ListTile(
-                    leading=Image(
+                    leading=RTTImage(
                         src=f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod['hash']}"
                     ),
                     title=Row(
@@ -1762,7 +1760,7 @@ class ModsController(Controller):
                             *(
                                 [
                                     RTTChip(
-                                        leading=Image(
+                                        leading=RTTImage(
                                             src="https://trovesaurus.com/images/logos/Sage_64.png?1"
                                         ),
                                         label=Text("Trovesaurus"),
@@ -1789,7 +1787,7 @@ class ModsController(Controller):
                                             TextButton(
                                                 content=Row(
                                                     controls=[
-                                                        Image(
+                                                        RTTImage(
                                                             src=author["Avatar"],
                                                             width=24,
                                                         ),

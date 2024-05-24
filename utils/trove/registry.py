@@ -66,10 +66,10 @@ class TroveGamePath:
     @property
     def icon(self):
         if self.is_glyph:
-            return "assets/icons/brands/glyph.png"
+            return "icons/brands/glyph.png"
         if self.is_steam:
-            return "assets/icons/brands/steam.png"
-        return "assets/icons/brands/trove.png"
+            return "icons/brands/steam.png"
+        return "icons/brands/trove.png"
 
     @property
     def executable(self):

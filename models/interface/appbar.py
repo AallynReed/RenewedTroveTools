@@ -16,7 +16,6 @@ from flet import (
     Row,
     Text,
     Container,
-    Image,
     TextButton,
     MainAxisAlignment,
     Icon,
@@ -42,6 +41,7 @@ from flet_core.icons import (
 )
 
 from models.preferences import AccentColor
+from models.interface.image import RTTImage
 from utils.functions import check_update
 from utils.tasks import loop
 from utils.locale import ENGINE, loc, Locale
@@ -174,8 +174,8 @@ class CustomAppBar(AppBar):
                             data="paypal",
                             content=Row(
                                 controls=[
-                                    Image(
-                                        "assets/icons/brands/paypal-mark.png", width=19
+                                    RTTImage(
+                                        src="icons/brands/paypal-mark.png", width=19
                                     ),
                                     Text("Paypal"),
                                 ]
@@ -186,7 +186,7 @@ class CustomAppBar(AppBar):
                             data="buy_me_a_coffee",
                             content=Row(
                                 controls=[
-                                    Image("assets/icons/brands/bmc.png", width=12),
+                                    RTTImage(src="icons/brands/bmc.png", width=12),
                                     Text("Buy me a Coffee"),
                                 ]
                             ),
@@ -196,8 +196,8 @@ class CustomAppBar(AppBar):
                             data="kofi",
                             content=Row(
                                 controls=[
-                                    Image(
-                                        "assets/icons/brands/kofi-mark.png", width=24
+                                    RTTImage(
+                                        src="icons/brands/kofi-mark.png", width=24
                                     ),
                                     Text("Kofi"),
                                 ]
@@ -213,8 +213,8 @@ class CustomAppBar(AppBar):
                             content=Row(
                                 controls=(
                                     [
-                                        Image(
-                                            self.page.user_data["avatar_url"],
+                                        RTTImage(
+                                            src=self.page.user_data["avatar_url"],
                                             error_content=Icon(PERSON),
                                             width=40,
                                             border_radius=50,
@@ -255,11 +255,11 @@ class CustomAppBar(AppBar):
                             data="discord",
                             content=Row(
                                 controls=[
-                                    Image(
-                                        (
-                                            "assets/icons/brands/discord-mark-black.png"
+                                    RTTImage(
+                                        src=(
+                                            "icons/brands/discord-mark-black.png"
                                             if not self.page.dark_theme
-                                            else "assets/icons/brands/discord-mark-white.png"
+                                            else "icons/brands/discord-mark-white.png"
                                         ),
                                         width=19,
                                     ),
@@ -272,11 +272,11 @@ class CustomAppBar(AppBar):
                             data="github",
                             content=Row(
                                 controls=[
-                                    Image(
+                                    RTTImage(
                                         (
-                                            "assets/icons/brands/github-mark-black.png"
+                                            "icons/brands/github-mark-black.png"
                                             if not self.page.dark_theme
-                                            else "assets/icons/brands/github-mark-white.png"
+                                            else "icons/brands/github-mark-white.png"
                                         ),
                                         width=19,
                                     ),
@@ -332,9 +332,9 @@ class CustomAppBar(AppBar):
                 for item in action.items:
                     if item.data in ["discord", "github"] and item.content is not None:
                         item.content.controls[0].src = (
-                            f"assets/icons/brands/{item.data}-mark-black.png"
+                            f"icons/brands/{item.data}-mark-black.png"
                             if self.page.theme_mode == "LIGHT"
-                            else f"assets/icons/brands/{item.data}-mark-white.png"
+                            else f"icons/brands/{item.data}-mark-white.png"
                         )
 
         await self.page.update_async()
@@ -496,9 +496,9 @@ class CustomAppBar(AppBar):
                 for item in action.items:
                     if item.data in ["discord", "github"] and item.content is not None:
                         item.content.controls[0].src = (
-                            f"assets/icons/brands/{item.data}-mark-black.png"
+                            f"icons/brands/{item.data}-mark-black.png"
                             if self.page.theme_mode == "light"
-                            else f"assets/icons/brands/{item.data}-mark-white.png"
+                            else f"icons/brands/{item.data}-mark-white.png"
                         )
         self.page.preferences.theme = self.page.theme_mode
         self.page.preferences.save()
