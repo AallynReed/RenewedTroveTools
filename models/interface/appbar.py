@@ -520,11 +520,11 @@ class CustomAppBar(AppBar):
 
     async def go_url(self, event):
         urls = {
-            "discord": "https://discord.gg/MbByECEc5k",
-            "github": "https://github.com/Sly0511/RenewedTroveTools",
-            "paypal": "https://www.paypal.com/paypalme/waterin",
-            "kofi": "https://ko-fi.com/slydev",
-            "buy_me_a_coffee": "https://www.buymeacoffee.com/sly1301",
+            "discord": "https://kiwiapi.slynx.xyz/v1/misc/support",
+            "github": "https://kiwiapi.slynx.xyz/v1/misc/github",
+            "paypal": "https://kiwiapi.slynx.xyz/v1/misc/paypal",
+            "kofi": "https://kiwiapi.slynx.xyz/v1/misc/kofi",
+            "buy_me_a_coffee": "https://kiwiapi.slynx.xyz/v1/misc/bmc",
         }
         await self.page.launch_url_async(urls[event.control.data])
 
