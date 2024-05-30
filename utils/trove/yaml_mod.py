@@ -52,7 +52,7 @@ class ModYaml:
 
     @staticmethod
     def validate_title(title):
-        return bool(re.match(r"^[\w,\s\-()\[\]]+$", title))
+        return bool(re.match(r"^[\w',\s\-()\[\]]+$", title))
 
     @property
     def authors(self):
