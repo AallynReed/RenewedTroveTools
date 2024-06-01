@@ -42,7 +42,6 @@ from flet_core.icons import (
 
 from models.preferences import AccentColor
 from models.interface.image import RTTImage
-from utils.functions import check_update
 from utils.tasks import loop
 from utils.locale import ENGINE, loc, Locale
 
@@ -50,7 +49,7 @@ from utils.locale import ENGINE, loc, Locale
 async def check_update(current_version, debug=False, force=False):
     async with ClientSession() as session:
         async with session.get(
-            "https://api.github.com/repos/Sly0511/RenewedTroveTools/releases"
+            "https://api.github.com/repos/AallynDev/RenewedTroveTools/releases"
         ) as response:
             version_data = await response.json()
             try:

@@ -177,18 +177,6 @@ def chunks(lst, n):
     return result
 
 
-async def check_update(current_version):
-    async with ClientSession() as session:
-        async with session.get(
-            "https://api.github.com/repos/Sly0511/TroveFileExtractor/releases"
-        ) as response:
-            version_data = await response.json()
-            version = version_data[0]
-            if current_version != version.get("name"):
-                return version.get("html_url")
-    return None
-
-
 def read_leb128(buffer: BinaryReader, pos):
     result = 0
     shift = 0
