@@ -23,7 +23,7 @@ if not flet_path.exists():
 editor = r".\resedit.exe"
 
 instructions = [
-    ("--set-version-string", "CompanyName", "Sly"),
+    ("--set-version-string", "CompanyName", "Aallyn"),
     ("--set-version-string", "FileDescription", metadata.name),
     ("--set-version-string", "ProductName", metadata.name),
     (
@@ -32,7 +32,7 @@ instructions = [
         f"{metadata.tech_name}-{metadata.version}.exe",
     ),
     ("--set-version-string", "LegalCopyright", metadata.copyright),
-    ("--set-version-string", "CompanyName", "Sly"),
+    ("--set-version-string", "CompanyName", "Aallyn"),
     ("--set-version-string", "InternalName", metadata.tech_name),
     ("--set-file-version", metadata.version, ""),
     ("--set-product-version", metadata.version, ""),

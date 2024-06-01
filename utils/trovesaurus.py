@@ -26,7 +26,7 @@ async def get_mods_list(*fields, limit=0, offset=0) -> list[Mod]:
     url_query += f"&offset={offset}" if offset else ""
     async with ClientSession() as session:
         async with session.get(
-            f"https://kiwiapi.slynx.xyz/v1/mods/list?{url_query}"
+            f"https://kiwiapi.aallyn.xyz/v1/mods/list?{url_query}"
         ) as response:
             data = await response.json()
             return [Mod.parse_obj(mod) for mod in data]

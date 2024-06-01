@@ -196,7 +196,7 @@ class App:
         if token is None:
             return None
         response = requests.get(
-            "https://kiwiapi.slynx.xyz/v1/user/discord/get?pass_key=" + token
+            "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token
         )
         if response.status_code == 200:
             await self.page.client_storage.set_async("rnt-token", token)
@@ -215,7 +215,7 @@ class App:
 
     async def execute_login_discord(self, e):
         await self.page.launch_url_async(
-            "https://kiwiapi.slynx.xyz/v1/user/discord/login"
+            "https://kiwiapi.aallyn.xyz/v1/user/discord/login"
         )
 
     async def execute_login_trovesaurus(self, e):

@@ -92,7 +92,7 @@ class LoginController(Controller):
 
     async def execute_login_discord(self, e):
         await self.page.launch_url_async(
-            "https://kiwiapi.slynx.xyz/v1/user/discord/login"
+            "https://kiwiapi.aallyn.xyz/v1/user/discord/login"
         )
 
     async def execute_login_trovesaurus(self, e):

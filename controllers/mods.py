@@ -653,7 +653,7 @@ class ModsController(Controller):
                         src=self.api.get_resized_image_url(
                             (
                                 mod.trovesaurus_data.image_url
-                                or f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"
+                                or f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod.hash}"
                             ),
                             ImageSize.SMALL,
                         ),
@@ -736,7 +736,7 @@ class ModsController(Controller):
                     data=mod,
                     content=RTTImage(
                         src=self.api.get_resized_image_url(
-                            f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}",
+                            f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod.hash}",
                             ImageSize.SMALL,
                         ),
                         fit=ImageFit.FIT_HEIGHT,
@@ -824,7 +824,7 @@ class ModsController(Controller):
             actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             content=RTTImage(
                 src=self.api.get_resized_image_url(
-                    (f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod.hash}"),
+                    (f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod.hash}"),
                     ImageSize.MAX,
                 ),
                 fit=ImageFit.FIT_WIDTH,
@@ -1743,7 +1743,7 @@ class ModsController(Controller):
             controls=[
                 ListTile(
                     leading=RTTImage(
-                        src=f"https://kiwiapi.slynx.xyz/v1/mods/preview_image/{mod['hash']}"
+                        src=f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod['hash']}"
                     ),
                     title=Row(
                         controls=[

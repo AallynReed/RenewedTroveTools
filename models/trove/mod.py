@@ -641,7 +641,7 @@ class TroveModList:
     async def cloud_check(self):
         async with ClientSession() as session:
             async with session.get(
-                f"https://kiwiapi.slynx.xyz/v1/profile/cloud_mods",
+                f"https://kiwiapi.aallyn.xyz/v1/profile/cloud_mods",
                 json={"hashes": self.all_hashes},
             ) as response:
                 data = await response.json()
@@ -687,14 +687,14 @@ class TroveModList:
                                     )
                 if uploads:
                     await session.post(
-                        f"https://kiwiapi.slynx.xyz/v1/profile/upload_cloud_mods",
+                        f"https://kiwiapi.aallyn.xyz/v1/profile/upload_cloud_mods",
                         json={"mods": uploads},
                     )
 
     async def update_trovesaurus_data(self):
         async with ClientSession() as session:
             async with session.get(
-                f"https://kiwiapi.slynx.xyz/v1/mods/hashes",
+                f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
                 json={"hashes": self.all_hashes},
             ) as response:
                 data = await response.json()

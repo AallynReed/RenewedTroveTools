@@ -26,7 +26,7 @@ class ConfigController(Controller):
                 Column(
                     controls=[
                         Text(
-                            "This application was developed by Sly#0511.\nIt's use is free and"
+                            "This application was developed by Aallyn.\nIt's use is free and"
                         )
                     ]
                 ),

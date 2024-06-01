@@ -1062,7 +1062,7 @@ class GemBuildsController(Controller):
         build_id = event.control.value.strip().split("-")[-1].strip()
         async with ClientSession() as session:
             async with session.get(
-                f"https://kiwiapi.slynx.xyz/v1/gem_builds/build/{build_id}"
+                f"https://kiwiapi.aallyn.xyz/v1/gem_builds/build/{build_id}"
             ) as response:
                 if response.status != 200:
                     await self.page.snack_bar.show(loc("Invalid build ID"))
@@ -1074,7 +1074,7 @@ class GemBuildsController(Controller):
     async def copy_build_string(self, _):
         async with ClientSession() as session:
             async with session.get(
-                "https://kiwiapi.slynx.xyz/v1/gem_builds/build_config",
+                "https://kiwiapi.aallyn.xyz/v1/gem_builds/build_config",
                 headers={"config": self.config.json()},
             ) as response:
                 data = await response.json()

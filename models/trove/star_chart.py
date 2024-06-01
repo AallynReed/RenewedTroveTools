@@ -91,7 +91,7 @@ class StarChart(BaseModel):
         paths = [s.path for s in self.activated_stars]
         string_paths = "$".join(paths)
         raw_build = requests.get(
-            "https://kiwiapi.slynx.xyz/v1/star_chart/build_paths?paths=" + string_paths
+            "https://kiwiapi.aallyn.xyz/v1/star_chart/build_paths?paths=" + string_paths
         )
         build = StarBuild(**json.loads(raw_build.json()))
         return build.build
@@ -99,7 +99,7 @@ class StarChart(BaseModel):
     async def from_string(self, build_id):
         build_id = build_id.strip().split("-")[-1].strip()
         raw_build = requests.get(
-            "https://kiwiapi.slynx.xyz/v1/star_chart/build/" + build_id
+            "https://kiwiapi.aallyn.xyz/v1/star_chart/build/" + build_id
         )
         if raw_build.status_code == 404:
             return False

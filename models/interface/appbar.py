@@ -93,7 +93,7 @@ class CustomAppBar(AppBar):
                     [
                         IconButton(
                             icon=DESKTOP_WINDOWS,
-                            url="https://kiwiapi.slynx.xyz/v1/misc/latest_release/download/redirect",
+                            url="https://kiwiapi.aallyn.xyz/v1/misc/latest_release/download/redirect",
                             tooltip=loc("Get Windows Application"),
                         )
                     ]
@@ -347,7 +347,7 @@ class CustomAppBar(AppBar):
         content = Column(expand=True, scroll=True)
         async with ClientSession() as session:
             async with session.get(
-                "https://kiwiapi.slynx.xyz/v1/misc/change_log"
+                "https://kiwiapi.aallyn.xyz/v1/misc/change_log"
             ) as response:
                 data = await response.json()
                 for version, version_data in sorted(
@@ -435,7 +435,7 @@ class CustomAppBar(AppBar):
     async def send_feedback(self, event):
         async with ClientSession() as session:
             data = {"message": self.feedback_text.value}
-            await session.post("https://kiwiapi.slynx.xyz/v1/misc/feedback", json=data)
+            await session.post("https://kiwiapi.aallyn.xyz/v1/misc/feedback", json=data)
         await self.page.dialog.hide()
         await self.page.snack_bar.show(loc("Feedback sent"))
 
@@ -520,11 +520,11 @@ class CustomAppBar(AppBar):
 
     async def go_url(self, event):
         urls = {
-            "discord": "https://kiwiapi.slynx.xyz/v1/misc/support",
-            "github": "https://kiwiapi.slynx.xyz/v1/misc/github",
-            "paypal": "https://kiwiapi.slynx.xyz/v1/misc/paypal",
-            "kofi": "https://kiwiapi.slynx.xyz/v1/misc/kofi",
-            "buy_me_a_coffee": "https://kiwiapi.slynx.xyz/v1/misc/bmc",
+            "discord": "https://kiwiapi.aallyn.xyz/v1/misc/support",
+            "github": "https://kiwiapi.aallyn.xyz/v1/misc/github",
+            "paypal": "https://kiwiapi.aallyn.xyz/v1/misc/paypal",
+            "kofi": "https://kiwiapi.aallyn.xyz/v1/misc/kofi",
+            "buy_me_a_coffee": "https://kiwiapi.aallyn.xyz/v1/misc/bmc",
         }
         await self.page.launch_url_async(urls[event.control.data])
 

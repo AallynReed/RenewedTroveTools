@@ -41,7 +41,7 @@ class Routing:
         await self.change_view_async(view)
 
     def get_view(self, event):
-        url = urlparse("https://trovetools.slynx.xyz" + event.route, scheme="https")
+        url = urlparse("https://trovetools.aallyn.xyz" + event.route, scheme="https")
         self.page.params = {
             k: v
             for kv in url.query.split("&")

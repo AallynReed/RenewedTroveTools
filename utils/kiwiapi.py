@@ -137,7 +137,7 @@ class Endpoints(Enum):
 
 
 class KiwiAPI:
-    base_url: str = "https://kiwiapi.slynx.xyz"
+    base_url: str = "https://kiwiapi.aallyn.xyz"
     api_version: int = 1
     api_url: str = f"{base_url}/v{api_version}"
 

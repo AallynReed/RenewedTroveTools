@@ -11,7 +11,7 @@ async def fetch_files(local_data=False, local_locales=False):
         # Load data files
         files_cache.clear()
         if not local_data:
-            response = await session.get("https://kiwiapi.slynx.xyz/v1/stats/get_data")
+            response = await session.get("https://kiwiapi.aallyn.xyz/v1/stats/get_data")
             if response.status != 200:
                 data_path = Path("data")
                 files_data = [
@@ -39,7 +39,7 @@ async def fetch_files(local_data=False, local_locales=False):
                     files_cache[file_name] = loads(x.read_text(encoding="utf-8"))
         # Load localization files
         if not local_locales:
-            response = await session.get("https://kiwiapi.slynx.xyz/v1/misc/locales")
+            response = await session.get("https://kiwiapi.aallyn.xyz/v1/misc/locales")
             if response.status != 200:
                 locales_path = Path("locales")
                 files_data = [
