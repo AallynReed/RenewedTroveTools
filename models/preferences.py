@@ -87,6 +87,7 @@ class Preferences(BaseModel):
             pref = cls.parse_obj(pref_obj)
         except:
             pref = cls(path=Path("data/preferences.json"), web=True)
+
         pref.bind_page(page)
         pref.save()
         return pref
@@ -102,6 +103,7 @@ class Preferences(BaseModel):
             except Exception:
                 print(f"Failed to load preferences from {path}")
                 pref = cls(path=path)
+        pref.path = path
         pref.bind_page(page)
         pref.save()
         return pref

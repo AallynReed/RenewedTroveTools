@@ -6,6 +6,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
+import shutil
 
 import requests
 from flet import app_async, WEB_BROWSER, FLET_APP, Theme, Row, Text, Icon
@@ -82,7 +83,14 @@ class App:
             except TypeError:
                 # Patch for Linux support
                 APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
-            self.app_data = APPDATA.joinpath("Trove/sly.dev").joinpath(
+            # Rebrand old folder
+            old_dir = APPDATA.joinpath("Trove/sly.dev")
+            try:
+                if old_dir.exists() and old_dir.is_dir():
+                    old_dir.rename(old_dir.parent.joinpath("aallyn"))
+            except FileExistsError:
+                shutil.rmtree(old_dir)
+            self.app_data = APPDATA.joinpath("Trove/aallyn").joinpath(
                 self.page.metadata.tech_name
             )
             self.logs_folder = self.app_data.joinpath("logs")

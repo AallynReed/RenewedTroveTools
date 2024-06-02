@@ -472,7 +472,7 @@ class CustomAppBar(AppBar):
                         exe_path = Path(sys.executable)
                         exe_location = exe_path.parent
                         appdata = Path(os.getenv("APPDATA"))
-                        rtt_path = appdata.joinpath("Trove/sly.dev").joinpath(
+                        rtt_path = appdata.joinpath("Trove/aallyn").joinpath(
                             self.page.metadata.tech_name
                         )
                         update_file = rtt_path / "update.msi"
@@ -536,7 +536,7 @@ class CustomAppBar(AppBar):
             content=Text(
                 loc(
                     (
-                        "This application was developed by Sly. Interface design improved by Cr0nicl3 D3str0y3r.\n\n"
+                        "This application was developed by Aallyn. Interface design improved by Cr0nicl3 D3str0y3r.\n\n"
                         "I am coding this as an hobby with the goal of achieving greater front-end building skills,"
                         " at the same time I also improve code making and organization skills.\n\nI have the goal to"
                         " not only build something that is usable but mostly updatable with little effort or code"
