@@ -18,7 +18,7 @@ from flet import (
 )
 from utils.locale import loc
 
-from models.interface import Controller, RTTImage
+from models.interface import Controller, RTTImage, RTTIconDecoButton
 from models.trove.gem import (
     LesserGem,
     EmpoweredGem,
@@ -85,7 +85,7 @@ class GemController(Controller):
                         content=Stack(
                             controls=[
                                 RTTImage(
-                                    f"assets/images/rarity/{self.selected_gem.tier.name}_frame.png",
+                                    src=f"assets/images/rarity/{self.selected_gem.tier.name}_frame.png",
                                     scale=5,
                                     left=89,
                                     top=89,
@@ -274,85 +274,55 @@ class GemController(Controller):
                                 controls=[
                                     ResponsiveRow(
                                         controls=[
-                                            Container(col={"xs": 3}),
                                             Text(
                                                 loc("Improve Stat"),
                                                 text_align="center",
-                                                col={"xs": 5},
                                             ),
-                                            Container(col={"xs": 4}),
                                         ],
                                         alignment="center",
                                     ),
                                     ResponsiveRow(
                                         controls=[
-                                            Container(col={"xs": 3.3}),
-                                            Container(
-                                                content=RTTImage(
-                                                    "assets/images/gems/augment_01.png",
-                                                    width=40,
-                                                ),
-                                                disabled=not bool(self.selected_stat)
-                                                or self.selected_stat.is_maxed,
-                                                on_click=self.rough_augment,
-                                                col={"xs": 1.5},
-                                            ),
-                                            Container(
-                                                content=RTTImage(
-                                                    "assets/images/gems/augment_02.png",
-                                                    width=40,
-                                                ),
-                                                disabled=not bool(self.selected_stat)
-                                                or self.selected_stat.is_maxed,
-                                                on_click=self.precise_augment,
-                                                col={"xs": 1.5},
-                                            ),
-                                            Container(
-                                                content=RTTImage(
-                                                    "assets/images/gems/augment_03.png",
-                                                    width=40,
-                                                ),
-                                                disabled=not bool(self.selected_stat)
-                                                or self.selected_stat.is_maxed,
-                                                on_click=self.superior_augment,
-                                                col={"xs": 1.5},
-                                            ),
-                                            Container(col={"xs": 3}),
-                                        ],
-                                    ),
-                                    ResponsiveRow(
-                                        controls=[
-                                            Container(col={"xs": 3.3}),
-                                            Container(
-                                                content=Text(
+                                            RTTIconDecoButton(
+                                                image="assets/images/gems/augment_01.png",
+                                                text=Text(
                                                     f"{round(2.5/(stat.boosts + 1), 2)}%"
                                                     if stat
                                                     else "2.50%"
                                                 ),
-                                                col={"xs": 1.5},
+                                                disabled=not bool(self.selected_stat)
+                                                or self.selected_stat.is_maxed,
+                                                on_click=self.rough_augment,
+                                                col={"xs": 4},
                                             ),
-                                            Container(
-                                                content=Text(
+                                            RTTIconDecoButton(
+                                                image="assets/images/gems/augment_02.png",
+                                                text=Text(
                                                     f"{round(5.0/(stat.boosts + 1), 2)}%"
                                                     if stat
                                                     else "5.00%"
                                                 ),
-                                                col={"xs": 1.5},
+                                                disabled=not bool(self.selected_stat)
+                                                or self.selected_stat.is_maxed,
+                                                on_click=self.precise_augment,
+                                                col={"xs": 4},
                                             ),
-                                            Container(
-                                                content=Text(
+                                            RTTIconDecoButton(
+                                                image="assets/images/gems/augment_03.png",
+                                                text=Text(
                                                     f"{round(12.5/(stat.boosts + 1), 2)}%"
                                                     if stat
                                                     else "12.5%"
                                                 ),
-                                                col={"xs": 1.5},
+                                                disabled=not bool(self.selected_stat)
+                                                or self.selected_stat.is_maxed,
+                                                on_click=self.superior_augment,
+                                                col={"xs": 4},
                                             ),
-                                            Container(col={"xs": 3}),
                                         ],
                                     ),
-                                    Container(col={"xs": 1}),
                                 ],
-                                col={"xs": 8},
+                                col={"xs": 6},
                             ),
                             Column(
                                 controls=[
@@ -361,18 +331,18 @@ class GemController(Controller):
                                             Text(
                                                 loc("Reroll Stat"),
                                                 text_align="center",
-                                                col={"xs": 5},
                                             ),
-                                            Container(col={"xs": 6}),
                                         ],
                                         alignment="center",
                                     ),
                                     ResponsiveRow(
                                         controls=[
-                                            Container(
-                                                content=RTTImage(
-                                                    "assets/images/gems/chaosspark.png",
-                                                    width=43,
+                                            RTTIconDecoButton(
+                                                image="assets/images/gems/chaosspark.png",
+                                                text=Text(
+                                                    loc("Change Stat"),
+                                                    size=11,
+                                                    text_align="center",
                                                 ),
                                                 disabled=(
                                                     not bool(self.selected_stat)
@@ -383,50 +353,32 @@ class GemController(Controller):
                                                     )
                                                 ),
                                                 on_click=self.change_stat,
-                                                col={"xs": 3.5},
+                                                col={"xs": 6},
                                             ),
-                                            Container(
-                                                content=RTTImage(
-                                                    "assets/images/gems/chaosflare.png",
-                                                    width=43,
-                                                ),
-                                                disabled=not bool(self.selected_stat)
-                                                or not self.selected_stat.boosts,
-                                                on_click=self.move_boost,
-                                                col={"xs": 3.5},
-                                            ),
-                                        ],
-                                    ),
-                                    ResponsiveRow(
-                                        controls=[
-                                            Container(
-                                                content=Text(
-                                                    loc("Change Stat"),
-                                                    size=11,
-                                                    text_align="center",
-                                                ),
-                                                col={"xs": 3.5},
-                                            ),
-                                            Container(
-                                                content=Text(
+                                            RTTIconDecoButton(
+                                                image="assets/images/gems/chaosflare.png",
+                                                text=Text(
                                                     loc("Move Boost"),
                                                     size=11,
                                                     text_align="center",
                                                 ),
-                                                col={"xs": 3.5},
+                                                disabled=not bool(self.selected_stat)
+                                                or not self.selected_stat.boosts,
+                                                on_click=self.move_boost,
+                                                col={"xs": 6},
                                             ),
                                         ],
                                     ),
                                 ],
                                 horizontal_alignment="top",
-                                col={"xs": 4},
+                                col={"xs": 6},
                             ),
                         ],
                         alignment="center",
                     ),
                 ],
                 horizontal_alignment="center",
-                col={"xxl": 4},
+                col={"xxl": 5},
                 spacing=2,
             )
         )
