@@ -84,6 +84,12 @@ class App:
                 # Patch for Linux support
                 APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
             # Rebrand old folder
+            old_dir = APPDATA.joinpath("Sly")
+            try:
+                if old_dir.exists() and old_dir.is_dir():
+                    old_dir.rename(old_dir.parent.joinpath("Aallyn"))
+            except FileExistsError:
+                shutil.rmtree(old_dir)
             old_dir = APPDATA.joinpath("Trove/sly.dev")
             try:
                 if old_dir.exists() and old_dir.is_dir():
