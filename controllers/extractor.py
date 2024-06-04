@@ -759,15 +759,17 @@ class ExtractorController(Controller):
                 ]
             )
             self.extract_changes_button.text = loc(
-                "Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True))
+                "Extract Changes [{value}]".format(
+                    value=naturalsize(changes_size, gnu=True)
+                )
             )
             self.extract_selected_button.text = loc(
-                "Extract Selected [{Value}]".format(
-                    naturalsize(selected_size, gnu=True)
+                "Extract Selected [{value}]".format(
+                    value=naturalsize(selected_size, gnu=True)
                 )
             )
             self.extract_all_button.text = loc(
-                "Extract All [{Value}]".format(naturalsize(all_size, gnu=True))
+                "Extract All [{value}]".format(value=naturalsize(all_size, gnu=True))
             )
             self.metrics.controls[0].controls[1].value = naturalsize(
                 sum([f.size for f in self.changed_files]), gnu=True
