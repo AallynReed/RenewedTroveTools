@@ -13,6 +13,7 @@ class RTTImage(Image):
             error_content = RTTImage(
                 src="https://kiwiapi.aallyn.xyz/v1/misc/assets/images/construction.png",
                 is_fallback=True,
+                width=kwargs.get("width"),
             )
             kwargs["error_content"] = error_content
         super().__init__(**kwargs)
