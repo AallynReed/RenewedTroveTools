@@ -17,6 +17,7 @@ def all_views(web_mode=False):
     views.append(GearBuildsView)
     views.append(GemView)
     views.append(GemSetView)
+    views.append(MaxStatsView)
     views.append(MasteryView)
     views.append(MagicFindView)
     if web_mode:

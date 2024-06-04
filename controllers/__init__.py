@@ -11,3 +11,4 @@ from .mastery import MasteryController
 from .modders import ModdersController
 from .mods import ModsController
 from .star import StarChartController
+from .max_stats import MaxStatsController

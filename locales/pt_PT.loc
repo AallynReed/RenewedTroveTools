@@ -128,12 +128,14 @@ Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files f
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
 Automatically generate and fix cfg files for UI mods»»Automatically generate and fix cfg files for UI mods
 Banner»»Banner
+Banner (Leviathan Permanent Torch U10/U11)»»Banner (Leviathan Permanent Torch U10/U11)
 Banners»»Banners
 Bard»»Bardo
 Base Damage»»Dano Base
 Beamer»»Beamer
 Berserk Battler (Cosmic)»»Berserk Battler (Cosmic)
 Berserker Battler»»Guerreiro Furioso
+Berserker Battler (Empowered Cosmic Gem Ability)»»Berserker Battler (Empowered Cosmic Gem Ability)
 Best»»Melhor
 Blue»»Azul
 Blueprints»»Blueprints
@@ -177,6 +179,7 @@ Changes»»Changes
 Chaos Contained Flare»»Labareda Contida do Caos
 Chaos Contained Spark»»Faísca Contida do Caos
 Chaos Forge can reroll the second stat on equipment!»»Chaos Forge can reroll the second stat on equipment!
+Charl (Chaos Dragon)»»Charl (Chaos Dragon)
 Chinese(Simplified)»»简体中文
 Chloromancer»»Chloromancer
 Chronomantic»»Chronomantic
@@ -222,6 +225,13 @@ Critical»»Crítico
 Critical Damage»»Dano Crítico
 Critical Hit»»Chance Crítica
 Crystal»»Cristal
+Crystal 4 Ring»»Crystal 4 Ring
+Crystal 5 Face»»Crystal 5 Face
+Crystal 5 Hat»»Crystal 5 Hat
+Crystal 5 Weapon»»Crystal 5 Weapon
+Crystal Cosmic Empowered Gem»»Crystal Cosmic Empowered Gem
+Crystal Cosmic Lesser Gem 1»»Crystal Cosmic Lesser Gem 1
+Crystal Cosmic Lesser Gem 2»»Crystal Cosmic Lesser Gem 2
 Cubic Curtain»»Curtina Cúbica
 Cubic Curtain/Explosive Epilogue»»Cubic Curtain/Explosive Epilogue
 Cubic Curtain/Mired Mojo»»Cubic Curtain/Mired Mojo
@@ -296,6 +306,7 @@ Energy Regen»»Energy Regen
 Energy Regen Bonus»»Energy Regen Bonus
 Energy Regeneration»»Energy Regeneration
 Enlightened»»Iluminado
+Enlightened Buff»»Enlightened Buff
 Enter changes»»Enter changes
 Even though most magic classes have good range, here is some stability so you don't go flying.»»Even though most magic classes have good range, here is some stability so you don't go flying.
 Events»»Eventos
@@ -351,6 +362,7 @@ Fly even faster.»»Fly even faster.
 Fly free you fools in the Sundered Uplands.»»Fly free you fools in the Sundered Uplands.
 Fly, you fools, Fly to the end of that Delve.»»Fly, you fools, Fly to the end of that Delve.
 Food»»Comida
+Food (Premium Fish)»»Food (Premium Fish)
 Freerange Electrolytic Crystals»»Freerange Electrolytic Crystals
 French»»Françês
 Friday»»Sexta
@@ -376,6 +388,7 @@ Gem Upgrade Dust Cost Reduced By 10%»»Gem Upgrade Dust Cost Reduced By 10%
 Gem Upgrade Dust Cost Reduced By 20%»»Gem Upgrade Dust Cost Reduced By 20%
 Gem level changed to {level}»»Nível de gema alterada para {level}
 Gems»»Gems
+Geode Mastery (Level 100)»»Geode Mastery (Level 100)
 Geode Mastery Buffs»»Bónus de Maestria de Geodo
 German»»Alemão
 Get Modding Software»»Get Modding Software
@@ -560,7 +573,10 @@ Mastery Level»»Nível de Maestria
 Mastery Levels»»Níveis de Maestria
 Mastery Points»»Pontos de Maestria
 Max»»Máx
+Max Light»»Max Light
 Max Mastery»»Maestria Máxima
+Max Power Rank»»Max Power Rank
+Max Stats»»Max Stats
 Max mastery is 1000»»Maestria máxima é 1000
 Maximum Health»»Vida Máxima
 Maximum Health %»»Vida Máxima %
@@ -784,6 +800,7 @@ Strength»»Strength
 Strength and Intellect»»Strength and Intellect
 Stunburst»»Rutura de Atordoamento
 Subclass»»Subclasse
+Subclass (Solarion) / Solarion»»Subclass (Solarion) / Solarion
 Subclass active»»Subclasse ativa
 Sundard Flight»»Sundard Flight
 Sunday»»Domingo
@@ -797,6 +814,7 @@ TMod File»»TMod File
 TMod extracted»»TMod extracted
 TMod file is required»»TMod file is required
 TMod overrides extracted»»TMod overrides extracted
+Taeryn Veernok (Cosmic Primordial Dragon)»»Taeryn Veernok (Cosmic Primordial Dragon)
 Tank»»Tank
 Teal»»Teal
 Test overrides»»Test overrides
@@ -903,6 +921,7 @@ You get a buff and you get a buff, everybody gets a buff.»»You get a buff and 
 You have found the Weakness, now keep on attacking.»»You have found the Weakness, now keep on attacking.
 Zealous»»Zealous
 Zero»»Zero
+Zeuztian (Irradiant Dragon)»»Zeuztian (Irradiant Dragon)
 [BETA] Trove Calculation Tool»»[BETA] Trove Calculation Tool
 [LT|MS] Staruable»»[LT|MS] Staruable
 [MD] Chronomancer Qubesly»»[MD] Chronomancer Qubesly

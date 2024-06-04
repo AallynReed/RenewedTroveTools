@@ -128,12 +128,14 @@ Auto Generate and Fix CFG files for UI mods»»Generiere und Repariere automatis
 Automatically fix mod names on directory reading»»Mod-Namen automatisch beim lesen des Ordners korrigieren
 Automatically generate and fix cfg files for UI mods»»Automatically generate and fix cfg files for UI mods
 Banner»»Banner
+Banner (Leviathan Permanent Torch U10/U11)»»Banner (Leviathan Permanent Torch U10/U11)
 Banners»»Banners
 Bard»»Barde
 Base Damage»»Basisschaden
 Beamer»»Beamer
 Berserk Battler (Cosmic)»»Kampfberserker (Kosmisch)
 Berserker Battler»»Kampfberserker
+Berserker Battler (Empowered Cosmic Gem Ability)»»Berserker Battler (Empowered Cosmic Gem Ability)
 Best»»Bester
 Blue»»Blau
 Blueprints»»Blueprints
@@ -177,6 +179,7 @@ Changes»»Changes
 Chaos Contained Flare»»Kontrollierte Chaosfackel
 Chaos Contained Spark»»Kontrollierter Chaosfunke
 Chaos Forge can reroll the second stat on equipment!»»Die Chaosschmiede kann das zweite Attribut auf Ausrüstung ändern!
+Charl (Chaos Dragon)»»Charl (Chaos Dragon)
 Chinese(Simplified)»»简体中文
 Chloromancer»»Chloromant
 Chronomantic»»Chronomantic
@@ -222,6 +225,13 @@ Critical»»Kritisch
 Critical Damage»»Kritischer Schaden
 Critical Hit»»Kritische Trefferchance
 Crystal»»Kristall
+Crystal 4 Ring»»Crystal 4 Ring
+Crystal 5 Face»»Crystal 5 Face
+Crystal 5 Hat»»Crystal 5 Hat
+Crystal 5 Weapon»»Crystal 5 Weapon
+Crystal Cosmic Empowered Gem»»Crystal Cosmic Empowered Gem
+Crystal Cosmic Lesser Gem 1»»Crystal Cosmic Lesser Gem 1
+Crystal Cosmic Lesser Gem 2»»Crystal Cosmic Lesser Gem 2
 Cubic Curtain»»Kubischer schild
 Cubic Curtain/Explosive Epilogue»»Kubischer Schild/Explosiver Epilog
 Cubic Curtain/Mired Mojo»»Cubic Curtain/Mired Mojo
@@ -296,6 +306,7 @@ Energy Regen»»Energy Regen
 Energy Regen Bonus»»Energy Regen Bonus
 Energy Regeneration»»Energy Regeneration
 Enlightened»»Erleuchtet
+Enlightened Buff»»Enlightened Buff
 Enter changes»»Enter changes
 Even though most magic classes have good range, here is some stability so you don't go flying.»»Even though most magic classes have good range, here is some stability so you don't go flying.
 Events»»Ereignisse
@@ -351,6 +362,7 @@ Fly even faster.»»Fly even faster.
 Fly free you fools in the Sundered Uplands.»»Fly free you fools in the Sundered Uplands.
 Fly, you fools, Fly to the end of that Delve.»»Fly, you fools, Fly to the end of that Delve.
 Food»»Nahrung
+Food (Premium Fish)»»Food (Premium Fish)
 Freerange Electrolytic Crystals»»Elektrolytische Freilauf-Kristalle
 French»»Französisch
 Friday»»Freitag
@@ -376,6 +388,7 @@ Gem Upgrade Dust Cost Reduced By 10%»»Um 10% reduzierte Juwelenstaubkosten
 Gem Upgrade Dust Cost Reduced By 20%»»Um 20% reduzierte Juwelenstaubkosten
 Gem level changed to {level}»»Juwelenlevel geändert zu {level}
 Gems»»Juwelen
+Geode Mastery (Level 100)»»Geode Mastery (Level 100)
 Geode Mastery Buffs»»Geode Beherrschungs Buffs
 German»»Deutsch
 Get Modding Software»»Get Modding Software
@@ -560,7 +573,10 @@ Mastery Level»»Mastery Level
 Mastery Levels»»Beherrschungsrang
 Mastery Points»»Beherrschungspunkte
 Max»»Max
+Max Light»»Max Light
 Max Mastery»»Maximaler Beherrschungsrang
+Max Power Rank»»Max Power Rank
+Max Stats»»Max Stats
 Max mastery is 1000»»Der maximale Beherrschungsrang ist 1000
 Maximum Health»»Max. Gesundheit
 Maximum Health %»»Max. Gesundheit %
@@ -784,6 +800,7 @@ Strength»»Strength
 Strength and Intellect»»Strength and Intellect
 Stunburst»»Stasissalve
 Subclass»»Subklasse
+Subclass (Solarion) / Solarion»»Subclass (Solarion) / Solarion
 Subclass active»»Subklasse aktiv
 Sundard Flight»»Sundard Flight
 Sunday»»Sonntag
@@ -797,6 +814,7 @@ TMod File»»TMod File
 TMod extracted»»TMod extracted
 TMod file is required»»TMod file is required
 TMod overrides extracted»»TMod overrides extracted
+Taeryn Veernok (Cosmic Primordial Dragon)»»Taeryn Veernok (Cosmic Primordial Dragon)
 Tank»»Tank
 Teal»»Aquamarin
 Test overrides»»Test overrides
@@ -903,6 +921,7 @@ You get a buff and you get a buff, everybody gets a buff.»»You get a buff and 
 You have found the Weakness, now keep on attacking.»»You have found the Weakness, now keep on attacking.
 Zealous»»Zealous
 Zero»»Null
+Zeuztian (Irradiant Dragon)»»Zeuztian (Irradiant Dragon)
 [BETA] Trove Calculation Tool»»[BETA] Trove Calculation Tool
 [LT|MS] Staruable»»[LT|MS] Staruable
 [MD] Chronomancer Qubesly»»[MD] Chronomancer Qubesly

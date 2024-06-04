@@ -128,12 +128,14 @@ Auto Generate and Fix CFG files for UI mods»»Auto Generate and Fix CFG files f
 Automatically fix mod names on directory reading»»Automatically fix mod names on directory reading
 Automatically generate and fix cfg files for UI mods»»Automatically generate and fix cfg files for UI mods
 Banner»»旗帜
+Banner (Leviathan Permanent Torch U10/U11)»»Banner (Leviathan Permanent Torch U10/U11)
 Banners»»Banners
 Bard»»吟游诗人
 Base Damage»»基础伤害
 Beamer»»射线徽章
 Berserk Battler (Cosmic)»»狂暴勇士
 Berserker Battler»»狂暴勇士
+Berserker Battler (Empowered Cosmic Gem Ability)»»Berserker Battler (Empowered Cosmic Gem Ability)
 Best»»最佳
 Blue»»❓兰
 Blueprints»»Blueprints
@@ -177,6 +179,7 @@ Changes»»Changes
 Chaos Contained Flare»»能源化混乱闪光
 Chaos Contained Spark»»能源化混乱火花
 Chaos Forge can reroll the second stat on equipment!»»混沌熔炉可重新分配装备的第二属性[水晶装备为第三属性]
+Charl (Chaos Dragon)»»Charl (Chaos Dragon)
 Chinese(Simplified)»»简体中文
 Chloromancer»»碧叶使者
 Chronomantic»»碧叶徽章
@@ -222,6 +225,13 @@ Critical»»暴击伤害
 Critical Damage»»暴击伤害
 Critical Hit»»暴击率
 Crystal»»水晶
+Crystal 4 Ring»»Crystal 4 Ring
+Crystal 5 Face»»Crystal 5 Face
+Crystal 5 Hat»»Crystal 5 Hat
+Crystal 5 Weapon»»Crystal 5 Weapon
+Crystal Cosmic Empowered Gem»»Crystal Cosmic Empowered Gem
+Crystal Cosmic Lesser Gem 1»»Crystal Cosmic Lesser Gem 1
+Crystal Cosmic Lesser Gem 2»»Crystal Cosmic Lesser Gem 2
 Cubic Curtain»»方形幕布
 Cubic Curtain/Explosive Epilogue»» 方形幕布/爆炸性结局
 Cubic Curtain/Mired Mojo»»方形幕布/深陷符咒
@@ -296,6 +306,7 @@ Energy Regen»»能量回复
 Energy Regen Bonus»»❓能量再生加成
 Energy Regeneration»»充能徽章
 Enlightened»»启迪
+Enlightened Buff»»Enlightened Buff
 Enter changes»»Enter changes
 Even though most magic classes have good range, here is some stability so you don't go flying.»»❓尽管大多数魔法职业都有良好 的射程, 但这里有一些稳定性, 因此您不会去飞行.
 Events»»事件
@@ -351,6 +362,7 @@ Fly even faster.»»❓飞得更快.
 Fly free you fools in the Sundered Uplands.»»❓在被淹没的高地解放你们这些傻瓜.
 Fly, you fools, Fly to the end of that Delve.»»❓飞吧, 你们这些傻瓜, 飞到那个探索的尽头.
 Food»»食物
+Food (Premium Fish)»»Food (Premium Fish)
 Freerange Electrolytic Crystals»» 自由变化电解晶体
 French»»French
 Friday»»星期五
@@ -376,6 +388,7 @@ Gem Upgrade Dust Cost Reduced By 10%»»升级宝石消耗宝石尘的数量降�
 Gem Upgrade Dust Cost Reduced By 20%»»升级宝石消耗宝石尘的数量降低20%
 Gem level changed to {level}»»宝石等级已更改为{level}
 Gems»»宝石
+Geode Mastery (Level 100)»»Geode Mastery (Level 100)
 Geode Mastery Buffs»»晶洞增益
 German»»German
 Get Modding Software»»Get Modding Software
@@ -560,7 +573,10 @@ Mastery Level»»专精等级
 Mastery Levels»»等级
 Mastery Points»»经验值
 Max»»最大等级
+Max Light»»Max Light
 Max Mastery»»最大专精
+Max Power Rank»»Max Power Rank
+Max Stats»»Max Stats
 Max mastery is 1000»»最高专精等级1000
 Maximum Health»»最大生命
 Maximum Health %»»最大生命(百分比)
@@ -784,6 +800,7 @@ Strength»»❓力量
 Strength and Intellect»»❓力量和智力
 Stunburst»»眩晕爆发
 Subclass»»副职业
+Subclass (Solarion) / Solarion»»Subclass (Solarion) / Solarion
 Subclass active»»副职业有效
 Sundard Flight»»❓圣达尔航班
 Sunday»»星期日
@@ -797,6 +814,7 @@ TMod File»»TMod File
 TMod extracted»»TMod extracted
 TMod file is required»»TMod file is required
 TMod overrides extracted»»TMod overrides extracted
+Taeryn Veernok (Cosmic Primordial Dragon)»»Taeryn Veernok (Cosmic Primordial Dragon)
 Tank»»肉坦
 Teal»»❓青色
 Test overrides»»Test overrides
@@ -903,6 +921,7 @@ You get a buff and you get a buff, everybody gets a buff.»»❓你得到一个B
 You have found the Weakness, now keep on attacking.»»❓你已经找到了弱点, 现在继续攻击.
 Zealous»»满能徽章
 Zero»»归零
+Zeuztian (Irradiant Dragon)»»Zeuztian (Irradiant Dragon)
 [BETA] Trove Calculation Tool»»[BETA] Trove 计算工具
 [LT|MS] Staruable»»❓[LT | MS] Staruable
 [MD] Chronomancer Qubesly»»❓[MD] Chronomancer Qubesly
