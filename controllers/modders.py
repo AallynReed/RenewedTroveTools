@@ -67,7 +67,7 @@ class ModdersController(Controller):
             self.settings_tab = Tab(icon=icons.SETTINGS)
             self.extract_tab = Tab(loc("Extract TMod"))
             self.compile_tab = Tab(loc("Build TMod"))
-            self.projects_tab = Tab(loc("Projects (BETA)"))
+            self.projects_tab = Tab(loc("Projects"))
             self.settings = Column(expand=True)
             self.extract = Column(expand=True)
             self.compile = Column(expand=True)
