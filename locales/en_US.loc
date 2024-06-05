@@ -260,6 +260,7 @@ Directory List»»Directory List
 Disable»»Disable
 Disabled»»Disabled
 Disabled ({amount})»»Disabled ({amount})
+Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}»»Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}
 Don't show again»»Don't show again
 Donate»»Donate
 Double Chance To Find Flux Artifacts»»Double Chance To Find Flux Artifacts
@@ -328,6 +329,7 @@ Extract overrides»»Extract overrides
 Extract selected directories»»Extract selected directories
 Extract to»»Extract to
 Extraction Complete»»Extraction Complete
+Extraction confirmation»»Extraction confirmation
 Extractor Idle»»Extractor Idle
 Face»»Face
 Face Damage»»Face Damage
@@ -709,7 +711,7 @@ Private»»Private
 Project folder»»Project folder
 Project folder cleared»»Project folder cleared
 Project folder selected»»Project folder selected
-Projects (BETA)»»Projects (BETA)
+Projects»»Projects
 Protection»»Protection
 Purple»»Purple
 Pve»»Pve
@@ -908,6 +910,7 @@ When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 se
 When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.»»When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.
 When visiting the final frontier, it's always good to have speed.»»When visiting the final frontier, it's always good to have speed.
 Whether mod tiles in My Mods enable/disable mods»»Whether mod tiles in My Mods enable/disable mods
+Whilst keeping track of changes in a versioned folder in {value}»»Whilst keeping track of changes in a versioned folder in {value}
 Why are flasks so OP... here is a random one.»»Why are flasks so OP... here is a random one.
 Will need to double check numbers to make sure this is not too much strength.»»Will need to double check numbers to make sure this is not too much strength.
 Wings»»Wings

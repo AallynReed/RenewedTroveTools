@@ -260,6 +260,7 @@ Directory List»»❓目录列表
 Disable»»Disable
 Disabled»»Disabled
 Disabled ({amount})»»Disabled ({amount})
+Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}»»Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}
 Don't show again»»❓不再显示
 Donate»»❓v.捐赠 ,馈赠,捐献 ,捐助
 Double Chance To Find Flux Artifacts»»掉落原晶法器的几率提升2倍
@@ -328,6 +329,7 @@ Extract overrides»»Extract overrides
 Extract selected directories»»❓提取所选目录
 Extract to»»解压到
 Extraction Complete»»Extraction Complete
+Extraction confirmation»»Extraction confirmation
 Extractor Idle»»❓提取器空闲
 Face»»面具
 Face Damage»»面具伤害
@@ -709,7 +711,7 @@ Private»»Private
 Project folder»»Project folder
 Project folder cleared»»Project folder cleared
 Project folder selected»»Project folder selected
-Projects (BETA)»»Projects (BETA)
+Projects»»Projects
 Protection»»❓防护
 Purple»»❓紫色
 Pve»»❓Pve
@@ -908,6 +910,7 @@ When taking damage, you have a 20% chance to gain a 30% reflect shield for 10 se
 When taking damage, you have a 30% chance to gain a 45% reflect shield and 30% damage reduction for 10 seconds. Has a 1 minute cooldown.»»❓受到伤害时, 有30%的概率获得45%的反射护盾和30%的伤害减免, 持续10秒.有1分钟 的冷却时间.
 When visiting the final frontier, it's always good to have speed.»»❓在游览最后的边疆时, 速度总是好的.
 Whether mod tiles in My Mods enable/disable mods»»Whether mod tiles in My Mods enable/disable mods
+Whilst keeping track of changes in a versioned folder in {value}»»Whilst keeping track of changes in a versioned folder in {value}
 Why are flasks so OP... here is a random one.»»❓为什么烧瓶是OP...这里是一个随机的.
 Will need to double check numbers to make sure this is not too much strength.»»❓将需要仔细检查数字, 以确保这不是太多的强度.
 Wings»»Wings
