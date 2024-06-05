@@ -202,6 +202,7 @@ Compare changes with»»❓比较更改
 Config»»Config
 Config file»»Config file
 Confirm»»Confirm
+Confirm extraction»»Confirm extraction
 Conjurer's Crucible Vial»»巫师的提炼药瓶
 Continue to grow your strength and prove Might is better then brains.»»❓继续增强你的力量, 并证明Might比大脑更好.
 Copied build GB-{buildid} to clipboard»»复制构建 GB-{buildid} 到剪贴板
@@ -316,6 +317,9 @@ Experience Gain Bonus»»❓经验增益加成
 Exploring and armoring up.»»❓探索和装甲.
 Explosive Epilogue»»爆炸性结局
 Extra flasks are always good.»»❓额外的烧瓶总是好的.
+Extract All [{value}]»»Extract All [{value}]
+Extract Changes [{value}]»»Extract Changes [{value}]
+Extract Selected [{value}]»»Extract Selected [{value}]
 Extract TMod»»Extract TMod
 Extract all»»❓全部解压缩
 Extract changed files»»❓提取已更改的文件
@@ -323,6 +327,7 @@ Extract from archives»»Extract from archives
 Extract overrides»»Extract overrides
 Extract selected directories»»❓提取所选目录
 Extract to»»解压到
+Extraction Complete»»Extraction Complete
 Extractor Idle»»❓提取器空闲
 Face»»面具
 Face Damage»»面具伤害
@@ -646,6 +651,7 @@ Next»»下一页
 No»»No
 No Trove installation found»»No Trove installation found
 No authors»»No authors
+No changes were queried.»»No changes were queried.
 No custom directories»»No custom directories
 No events are currently going on.»»❓当前没有正在进行的活动。
 No files added»»No files added

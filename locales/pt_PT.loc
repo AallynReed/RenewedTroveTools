@@ -202,6 +202,7 @@ Compare changes with»»Compare changes with
 Config»»Config
 Config file»»Config file
 Confirm»»Confirm
+Confirm extraction»»Confirm extraction
 Conjurer's Crucible Vial»»Conjurer's Crucible Vial
 Continue to grow your strength and prove Might is better then brains.»»Continue to grow your strength and prove Might is better then brains.
 Copied build GB-{buildid} to clipboard»»Copied build GB-{buildid} to clipboard
@@ -316,6 +317,9 @@ Experience Gain Bonus»»Experience Gain Bonus
 Exploring and armoring up.»»Exploring and armoring up.
 Explosive Epilogue»»Epílogo Explosivo
 Extra flasks are always good.»»Extra flasks are always good.
+Extract All [{value}]»»Extract All [{value}]
+Extract Changes [{value}]»»Extract Changes [{value}]
+Extract Selected [{value}]»»Extract Selected [{value}]
 Extract TMod»»Extract TMod
 Extract all»»Extract all
 Extract changed files»»Extract changed files
@@ -323,6 +327,7 @@ Extract from archives»»Extract from archives
 Extract overrides»»Extract overrides
 Extract selected directories»»Extract selected directories
 Extract to»»Extract to
+Extraction Complete»»Extraction Complete
 Extractor Idle»»Extractor Idle
 Face»»Máscara
 Face Damage»»Dano de máscara
@@ -646,6 +651,7 @@ Next»»Próxima
 No»»No
 No Trove installation found»»No Trove installation found
 No authors»»No authors
+No changes were queried.»»No changes were queried.
 No custom directories»»Não ha diretorias personalizadas
 No events are currently going on.»»Não existem eventos de momento.
 No files added»»No files added
