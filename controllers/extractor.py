@@ -345,9 +345,10 @@ class ExtractorController(Controller):
                 if r.selected
             ]
         )
-        self.extract_selected_button.text = loc(
-            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
+        self.extract_selected_button.text = loc("Extract Selected [{value}]").format(
+            value=naturalsize(selected_size, gnu=True)
         )
+
         await self.page.update_async()
 
     async def unselect_all(self, _):
@@ -362,9 +363,10 @@ class ExtractorController(Controller):
                 if r.selected
             ]
         )
-        self.extract_selected_button.text = loc(
-            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
+        self.extract_selected_button.text = loc("Extract Selected [{value}]").format(
+            value=naturalsize(selected_size, gnu=True)
         )
+
         await self.page.update_async()
 
     @throttle
@@ -525,15 +527,18 @@ class ExtractorController(Controller):
                 for f in await r.data.files_list
             ]
         )
-        self.extract_changes_button.text = loc(
-            "Extract Changes [{Value}]".format(naturalsize(changes_size, gnu=True))
+        self.extract_changes_button.text = loc("Extract Changes [{value}]").format(
+            value=naturalsize(changes_size, gnu=True)
         )
-        self.extract_selected_button.text = loc(
-            "Extract Selected [{Value}]".format(naturalsize(selected_size, gnu=True))
+
+        self.extract_selected_button.text = loc("Extract Selected [{value}]").format(
+            value=naturalsize(selected_size, gnu=True)
         )
-        self.extract_all_button.text = loc(
-            "Extract All [{Value}]".format(naturalsize(all_size, gnu=True))
+
+        self.extract_all_button.text = loc("Extract All [{value}]").format(
+            value=naturalsize(all_size, gnu=True)
         )
+
         self.extract_selected_button.disabled = not bool(
             [r for r in self.directory_list.rows if r.selected]
         )
@@ -758,19 +763,16 @@ class ExtractorController(Controller):
                     for f in await r.data.files_list
                 ]
             )
-            self.extract_changes_button.text = loc(
-                "Extract Changes [{value}]".format(
-                    value=naturalsize(changes_size, gnu=True)
-                )
+            self.extract_changes_button.text = loc("Extract Changes [{value}]").format(
+                value=naturalsize(changes_size, gnu=True)
             )
             self.extract_selected_button.text = loc(
-                "Extract Selected [{value}]".format(
-                    value=naturalsize(selected_size, gnu=True)
-                )
+                "Extract Selected [{value}]"
+            ).format(value=naturalsize(selected_size, gnu=True))
+            self.extract_all_button.text = loc("Extract All [{value}]").format(
+                value=naturalsize(all_size, gnu=True)
             )
-            self.extract_all_button.text = loc(
-                "Extract All [{value}]".format(value=naturalsize(all_size, gnu=True))
-            )
+
             self.metrics.controls[0].controls[1].value = naturalsize(
                 sum([f.size for f in self.changed_files]), gnu=True
             )
@@ -854,8 +856,8 @@ class ExtractorController(Controller):
         )
         if self.page.preferences.advanced_mode:
             task += loc(
-                "\nWhilst keeping track of changes in a versioned folder in {Value}".format(
-                    self.locations.changes_to
+                "\nWhilst keeping track of changes in a versioned folder in {value}".format(
+                    value=self.locations.changes_to
                 )
             )
         await self.page.dialog.set_data(
