@@ -312,3 +312,47 @@ class KiwiAPI:
                 f"{self.api_url}{Endpoints.twitch_streams.value}"
             ) as response:
                 return await response.json()
+
+
+class ModProfileList:
+    def __init__(self, mod_profiles: list[dict]):
+        self._profiles = mod_profiles
+
+    def __iter__(self):
+        return iter(self.profiles)
+
+    @property
+    def profiles(self):
+        return self._profiles
+
+    @property
+    def all_profile_mods(self):
+        return [mod for m in self._profiles for mod in m["mods"]]
+
+    @property
+    def hashes(self):
+        return list(set([m["hash"] for m in self.all_profile_mods]))
+
+    async def trovesaurus_data(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
+                json={"hashes": self.hashes},
+            ) as response:
+                return await response.json()
+
+    async def update_trovesaurus_data(self):
+        trovesaurus_data = await self.trovesaurus_data()
+        for mod in self.all_profile_mods:
+            if "trovesaurus_data" not in mod:
+                mod["trovesaurus_data"] = None
+            for ts_mod, data in trovesaurus_data.items():
+                if data is None:
+                    continue
+                if mod["hash"] == ts_mod:
+                    mod["trovesaurus_data"] = data
+                    downloads = data["downloads"]
+                    downloads.sort(key=lambda x: x["date"], reverse=True)
+                    mod["current_version"] = [f for f in downloads if f["hash"] == ts_mod][0]
+                    mod["update"] = downloads[0]
+                    mod["has_update"] = mod["update"] != mod["current_version"]

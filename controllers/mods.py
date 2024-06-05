@@ -43,7 +43,13 @@ from flet import (
 from models.interface import RTTChip, RTTIconDecoButton, Controller, RTTImage
 from models.interface.inputs import NumberField
 from models.trove.mod import TroveModList, TMod
-from utils.kiwiapi import KiwiAPI, ImageSize, ModAuthorRole, ModAuthorRoleColors
+from utils.kiwiapi import (
+    KiwiAPI,
+    ImageSize,
+    ModAuthorRole,
+    ModAuthorRoleColors,
+    ModProfileList,
+)
 from utils.locale import loc
 from utils.trove.registry import get_trove_locations, TroveGamePath
 
@@ -1657,7 +1663,7 @@ class ModsController(Controller):
             await self.release_ui()
             return
         self.mod_profiles.controls.append(
-            TextButton(
+            ElevatedButton(
                 content=Text(loc("Create new profile")),
                 on_click=self.create_new_profile,
             )
@@ -1665,6 +1671,8 @@ class ModsController(Controller):
         mod_profiles = await self.api.list_profiles(
             self.page.user_data["internal_token"]
         )
+        mod_profiles = ModProfileList(mod_profiles)
+        await mod_profiles.update_trovesaurus_data()
         if not mod_profiles:
             self.mod_profiles.controls.append(Text(loc("No profiles found")))
             await self.release_ui()
