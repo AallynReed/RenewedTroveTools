@@ -988,7 +988,7 @@ class ModdersController(Controller):
         version = re.findall(
             r"lastmodversion = (\d+)",
             config.read_text(encoding="utf-8").lower(),
-            re.MULTILINE,
+            re.MULTILINE | re.IGNORECASE,
         )
         return version[0]
 
