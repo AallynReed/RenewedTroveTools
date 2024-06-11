@@ -353,6 +353,8 @@ class ModProfileList:
                     mod["trovesaurus_data"] = data
                     downloads = data["downloads"]
                     downloads.sort(key=lambda x: x["date"], reverse=True)
-                    mod["current_version"] = [f for f in downloads if f["hash"] == ts_mod][0]
+                    mod["current_version"] = [
+                        f for f in downloads if f["hash"] == ts_mod
+                    ][0]
                     mod["update"] = downloads[0]
                     mod["has_update"] = mod["update"] != mod["current_version"]

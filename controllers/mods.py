@@ -940,7 +940,9 @@ class ModsController(Controller):
             mod.toggle()
         except FileExistsError:
             await self.page.snack_bar.show(
-                loc("Failed to toggle {name} mod, a mod with this name already exists").format(name=mod.name)
+                loc(
+                    "Failed to toggle {name} mod, a mod with this name already exists"
+                ).format(name=mod.name)
             )
             return await self.release_ui()
         for m in mod.file_conflicts:
