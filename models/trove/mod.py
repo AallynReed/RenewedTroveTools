@@ -179,6 +179,8 @@ class TroveMod:
         else:
             new_name = self.mod_path.name.split(extension)[0] + f"{extension}.disabled"
             new_path = self.cwd.joinpath(new_name)
+        if new_path.exists():
+            raise FileExistsError()
         self.mod_path.rename(new_path)
         self.mod_path = new_path
 

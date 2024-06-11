@@ -936,7 +936,13 @@ class ModsController(Controller):
 
     async def toggle_mod(self, event):
         mod = event.control.data
-        mod.toggle()
+        try:
+            mod.toggle()
+        except FileExistsError:
+            await self.page.snack_bar.show(
+                loc("Failed to toggle {name} mod, a mod with this name already exists").format(name=mod.name)
+            )
+            return await self.release_ui()
         for m in mod.file_conflicts:
             m.check_conflicts(self.my_mod_list.mods, True)
             await self.update_mod_tile_ui(m)
