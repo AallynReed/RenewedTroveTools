@@ -96,8 +96,8 @@ class HomeController(Controller):
         self.main.controls = [
             Column(
                 controls=[
-                    self.streams_widget,
-                    Divider(height=1),
+                    # self.streams_widget,
+                    # Divider(height=1),
                     self.weekly_widget,
                     Divider(height=1),
                     ResponsiveRow(
@@ -124,7 +124,7 @@ class HomeController(Controller):
             )
         ]
         tasks = [
-            self.update_twitch_streams,
+            # self.update_twitch_streams,
             self.update_weekly,
             self.update_daily,
             self.update_dragons,
