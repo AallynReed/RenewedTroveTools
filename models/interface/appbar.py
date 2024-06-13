@@ -34,6 +34,7 @@ from flet_core.icons import (
     PALETTE,
     SAVINGS,
     PERSON,
+    FAVORITE,
     FEEDBACK,
     PEST_CONTROL,
     HISTORY_EDU,
@@ -104,6 +105,13 @@ class CustomAppBar(AppBar):
                     on_click=self.go_to_update_page,
                     visible=False,
                     tooltip=loc("A newer version is available."),
+                ),
+                IconButton(
+                    icon=FAVORITE,
+                    icon_color="#bb0000",
+                    on_click=self.open_supporters,
+                    visible=True,
+                    tooltip=loc("Supporters"),
                 ),
                 IconButton(
                     icon=HISTORY_EDU,
@@ -545,6 +553,25 @@ class CustomAppBar(AppBar):
                         " am around I should be able to.\n\nThanks for using my application. <3"
                     )
                 )
+            ),
+        )
+
+    async def open_supporters(self, _):
+        await self.page.dialog.set_data(
+            modal=True,
+            title=Text(loc("Supporters")),
+            actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
+            actions_alignment=MainAxisAlignment.END,
+            content=Column(
+                controls=[
+                    Text(
+                        loc(
+                            "Thanks to the people below who've supported the project financially."
+                        )
+                    ),
+                    Divider(),
+                    Text("Nao737", size=24),
+                ]
             ),
         )
 
