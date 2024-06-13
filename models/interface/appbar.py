@@ -45,6 +45,7 @@ from models.preferences import AccentColor
 from models.interface.image import RTTImage
 from utils.tasks import loop
 from utils.locale import ENGINE, loc, Locale
+from models.constants import files_cache
 
 
 async def check_update(current_version, debug=False, force=False):
@@ -570,7 +571,7 @@ class CustomAppBar(AppBar):
                         )
                     ),
                     Divider(),
-                    Text("Nao737", size=24),
+                    *([Text(name, size=24) for name in files_cache["supporters.json"]]),
                 ]
             ),
         )
