@@ -186,6 +186,7 @@ Chronomantic»»Chronomantic
 Class»»Class
 Class Bonus»»Class Bonus
 Class Gem»»Class Gem
+Class level 30»»Class level 30
 Clear»»Clear
 Clear all overrides»»Clear all overrides
 Clear config»»Clear config
@@ -233,6 +234,7 @@ Crystal 5 Weapon»»Crystal 5 Weapon
 Crystal Cosmic Empowered Gem»»Crystal Cosmic Empowered Gem
 Crystal Cosmic Lesser Gem 1»»Crystal Cosmic Lesser Gem 1
 Crystal Cosmic Lesser Gem 2»»Crystal Cosmic Lesser Gem 2
+Crystal Gems»»Crystal Gems
 Cubic Curtain»»Cubic Curtain
 Cubic Curtain/Explosive Epilogue»»Cubic Curtain/Explosive Epilogue
 Cubic Curtain/Mired Mojo»»Cubic Curtain/Mired Mojo
@@ -293,6 +295,8 @@ Eliminating the need of 1gb folders for each update and keeping it streamlined t
 Elixir»»Elixir
 Elysian Bandolier»»Elysian Bandolier
 Emblem»»Emblem
+Emblem 1»»Emblem 1
+Emblem 2»»Emblem 2
 Emblem 2.5x»»Emblem 2.5x
 Empowered»»Empowered
 Empowered Air Gem»»Empowered Air Gem
@@ -396,6 +400,7 @@ Gem Upgrade Dust Cost Reduced By 10%»»Gem Upgrade Dust Cost Reduced By 10%
 Gem Upgrade Dust Cost Reduced By 20%»»Gem Upgrade Dust Cost Reduced By 20%
 Gem level changed to {level}»»Gem level changed to {level}
 Gems»»Gems
+Geode Mastery»»Geode Mastery
 Geode Mastery (Level 100)»»Geode Mastery (Level 100)
 Geode Mastery Buffs»»Geode Mastery Buffs
 German»»German
@@ -647,6 +652,9 @@ Move Boost»»Move Boost
 Movement Speed»»Movement Speed
 My Mods»»My Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
+Mystic 1 Face»»Mystic 1 Face
+Mystic 1 Hat»»Mystic 1 Hat
+Mystic 1 Weapon»»Mystic 1 Weapon
 NPCs»»NPCs
 Neon Ninja»»Neon Ninja
 New version»»New version
@@ -813,6 +821,7 @@ Stunburst»»Stunburst
 Subclass»»Subclass
 Subclass (Solarion) / Solarion»»Subclass (Solarion) / Solarion
 Subclass active»»Subclass active
+Subclass level 30»»Subclass level 30
 Sundard Flight»»Sundard Flight
 Sunday»»Sunday
 Sunday Loot Day»»Sunday Loot Day
@@ -862,6 +871,7 @@ Triple Crystal Drops»»Triple Crystal Drops
 Triple Inert Geode Drops»»Triple Inert Geode Drops
 Triple Radiant Shard Drops»»Triple Radiant Shard Drops
 Triple Shadow Shard Drops»»Triple Shadow Shard Drops
+Trove Mastery»»Trove Mastery
 Trove Time»»Trove Time
 Trove directory»»Trove directory
 Try running program as administrator or go to settings and add the directory manually.»»Try running program as administrator or go to settings and add the directory manually.

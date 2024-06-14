@@ -186,6 +186,7 @@ Chronomantic»»碧叶徽章
 Class»»职业
 Class Bonus»»❓职业奖金
 Class Gem»»职业宝石
+Class level 30»»Class level 30
 Clear»»Clear
 Clear all overrides»»Clear all overrides
 Clear config»»Clear config
@@ -233,6 +234,7 @@ Crystal 5 Weapon»»Crystal 5 Weapon
 Crystal Cosmic Empowered Gem»»Crystal Cosmic Empowered Gem
 Crystal Cosmic Lesser Gem 1»»Crystal Cosmic Lesser Gem 1
 Crystal Cosmic Lesser Gem 2»»Crystal Cosmic Lesser Gem 2
+Crystal Gems»»Crystal Gems
 Cubic Curtain»»方形幕布
 Cubic Curtain/Explosive Epilogue»» 方形幕布/爆炸性结局
 Cubic Curtain/Mired Mojo»»方形幕布/深陷符咒
@@ -293,6 +295,8 @@ Eliminating the need of 1gb folders for each update and keeping it streamlined t
 Elixir»»寻日者灵药
 Elysian Bandolier»»幸福瓶带
 Emblem»»徽章
+Emblem 1»»Emblem 1
+Emblem 2»»Emblem 2
 Emblem 2.5x»»徽章 2.5倍
 Empowered»»附魔
 Empowered Air Gem»»附魔天空宝石
@@ -396,6 +400,7 @@ Gem Upgrade Dust Cost Reduced By 10%»»升级宝石消耗宝石尘的数量降�
 Gem Upgrade Dust Cost Reduced By 20%»»升级宝石消耗宝石尘的数量降低20%
 Gem level changed to {level}»»宝石等级已更改为{level}
 Gems»»宝石
+Geode Mastery»»Geode Mastery
 Geode Mastery (Level 100)»»Geode Mastery (Level 100)
 Geode Mastery Buffs»»晶洞增益
 German»»German
@@ -647,6 +652,9 @@ Move Boost»»随机跳点
 Movement Speed»»移动速度
 My Mods»»My Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
+Mystic 1 Face»»Mystic 1 Face
+Mystic 1 Hat»»Mystic 1 Hat
+Mystic 1 Weapon»»Mystic 1 Weapon
 NPCs»»NPCs
 Neon Ninja»»霓虹忍者
 New version»»New version
@@ -813,6 +821,7 @@ Stunburst»»眩晕爆发
 Subclass»»副职业
 Subclass (Solarion) / Solarion»»Subclass (Solarion) / Solarion
 Subclass active»»副职业有效
+Subclass level 30»»Subclass level 30
 Sundard Flight»»❓圣达尔航班
 Sunday»»星期日
 Sunday Loot Day»»收获日
@@ -862,6 +871,7 @@ Triple Crystal Drops»»掉落的水晶数量为原来的3倍
 Triple Inert Geode Drops»»掉落的惰性晶石数量提升3倍
 Triple Radiant Shard Drops»»光辉碎片掉落数量为原来的3倍
 Triple Shadow Shard Drops»»掉落的暗影碎片数量提升3倍
+Trove Mastery»»Trove Mastery
 Trove Time»»Trove 时间
 Trove directory»»Trove 目录
 Try running program as administrator or go to settings and add the directory manually.»»Try running program as administrator or go to settings and add the directory manually.
