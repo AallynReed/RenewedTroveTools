@@ -51,7 +51,7 @@ from models.constants import files_cache
 async def check_update(current_version, debug=False, force=False):
     async with ClientSession() as session:
         async with session.get(
-            "https://api.github.com/repos/AallynDev/RenewedTroveTools/releases"
+            "https://api.github.com/repos/AallynReed/RenewedTroveTools/releases"
         ) as response:
             version_data = await response.json()
             try:

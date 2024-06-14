@@ -85,7 +85,7 @@ setup(
     name=metadata.name,
     version=metadata.version,
     author=metadata.author,
-    url=f"https://github.com/AallynDev/{metadata.tech_name}",
+    url=f"https://github.com/AallynReed/{metadata.tech_name}",
     description=metadata.description,
     options=options,
     license="MIT",
