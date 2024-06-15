@@ -828,6 +828,7 @@ class ModsController(Controller):
         await self.page.dialog.set_data(
             modal=False,
             actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
+            title=Text(loc("Mod image preview")),
             content=RTTImage(
                 src=self.api.get_resized_image_url(
                     (f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{hash}"),
