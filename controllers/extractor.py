@@ -824,7 +824,7 @@ class ExtractorController(Controller):
             "Even out of performance mode, this app will most likely manage faster speeds than other methods (I know "
             "of).",
         ]
-        task = "\n\n".join(task_lines)
+        task = loc("\n\n".join(task_lines))
         await self.page.dialog.set_data(
             modal=False,
             title=Text(loc("Performance mode enabled")),
@@ -848,18 +848,16 @@ class ExtractorController(Controller):
 
     async def warn_extraction(self, extraction_type: str):
         task = loc(
-            "Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}".format(
-                ExtractionType=extraction_type,
-                ExtractFrom=self.locations.extract_from,
-                ExtractTo=self.locations.extract_to,
-            )
+            "Do you really wish to extract {ExtractionType} from {ExtractFrom} into {ExtractTo}"
+        ).format(
+            ExtractionType=extraction_type,
+            ExtractFrom=self.locations.extract_from,
+            ExtractTo=self.locations.extract_to,
         )
         if self.page.preferences.advanced_mode:
             task += loc(
-                "\nWhilst keeping track of changes in a versioned folder in {value}".format(
-                    value=self.locations.changes_to
-                )
-            )
+                "\nWhilst keeping track of changes in a versioned folder in {value}"
+            ).format(value=self.locations.changes_to)
         await self.page.dialog.set_data(
             modal=False,
             title=Text(loc("Extraction confirmation")),
@@ -919,9 +917,17 @@ class ExtractorController(Controller):
                 if old_pro != (progress := round(i / total * 1000) / 1000):
                     elapsed = perf_counter() - start
                     remaining = round(elapsed * (total / i - 1))
-                    self.extraction_progress.controls[0].controls[
-                        0
-                    ].value = f"[{round(i / total * 100, 1)}%] | Elapsed: {round(elapsed):>3}s | Estimated {remaining:>3}s remaining | Extracting {event.control.data}:\r"
+                    self.extraction_progress.controls[0].controls[0].value = (
+                        loc(
+                            "[{}%] | Elapsed: {:>3}s | Estimated {:>3}s remaining | Extracting {}"
+                        ).format(
+                            round(i / total * 100, 1),
+                            round(elapsed),
+                            remaining,
+                            event.control.data,
+                        )
+                        + ":\r"
+                    )
                     self.extraction_progress.controls[0].controls[1].value = file.name
                     self.extraction_progress.controls[1].controls[0].value = progress
                     await self.extraction_progress.update_async()
@@ -1034,9 +1040,9 @@ class ExtractorController(Controller):
                     async for file in archive.files():
                         if self.cancel_extraction:
                             self.cancel_extraction = False
-                            self.extraction_progress.controls[0].controls[
-                                0
-                            ].value = "Extractor Idle"
+                            self.extraction_progress.controls[0].controls[0].value = (
+                                loc("Extractor Idle")
+                            )
                             self.extraction_progress.controls[0].controls[1].value = ""
                             self.extraction_progress.controls[1].controls[0].value = 0
                             return await self.page.snack_bar.show(
@@ -1049,9 +1055,17 @@ class ExtractorController(Controller):
                         ):
                             elapsed = perf_counter() - start
                             remaining = round(elapsed * (number_of_files / i - 1))
-                            self.extraction_progress.controls[0].controls[
-                                0
-                            ].value = f"[{round(i / number_of_files * 100, 1)}%] | Elapsed: {round(elapsed):>3}s | Estimated {remaining:>3}s remaining | Extracting {event.control.data}:\r"
+                            self.extraction_progress.controls[0].controls[0].value = (
+                                loc(
+                                    "[{}%] | Elapsed: {:>3}s | Estimated {:>3}s remaining | Extracting {}"
+                                ).format(
+                                    round(i / number_of_files * 100, 1),
+                                    round(elapsed),
+                                    remaining,
+                                    event.control.data,
+                                )
+                                + ":\r"
+                            )
                             self.extraction_progress.controls[0].controls[
                                 1
                             ].value = file.name
@@ -1066,7 +1080,7 @@ class ExtractorController(Controller):
         hashes_path.write_text(json.dumps(self.hashes, indent=4))
         self.main_controls.disabled = False
         self.cancel_extraction_button.visible = False
-        self.extraction_progress.controls[0].controls[0].value = "Extractor Idle"
+        self.extraction_progress.controls[0].controls[0].value = loc("Extractor Idle")
         self.extraction_progress.controls[0].controls[1].value = ""
         self.extraction_progress.controls[1].controls[0].value = 0
         await self.page.snack_bar.show(loc("Extraction Complete"))
