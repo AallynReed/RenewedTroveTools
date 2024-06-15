@@ -654,7 +654,7 @@ class ModsController(Controller):
         if mod.trovesaurus_data:
             if self.page.preferences.mod_manager.show_previews:
                 mod_tile.leading = IconButton(
-                    data=mod,
+                    data=mod.hash,
                     content=RTTImage(
                         src=self.api.get_resized_image_url(
                             (
@@ -739,7 +739,7 @@ class ModsController(Controller):
         else:
             if self.page.preferences.mod_manager.show_previews:
                 mod_tile.leading = IconButton(
-                    data=mod,
+                    data=mod.hash,
                     content=RTTImage(
                         src=self.api.get_resized_image_url(
                             f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod.hash}",
@@ -824,13 +824,13 @@ class ModsController(Controller):
         )
 
     async def go_to_image_preview(self, event):
-        mod = event.control.data
+        hash = event.control.data
         await self.page.dialog.set_data(
             modal=False,
             actions=[TextButton(loc("Close"), on_click=self.page.RTT.close_dialog)],
             content=RTTImage(
                 src=self.api.get_resized_image_url(
-                    (f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{mod.hash}"),
+                    (f"https://kiwiapi.aallyn.xyz/v1/mods/preview_image/{hash}"),
                     ImageSize.MAX,
                 ),
                 fit=ImageFit.FIT_WIDTH,
@@ -1186,15 +1186,23 @@ class ModsController(Controller):
                         break
             self.mods_list.controls.append(
                 ExpansionTile(
-                    leading=RTTImage(
-                        src=(
-                            self.api.get_resized_image_url(
-                                mod.image_url, ImageSize.SMALL
-                            )
-                            or "https://trovesaurus.com/images/logos/Sage_64.png?1"
+                    leading=IconButton(
+                        data=mod.file_objs[0].hash,
+                        content=RTTImage(
+                            src=(
+                                self.api.get_resized_image_url(
+                                    mod.image_url, ImageSize.SMALL
+                                )
+                                or "https://trovesaurus.com/images/logos/Sage_64.png?1"
+                            ),
+                            width=64,
+                            height=64,
                         ),
+                        tooltip=loc("Click to preview image"),
+                        style=ButtonStyle(padding=padding.symmetric(0, 0)),
+                        on_click=self.go_to_image_preview,
                         width=64,
-                        height=64,
+                        expand=True,
                     ),
                     title=ResponsiveRow(
                         controls=[
