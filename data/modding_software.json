@@ -42,12 +42,14 @@
     },
     "vfx": {
         "description": "Create visual effects for Trove's collectibles.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
-        "software": {
-            "name": "PopcornFX (1.13.5)",
-            "free": true,
-            "url": "https://wiki.popcornfx.com/index.php/PK-Editor_v1.13",
-            "description": "PopcornFX is a free particle editor that is used to create visual effects."
-        }
+        "software": [
+            {
+                "name": "PopcornFX (1.13.5)",
+                "free": true,
+                "url": "https://wiki.popcornfx.com/index.php/PK-Editor_v1.13",
+                "description": "PopcornFX is a free particle editor that is used to create visual effects."
+            }
+        ]
     },
     "ui": {
         "description": "UI (User Interface) is used to edit user interfaces present in Trove and alter or add to their functionality.",
@@ -68,12 +70,14 @@
     },
     "sound": {
         "description": "Create sound effects and music for Trove'.\nThis includes the Items, Blocks, Item Icons, Mounts, Allies, Costumes and much more.",
-        "software": {
-            "name": "BNK Replacer",
-            "free": true,
-            "url": "https://github.com/EtiTheSpirit/BNKReplacer",
-            "description": "BNK Replacer is a free tool that is used to replace sound effects in Trove's sound bank."
-        }
+        "software": [
+            {
+                "name": "BNK Replacer",
+                "free": true,
+                "url": "https://github.com/EtiTheSpirit/BNKReplacer",
+                "description": "BNK Replacer is a free tool that is used to replace sound effects in Trove's sound bank."
+            }
+        ]
     },
     "textures": {
         "description": "Create textures for Trove's visual effects.",
