@@ -1,5 +1,14 @@
 # Renewed Trove Tools
-
+[![GitHub Release](https://img.shields.io/github/release/AallynReed/RenewedTroveTools.svg?style=flat)]()
+[![Github All Releases](https://img.shields.io/github/downloads/AallynReed/RenewedTroveTools/total.svg?style=flat)]()
+[![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/AallynReed/RenewedTroveTools/blob/master/LICENSE)
+<br>
+[![GitHub last commit](https://img.shields.io/github/last-commit/AallynReed/RenewedTroveTools.svg?style=flat)]()
+[![GitHub commit activity the past week, 4 weeks](https://img.shields.io/github/commit-activity/y/AallynReed/RenewedTroveTools.svg?style=flat)]()
+<br>
+[![GitHub stars](https://img.shields.io/github/stars/AallynReed/RenewedTroveTools.svg?style=social&label=Stars&style=plastic)]()
+[![GitHub watchers](https://img.shields.io/github/watchers/AallynReed/RenewedTroveTools.svg?style=social&label=Watch&style=plastic)]()
+[![GitHub forks](https://img.shields.io/github/forks/AallynReed/RenewedTroveTools.svg?style=social&label=Fork&style=plastic)]()
 ## Introduction
 This project aims at remaking the tools present in Trove Tools by Dazo using modern interface and adding new features and tools for public use.
 
@@ -37,4 +46,7 @@ To run the app, use : `venv/bin/python app.py`
 <br>
 Note: This still requires you to manually set up your mods folder
 
-#### Huge thanks to ThePotatoPvP for his contribution.
+### Thanks
+PotatoPVP - Linux Support
+<br>
+AnglesD - Chinese translations
