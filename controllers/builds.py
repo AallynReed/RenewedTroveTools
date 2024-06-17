@@ -211,7 +211,7 @@ class GemBuildsController(Controller):
                                             content=Column(
                                                 controls=[
                                                     Dropdown(
-                                                        label=loc("Food"),
+                                                        label=loc("Auto-use"),
                                                         value=self.config.food,
                                                         options=[
                                                             dropdown.Option(

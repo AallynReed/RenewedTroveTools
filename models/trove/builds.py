@@ -117,18 +117,11 @@ class TroveClass(BaseModel):
         return f"images/classes/icons/{self.name.name}.png"
 
 
-class Food(Enum):
-    freerange = "Freerange Electrolytic Crystals"
-    soup = "Premium Fish Soup"
-    fillet = "Premium Fish Fillet"
-    kabobs = "Premium Fish Kabobs"
-
-
 class BuildConfig(BaseModel):
     build_type: BuildType = BuildType.light
     character: Class = Class.bard
     subclass: Class = Class.boomeranger
-    food: str = "delve_freerange"
+    food: str = "zephyr_rune"
     ally: str = "boot_clown"
     berserker_battler: bool = False
     critical_damage_count: int = 3
