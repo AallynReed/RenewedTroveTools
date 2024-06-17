@@ -827,7 +827,7 @@ class GemBuildsController(Controller):
             if stat["name"] == StatName.light.value:
                 third += stat["value"]
         # Remove critical damage stats from equipments (movement speed builds)
-        second -= 44.2 * (3 - self.config.critical_damage_count)
+        second -= 48.1 * (3 - self.config.critical_damage_count)
         # Solarion 140 Light
         if Class.solarion in [self.config.character, self.config.subclass]:
             third += 140
