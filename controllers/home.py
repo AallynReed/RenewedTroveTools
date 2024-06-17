@@ -414,7 +414,7 @@ class HomeController(Controller):
 
     @tasks.loop(seconds=60)
     async def update_mastery(self):
-        is_admin = self.page.user_data["is_admin"] if self.page.user_data else False
+        is_admin = self.page.is_admin
         mastery_data = await self.api.get_mastery()
         now = datetime.now(UTC)
         mastery_updated = humanize.naturaltime(
