@@ -11,7 +11,7 @@ def all_views(web_mode=False):
         views.append(ModsView)
         views.append(ModdersView)
         views.append(ExtractorView)
-        views.append(LoginView)
+    views.append(LoginView)
     views.append(StarView)
     views.append(GemBuildsView)
     views.append(GearBuildsView)

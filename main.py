@@ -69,7 +69,7 @@ class App:
         self.setup_localization()
         await self.setup_page()
         await self.gather_views()
-        await self.post_login(route=self.page.route)
+        await self.process_login()
 
     def setup_folders(self):
         self.compiled = getattr(sys, "frozen", False)
@@ -204,6 +204,10 @@ class App:
     async def process_login(self, logout=False):
         token = await self.page.client_storage.get_async("rnt-token")
         self.page.user_data = await self.login(token)
+        if self.page.user_data:
+            self.page.is_admin = self.page.user_data["is_admin"]
+        else:
+            self.page.is_admin = False
         await self.post_login(logout=logout)
 
     async def login(self, token):
@@ -276,7 +280,7 @@ class App:
 
     async def gather_views(self):
         self.page.all_views = []
-        self.page.all_views.extend(all_views(self.page.web))
+        self.page.all_views.extend(all_views(self.page, self.page.web))
         Routing(self.page, self.page.all_views)
 
     async def handshake_api(self):

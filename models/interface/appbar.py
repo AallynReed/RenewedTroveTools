@@ -257,8 +257,6 @@ class CustomAppBar(AppBar):
                             ),
                         )
                     ]
-                    if not self.page.web
-                    else []
                 ),
                 PopupMenuButton(
                     data="other-buttons",
