@@ -73,13 +73,9 @@ class GemBuildsController(Controller):
         await self.page.update_async()
         self.selected_class = self.classes.get(self.config.character.value, None)
         self.selected_subclass = self.classes.get(self.config.subclass.value, None)
+        presets = await self.page.api.get_star_chart_presets()
         preset_builds = [
-            ["zkIdCjZy", loc("MD/Light")],
-            ["Jlc4iMaP", loc("PD/Light")],
-            ["gBus7rhC", loc("MD+PD/Light")],
-            ["Hsjychqv", loc("MS/MD/Light")],
-            ["SbJ5AoPg", loc("MS/PD/Light")],
-            ["0XJI18N3", loc("MS/MD+PD/Light")],
+            [preset["build"], preset["preset"]["name"]] for preset in presets
         ]
         self.coeff_table = DataTable(
             columns=[

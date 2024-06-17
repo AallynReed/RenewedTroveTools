@@ -134,6 +134,7 @@ class Endpoints(Enum):
     mastery: str = "/stats/mastery"
     profiles: str = "/profile"
     twitch_streams: str = "/misc/twitch_streams"
+    star_chart_presets: str = "/star_chart/presets"
 
 
 class KiwiAPI:
@@ -310,6 +311,13 @@ class KiwiAPI:
         async with ClientSession() as session:
             async with session.get(
                 f"{self.api_url}{Endpoints.twitch_streams.value}"
+            ) as response:
+                return await response.json()
+
+    async def get_star_chart_presets(self):
+        async with ClientSession() as session:
+            async with session.get(
+                f"{self.api_url}{Endpoints.star_chart_presets.value}"
             ) as response:
                 return await response.json()
 
