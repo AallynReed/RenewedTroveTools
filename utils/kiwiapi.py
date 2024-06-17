@@ -319,7 +319,7 @@ class KiwiAPI:
             async with session.get(
                 f"{self.api_url}{Endpoints.star_chart_presets.value}"
             ) as response:
-                return await response.json()
+                return sorted(await response.json(), key=lambda x: x["preset"]["order"])
 
 
 class ModProfileList:
