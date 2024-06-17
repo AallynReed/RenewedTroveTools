@@ -246,11 +246,21 @@ class CustomAppBar(AppBar):
                             ),
                             items=(
                                 [
+                                    *(
+                                        [
+                                            PopupMenuItem(
+                                                text=loc("Admin Panel"),
+                                                on_click=self.go_to_admin_panel,
+                                            ),
+                                        ]
+                                        if self.page.is_admin
+                                        else []
+                                    ),
                                     PopupMenuItem(
                                         data="logout",
                                         text=loc("Logout"),
                                         on_click=self.page.RTT.execute_logout,
-                                    )
+                                    ),
                                 ]
                                 if self.page.user_data is not None
                                 else []
@@ -580,3 +590,6 @@ class CustomAppBar(AppBar):
         self.page.preferences.accent_color = color
         self.page.preferences.save()
         await self.page.update_async()
+
+    async def go_to_admin_panel(self, _):
+        await self.page.go_async("/admin")

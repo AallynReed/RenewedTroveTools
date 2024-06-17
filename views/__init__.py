@@ -4,7 +4,7 @@ from views.web import *
 from views.no_tab import *
 
 
-def all_views(web_mode=False):
+def all_views(page, web_mode=False):
     views = list()
     views.append(HomeView)
     if not web_mode:
@@ -20,6 +20,7 @@ def all_views(web_mode=False):
     views.append(MaxStatsView)
     views.append(MasteryView)
     views.append(MagicFindView)
+    views.append(AdminView)
     if web_mode:
         views.append(View404)
     return views
