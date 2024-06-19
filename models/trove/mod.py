@@ -675,18 +675,19 @@ class TroveModList:
                                         }
                                     )
                                 else:
-                                    uploads.append(
-                                        {
-                                            "hash": mod.hash,
-                                            "name": mod.name,
-                                            "format": "zip",
-                                            "authors": [],
-                                            "description": None,
-                                            "data": base64.b64encode(
-                                                mod.zip_content
-                                            ).decode("utf-8"),
-                                        }
-                                    )
+                                    ...
+                                    # uploads.append(
+                                    #     {
+                                    #         "hash": mod.hash,
+                                    #         "name": mod.name,
+                                    #         "format": "zip",
+                                    #         "authors": [],
+                                    #         "description": None,
+                                    #         "data": base64.b64encode(
+                                    #             mod.zip_content
+                                    #         ).decode("utf-8"),
+                                    #     }
+                                    # )
                 if uploads:
                     await session.post(
                         f"https://kiwiapi.aallyn.xyz/v1/profile/upload_cloud_mods",
