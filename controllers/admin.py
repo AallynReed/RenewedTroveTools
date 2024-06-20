@@ -48,6 +48,10 @@ class AdminController(Controller):
 
     async def build_admin_panel(self):
         self.main.controls.append(
-            Column(controls=[Text("Still building this shit")], col=4)
+            Column(
+                controls=[Card(content=Text("Still building this shit"))],
+                expand=True,
+                col=4,
+            )
         )
         await self.main.update_async()

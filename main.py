@@ -24,6 +24,8 @@ from utils.trove.server_time import ServerTime
 from views import all_views
 from utils.kiwiapi import KiwiAPI
 from utils import locale
+from persistent import AsyncFileEventHandler
+from watchdog.observers import Observer
 
 
 class App:
@@ -31,8 +33,8 @@ class App:
         self.web = web
 
     def run(self, port: int = 0):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_until_complete(
             app_async(
                 target=self.start,
                 assets_dir="assets",
@@ -71,6 +73,18 @@ class App:
         await self.gather_views()
         await self.process_login()
 
+    async def monitor_directory(self, path, loop):
+        event_handler = AsyncFileEventHandler(self.page, loop)
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=False)
+        observer.start()
+        try:
+            while True:
+                await asyncio.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
+
     def setup_folders(self):
         self.compiled = getattr(sys, "frozen", False)
         self.app_path = BasePath
@@ -102,9 +116,10 @@ class App:
             self.logs_folder = self.app_data.joinpath("logs")
             self.logs_folder.mkdir(parents=True, exist_ok=True)
             self.app_data.mkdir(parents=True, exist_ok=True)
-
-    async def watcher_result(self, *args, **kwargs):
-        print(*args, **kwargs)
+            # Watch CFG edits
+            asyncio.create_task(
+                self.monitor_directory(APPDATA.joinpath("Trove/ModCfgs"), self.loop)
+            )
 
     async def load_configurations(self):
         self.page.user_data = None

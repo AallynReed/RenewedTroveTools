@@ -81,6 +81,12 @@ class HomeController(Controller):
             title_size=20,
             controls=[Text(loc("Loading..."))],
         )
+        self.biomes_widget = HomeWidget(
+            icon=icons.LANDSCAPE,
+            title=loc("D15 Biomes"),
+            title_size=20,
+            controls=[Text(loc("Loading..."))],
+        )
         self.dragons_widget = HomeWidget(
             icon=icons.STORE,
             title=loc("Dragon Merchants"),
@@ -107,6 +113,8 @@ class HomeController(Controller):
                             ),
                             Column(
                                 controls=[
+                                    self.biomes_widget,
+                                    Divider(height=1),
                                     self.dragons_widget,
                                     Divider(height=1),
                                     self.mastery_widget,
@@ -127,6 +135,7 @@ class HomeController(Controller):
             # self.update_twitch_streams,
             self.update_weekly,
             self.update_daily,
+            self.update_biomes,
             self.update_dragons,
             self.update_mastery,
             self.update_events,
@@ -258,6 +267,39 @@ class HomeController(Controller):
             )
         )
         await self.weekly_widget.update_async()
+
+    @tasks.loop(seconds=60, log_errors=True)
+    async def update_biomes(self):
+        async with ClientSession() as session:
+            async with session.get(
+                "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes"
+            ) as response:
+                data = await response.json()
+                biome_controls = []
+                for biome, users in data:
+                    biome_controls.append(
+                        Card(
+                            Container(
+                                Column(
+                                    controls=[Text(biome, size=16)],
+                                    horizontal_alignment=CrossAxisAlignment.CENTER,
+                                    spacing=0,
+                                ),
+                                padding=padding.symmetric(5, 15),
+                            )
+                        )
+                    )
+                if not biome_controls:
+                    biome_controls.append(
+                        Text(loc("No biomes submitted yet."), size=16)
+                    )
+                self.biomes_widget.set_controls(
+                    Row(
+                        controls=biome_controls,
+                        alignment=MainAxisAlignment.SPACE_AROUND,
+                    )
+                )
+                await self.biomes_widget.update_async()
 
     @tasks.loop(seconds=60)
     async def update_dragons(self):
