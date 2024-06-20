@@ -361,7 +361,9 @@ class RegexField(UserControl):
 class Modal(UserControl):
     def __init__(self, page, **kwargs):
         self._page = page
-        self.dialog = AlertDialog(**kwargs)
+        self.dialog = AlertDialog(
+            **kwargs, title=Text("Title"), content=Text("Modal"), actions=[]
+        )
         page.dialog = self
         super().__init__()
 
