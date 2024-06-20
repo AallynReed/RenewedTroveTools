@@ -28,6 +28,10 @@ from persistent import AsyncFileEventHandler
 from watchdog.observers import Observer
 
 
+if getattr(sys, "frozen", False):
+    os.chdir(Path(sys.executable).parent)
+
+
 class App:
     def __init__(self, web=False):
         self.web = web
