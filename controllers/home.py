@@ -272,11 +272,11 @@ class HomeController(Controller):
     async def update_biomes(self):
         async with ClientSession() as session:
             async with session.get(
-                "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes"
+                "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes?simple"
             ) as response:
                 data = await response.json()
                 biome_controls = []
-                for biome, users in data:
+                for biome in data:
                     biome_controls.append(
                         Card(
                             Container(
