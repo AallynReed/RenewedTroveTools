@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, UTC
+from datetime import datetime, UTC, timedelta
 
 import humanize
 from aiohttp import ClientSession
@@ -42,6 +42,7 @@ from models.interface import Controller, RTTImage, HomeWidget, RTTChip
 from utils import tasks
 from utils.kiwiapi import KiwiAPI
 from utils.trove.mastery import points_to_mr
+from models.trove.star_chart import rotate
 
 
 class HomeController(Controller):
@@ -85,6 +86,7 @@ class HomeController(Controller):
             icon=icons.LANDSCAPE,
             title=loc("D15 Biomes"),
             title_size=20,
+            # on_click=lambda x: print(x), TODO: Modal with history of biomes
             controls=[Text(loc("Loading..."))],
         )
         self.dragons_widget = HomeWidget(
@@ -272,31 +274,63 @@ class HomeController(Controller):
     async def update_biomes(self):
         async with ClientSession() as session:
             async with session.get(
-                "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes?simple"
+                "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes"
             ) as response:
+                now = int(datetime.now(UTC).timestamp())
                 data = await response.json()
-                biome_controls = []
-                for biome in data:
-                    biome_controls.append(
-                        Card(
-                            Container(
-                                Column(
-                                    controls=[Text(biome, size=16)],
-                                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                                    spacing=0,
-                                ),
-                                padding=padding.symmetric(5, 15),
-                            )
+                current = data["current"]
+                _next = data["next"]
+                start, end, first, second, third, _ = current
+                biome_pills = [
+                    Card(
+                        Container(
+                            Row(
+                                controls=[
+                                    RTTImage(f"images/biomes/{image}.png", width=20),
+                                    Text(biome, size=13),
+                                ],
+                            ),
+                            padding=padding.symmetric(5, 15),
                         )
                     )
-                if not biome_controls:
-                    biome_controls.append(
-                        Text(loc("No biomes submitted yet."), size=16)
+                    for biome, image in (first, second, third)
+                ]
+                start, end, first, second, third, _ = _next
+                next_biome_pills = [
+                    Card(
+                        Container(
+                            Row(
+                                controls=[
+                                    RTTImage(f"images/biomes/{image}.png", width=20),
+                                    Text(biome, size=13),
+                                ],
+                            ),
+                            padding=padding.symmetric(5, 15),
+                        )
                     )
+                    for biome, image in (first, second, third)
+                ]
                 self.biomes_widget.set_controls(
-                    Row(
-                        controls=biome_controls,
-                        alignment=MainAxisAlignment.SPACE_AROUND,
+                    ResponsiveRow(
+                        controls=[
+                            Text(loc("Current")),
+                            Row(
+                                controls=biome_pills,
+                                alignment=MainAxisAlignment.SPACE_AROUND,
+                            ),
+                            Text(
+                                loc("Next in {}").format(
+                                    humanize.naturaltime(
+                                        timedelta(seconds=now - start)
+                                    ).replace(" from now", "")
+                                )
+                            ),
+                            Row(
+                                controls=next_biome_pills,
+                                alignment=MainAxisAlignment.SPACE_AROUND,
+                            ),
+                            # biomes,
+                        ]
                     )
                 )
                 await self.biomes_widget.update_async()
