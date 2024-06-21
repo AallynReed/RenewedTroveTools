@@ -51,13 +51,9 @@ from models.constants import files_cache
 async def check_update(current_version, debug=False, force=False):
     async with ClientSession() as session:
         async with session.get(
-            "https://api.github.com/repos/AallynReed/RenewedTroveTools/releases"
+            "https://kiwiapi.aallyn.xyz/v1/misc/latest_release"
         ) as response:
-            version_data = await response.json()
-            try:
-                version = version_data[0]
-            except IndexError:
-                return None
+            version = await response.json()
             if current_version != version.get("name") or force:
                 if os.name == "nt":
                     for asset in version.get("assets"):
