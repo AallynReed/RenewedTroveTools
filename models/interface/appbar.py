@@ -356,7 +356,6 @@ class CustomAppBar(AppBar):
                             if self.page.theme_mode == "LIGHT"
                             else f"assets/icons/brands/{item.data}-mark-white.png"
                         )
-
         await self.page.update_async()
 
     async def display_changelog(self, event):
