@@ -15,15 +15,15 @@ class AsyncFileEventHandler(FileSystemEventHandler):
         self.loop = loop
         self.swf_file_regex = re.compile(r"\[(.*?\.swf)]")
         self.swf_files = {
-            "zonebanner.swf": [
-                (
-                    self.process_biomes,
-                    re.compile(
-                        r"biome = (.*)",
-                        re.MULTILINE,
-                    ),
-                )
-            ]
+            # "zonebanner.swf": [
+            #     (
+            #         self.process_biomes,
+            #         re.compile(
+            #             r"biome = (.*)",
+            #             re.MULTILINE,
+            #         ),
+            #     )
+            # ]
         }
 
     def check_process_and_get_path(self, process_name):
