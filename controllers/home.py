@@ -86,6 +86,7 @@ class HomeController(Controller):
             icon=icons.LANDSCAPE,
             title=loc("D15 Biomes"),
             title_size=20,
+            title_url="https://trove.aallyn.xyz/long_shade_rotation",
             # on_click=lambda x: print(x), TODO: Modal with history of biomes
             controls=[Text(loc("Loading..."))],
         )
@@ -286,14 +287,16 @@ class HomeController(Controller):
                         Container(
                             Row(
                                 controls=[
-                                    RTTImage(f"images/biomes/{image}.png", width=20),
-                                    Text(biome, size=13),
+                                    RTTImage(
+                                        f"images/biomes/{b['icon']}.png", width=20
+                                    ),
+                                    Text(b["final_name"], size=13),
                                 ],
                             ),
                             padding=padding.symmetric(5, 15),
                         )
                     )
-                    for biome, image in (first, second, third)
+                    for b in (first, second, third)
                 ]
                 start, end, first, second, third, _ = _next
                 next_biome_pills = [
@@ -301,14 +304,16 @@ class HomeController(Controller):
                         Container(
                             Row(
                                 controls=[
-                                    RTTImage(f"images/biomes/{image}.png", width=20),
-                                    Text(biome, size=13),
+                                    RTTImage(
+                                        f"images/biomes/{b['icon']}.png", width=20
+                                    ),
+                                    Text(b["final_name"], size=13),
                                 ],
                             ),
                             padding=padding.symmetric(5, 15),
                         )
                     )
-                    for biome, image in (first, second, third)
+                    for b in (first, second, third)
                 ]
                 self.biomes_widget.set_controls(
                     ResponsiveRow(
