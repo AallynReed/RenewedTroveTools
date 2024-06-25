@@ -418,6 +418,7 @@ class ExtractorController(Controller):
         await self.page.update_async()
 
     async def pick_directory(self, event):
+        self.page.overlay.clear()
         file_picker = FilePicker(data=event.control.data, on_result=self.set_directory)
         self.page.overlay.append(file_picker)
         await self.page.update_async()
