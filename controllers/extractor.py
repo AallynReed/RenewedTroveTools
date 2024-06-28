@@ -453,7 +453,7 @@ class ExtractorController(Controller):
             trove_path = Path(event.path)
             self.directory_dropdown.value = (
                 trove_path
-                if trove_path in [x[1] for x in self.trove_locations]
+                if trove_path in [x.path for x in self.trove_locations]
                 else "none"
             )
         if event.control.data in ["extract_from", "changes_from"]:
