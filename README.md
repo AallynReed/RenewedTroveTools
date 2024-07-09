@@ -1,4 +1,6 @@
 # Renewed Trove Tools
+[![](https://dcbadge.limes.pink/api/server/WTq6YxYzut)](https://discord.gg/WTq6YxYzut)
+<br>
 [![GitHub Release](https://img.shields.io/github/release/AallynReed/RenewedTroveTools.svg?style=flat)]()
 [![Github All Releases](https://img.shields.io/github/downloads/AallynReed/RenewedTroveTools/total.svg?style=flat)]()
 [![NPM License](https://img.shields.io/npm/l/all-contributors.svg?style=flat)](https://github.com/AallynReed/RenewedTroveTools/blob/master/LICENSE)
@@ -45,6 +47,8 @@ To run the app, use : `venv/bin/python app.py`
 <br>
 <br>
 Note: This still requires you to manually set up your mods folder
+
+#### Need help? Join my [Discord](https://kiwiapi.aallyn.xyz/v1/misc/support)
 
 ### Thanks
 PotatoPVP - Linux Support
