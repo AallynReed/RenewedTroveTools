@@ -993,6 +993,16 @@ class ModdersController(Controller):
         return version[0]
 
     async def load_projects(self):
+        if not self.mod_folders:
+            self.projects.controls = [
+                Text(
+                    loc(
+                        "No Trove installation found"
+                        "\nTry running program as administrator or go to settings and add the directory manually."
+                    )
+                )
+            ]
+            return
         if not self.page.preferences.modders_tools.project_path:
             self.projects.controls.append(
                 Text(
@@ -1087,7 +1097,7 @@ class ModdersController(Controller):
         else:
             selected_tab = self.projects_list.selected_index
             project = self.projects_list.tabs[selected_tab].tab_content.data
-        installation_path = self.memory["extract"]["installation_path"].path
+        installation_path = self.memory["projects"]["installation_path"].path
         self.project_control.controls.clear()
         config = ProjectConfig.parse_obj(
             json.loads(project.joinpath(".rtt/config.json").read_text())
