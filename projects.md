@@ -27,6 +27,7 @@ Click `New Project` and fill in the details of your project.
 Once you've filled in these details you can click `Create`
 Now you have created your mod project, however you still need to create your first version, to do that you have to click `New Version` and name the version. This is a "protected" field which means that it must follow some logic and shouldn't be used with names that don't follow some sort of order, the idea is to ensure that versions follow a general pattern such as `1.0` or `1.1`.
 You will name your version here `1.0` for example here and you'll notice there's a switch to `Copy previous version` this is not important if it is the first version in the project, you may ignore it for now.
+
 ![image](https://github.com/AallynReed/RenewedTroveTools/assets/47339373/bc58f0ac-4091-4073-9da0-4600f63c0bd5)
 
 
@@ -69,6 +70,7 @@ Unlike other solutions you may find such as `TroveTools.NET` by Dazo, I made my 
 
 #### List of applications
 Sometimes as a new modder you may not know where to get the applications needed to mod certain aspects of the game, inside the app there will be a button called `Get modding software` it will display a list of apps for each type of modding you can do and show information about what the app is and if it is paid or not as well as shortcuts to their pages.
+
 ![image](https://github.com/AallynReed/RenewedTroveTools/assets/47339373/34de399c-7b70-4cca-8b0f-aee2b1574eb1)
 
 If you have feature suggestions, let me know, I'll look into trying to fit them in if I see they are doable without much problem or interference to the app or people's computers
