@@ -359,10 +359,21 @@ class ModsController(Controller):
         await self.settings_custom_dir_pick.get_directory_path_async()
 
     async def settings_set_custom_dir(self, event):
-        self.memory["settings"]["picked_custom_dir"] = Path(event.path)
+        path = Path(event.path)
+        if path.name != "mods":
+            if path.joinpath("Trove.exe").is_file():
+                path = path.joinpath("mods")
+            else:
+                path = None
+        self.memory["settings"]["picked_custom_dir"] = path
         self.settings_picked_dir.value = self.memory["settings"][
             "picked_custom_dir"
         ] or loc("No picked directory (Pick your mods folder)")
+        if path is None:
+            self.error_message.visible = True
+        else:
+            self.error_message.visible = False
+        await self.error_message.update_async()
         await self.settings_picked_dir.update_async()
 
     async def settings_set_custom_dir_name(self, event):
@@ -381,6 +392,11 @@ class ModsController(Controller):
         self.settings_picked_dir = Text(
             loc("No picked directory (Pick your mods folder)")
         )
+        self.error_message = Text(
+            loc("Invalid directory selected, select your mods folder"),
+            visible=False,
+            color="red",
+        )
         self.commit_custom_dir_button = IconButton(
             icon=icons.FOLDER,
             on_click=self.settings_pick_custom_dir,
@@ -398,6 +414,7 @@ class ModsController(Controller):
                             self.settings_picked_dir,
                         ]
                     ),
+                    self.error_message,
                 ]
             ),
             actions=[
