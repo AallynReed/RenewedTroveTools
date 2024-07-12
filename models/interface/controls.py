@@ -412,7 +412,7 @@ class Snackbar(UserControl):
     def build(self):
         return self.snackbar
 
-    async def show(self, message, color="green", duration=1000):
+    async def show(self, message, color="green", duration=5000):
         self.snackbar.content.value = message
         self.snackbar.bgcolor = color
         self.snackbar.duration = duration
