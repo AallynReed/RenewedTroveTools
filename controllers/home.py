@@ -325,9 +325,10 @@ class HomeController(Controller):
                             ),
                             Text(
                                 loc("Next in {}").format(
-                                    humanize.naturaltime(
-                                        timedelta(seconds=now - start)
-                                    ).replace(" from now", "")
+                                    "{:02d}:{:02d}".format(
+                                        (start - now) // 3600,
+                                        (start - now) % 3600 // 60,
+                                    )
                                 )
                             ),
                             Row(
