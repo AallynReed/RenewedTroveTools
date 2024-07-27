@@ -1092,11 +1092,8 @@ class ModdersController(Controller):
         await self.project_tab_loader()
 
     async def project_tab_loader(self, event=None):
-        if event:
-            project = event.tab_content.data
-        else:
-            selected_tab = self.projects_list.selected_index
-            project = self.projects_list.tabs[selected_tab].tab_content.data
+        selected_tab = self.projects_list.selected_index
+        project = self.projects_list.tabs[selected_tab].tab_content.data
         installation_path = self.memory["projects"]["installation_path"].path
         self.project_control.controls.clear()
         config = ProjectConfig.parse_obj(
@@ -1130,6 +1127,8 @@ class ModdersController(Controller):
                     loc("Create version"), icon=icons.ADD, on_click=self.create_version
                 )
             )
+            if event:
+                await self.release_ui()
             return
         version, version_config = self.memory["projects"]["version"]
         self.project_control.controls.append(
@@ -1498,7 +1497,7 @@ class ModdersController(Controller):
             )
         )
         if event:
-            await self.projects.update_async()
+            await self.release_ui()
 
     async def show_software(self, event):
         types_data = json.load(open("data/modding_software.json"))
@@ -1613,7 +1612,7 @@ class ModdersController(Controller):
             self.page.preferences.modders_tools.project_path = None
             self.page.preferences.save()
             await self.page.snack_bar.show("Project folder not found", color="red")
-            return await self.load_tab()
+            return await self.project_tab_loader(event)
         project_folder = project_path.joinpath(project_name)
         self.memory["projects"]["selected_project"] = project_folder
         rtt = project_folder.joinpath(".rtt")
@@ -1635,7 +1634,7 @@ class ModdersController(Controller):
             ).json()
         )
         await self.page.snack_bar.show("Project created")
-        await self.load_tab()
+        await self.project_tab_loader(event)
         await self.page.dialog.hide()
 
     async def create_version(self, event):
@@ -1715,11 +1714,11 @@ class ModdersController(Controller):
         self.memory["projects"]["version"] = (version_folder, version_config)
         version_folder.joinpath("version.json").write_text(version_config.json())
         await self.page.snack_bar.show("Version created")
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def set_version(self, event):
         self.memory["projects"]["version"] = event.control.data
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def version_change_mod_type(self, event):
         value = event.control.value
@@ -1768,7 +1767,7 @@ class ModdersController(Controller):
             self.memory["projects"]["config"].authors.append(author)
             self.save_project_config()
         await self.page.dialog.hide()
-        await self.load_tab()
+        await self.project_tab_loader(event)
         await self.page.snack_bar.show(f"Added {author}")
 
     async def remove_author(self, event):
@@ -1794,7 +1793,7 @@ class ModdersController(Controller):
         self.memory["projects"]["config"].authors.remove(author)
         self.save_project_config()
         await self.page.dialog.hide()
-        await self.load_tab()
+        await self.project_tab_loader(event)
         await self.page.snack_bar.show(f"Removed {author}")
 
     @throttle
@@ -1814,7 +1813,7 @@ class ModdersController(Controller):
         ).write_text(self.memory["projects"]["config"].json())
 
     async def refresh_files_list(self, event):
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def test_project_overrides(self, event):
         project = self.memory["projects"]["selected_project"]
@@ -1901,7 +1900,7 @@ class ModdersController(Controller):
         preview = version_folder.joinpath(file.name)
         shutil.copy(file, preview)
         await self.page.snack_bar.show("Preview added")
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def clear_project_preview(self, event):
         project = self.memory["projects"]["selected_project"]
@@ -1917,7 +1916,7 @@ class ModdersController(Controller):
             except Exception:
                 pass
         await self.page.snack_bar.show("Preview cleared")
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def fix_files_paths(self, event):
         await self.lock_ui()
@@ -1952,7 +1951,7 @@ class ModdersController(Controller):
                                 files.append(new_file_path)
                                 break
         await self.page.snack_bar.show("Files paths fixed")
-        await self.load_tab()
+        await self.project_tab_loader(event)
 
     async def build_project_tmod(self, event):
         mod = TMod()
