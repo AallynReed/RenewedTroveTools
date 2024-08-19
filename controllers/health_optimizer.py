@@ -387,7 +387,7 @@ class HealthOptimizerController(Controller):
         second += 50000  # Dragons
         second += 37700 * 2  # Gear
         # Populate Base Max Health %
-        third += 142  # Dragons
+        third += 137  # Dragons
         third += 100  # Club
         third += 500 * 0.6  # Mastery
         if self.config.hat_health:
