@@ -146,6 +146,7 @@ Blueprints»»Blueprints
 Boats and Sails»»Boats and Sails
 Bonus Damage»»Bonus Damage
 Bonus MF (No deaths)»»Bonus MF (No deaths)
+Bonus Max Health»»Bonus Max Health
 Bonus Star Bar»»Bonus Star Bar
 Bonus XP»»Bonus XP
 Boomeranger»»Boomeranger
@@ -345,6 +346,7 @@ Extraction confirmation»»Extraction confirmation
 Extractor Idle»»Extractor Idle
 Face»»Face
 Face Damage»»Face Damage
+Face MH%»»Face MH%
 Fae Trickster»»Fae Trickster
 Failed to get game version, please open trove at least once»»Failed to get game version, please open trove at least once
 Failed to toggle {name} mod, a mod with this name already exists»»Failed to toggle {name} mod, a mod with this name already exists
@@ -375,6 +377,7 @@ Flask»»Flask
 Flask Capacity»»Flask Capacity
 Flask Renewal»»Flask Renewal
 Flask Renewal 2.0»»Flask Renewal 2.0
+Flat Max Health»»Flat Max Health
 Flower Power»»Flower Power
 Flux»»Flux
 Fluxion»»Fluxion
@@ -443,11 +446,14 @@ Harvest 2.0»»Harvest 2.0
 Haste»»Haste
 Haste and Critical»»Haste and Critical
 Hat»»Hat
+Hat MH%»»Hat MH%
 Healing»»Healing
 Healing and Caffeine»»Healing and Caffeine
 Healing and Heartiness»»Healing and Heartiness
 Health»»Health
 Health Bonus»»Health Bonus
+Health Deviation»»Health Deviation
+Health Optimizer»»Health Optimizer
 Health Regen»»Health Regen
 Health Regen Bonus»»Health Regen Bonus
 Heart of Darkness»»Heart of Darkness
@@ -598,6 +604,7 @@ Mastery Level»»Mastery Level
 Mastery Levels»»Mastery Levels
 Mastery Points»»Mastery Points
 Max»»Max
+Max Health»»Max Health
 Max Light»»Max Light
 Max Mastery»»Max Mastery
 Max Power Rank»»Max Power Rank
@@ -773,12 +780,13 @@ Reroll Stat»»Reroll Stat
 Reset»»Reset
 Revenant»»Revenant
 Ring»»Ring
+Ring CH»»Ring CH
 Role Class»»Role Class
 Role SubClass»»Role SubClass
 Root star of Combat»»Root star of Combat
 Root star of Gathering»»Root star of Gathering
 Root star of Pve»»Root star of Pve
-Rune (Works on top of food)»»Rune (Works on top of food)
+Rune»»Rune
 Russian»»Russian
 Saturday»»Saturday
 Save»»Save
@@ -804,6 +812,7 @@ Send»»Send
 Send feedback»»Send feedback
 Server»»Server
 Settings»»Settings
+Setup»»Setup
 Shadow Hunter»»Shadow Hunter
 Shard Searcher»»Shard Searcher
 Shard Searcher 2.0»»Shard Searcher 2.0
@@ -934,6 +943,7 @@ Waypoint»»Waypoint
 Weakness»»Weakness
 Weakness 1.5»»Weakness 1.5
 Weapon»»Weapon
+Weapon CH»»Weapon CH
 Wednesday»»Wednesday
 Weekly Bonuses»»Weekly Bonuses
 When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.»»When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.

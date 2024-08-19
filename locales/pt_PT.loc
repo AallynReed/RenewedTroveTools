@@ -146,6 +146,7 @@ Blueprints»»Blueprints
 Boats and Sails»»Boats and Sails
 Bonus Damage»»Dano Bónus
 Bonus MF (No deaths)»»PM Bónus (Sem mortes)
+Bonus Max Health»»Bonus Max Health
 Bonus Star Bar»»Barra de Estrela Dupla
 Bonus XP»»XP Bónus
 Boomeranger»»Boomeranger
@@ -345,6 +346,7 @@ Extraction confirmation»»Extraction confirmation
 Extractor Idle»»Extractor Idle
 Face»»Máscara
 Face Damage»»Dano de máscara
+Face MH%»»Face MH%
 Fae Trickster»»Fae Trickster
 Failed to get game version, please open trove at least once»»Failed to get game version, please open trove at least once
 Failed to toggle {name} mod, a mod with this name already exists»»Failed to toggle {name} mod, a mod with this name already exists
@@ -375,6 +377,7 @@ Flask»»Poção
 Flask Capacity»»Flask Capacity
 Flask Renewal»»Flask Renewal
 Flask Renewal 2.0»»Flask Renewal 2.0
+Flat Max Health»»Flat Max Health
 Flower Power»»Poder da Flor
 Flux»»Fluxo
 Fluxion»»Fluxion
@@ -443,11 +446,14 @@ Harvest 2.0»»Harvest 2.0
 Haste»»Haste
 Haste and Critical»»Haste and Critical
 Hat»»Capacete
+Hat MH%»»Hat MH%
 Healing»»Healing
 Healing and Caffeine»»Healing and Caffeine
 Healing and Heartiness»»Healing and Heartiness
 Health»»Vida
 Health Bonus»»Bónus de Vida
+Health Deviation»»Health Deviation
+Health Optimizer»»Health Optimizer
 Health Regen»»Health Regen
 Health Regen Bonus»»Health Regen Bonus
 Heart of Darkness»»Coração das Trevas
@@ -598,6 +604,7 @@ Mastery Level»»Nível de Maestria
 Mastery Levels»»Níveis de Maestria
 Mastery Points»»Pontos de Maestria
 Max»»Máx
+Max Health»»Max Health
 Max Light»»Max Light
 Max Mastery»»Maestria Máxima
 Max Power Rank»»Max Power Rank
@@ -773,12 +780,13 @@ Reroll Stat»»Rolar estatística
 Reset»»Reset
 Revenant»»Revenante
 Ring»»Anel
+Ring CH»»Ring CH
 Role Class»»Role Class
 Role SubClass»»Role SubClass
 Root star of Combat»»Root star of Combat
 Root star of Gathering»»Root star of Gathering
 Root star of Pve»»Root star of Pve
-Rune (Works on top of food)»»Rune (Works on top of food)
+Rune»»Rune
 Russian»»Russo
 Saturday»»Sábado
 Save»»Guardar
@@ -804,6 +812,7 @@ Send»»Enviar
 Send feedback»»Enviar opinião
 Server»»Servidor
 Settings»»Configurações
+Setup»»Setup
 Shadow Hunter»»Caçador das Sombras
 Shard Searcher»»Shard Searcher
 Shard Searcher 2.0»»Shard Searcher 2.0
@@ -934,6 +943,7 @@ Waypoint»»Waypoint
 Weakness»»Weakness
 Weakness 1.5»»Weakness 1.5
 Weapon»»Arma
+Weapon CH»»Weapon CH
 Wednesday»»Quarta
 Weekly Bonuses»»Bónus Semanais
 When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.»»When dropping below 30% health, gain a 6% Outgoing damage buff and 10% Attack Speed for 10 seconds. 120 second cooldown.
