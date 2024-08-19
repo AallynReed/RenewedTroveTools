@@ -13,3 +13,4 @@ from .mods import ModsController
 from .star import StarChartController
 from .max_stats import MaxStatsController
 from .admin import AdminController
+from .health_optimizer import HealthOptimizerController

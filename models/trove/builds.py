@@ -1,9 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, Field
-
-from utils.functions import random_id
+from pydantic import BaseModel
 
 
 class BuildType(Enum):
@@ -142,3 +140,12 @@ class BuildConfig(BaseModel):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+
+class HealthOptimizerConfig(BaseModel):
+    character: Class = Class.bard
+    star_chart: Optional[str] = None
+    weapon_ch: bool = False
+    ring_ch: bool = False
+    hat_health: bool = False
+    face_health: bool = False

@@ -7,3 +7,4 @@ from .mastery import MasteryView
 from .star import StarView
 from .gear import GearBuildsView
 from .max_stats import MaxStatsView
+from .health_optimizer import HealthOptimizerView

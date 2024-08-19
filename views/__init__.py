@@ -14,6 +14,7 @@ def all_views(page, web_mode=False):
     views.append(LoginView)
     views.append(StarView)
     views.append(GemBuildsView)
+    views.append(HealthOptimizerView)
     views.append(GearBuildsView)
     views.append(GemView)
     views.append(GemSetView)

@@ -182,6 +182,27 @@ class StarChart(BaseModel):
                 stats[stat_name][0] += stat["value"]
         return stats
 
+    @property
+    def alternate_gem_stats(self):
+        gem_stats = ["Critical Hit", "Maximum Health %"]
+        percentage_stats = ["Maximum Health %"]
+        stats = {}
+        for star in self.activated_stars:
+            for stat in star.stats:
+                if stat["name"] not in gem_stats:
+                    continue
+                if stat["percentage"]:
+                    stat_name = stat["name"] + " Bonus"
+                else:
+                    stat_name = stat["name"]
+                if not stats.get(stat_name):
+                    stats[stat_name] = [
+                        0,
+                        (stat_name in percentage_stats or stat_name.endswith("Bonus")),
+                    ]
+                stats[stat_name][0] += stat["value"]
+        return stats
+
     def activated_select_stats(self, stat_name):
         gem_stats = ["Magic Find"]
         stats = {}
