@@ -66,6 +66,7 @@ class GemBuildsController(Controller):
                 self.classes[trove_class["name"]] = TroveClass(**trove_class)
             self.foods = self.files["builds/food.json"]
             self.allies = self.files["builds/ally.json"]
+            self.face_damage = self.files["builds/face_damage.json"]["Face"]
             self.config = BuildConfig()
             self.character_data = ResponsiveRow()
             self.features = ResponsiveRow()
@@ -797,7 +798,7 @@ class GemBuildsController(Controller):
             self.selected_class.stats, name=StatName("Critical Damage")
         ).value
         if not self.config.no_face:
-            first += 7507.5
+            first += self.face_damage
         # Dragon stats
         first += self.sum_file_values(f"{damage_type.name}/dragons_damage")
         first += self.sum_file_values(f"dragons_damage")
