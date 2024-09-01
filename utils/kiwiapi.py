@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, UTC
 from enum import Enum
 from typing import Union, Optional
@@ -144,18 +145,22 @@ class KiwiAPI:
 
     async def handshake(self, page):
         async with ClientSession() as session:
-            await session.get(
-                f"{self.api_url}{Endpoints.handshake.value}",
-                json={
-                    "version": page.metadata.version,
-                    "dev": page.metadata.dev,
-                    "os": {
-                        "name": platform.system(),
-                        "version": platform.version(),
-                        "release": platform.release(),
+            try:
+                await session.get(
+                    f"{self.api_url}{Endpoints.handshake.value}",
+                    json={
+                        "version": page.metadata.version,
+                        "dev": page.metadata.dev,
+                        "os": {
+                            "name": platform.system(),
+                            "version": platform.version(),
+                            "release": platform.release(),
+                        },
                     },
-                },
-            )
+                    timeout=2
+                )
+            except asyncio.TimeoutError:
+                ...
 
     async def get_mods_page_count(
         self,
@@ -232,6 +237,8 @@ class KiwiAPI:
             async with session.get(
                 f"{self.api_url}{Endpoints.mastery.value}"
             ) as response:
+                if response.status != 200:
+                    return
                 return await response.json()
 
     async def update_mastery(self, user_token: str, mastery_data: dict):
@@ -316,10 +323,16 @@ class KiwiAPI:
 
     async def get_star_chart_presets(self):
         async with ClientSession() as session:
-            async with session.get(
-                f"{self.api_url}{Endpoints.star_chart_presets.value}"
-            ) as response:
-                return sorted(await response.json(), key=lambda x: x["preset"]["order"])
+            try:
+                response = await session.get(
+                    f"{self.api_url}{Endpoints.star_chart_presets.value}",
+                    timeout=2
+                )
+                if response.status != 200:
+                    return []
+            except asyncio.TimeoutError:
+                return []
+            return sorted(await response.json(), key=lambda x: x["preset"]["order"])
 
 
 class ModProfileList:
@@ -343,11 +356,17 @@ class ModProfileList:
 
     async def trovesaurus_data(self):
         async with ClientSession() as session:
-            async with session.get(
-                f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
-                json={"hashes": self.hashes},
-            ) as response:
-                return await response.json()
+            try:
+                response = await session.get(
+                    f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
+                    json={"hashes": self.hashes},
+                    timeout=2
+                )
+                if response.status == 200:
+                    return await response.json()
+            except asyncio.TimeoutError:
+                ...
+            return []
 
     async def update_trovesaurus_data(self):
         trovesaurus_data = await self.trovesaurus_data()

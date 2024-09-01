@@ -232,10 +232,17 @@ class App:
     async def login(self, token):
         if token is None:
             return None
-        response = requests.get(
-            "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token
-        )
-        if response.status_code == 200:
+        fail = False
+        try:
+            response = requests.get(
+                "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token,
+                timeout=2,
+            )
+            if response.status_code == 200:
+                fail = True
+        except asyncio.TimeoutError:
+            fail = True
+        if not fail:
             await self.page.client_storage.set_async("rnt-token", token)
             return response.json()
         return None

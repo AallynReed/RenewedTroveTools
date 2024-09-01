@@ -1,3 +1,5 @@
+import asyncio
+
 from aiohttp import ClientSession
 from json import load, loads
 from pathlib import Path
@@ -11,8 +13,16 @@ async def fetch_files(local_data=False, local_locales=False):
         # Load data files
         files_cache.clear()
         if not local_data:
-            response = await session.get("https://kiwiapi.aallyn.xyz/v1/stats/get_data")
-            if response.status != 200:
+            fail = False
+            try:
+                response = await session.get(
+                    "https://kiwiapi.aallyn.xyz/v1/stats/get_data", timeout=2
+                )
+                if response.status != 200:
+                    fail = True
+            except asyncio.TimeoutError:
+                fail = True
+            if fail:
                 data_path = Path("data")
                 files_data = [
                     str(x.relative_to(data_path))
@@ -39,8 +49,16 @@ async def fetch_files(local_data=False, local_locales=False):
                     files_cache[file_name] = loads(x.read_text(encoding="utf-8"))
         # Load localization files
         if not local_locales:
-            response = await session.get("https://kiwiapi.aallyn.xyz/v1/misc/locales")
-            if response.status != 200:
+            fail = False
+            try:
+                response = await session.get(
+                    "https://kiwiapi.aallyn.xyz/v1/misc/locales", timeout=2
+                )
+                if response.status != 200:
+                    fail = True
+            except asyncio.TimeoutError:
+                fail = True
+            if fail:
                 locales_path = Path("locales")
                 files_data = [
                     str(x.relative_to(locales_path))

@@ -277,6 +277,10 @@ class HomeController(Controller):
             async with session.get(
                 "https://kiwiapi.aallyn.xyz/v1/misc/d15_biomes"
             ) as response:
+                if response.status != 200:
+                    self.biomes_widget.set_controls(Text("API is unreachable"))
+                    await self.biomes_widget.update_async()
+                    return
                 now = int(datetime.now(UTC).timestamp())
                 data = await response.json()
                 current = data["current"]
@@ -498,6 +502,10 @@ class HomeController(Controller):
     async def update_mastery(self):
         is_admin = self.page.is_admin
         mastery_data = await self.api.get_mastery()
+        if mastery_data is None:
+            self.mastery_widget.set_controls(Text("API is unreachable"))
+            await self.mastery_widget.update_async()
+            return
         now = datetime.now(UTC)
         mastery_updated = humanize.naturaltime(
             now

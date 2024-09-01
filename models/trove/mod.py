@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import base64
 import io
 import zipfile
@@ -642,78 +643,88 @@ class TroveModList:
 
     async def cloud_check(self):
         async with ClientSession() as session:
-            async with session.get(
-                f"https://kiwiapi.aallyn.xyz/v1/profile/cloud_mods",
-                json={"hashes": self.all_hashes},
-            ) as response:
-                data = await response.json()
-                uploads = []
-                for hash, entry in data.items():
-                    for mod in self:
-                        if mod.hash == hash:
-                            if entry is None:
-                                if isinstance(mod, TMod):
-                                    authors = [
-                                        {
-                                            "ID": None,
-                                            "Username": author,
-                                            "Avatar": None,
-                                            "Role": None,
-                                        }
-                                        for author in mod.author.split(",")
-                                    ]
-                                    uploads.append(
-                                        {
-                                            "hash": mod.hash,
-                                            "name": mod.name,
-                                            "format": "tmod",
-                                            "authors": authors,
-                                            "description": None,
-                                            "data": base64.b64encode(
-                                                mod.tmod_content
-                                            ).decode("utf-8"),
-                                        }
-                                    )
-                                else:
-                                    ...
-                                    # uploads.append(
-                                    #     {
-                                    #         "hash": mod.hash,
-                                    #         "name": mod.name,
-                                    #         "format": "zip",
-                                    #         "authors": [],
-                                    #         "description": None,
-                                    #         "data": base64.b64encode(
-                                    #             mod.zip_content
-                                    #         ).decode("utf-8"),
-                                    #     }
-                                    # )
-                if uploads:
-                    await session.post(
-                        f"https://kiwiapi.aallyn.xyz/v1/profile/upload_cloud_mods",
-                        json={"mods": uploads},
-                    )
+            try:
+                async with session.get(
+                    f"https://kiwiapi.aallyn.xyz/v1/profile/cloud_mods",
+                    json={"hashes": self.all_hashes},
+                    timeout=2,
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        uploads = []
+                        for hash, entry in data.items():
+                            for mod in self:
+                                if mod.hash == hash:
+                                    if entry is None:
+                                        if isinstance(mod, TMod):
+                                            authors = [
+                                                {
+                                                    "ID": None,
+                                                    "Username": author,
+                                                    "Avatar": None,
+                                                    "Role": None,
+                                                }
+                                                for author in mod.author.split(",")
+                                            ]
+                                            uploads.append(
+                                                {
+                                                    "hash": mod.hash,
+                                                    "name": mod.name,
+                                                    "format": "tmod",
+                                                    "authors": authors,
+                                                    "description": None,
+                                                    "data": base64.b64encode(
+                                                        mod.tmod_content
+                                                    ).decode("utf-8"),
+                                                }
+                                            )
+                                        else:
+                                            ...
+                                            # uploads.append(
+                                            #     {
+                                            #         "hash": mod.hash,
+                                            #         "name": mod.name,
+                                            #         "format": "zip",
+                                            #         "authors": [],
+                                            #         "description": None,
+                                            #         "data": base64.b64encode(
+                                            #             mod.zip_content
+                                            #         ).decode("utf-8"),
+                                            #     }
+                                            # )
+                        if uploads:
+                            await session.post(
+                                f"https://kiwiapi.aallyn.xyz/v1/profile/upload_cloud_mods",
+                                json={"mods": uploads},
+                            )
+            except asyncio.TimeoutError:
+                ...
 
     async def update_trovesaurus_data(self):
         async with ClientSession() as session:
-            async with session.get(
-                f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
-                json={"hashes": self.all_hashes},
-            ) as response:
-                data = await response.json()
-                for mod in self:
-                    for k, v in data.items():
-                        if mod.hash == k and v is not None:
-                            mod.trovesaurus_data = Mod.parse_obj(v)
-                            mod.trovesaurus_data.installed = True
-                            for file in mod.trovesaurus_data.file_objs:
-                                if file.hash == mod.hash:
-                                    mod.trovesaurus_data.installed_file = file
-                                    mod.trovesaurus_data.installed_version = (
-                                        file.version
-                                    )
-                                    break
-                            break
+            try:
+                response = await session.get(
+                    f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
+                    json={"hashes": self.all_hashes},
+                    timeout=2,
+                )
+                if response.status == 200:
+                    data = await response.json()
+                    for mod in self:
+                        for k, v in data.items():
+                            if mod.hash == k and v is not None:
+                                mod.trovesaurus_data = Mod.parse_obj(v)
+                                mod.trovesaurus_data.installed = True
+                                for file in mod.trovesaurus_data.file_objs:
+                                    if file.hash == mod.hash:
+                                        mod.trovesaurus_data.installed_file = file
+                                        mod.trovesaurus_data.installed_version = (
+                                            file.version
+                                        )
+                                        break
+                                break
+            except asyncio.TimeoutError:
+                ...
 
     @property
     def all_hashes(self):
