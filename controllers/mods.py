@@ -1671,8 +1671,17 @@ class ModsController(Controller):
                 if hash in hashes:
                     mod_file.unlink()
         url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file_data.file_id}"
-        async with ClientSession() as session:
+        headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
+        async with ClientSession(headers=headers) as session:
             async with session.get(url) as response:
+                if response.status != 200:
+                    await self.page.snack_bar.show(
+                        loc("Failed to install mod ({status})").format(
+                            status=response.status
+                        ),
+                        color="red",
+                    )
+                    return
                 data = await response.read()
                 try:
                     mod = TMod.read_bytes(Path(""), data)

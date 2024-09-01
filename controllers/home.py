@@ -761,7 +761,8 @@ class HomeController(Controller):
 
     @tasks.loop(seconds=60)
     async def update_events(self):
-        async with ClientSession() as session:
+        headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
+        async with ClientSession(headers=headers) as session:
             async with session.get("https://trovesaurus.com/calendar/feed") as response:
                 events = await response.json()
                 self.events_widget.set_controls(

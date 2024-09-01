@@ -104,7 +104,8 @@ class PathViewer(UserControl):
         file_names = None
         if "_" not in self.query:
             file_names = []
-            async with ClientSession() as session:
+            headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
+            async with ClientSession(headers=headers) as session:
                 query = quote_plus(self.query)
                 async with session.get(
                     f"https://trovesaurus.com/search/collections?q={query}.json&full&parts"
