@@ -238,7 +238,7 @@ class App:
                 "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token,
                 timeout=2,
             )
-            if response.status_code == 200:
+            if response.status_code != 200:
                 fail = True
         except asyncio.TimeoutError:
             fail = True
