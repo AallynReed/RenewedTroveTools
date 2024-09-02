@@ -232,11 +232,14 @@ class App:
     async def login(self, token):
         if token is None:
             return None
+
+        headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
         fail = False
         try:
             response = requests.get(
                 "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token,
                 timeout=2,
+                headers=headers
             )
             if response.status_code != 200:
                 fail = True
