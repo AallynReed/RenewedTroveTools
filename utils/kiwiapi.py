@@ -360,7 +360,7 @@ class ModProfileList:
                 response = await session.get(
                     f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
                     json={"hashes": self.hashes},
-                    timeout=2
+                    timeout=10
                 )
                 if response.status == 200:
                     return await response.json()

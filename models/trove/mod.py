@@ -706,7 +706,7 @@ class TroveModList:
                 response = await session.get(
                     f"https://kiwiapi.aallyn.xyz/v1/mods/hashes",
                     json={"hashes": self.all_hashes},
-                    timeout=2,
+                    timeout=10,
                 )
                 if response.status == 200:
                     data = await response.json()
