@@ -151,6 +151,7 @@ class ModsController(Controller):
                     "type": None,
                     "sub_type": None,
                     "sort_by": [
+                        ("hot", "desc"),
                         ("downloads", "desc"),
                         ("likes", "desc"),
                         ("name", "asc"),
