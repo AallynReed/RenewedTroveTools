@@ -152,10 +152,10 @@ class ModsController(Controller):
                     "sub_type": None,
                     "sort_by": [
                         ("hot", "desc"),
-                        ("downloads", "desc"),
-                        ("likes", "desc"),
-                        ("name", "asc"),
                         ("last_update", "desc"),
+                        ("likes", "desc"),
+                        ("downloads", "desc"),
+                        ("name", "asc"),
                     ],
                 },
             },
@@ -1134,7 +1134,7 @@ class ModsController(Controller):
                     Row(
                         controls=[
                             Chip(
-                                data=sorter,
+                                data=(i, sorter),
                                 label=Row(
                                     controls=[
                                         (
@@ -1448,7 +1448,7 @@ class ModsController(Controller):
         await self.load_trovesaurus_mods(boot=True)
 
     async def set_trovesaurus_sorter_switch(self, event):
-        sorter = event.control.data
+        i, sorter = event.control.data
         new_order = [
             (s, o)
             for s, o in self.memory["trovesaurus"]["search"]["sort_by"]
@@ -1456,7 +1456,10 @@ class ModsController(Controller):
         ]
         for s, o in self.memory["trovesaurus"]["search"]["sort_by"]:
             if s == sorter:
-                new_order.insert(0, (s, "asc" if o == "desc" else "desc"))
+                if i == 0:
+                    new_order.insert(0, (s, "asc" if o == "desc" else "desc"))
+                else:
+                    new_order.insert(0, (s, o))
         self.memory["trovesaurus"]["search"]["sort_by"] = new_order
         await self.load_trovesaurus_mods(boot=True)
 
