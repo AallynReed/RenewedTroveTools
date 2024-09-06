@@ -69,6 +69,7 @@ class Mod(BaseModel):
     installed: bool = False
     installed_file: ModFile = None
     installed_version: str = None
+    obsolete: int
 
     def __contains__(self, item):
         return item in self.hashes
