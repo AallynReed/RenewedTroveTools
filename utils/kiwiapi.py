@@ -92,6 +92,7 @@ class Mod(BaseModel):
     file_objs: list[ModFile] = Field(alias="downloads", default_factory=list)
     installed: bool = False
     installed_file: ModFile = None
+    obsolete: int
 
     def __contains__(self, item):
         return item in self.hashes
@@ -113,6 +114,10 @@ class Mod(BaseModel):
     @property
     def image_thumbnail_url(self):
         return self.image_url.replace("_l.", "_t.")
+
+    @property
+    def is_obsolete(self):
+        return self.obsolete != 0
 
 
 class ImageSize(Enum):

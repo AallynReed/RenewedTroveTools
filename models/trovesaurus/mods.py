@@ -87,3 +87,7 @@ class Mod(BaseModel):
     @property
     def url(self):
         return f"https://trovesaurus.com/mod={self.id}"
+
+    @property
+    def is_obsolete(self):
+        return self.obsolete != 0

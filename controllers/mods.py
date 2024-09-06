@@ -1198,9 +1198,10 @@ class ModsController(Controller):
         for i, mod in enumerate(self.cached_trovesaurus_mods):
             installed = False
             ts_mod = None
-            for ts_mod in mod_l.mods:
-                if ts_mod.trovesaurus_data:
-                    if ts_mod.trovesaurus_data.id == mod.id:
+            for _mod in mod_l.mods:
+                if _mod.trovesaurus_data:
+                    if _mod.trovesaurus_data.id == mod.id:
+                        ts_mod = _mod
                         installed = True
                         break
             self.mods_list.controls.append(
@@ -1233,6 +1234,19 @@ class ModsController(Controller):
                                             mod.name, color="#bbbbbb", size=18
                                         ),
                                         url=f"https://trovesaurus.com/mod={mod.id}",
+                                    ),
+                                    *(
+                                        [
+                                            Tooltip(
+                                                message="This mod may not work properly as it is out of date",
+                                                content=RTTIconDecoButton(
+                                                    icon=icons.WARNING,
+                                                    icon_color="yellow",
+                                                ),
+                                            )
+                                        ]
+                                        if mod.is_obsolete
+                                        else []
                                     ),
                                     *(
                                         [
