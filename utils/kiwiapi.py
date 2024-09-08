@@ -162,7 +162,7 @@ class KiwiAPI:
                             "release": platform.release(),
                         },
                     },
-                    timeout=2
+                    timeout=5
                 )
             except asyncio.TimeoutError:
                 ...
@@ -331,7 +331,7 @@ class KiwiAPI:
             try:
                 response = await session.get(
                     f"{self.api_url}{Endpoints.star_chart_presets.value}",
-                    timeout=2
+                    timeout=5
                 )
                 if response.status != 200:
                     return []

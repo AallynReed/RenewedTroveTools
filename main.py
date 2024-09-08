@@ -234,21 +234,18 @@ class App:
             return None
 
         headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
-        fail = False
         try:
             response = requests.get(
                 "https://kiwiapi.aallyn.xyz/v1/user/discord/get?pass_key=" + token,
-                timeout=2,
+                timeout=5,
                 headers=headers,
             )
             if response.status_code != 200:
-                fail = True
-        except asyncio.TimeoutError:
-            fail = True
-        if not fail:
+                return None
             await self.page.client_storage.set_async("rnt-token", token)
             return response.json()
-        return None
+        except requests.Timeout:
+            return None
 
     async def display_login_screen(self, _):
         await self.page.go_async("/login")
