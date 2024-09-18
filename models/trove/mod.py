@@ -496,7 +496,7 @@ class TMod(TroveMod):
         return self.tmod_hash
 
     @classmethod
-    def read_bytes(cls, path: Path, data: bytes):
+    def read_bytes(cls, path: Path, data: bytes, partial=False):
         mod = cls()
         mod.tmod_content = data
         mod.mod_path = path
@@ -512,15 +512,20 @@ class TMod(TroveMod):
             value_size = read_leb128(data, data.pos())
             value = data.read_str(value_size)
             mod.properties.append(Property(name=name, value=value))
-        file_stream = data.buffer()[header_size:]
-        decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS)
-        try:
-            file_stream = BinaryReader(bytearray(decompressor.decompress(file_stream)))
-        except:
-            ModParserLogger.debug(
-                "Failed to decompile mod, trying manual decompression: " + str(path)
-            )
-            file_stream = BinaryReader(bytearray(mod.manual_decompression(file_stream)))
+        if not partial:
+            file_stream = data.buffer()[header_size:]
+            decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS)
+            try:
+                file_stream = BinaryReader(
+                    bytearray(decompressor.decompress(file_stream))
+                )
+            except:
+                ModParserLogger.debug(
+                    "Failed to decompile mod, trying manual decompression: " + str(path)
+                )
+                file_stream = BinaryReader(
+                    bytearray(mod.manual_decompression(file_stream))
+                )
         while data.pos() < header_size:
             name_size = data.read_uint8()
             name = data.read_str(name_size)
@@ -528,12 +533,13 @@ class TMod(TroveMod):
             offset = read_leb128(data, data.pos())
             size = read_leb128(data, data.pos())
             checksum = read_leb128(data, data.pos())
-            file_stream.seek(offset)
-            content = file_stream.read_bytes(size)
-            file = TroveModFile(Path(name), content)
-            file.index = index
-            file.old_checksum = checksum
-            mod.files.append(file)
+            if not partial:
+                file_stream.seek(offset)
+                content = file_stream.read_bytes(size)
+                file = TroveModFile(Path(name), content)
+                file.index = index
+                file.old_checksum = checksum
+                mod.files.append(file)
         return mod
 
     @staticmethod
@@ -769,11 +775,11 @@ class TroveModList:
             if mod.is_ui_mod:
                 mod.ensure_config()
 
-    def _populate(self, force=False, fix_names=True, fix_configs=True):
+    def _populate(self, force=False, fix_names=True, fix_configs=True, partial=False):
         self._mods.clear()
         self._ensure_correct_extensions()
-        self._populate_tmod_enabled(fix_names)
-        self._populate_tmod_disabled(fix_names)
+        self._populate_tmod_enabled(fix_names, partial)
+        self._populate_tmod_disabled(fix_names, partial)
         self._populate_zip_enabled()
         self._populate_zip_disabled()
         self.sort_by_name()
@@ -795,22 +801,36 @@ class TroveModList:
             if not zipfile.is_zipfile(file):
                 file.rename(file.with_suffix("").with_suffix(".tmod.disabled"))
 
-    def _populate_tmod_enabled(self, fix_names=True):
+    def _populate_tmod_enabled(self, fix_names=True, partial=False):
         for file in self.trove_path.enabled_tmods:
-            file_data = file.read_bytes()
-            mod = TMod.read_bytes(file, file_data)
-            if mod.has_wrong_name and fix_names:
-                mod.fix_name()
-            self._mods.append(mod)
+            with open(file, "rb") as f:
+                if partial:
+                    file_data = f.read(8)
+                    header_size = int.from_bytes(file_data, "little")
+                    f.seek(0)
+                    file_data = f.read(header_size)
+                else:
+                    file_data = f.read()
+                mod = TMod.read_bytes(file, file_data, partial)
+                if mod.has_wrong_name and fix_names:
+                    mod.fix_name()
+                self._mods.append(mod)
 
-    def _populate_tmod_disabled(self, fix_names=True):
+    def _populate_tmod_disabled(self, fix_names=True, partial=False):
         for file in self.trove_path.disabled_tmods:
-            file_data = file.read_bytes()
-            mod = TMod.read_bytes(file, file_data)
-            mod.enabled = False
-            if mod.has_wrong_name and fix_names:
-                mod.fix_name()
-            self._mods.append(mod)
+            with open(file, "rb") as f:
+                if partial:
+                    file_data = f.read(8)
+                    header_size = int.from_bytes(file_data, "little")
+                    f.seek(0)
+                    file_data = f.read(header_size)
+                else:
+                    file_data = f.read()
+                mod = TMod.read_bytes(file, file_data, partial)
+                mod.enabled = False
+                if mod.has_wrong_name and fix_names:
+                    mod.fix_name()
+                self._mods.append(mod)
 
     def _populate_zip_enabled(self):
         for file in self.trove_path.enabled_zips:

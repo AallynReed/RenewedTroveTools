@@ -513,9 +513,10 @@ class ModsController(Controller):
             path=installation_path,
             fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
             fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+            partial=True,
         )
         await self.my_mod_list.update_trovesaurus_data()
-        await self.my_mod_list.cloud_check()
+        # await self.my_mod_list.cloud_check()
         if not self.my_mod_list.mods:
             self.my_mods.controls.append(Text(loc("No mods in this directory")))
             await self.release_ui()
@@ -931,6 +932,7 @@ class ModsController(Controller):
             path=installation_path,
             fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
             fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+            partial=True,
         )
         await self.my_mod_list.update_trovesaurus_data()
         for tile in self.my_mod_tiles:
@@ -1193,6 +1195,7 @@ class ModsController(Controller):
             path=installation_path,
             fix_names=self.page.preferences.mod_manager.auto_fix_mod_names,
             fix_configs=self.page.preferences.mod_manager.auto_generate_and_fix_cfg,
+            partial=True,
         )
         await mod_l.update_trovesaurus_data()
         for i, mod in enumerate(self.cached_trovesaurus_mods):
