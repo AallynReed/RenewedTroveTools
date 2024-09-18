@@ -174,6 +174,8 @@ class KiwiAPI:
         type: str = None,
         sub_type: str = None,
     ):
+        if not hasattr(self, "_mod_pages_count"):
+            self._mod_pages_count = {}
         params = {"limit": page_size}
         if query is not None:
             params["query"] = query
@@ -182,13 +184,16 @@ class KiwiAPI:
         if sub_type is not None:
             params["sub_type"] = sub_type
         encoded_params = urlencode(params)
-        async with ClientSession() as session:
-            async with session.get(
-                f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
-            ) as response:
-                count = int(response.headers.get("count"))
-                pages = count // page_size + 1
-        return pages
+        cached_pages = self._mod_pages_count.get(encoded_params)
+        if cached_pages is None:
+            async with ClientSession() as session:
+                async with session.get(
+                    f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
+                ) as response:
+                    count = int(response.headers.get("count"))
+                    cached_pages = count // page_size + 1
+                    self._mod_pages_count[encoded_params] = cached_pages
+        return cached_pages
 
     async def get_mods_list_chunk(
         self,
@@ -199,6 +204,8 @@ class KiwiAPI:
         sub_type: str = None,
         sort_by: list[tuple[str, str]] = None,
     ):
+        if not hasattr(self, "_mod_pages"):
+            self._mod_pages = {}
         offset = page_size * page
         params = {"limit": page_size, "offset": offset}
         if query is not None:
@@ -211,26 +218,38 @@ class KiwiAPI:
             sort_by_string = ",".join([f"{field}:{order}" for field, order in sort_by])
             params["sort_by"] = sort_by_string
         encoded_params = urlencode(params)
-        async with ClientSession() as session:
-            async with session.get(
-                f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
-            ) as response:
-                mods = await response.json()
-        return [Mod(**mod) for mod in mods]
+        cached_mods = self._mod_pages.get(encoded_params)
+        if cached_mods is None:
+            async with ClientSession() as session:
+                async with session.get(
+                    f"{self.api_url}{Endpoints.mods_search.value}?{encoded_params}"
+                ) as response:
+                    cached_mods = await response.json()
+                    cached_mods = [Mod(**mod) for mod in cached_mods]
+                    self._mod_pages[encoded_params] = cached_mods
+        return cached_mods
 
     async def get_mod_types(self):
-        async with ClientSession() as session:
-            async with session.get(
-                f"{self.api_url}{Endpoints.mod_types.value}"
-            ) as response:
-                return await response.json()
+        if not hasattr(self, "_mod_types"):
+            async with ClientSession() as session:
+                async with session.get(
+                    f"{self.api_url}{Endpoints.mod_types.value}"
+                ) as response:
+                    self._mod_types = await response.json()
+                    return self._mod_types
+        return self._mod_types
 
     async def get_mod_sub_types(self, type: str):
-        async with ClientSession() as session:
-            async with session.get(
-                f"{self.api_url}{Endpoints.mod_sub_types.value}/{type}"
-            ) as response:
-                return await response.json()
+        if not hasattr(self, "_mod_sub_types") or self._mod_sub_types.get(type) is None:
+            async with ClientSession() as session:
+                async with session.get(
+                    f"{self.api_url}{Endpoints.mod_sub_types.value}/{type}"
+                ) as response:
+                    if not hasattr(self, "_mod_sub_types"):
+                        self._mod_sub_types = {}
+                    self._mod_sub_types[type] = await response.json()
+                    return self._mod_sub_types[type]
+        return self._mod_sub_types[type]
 
     def get_resized_image_url(self, url: str, size: ImageSize):
         return (
