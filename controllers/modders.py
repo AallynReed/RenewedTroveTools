@@ -118,6 +118,7 @@ class ModdersController(Controller):
             path = path.parent
             if path.joinpath("Trove.exe").is_file():
                 self.mod_folders.append(TroveGamePath(path=Path(path), name=name))
+        mod_folders = [str(f.path) for f in self.mod_folders]
         extract = self.memory["extract"]
         compile = self.memory["compile"]
         projects = self.memory["projects"]
@@ -126,20 +127,20 @@ class ModdersController(Controller):
             extract["installation_path"] = None
             projects["installation_path"] = None
         else:
-            if not compile["installation_path"]:
+            if compile["installation_path"] is None:
                 compile["installation_path"] = self.mod_folders[0]
             else:
-                if compile["installation_path"] not in self.mod_folders:
+                if str(compile["installation_path"].path) not in mod_folders:
                     compile["installation_path"] = self.mod_folders[0]
-            if not extract["installation_path"]:
+            if extract["installation_path"] is None:
                 extract["installation_path"] = self.mod_folders[0]
             else:
-                if extract["installation_path"] not in self.mod_folders:
+                if str(extract["installation_path"].path) not in mod_folders:
                     extract["installation_path"] = self.mod_folders[0]
-            if not projects["installation_path"]:
+            if projects["installation_path"] is None:
                 projects["installation_path"] = self.mod_folders[0]
             else:
-                if projects["installation_path"] not in self.mod_folders:
+                if str(projects["installation_path"].path) not in mod_folders:
                     projects["installation_path"] = self.mod_folders[0]
 
     async def load_tab(self, event=None, boot=False):
@@ -289,6 +290,8 @@ class ModdersController(Controller):
 
     async def set_extract_installation_path(self, event):
         self.memory["extract"]["installation_path"] = event.control.data
+        self.memory["compile"]["installation_path"] = event.control.data
+        self.memory["projects"]["installation_path"] = event.control.data
         await self.load_tab()
 
     async def select_tmod_file(self, _):
@@ -597,7 +600,9 @@ class ModdersController(Controller):
         self.compile.controls.append(files)
 
     async def set_compile_installation_path(self, event):
+        self.memory["extract"]["installation_path"] = event.control.data
         self.memory["compile"]["installation_path"] = event.control.data
+        self.memory["projects"]["installation_path"] = event.control.data
         await self.load_tab()
 
     async def add_mod_title(self, event):
