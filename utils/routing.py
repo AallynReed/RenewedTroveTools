@@ -26,6 +26,7 @@ class Routing:
         self.page = page
         self.views = views
         self.page.on_route_change = self.handle_route_change_async
+        self.cached_routes = {}
 
     async def handle_route_change_async(self, event):
         if event is None:
@@ -48,8 +49,13 @@ class Routing:
             for k, v in re.findall(r"^(.*?)=(.*?)$", kv)
         }
         view = get_attr(self.current_views, route=url.path)
+        cached_view = self.cached_routes.get(view, None)
+        if cached_view is None:
+            cached_view = view(self.page)
+            if not self.page.web:
+                self.cached_routes[view] = cached_view
         self.page.appbar.leading.controls[0].name = view.icon
-        return view(self.page)
+        return cached_view
 
     async def change_view_async(self, view: Type[View]):
         self.page.controls = [

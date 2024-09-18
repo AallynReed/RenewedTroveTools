@@ -134,7 +134,7 @@ class HomeController(Controller):
                 expand=True,
             )
         ]
-        tasks = [
+        self.tasks = [
             # self.update_twitch_streams,
             self.update_weekly,
             self.update_daily,
@@ -142,13 +142,20 @@ class HomeController(Controller):
             self.update_dragons,
             self.update_mastery,
             self.update_events,
+            self.tasks_manager,
         ]
-        for task in tasks:
+        for task in self.tasks:
             if not task.is_running():
                 task.start()
         await self.main.update_async()
 
     def setup_events(self): ...
+
+    @tasks.loop(seconds=60)
+    async def tasks_manager(self):
+        for task in self.tasks:
+            if not task.is_running():
+                task.start()
 
     @tasks.loop(seconds=60)
     async def update_daily(self):
@@ -271,7 +278,7 @@ class HomeController(Controller):
         )
         await self.weekly_widget.update_async()
 
-    @tasks.loop(seconds=60, log_errors=True)
+    @tasks.loop(seconds=60)
     async def update_biomes(self):
         async with ClientSession() as session:
             async with session.get(
