@@ -166,21 +166,22 @@ class ModsController(Controller):
         custom_mod_folders = self.page.preferences.mod_manager.custom_directories
         for name, path in custom_mod_folders:
             self.mod_folders.append(TroveGamePath(path=Path(path), name=name))
+        mod_folders = [str(f.path) for f in self.mod_folders]
         my_mods = self.memory["my_mods"]
         trovesarus = self.memory["trovesaurus"]
         if not self.mod_folders:
             my_mods["installation_path"] = None
             trovesarus["installation_path"] = None
         else:
-            if not my_mods["installation_path"]:
+            if my_mods["installation_path"] is None:
                 my_mods["installation_path"] = self.mod_folders[0]
             else:
-                if my_mods["installation_path"] not in self.mod_folders:
+                if str(my_mods["installation_path"].path) not in mod_folders:
                     my_mods["installation_path"] = self.mod_folders[0]
-            if not trovesarus["installation_path"]:
+            if trovesarus["installation_path"] is None:
                 trovesarus["installation_path"] = self.mod_folders[0]
             else:
-                if trovesarus["installation_path"] not in self.mod_folders:
+                if str(trovesarus["installation_path"].path) not in mod_folders:
                     trovesarus["installation_path"] = self.mod_folders[0]
 
     async def tab_loader(self, event=None, index=None, boot=False):
@@ -1046,6 +1047,7 @@ class ModsController(Controller):
 
     async def set_my_mods_installation_path(self, event):
         self.memory["my_mods"]["installation_path"] = event.control.data
+        self.memory["trovesaurus"]["installation_path"] = event.control.data
         await self.load_my_mods()
 
     # Trovesaurus Tab
@@ -1560,6 +1562,7 @@ class ModsController(Controller):
             pass
 
     async def set_trovesaurus_installation_path(self, event):
+        self.memory["my_mods"]["installation_path"] = event.control.data
         self.memory["trovesaurus"]["installation_path"] = event.control.data
         await self.load_trovesaurus_mods()
 
