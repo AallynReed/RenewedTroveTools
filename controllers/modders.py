@@ -147,11 +147,11 @@ class ModdersController(Controller):
         if boot or event:
             self.check_memory()
         tab = self.tab_map.get(self.tabs.selected_index)
+        await self.lock_ui()
         self.main.controls.clear()
         self.main.controls.append(self.tabs)
         tab_control = self.tab_controls.get(self.tabs.selected_index)
         tab_control.controls.clear()
-        await self.lock_ui()
         self.main.controls.append(tab_control)
         await tab()
         await self.release_ui()
