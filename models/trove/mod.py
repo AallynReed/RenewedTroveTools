@@ -190,8 +190,13 @@ class TroveMod:
         new_mod_path = self.mod_path.with_name(self.name + extension)
         if new_mod_path.exists():
             return
-        self.mod_path.rename(new_mod_path)
-        self.mod_path = new_mod_path
+        try:
+            self.mod_path.rename(new_mod_path)
+            self.mod_path = new_mod_path
+        except PermissionError:
+            ModParserLogger.error(
+                f"Failed to rename mod {self.name} at {self.mod_path} (Likely another program is using it)"
+            )
 
     def check_conflicts(self, mods: list[TroveMod], force=False):
         if force:
