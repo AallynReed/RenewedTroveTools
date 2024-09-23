@@ -23,6 +23,8 @@ from ..trovesaurus.mods import Mod
 from utils.trove.registry import TroveGamePath
 
 
+mod_file_cache = {}
+
 ModParserLogger = Logger("Mod Parser")
 
 
@@ -112,6 +114,60 @@ class TroveModFile:
         data.extend(write_leb128(self.size))
         data.extend(write_leb128(self.checksum))
         return data.buffer()
+
+
+class PartialTroveModFile(TroveModFile):
+    size: int = 0
+
+    def __init__(self, trove_path: Path):
+        super().__init__(trove_path, b"")
+        self.trove_path = trove_path.as_posix().lower()
+        self._content = None
+        self._checksum = None
+
+    @property
+    def mod_header_size(self):
+        with open(self.trove_path, "rb") as f:
+            header = f.read(8)
+            return int.from_bytes(header, "little")
+
+    @property
+    def mod_header(self):
+        with open(self.trove_path, "rb") as f:
+            header = f.read(self.mod_header_size)
+            return header
+
+    @property
+    def content(self) -> BinaryReader:
+        if self._content is None:
+            with open(self.trove_path, "rb") as f:
+                f.seek(self.mod_header_size)
+                # Decompress the file
+                cached_file = mod_file_cache.get(self.trove_path)
+                if cached_file is None:
+                    file_stream = f.read()
+                    decompressor = zlib.decompressobj(wbits=zlib.MAX_WBITS)
+                    try:
+                        file_stream = BinaryReader(
+                            bytearray(decompressor.decompress(file_stream))
+                        )
+                    except:
+                        ModParserLogger.debug(
+                            "Failed to decompile mod, trying manual decompression: "
+                            + str(trove_path)
+                        )
+                        file_stream = BinaryReader(
+                            bytearray(TMod.manual_decompression(file_stream))
+                        )
+                    cached_file = mod_file_cache[self.trove_path] = file_stream
+                cached_file.seek(self.offset)
+                self.content = cached_file.read(self.size)
+                cached_file.seek(0)
+        return self._content
+
+    @content.setter
+    def content(self, value: BinaryReader):
+        self._content = value
 
 
 class TroveMod:
@@ -545,6 +601,12 @@ class TMod(TroveMod):
                 file.index = index
                 file.old_checksum = checksum
                 mod.files.append(file)
+            else:
+                file = PartialTroveModFile(Path(name))
+                file.index = index
+                file.offset = offset
+                file.size = size
+                mod.files.append(file)
         return mod
 
     @staticmethod
@@ -781,6 +843,7 @@ class TroveModList:
                 mod.ensure_config()
 
     def _populate(self, force=False, fix_names=True, fix_configs=True, partial=False):
+        mod_file_cache.clear()
         self._mods.clear()
         self._ensure_correct_extensions()
         self._populate_tmod_enabled(fix_names, partial)
