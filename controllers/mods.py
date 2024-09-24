@@ -533,16 +533,25 @@ class ModsController(Controller):
                 disabled=not bool(updates),
             ),
         )
+        enabled_count = len(self.my_mod_list.enabled)
+        disabled_count = len(self.my_mod_list.disabled)
+        self.enabled_counter = Text(
+            loc("Enabled ({amount})").format(amount=enabled_count)
+        )
+        self.disabled_counter = Text(
+            loc("Disabled ({amount})").format(amount=disabled_count)
+        )
         self.my_mods_list_maps = {
             i: [
                 ExpansionTile(
                     title=Row(
                         controls=[
-                            RTTImage(
-                                src="https://trovesaurus.com/images/logos/Sage_64.png?1",
-                                width=24,
+                            (
+                                Icon(icons.CHECK, color="green")
+                                if not i
+                                else Icon(icons.CLOSE, color="red")
                             ),
-                            Text("Trovesaurus"),
+                            self.enabled_counter if not i else self.disabled_counter,
                         ]
                     ),
                     tile_padding=padding.symmetric(0, 10),
@@ -567,13 +576,6 @@ class ModsController(Controller):
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
-                Divider(),
-                Column(
-                    controls=[self.my_mods_list_maps[0][1]],
-                    spacing=0,
-                    scroll=ScrollMode.ADAPTIVE,
-                    expand=True,
-                ),
             ],
             spacing=0,
             alignment="start",
@@ -586,33 +588,12 @@ class ModsController(Controller):
                     scroll=ScrollMode.ADAPTIVE,
                     expand=True,
                 ),
-                Divider(height=1),
-                Column(
-                    controls=[self.my_mods_list_maps[1][1]],
-                    scroll=ScrollMode.ADAPTIVE,
-                    expand=True,
-                ),
             ],
             expand=True,
-        )
-        enabled_count = len(self.my_mod_list.enabled)
-        disabled_count = len(self.my_mod_list.disabled)
-        self.enabled_counter = Text(
-            loc("Enabled ({amount})").format(amount=enabled_count)
-        )
-        self.disabled_counter = Text(
-            loc("Disabled ({amount})").format(amount=disabled_count)
         )
         my_mods_list.controls.append(
             Column(
                 controls=[
-                    Row(
-                        controls=[
-                            Icon(icons.CHECK, color="green"),
-                            self.enabled_counter,
-                        ],
-                        alignment="center",
-                    ),
                     self.enabled_mods_list,
                 ],
                 expand=True,
@@ -625,13 +606,6 @@ class ModsController(Controller):
         my_mods_list.controls.append(
             Column(
                 controls=[
-                    Row(
-                        controls=[
-                            Icon(icons.CANCEL, color="red"),
-                            self.disabled_counter,
-                        ],
-                        alignment="center",
-                    ),
                     self.disabled_mods_list,
                 ],
                 expand=True,
@@ -649,7 +623,7 @@ class ModsController(Controller):
             mod_frame = (
                 self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
             )
-            mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
+            mod_frame_tile = mod_frame[0]
             mt = self.get_mod_tile(mod)
             mod_frame_tile.controls.append(mt)
             if not mod.enabled:
@@ -945,7 +919,7 @@ class ModsController(Controller):
             mod_frame = (
                 self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
             )
-            mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
+            mod_frame_tile = mod_frame[0]
             tile = self.get_mod_tile(mod)
             if not mod.enabled:
                 tile.controls.reverse()
@@ -975,7 +949,7 @@ class ModsController(Controller):
         mod_frame = (
             self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
         )
-        mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
+        mod_frame_tile = mod_frame[0]
         mod_frame_tile.controls.sort(key=lambda x: self.my_mod_list.mods.index(x.data))
         self.enabled_counter.value = loc("Enabled ({amount})").format(
             amount=len(self.my_mod_list.enabled)
@@ -1012,8 +986,8 @@ class ModsController(Controller):
             end = (
                 self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
             )
-            start_mod_frame_tile = start[0] if mod.trovesaurus_data else start[1]
-            end_mod_frame_tile = end[0] if mod.trovesaurus_data else end[1]
+            start_mod_frame_tile = start[0]
+            end_mod_frame_tile = end[0]
             start_mod_frame_tile.controls.remove(tile)
             end_mod_frame_tile.controls.append(tile)
             tile.controls[icon_index].content.icon = icon
@@ -1030,7 +1004,7 @@ class ModsController(Controller):
         mod_frame = (
             self.my_mods_list_maps[0] if mod.enabled else self.my_mods_list_maps[1]
         )
-        mod_frame_tile = mod_frame[0] if mod.trovesaurus_data else mod_frame[1]
+        mod_frame_tile = mod_frame[0]
         mod_frame_tile.controls.remove(tile)
         self.my_mod_tiles.remove(tile)
         self.my_mod_list.mods.remove(mod)
