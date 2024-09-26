@@ -69,6 +69,9 @@ class Logger:
         self.logger.addHandler(self.stream_handler)
         LOGGERS[name] = self
 
+    def set_logging_level(self, level):
+        self.stream_handler.setLevel(level)
+
     def debug(self, message):
         self.logger.debug(message)
 

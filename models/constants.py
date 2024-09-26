@@ -4,6 +4,7 @@ from aiohttp import ClientSession
 from json import load, loads
 from pathlib import Path
 from base64 import b64decode
+from utils.logger import log
 
 files_cache = {}
 
@@ -19,8 +20,12 @@ async def fetch_files(local_data=False, local_locales=False):
                     "https://kiwiapi.aallyn.xyz/v1/stats/get_data", timeout=5
                 )
                 if response.status != 200:
+                    log("Network").error(
+                        "Failed to fetch data files, response code: %s", response.status
+                    )
                     fail = True
             except asyncio.TimeoutError:
+                log("Network").error("Failed to fetch data files, timeout")
                 fail = True
             if fail:
                 data_path = Path("data")
@@ -55,8 +60,13 @@ async def fetch_files(local_data=False, local_locales=False):
                     "https://kiwiapi.aallyn.xyz/v1/misc/locales", timeout=5
                 )
                 if response.status != 200:
+                    log("Network").error(
+                        "Failed to fetch locale files, response code: %s",
+                        response.status,
+                    )
                     fail = True
             except asyncio.TimeoutError:
+                log("Network").error("Failed to fetch locale files, timeout")
                 fail = True
             if fail:
                 locales_path = Path("locales")

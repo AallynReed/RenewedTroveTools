@@ -1,3 +1,20 @@
+from utils.logger import Logger, log
+import logging
+from models import Metadata, Preferences
+from utils.path import BasePath
+
+metadata = Metadata.load_from_file(BasePath.joinpath("data/metadata.json"))
+level = logging.DEBUG if metadata.dev else logging.INFO
+Logger("Core", level=level)
+Logger("Routing", level=level)
+Logger("Traffic", level=level)
+Logger("Network", level=level)
+Logger("Tasks", level=level)
+Logger("TMod Parser", level=level)
+Logger("Testing", level=level)
+
+#####
+
 import asyncio
 import json
 import os
@@ -7,17 +24,20 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 import shutil
+import win32gui
+import win32con
+import pystray
+from PIL import Image
+import threading
+import win11toast
 
 import requests
-from flet import app_async, WEB_BROWSER, FLET_APP, Theme, Row, Text, Icon
-
-from models import Metadata, Preferences
+from flet import app_async, AppView, Theme, Row, Text, Icon
 from models.constants import fetch_files
 from models.interface import CustomAppBar
 from models.interface.controls import Snackbar, Modal
 from utils import tasks
-from utils.logger import Logger, log
-from utils.path import BasePath
+
 from utils.protocol import set_protocol
 from utils.routing import Routing
 from utils.trove.server_time import ServerTime
@@ -38,18 +58,21 @@ class App:
 
     def run(self, port: int = 0):
         self.loop = asyncio.get_event_loop()
+        tray_thread = threading.Thread(
+            target=self.run_tray_icon, args=(self.loop,), daemon=True
+        )
+        tray_thread.start()
         self.loop.run_until_complete(
             app_async(
                 target=self.start,
                 assets_dir="assets",
-                view=WEB_BROWSER if self.web else FLET_APP,
+                view=AppView.WEB_BROWSER if self.web else AppView.FLET_APP,
                 port=port,
             )
         )
 
     async def start(self, page):
         self.page = page
-        self.setup_logging()
         self.page.RTT = self
         if page.web:
             await self.start_web()
@@ -151,6 +174,7 @@ class App:
                 )
                 asyncio.create_task(self.page.protocol_socket.serve_forever())
                 opened = True
+                log("Network").info("Started protocol socket at %s" % port)
                 break
             except OSError:
                 continue
@@ -160,6 +184,7 @@ class App:
     async def protocol_handler(self, reader, _):
         raw_data = await reader.read(2048)
         data = json.loads(raw_data.decode())
+        log("Network").debug("Received data from protocol socket: %s" % data)
         if data:
             uri = urlparse(data[0])
             if uri.scheme == "rtt":
@@ -170,21 +195,14 @@ class App:
                 }
                 await self.page.go_async(uri.path, **params)
 
-    def setup_logging(self, web=False):
-        Logger("Core")
-        Logger("Routing")
-        Logger("Traffic")
-        Logger("Network")
-        Logger("Tasks")
-        Logger("TMod Parser")
-        Logger("Testing")
-
     def setup_localization(self):
         locale.ENGINE.load_locale_translations()
         locale.ENGINE.locale = self.page.preferences.locale
         log("Core").info("Updated localization strings")
 
     async def setup_page(self):
+        self.page.fonts = {"Open Sans": "/fonts/Google Sans.ttf"}
+        self.page.theme = Theme(font_family="Product Sans")
         self.page.title = self.page.metadata.name
         self.page.window_min_width = 1630
         self.page.window_min_height = 950
@@ -211,6 +229,8 @@ class App:
             self.page.preferences.fullscreen = True
         elif e.data == "unmaximize":
             self.page.preferences.fullscreen = False
+        elif e.data == "minimize":
+            await self.hide_window()
         elif e.data == "resized":
             width = self.page.window_width
             height = self.page.window_height
@@ -342,6 +362,64 @@ class App:
         await self.setup_appbar()
         await self.page.go_async("/test")
         await self.page.go_async("/")
+
+    async def hide_window(self):
+        try:
+            hwnd = win32gui.FindWindow(None, "Renewed Trove Tools")
+            win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+            await self.send_notification(
+                "Renewed Trove Tools",
+                "The app is running in the background, close it from the tray icon.",
+            )
+        except ValueError:
+            ...
+
+    async def unhide_window(self):
+        try:
+            hwnd = win32gui.FindWindow(None, "Renewed Trove Tools")
+            win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+        except ValueError:
+            ...
+
+    async def close_window(self):
+        await self.page.window_close_async()
+
+    def create_image(self):
+        image = Image.open("assets/x48.png")
+        return image
+
+    def quit_app(self, icon, item):
+        icon.stop()
+        asyncio.run_coroutine_threadsafe(self.close_window(), self.loop)
+
+    def show_app(self, *args, **kwargs):
+        asyncio.run_coroutine_threadsafe(self.unhide_window(), self.loop)
+
+    def run_tray_icon(self, loop):
+        self.icon = pystray.Icon(
+            "Renewed Trove Tools",
+            self.create_image(),
+            menu=pystray.Menu(
+                pystray.MenuItem("Show", self.show_app),
+                pystray.MenuItem("Quit", self.quit_app),
+            ),
+        )
+        threading.Thread(
+            target=loop.run_forever, name="Renewed Trove Tools", daemon=True
+        ).start()
+        self.icon.run()
+
+    async def send_notification(self, title, message):
+        await win11toast.toast_async(
+            title,
+            message,
+            # icon={
+            #    "src": "https://kiwiapi.aallyn.xyz/v1/misc/assets/x256.png",
+            #    "placement": "appLogoOverride",
+            # },
+            on_click=self.show_app,
+            audio={"silent": "true"},
+        )
 
 
 if __name__ == "__main__":

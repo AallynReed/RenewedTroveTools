@@ -18,14 +18,12 @@ import re
 import os
 
 from utils.functions import read_leb128, write_leb128, calculate_hash, chunks, get_attr
-from utils.logger import Logger
+from utils.logger import log
 from ..trovesaurus.mods import Mod
 from utils.trove.registry import TroveGamePath
 
 
 mod_file_cache = {}
-
-ModParserLogger = Logger("Mod Parser")
 
 
 class NoFilesError(Exception): ...
@@ -152,9 +150,9 @@ class PartialTroveModFile(TroveModFile):
                             bytearray(decompressor.decompress(file_stream))
                         )
                     except:
-                        ModParserLogger.debug(
+                        log("TMod Parser").debug(
                             "Failed to decompile mod, trying manual decompression: "
-                            + str(trove_path)
+                            + str(self.trove_path)
                         )
                         file_stream = BinaryReader(
                             bytearray(TMod.manual_decompression(file_stream))
@@ -250,7 +248,7 @@ class TroveMod:
             self.mod_path.rename(new_mod_path)
             self.mod_path = new_mod_path
         except PermissionError:
-            ModParserLogger.error(
+            log("TMod Parser").error(
                 f"Failed to rename mod {self.name} at {self.mod_path} (Likely another program is using it)"
             )
 
@@ -581,7 +579,7 @@ class TMod(TroveMod):
                     bytearray(decompressor.decompress(file_stream))
                 )
             except:
-                ModParserLogger.debug(
+                log("TMod Parser").debug(
                     "Failed to decompile mod, trying manual decompression: " + str(path)
                 )
                 file_stream = BinaryReader(

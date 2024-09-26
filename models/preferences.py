@@ -8,6 +8,7 @@ from flet import ThemeMode
 from pydantic import BaseModel, Field, PrivateAttr, validator
 
 from utils.locale import Locale
+from utils.logger import log
 
 
 class AccentColor(Enum):
@@ -115,7 +116,8 @@ class Preferences(BaseModel):
         self.path.parent.mkdir(exist_ok=True, parents=True)
         if not self.web:
             with open(self.path, "w+") as f:
-                f.write(self.json())
+                f.write(self.json(indent=4))
+                log("Core").debug(f"Saved preferences: {self.json()}")
         else:
             asyncio.create_task(self.save_web())
 

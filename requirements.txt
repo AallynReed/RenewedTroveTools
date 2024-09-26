@@ -1,5 +1,5 @@
 python-dotenv
-flet==0.22.1
+flet==0.23.1
 flet-contrib
 python-i18n
 pydantic==1.10.16
@@ -18,3 +18,6 @@ vdf
 psutil
 sympy
 pillow
+pystray
+win11toast
+pywin32

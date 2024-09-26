@@ -4,6 +4,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from utils.logger import log
 
 from aiohttp import ClientSession
 from flet import (
@@ -80,7 +81,12 @@ class CustomAppBar(AppBar):
 
     @loop(seconds=120)
     async def check_updates(self):
+        log("Tasks").info("Checking for updates")
         await self.check_for_update()
+
+    @check_updates.before_loop
+    async def before_check_updates(self):
+        log("Tasks").info("Starting check for updates task")
 
     def build_actions(self, kwargs):
         actions = []
