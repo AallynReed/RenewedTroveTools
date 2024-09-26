@@ -62,6 +62,7 @@ class ModdersToolsPreferences(BaseModel):
 
 class Preferences(BaseModel):
     _page = PrivateAttr()
+    _cached_object = PrivateAttr(default=None)
     path: Path
     web: bool = False
     locale: Locale = Locale.en_US
@@ -116,8 +117,11 @@ class Preferences(BaseModel):
         self.path.parent.mkdir(exist_ok=True, parents=True)
         if not self.web:
             with open(self.path, "w+") as f:
-                f.write(self.json(indent=4))
-                log("Core").debug(f"Saved preferences: {self.json()}")
+                data = self.json(indent=4)
+                if self._cached_object != data:
+                    self._cached_object = data
+                    f.write(data)
+                    log("Core").debug(f"Saved preferences: {self.json()}")
         else:
             asyncio.create_task(self.save_web())
 
