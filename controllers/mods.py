@@ -617,7 +617,8 @@ class ModsController(Controller):
         for mod in self.my_mod_list.mods:
             if (
                 filter is not None
-                and filter.lower() not in (mod.name + mod.author).lower()
+                and filter.lower()
+                not in ((mod.name or "") + (mod.author or "")).lower()
             ):
                 continue
             mod_frame = (

@@ -208,20 +208,20 @@ class App:
         self.page.fonts = {"Open Sans": "/fonts/Google Sans.ttf"}
         self.page.theme = Theme(font_family="Product Sans")
         self.page.title = self.page.metadata.name
-        self.page.window.prevent_close = True
-        self.page.window.min_width = 1630
-        self.page.window.min_height = 950
+        self.page.window_prevent_close = True
+        self.page.window_min_width = 1630
+        self.page.window_min_height = 950
         width = self.page.preferences.window_size[0]
         height = self.page.preferences.window_size[1]
-        if width < self.page.window.min_width:
-            width = self.page.window.min_width
-        if height < self.page.window.min_height:
-            height = self.page.window.min_height
+        if width < self.page.window_min_width:
+            width = self.page.window_min_width
+        if height < self.page.window_min_height:
+            height = self.page.window_min_height
         self.page.preferences.window_size = (width, height)
         self.page.preferences.save()
-        self.page.window.width = width
-        self.page.window.height = height
-        self.page.window.maximized = self.page.preferences.fullscreen
+        self.page.window_width = width
+        self.page.window_height = height
+        self.page.window_maximized = self.page.preferences.fullscreen
         self.page.snack_bar = Snackbar(page=self.page)
         self.page.clock = Text(str(self.page.trove_time))
         self.page.on_error = self.renderer_error_logger
@@ -387,10 +387,10 @@ class App:
         except ValueError:
             ...
         await asyncio.sleep(2)
-        await self.page.window.to_front()
+        await self.page.window_to_front()
 
     async def close_window(self):
-        await self.page.window.destroy()
+        await self.page.window_destroy()
 
     def create_image(self):
         image = Image.open("assets/x48.png")
