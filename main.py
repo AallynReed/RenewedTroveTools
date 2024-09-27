@@ -391,7 +391,7 @@ class App:
         await self.page.window.to_front()
 
     async def close_window(self):
-        await self.page.window.destroy_async()
+        await self.page.window.destroy()
 
     def create_image(self):
         image = Image.open("assets/x48.png")
