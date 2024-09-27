@@ -46,7 +46,7 @@ from utils.kiwiapi import KiwiAPI
 from utils import locale
 from persistent import AsyncFileEventHandler
 from watchdog.observers import Observer
-from tasks.events import event_receiver
+from tasks import events
 
 
 if getattr(sys, "frozen", False):
@@ -91,7 +91,7 @@ class App:
         await self.gather_views()
         await self.handshake_api()
         await self.process_login()
-        event_receiver.start(self.page)
+        events.event_receiver.start(self.page)
 
     async def start_web(self):
         self.setup_folders()
