@@ -970,7 +970,10 @@ class ModsController(Controller):
             tile_index = -1 if mod.enabled else 0
         else:
             tile_index = 0 if mod.enabled else -1
-        tile = next((t for t in self.my_mod_tiles if t.data == mod))
+        try:
+            tile = next((t for t in self.my_mod_tiles if t.data == mod))
+        except StopIteration:
+            return
         for c in tile.controls[tile_index].title.controls:
             if c.data == "conflicts":
                 c.content.icon_color = (
