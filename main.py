@@ -46,6 +46,7 @@ from utils.kiwiapi import KiwiAPI
 from utils import locale
 from persistent import AsyncFileEventHandler
 from watchdog.observers import Observer
+from tasks.events import event_receiver
 
 
 if getattr(sys, "frozen", False):
@@ -90,6 +91,7 @@ class App:
         await self.gather_views()
         await self.handshake_api()
         await self.process_login()
+        event_receiver.start(self.page)
 
     async def start_web(self):
         self.setup_folders()
@@ -204,19 +206,20 @@ class App:
         self.page.fonts = {"Open Sans": "/fonts/Google Sans.ttf"}
         self.page.theme = Theme(font_family="Product Sans")
         self.page.title = self.page.metadata.name
-        self.page.window_min_width = 1630
-        self.page.window_min_height = 950
+        self.page.window.prevent_close = True
+        self.page.window.min_width = 1630
+        self.page.window.min_height = 950
         width = self.page.preferences.window_size[0]
         height = self.page.preferences.window_size[1]
-        if width < self.page.window_min_width:
-            width = self.page.window_min_width
-        if height < self.page.window_min_height:
-            height = self.page.window_min_height
+        if width < self.page.window.min_width:
+            width = self.page.window.min_width
+        if height < self.page.window.min_height:
+            height = self.page.window.min_height
         self.page.preferences.window_size = (width, height)
         self.page.preferences.save()
-        self.page.window_width = width
-        self.page.window_height = height
-        self.page.window_maximized = self.page.preferences.fullscreen
+        self.page.window.width = width
+        self.page.window.height = height
+        self.page.window.maximized = self.page.preferences.fullscreen
         self.page.snack_bar = Snackbar(page=self.page)
         self.page.clock = Text(str(self.page.trove_time))
         self.page.on_error = self.renderer_error_logger
@@ -229,12 +232,16 @@ class App:
             self.page.preferences.fullscreen = True
         elif e.data == "unmaximize":
             self.page.preferences.fullscreen = False
-        elif e.data == "minimize":
-            await self.hide_window()
         elif e.data == "resized":
             width = self.page.window_width
             height = self.page.window_height
             self.page.preferences.window_size = (width, height)
+        elif e.data == "close":
+            await self.hide_window()
+            await self.send_notification(
+                "Renewed Trove Tools",
+                "The app is running in the background, close it from the tray icon.",
+            )
         self.page.preferences.save()
 
     async def renderer_error_logger(self, e):
@@ -380,9 +387,11 @@ class App:
             win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
         except ValueError:
             ...
+        await asyncio.sleep(2)
+        await self.page.window.to_front()
 
     async def close_window(self):
-        await self.page.window_close_async()
+        await self.page.window.destroy_async()
 
     def create_image(self):
         image = Image.open("assets/x48.png")
@@ -400,7 +409,7 @@ class App:
             "Renewed Trove Tools",
             self.create_image(),
             menu=pystray.Menu(
-                pystray.MenuItem("Show", self.show_app),
+                pystray.MenuItem("Show", self.show_app, default=True),
                 pystray.MenuItem("Quit", self.quit_app),
             ),
         )
@@ -410,13 +419,16 @@ class App:
         self.icon.run()
 
     async def send_notification(self, title, message):
+        ico_path = Path("assets/x256.png").absolute()
         await win11toast.toast_async(
             title,
             message,
-            # icon={
-            #    "src": "https://kiwiapi.aallyn.xyz/v1/misc/assets/x256.png",
-            #    "placement": "appLogoOverride",
-            # },
+            icon={
+                "src": str(ico_path),
+                "placement": "appLogoOverride",
+            },
+            duration=self.page.metadata.notifications.duration or None,
+            app_id="Renewed Trove Tools",
             on_click=self.show_app,
             audio={"silent": "true"},
         )
