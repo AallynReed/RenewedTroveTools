@@ -1,48 +1,84 @@
 import utils.tasks as tasks
-from aiohttp import ClientSession
 import json
-import win11toast
 from utils.logger import log
+import websockets
 
 
-def handle_sse_event(event_data):
-    lines = event_data.split("\n")
-    event = {}
-    for line in lines:
-        if line.startswith("data: "):
-            event["data"] = json.loads(line[6:])
-        elif line.startswith("event: "):
-            event["event"] = line[7:]
-        elif line.startswith("id: "):
-            event["id"] = line[4:]
-        elif line.startswith("retry: "):
-            event["retry"] = line[7:]
-    if event.get("event") == "heartbeat":
-        log("Tasks").debug("Received event heartbeat")
-        return
-    else:
-        return event
+async def challenge_notification(page, event):
+    if event["challenge_type"] == "RAMPAGE":
+        await page.send_notification(
+            "Rampage Challenge", f"A rampage has started.", "Rampage"
+        )
+    elif event["challenge_type"] == "COLLECTION":
+        await page.send_notification(
+            "Collection Challenge",
+            f"A collection challenge has started. Head to hub and take the portal.",
+            "Dragon Coin Challenge",
+        )
+    elif event["challenge_type"] == "DUNGEON":
+        await page.send_notification(
+            "Dungeon Challenge",
+            f"A dungeon challenge has started in {event['name']} biome.",
+            "Dungeon",
+        )
+
+
+async def chaos_chest_notification(page, event):
+    await page.send_notification(
+        "Chaos Chest",
+        f"{event['item']} is now in Chaos Chest with increased odds.",
+        "Chaos Chest",
+    )
+
+
+async def luxion_notification(page, event):
+    await page.send_notification("Luxion", f"Luxion has arrived in the hub.", "Luxion")
+
+
+async def corruxion_notification(page, event):
+    await page.RTT.send_notification(
+        "Corruxion", f"Corruxion has arrived in the hub.", "Corruxion"
+    )
+
+
+async def fluxion_notification(page, event):
+    await page.RTT.send_notification(
+        "Fluxion", f"Fluxion has arrived in the hub.", "Fluxion"
+    )
+
+
+async def leaderboards_notification(page, event):
+    await page.send_notification(
+        "Leaderboards",
+        f"Leaderboards have been updated on Trovesaurus",
+        "Leaderboards",
+        url=("Open Trovesaurus", "https://trovesaurus.com/leaderboards"),
+    )
+
+
+async def notification_manager(page, event):
+    if event["event"] == "challenge":
+        await challenge_notification(page, event["data"])
+    elif event["event"] == "chaos_chest":
+        await chaos_chest_notification(page, event["data"])
+    elif event["event"] == "luxion":
+        await luxion_notification(page, event["data"])
+    elif event["event"] == "corruxion":
+        await corruxion_notification(page, event["data"])
+    elif event["event"] == "fluxion":
+        await fluxion_notification(page, event["data"])
+    elif event["event"] == "leaderboards":
+        await leaderboards_notification(page, event["data"])
 
 
 @tasks.loop(seconds=0.1)
 async def event_receiver(page):
-    event_receiver.cancel()
     try:
-        async with ClientSession() as session:
-            async with session.get(
-                "https://kiwiapi.aallyn.xyz/v1/events/", timeout=None
-            ) as response:
-                log("Tasks").info("Connected to events stream")
-                buffer = ""
-                async for chunk in response.content.iter_any():
-                    chunk = chunk.decode("utf-8")
-                    buffer += chunk
-                    if "\n\n" in buffer:
-                        events = buffer.split("\n\n")
-                        buffer = events.pop()
-                        for event in events:
-                            event = handle_sse_event(event)
-                            if event is not None:
-                                ...  # This is where the event is handled
+        async with websockets.connect("wss://events.aallyn.xyz/") as ws:
+            log("Tasks").info("Connected to events websocket")
+            async for message in ws:
+                event = json.loads(message)
+                log("Tasks").debug(f"Received event: {event}")
+                await notification_manager(page, event)
     except Exception as e:
         log("Tasks").error(f"Failed to receive events: {e}\nRetrying...")

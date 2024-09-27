@@ -74,6 +74,7 @@ class App:
 
     async def start(self, page):
         self.page = page
+        self.page.send_notification = self.send_notification
         self.page.RTT = self
         if page.web:
             await self.start_web()
@@ -91,7 +92,8 @@ class App:
         await self.gather_views()
         await self.handshake_api()
         await self.process_login()
-        events.event_receiver.start(self.page)
+        if os.name == "nt":
+            events.event_receiver.start(self.page)
 
     async def start_web(self):
         self.setup_folders()
@@ -238,10 +240,6 @@ class App:
             self.page.preferences.window_size = (width, height)
         elif e.data == "close":
             await self.hide_window()
-            await self.send_notification(
-                "Renewed Trove Tools",
-                "The app is running in the background, close it from the tray icon.",
-            )
         self.page.preferences.save()
 
     async def renderer_error_logger(self, e):
@@ -377,6 +375,7 @@ class App:
             await self.send_notification(
                 "Renewed Trove Tools",
                 "The app is running in the background, close it from the tray icon.",
+                "System Tray",
             )
         except ValueError:
             ...
@@ -418,20 +417,42 @@ class App:
         ).start()
         self.icon.run()
 
-    async def send_notification(self, title, message):
+    async def send_notification(self, title, message, type, url=None):
+        notification_settings = self.page.preferences.notifications
+        enabled = notification_settings.enabled
+        if not enabled:
+            return
+        duration = notification_settings.duration
+        sound = notification_settings.sound
+        for notification_setting in notification_settings.notifications:
+            if notification_setting.name.value == type:
+                if sound:
+                    sound = notification_setting.sound
+        sound = str(sound).lower()
         ico_path = Path("assets/x256.png").absolute()
-        await win11toast.toast_async(
-            title,
-            message,
-            icon={
-                "src": str(ico_path),
-                "placement": "appLogoOverride",
-            },
-            duration=self.page.metadata.notifications.duration or None,
-            app_id="Renewed Trove Tools",
-            on_click=self.show_app,
-            audio={"silent": "true"},
-        )
+        button = None
+        if url is not None:
+            button = {
+                "activationType": "protocol",
+                "arguments": url[1],
+                "content": url[0],
+            }
+        try:
+            await win11toast.toast_async(
+                title,
+                message,
+                icon={
+                    "src": str(ico_path),
+                    "placement": "appLogoOverride",
+                },
+                button=button,
+                duration=duration or None,
+                app_id="Renewed Trove Tools",
+                on_click=self.show_app,
+                audio={"silent": sound},
+            )
+        except Exception as e:
+            print(e)
 
 
 if __name__ == "__main__":

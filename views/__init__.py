@@ -8,10 +8,11 @@ def all_views(page, web_mode=False):
     views = list()
     views.append(HomeView)
     if not web_mode:
+        views.append(LoginView)
+        views.append(NotificationsView)
         views.append(ModsView)
         views.append(ModdersView)
         views.append(ExtractorView)
-        views.append(LoginView)
     views.append(StarView)
     views.append(GemBuildsView)
     views.append(HealthOptimizerView)

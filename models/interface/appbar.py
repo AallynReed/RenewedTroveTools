@@ -40,6 +40,7 @@ from flet_core.icons import (
     PEST_CONTROL,
     HISTORY_EDU,
     DESKTOP_WINDOWS,
+    NOTIFICATIONS,
 )
 
 from models.preferences import AccentColor
@@ -115,6 +116,11 @@ class CustomAppBar(AppBar):
                     on_click=self.open_supporters,
                     visible=True,
                     tooltip=loc("Supporters"),
+                ),
+                IconButton(
+                    icon=NOTIFICATIONS,
+                    on_click=self.open_notifications,
+                    tooltip=loc("Notifications"),
                 ),
                 IconButton(
                     icon=HISTORY_EDU,
@@ -596,3 +602,6 @@ class CustomAppBar(AppBar):
 
     async def go_to_admin_panel(self, _):
         await self.page.go_async("/admin")
+
+    async def open_notifications(self, _):
+        await self.page.go_async("/notifications")
