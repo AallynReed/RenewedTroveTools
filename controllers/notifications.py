@@ -183,12 +183,6 @@ class NotificationsController(Controller):
         )
         await self.release_ui()
 
-    async def load_notifications(self, boot=False):
-        await self.lock_ui()
-        self.notifications.controls.clear()
-        ...
-        await self.release_ui()
-
     async def switch_enabled(self, event):
         ns = event.control.data
         ns.enabled = event.control.value
@@ -206,3 +200,9 @@ class NotificationsController(Controller):
         ns.duration = int(event.control.value)
         self.page.preferences.save()
         await self.reload_tab(event)
+
+    async def load_notifications(self, boot=False):
+        await self.lock_ui()
+        self.notifications.controls.clear()
+        ...
+        await self.release_ui()

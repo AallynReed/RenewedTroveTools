@@ -420,14 +420,16 @@ class App:
     async def send_notification(self, title, message, type, url=None):
         notification_settings = self.page.preferences.notifications
         enabled = notification_settings.enabled
-        if not enabled:
-            return
         duration = notification_settings.duration
         sound = notification_settings.sound
         for notification_setting in notification_settings.notifications:
             if notification_setting.name.value == type:
                 if sound:
                     sound = notification_setting.sound
+                if enabled:
+                    enabled = notification_setting.enabled
+        if not enabled:
+            return
         sound = str(sound).lower()
         ico_path = Path("assets/x256.png").absolute()
         button = None
