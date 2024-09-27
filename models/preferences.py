@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field, PrivateAttr, validator
 
 from utils.locale import Locale
 from utils.logger import log
-import traceback
 
 
 class AccentColor(Enum):
@@ -151,8 +150,6 @@ class Preferences(BaseModel):
                 pref = cls.parse_obj(data)
             except Exception as e:
                 print(f"Failed to load preferences from {path}")
-                # Complete error
-                print(traceback.format_exc(e))
                 pref = cls(path=path)
         pref.path = path
         pref.bind_page(page)
