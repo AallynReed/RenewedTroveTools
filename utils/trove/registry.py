@@ -18,6 +18,21 @@ if os.name == "nt":
     SteamTroveID = "304050"
 
 
+def add_to_startup(exe_path, app_name, args):
+    key = r"Software\Microsoft\Windows\CurrentVersion\Run"
+    command = f'"{exe_path}" {args}'
+    registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key, 0, winreg.KEY_WRITE)
+    winreg.SetValueEx(registry_key, app_name, 0, winreg.REG_SZ, command)
+    winreg.CloseKey(registry_key)
+
+
+def remove_from_startup(app_name):
+    key = r"Software\Microsoft\Windows\CurrentVersion\Run"
+    registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key, 0, winreg.KEY_WRITE)
+    winreg.DeleteValue(registry_key, app_name)
+    winreg.CloseKey(registry_key)
+
+
 class TroveGamePath:
     def __init__(self, path: Path, steam: Optional[Path] = None, name: str = None):
         self.path = path

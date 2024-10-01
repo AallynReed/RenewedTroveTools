@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 import flet_core.icons as icons
 from flet import (
@@ -141,6 +142,17 @@ class NotificationsController(Controller):
                                         Text(loc("Notification duration")),
                                     ]
                                 ),
+                                Row(
+                                    controls=[
+                                        Switch(
+                                            data=notification_settings,
+                                            value=notification_settings.start_with_windows,
+                                            on_change=self.switch_start_with_windows,
+                                            disabled=os.name != "nt",
+                                        ),
+                                        Text(loc("Start with Windows")),
+                                    ]
+                                ),
                             ]
                         ),
                     ),
@@ -198,6 +210,16 @@ class NotificationsController(Controller):
     async def switch_duration(self, event):
         ns = event.control.data
         ns.duration = int(event.control.value)
+        self.page.preferences.save()
+        await self.reload_tab(event)
+
+    async def switch_start_with_windows(self, event):
+        ns = event.control.data
+        ns.start_with_windows = event.control.value
+        if ns.start_with_windows:
+            await self.page.RTT.add_start_with_windows()
+        else:
+            await self.page.RTT.remove_start_with_windows()
         self.page.preferences.save()
         await self.reload_tab(event)
 

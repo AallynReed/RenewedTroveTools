@@ -87,6 +87,7 @@ class NotificationPreferences(BaseModel):
     enabled: bool = False
     sound: bool = True
     duration: int = 0
+    start_with_windows: bool = False
     notifications: list[NotificationSetting] = Field(
         default_factory=lambda: [
             NotificationSetting(name=nt) for nt in NotificationType

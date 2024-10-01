@@ -44,6 +44,7 @@ from utils.trove.server_time import ServerTime
 from views import all_views
 from utils.kiwiapi import KiwiAPI
 from utils import locale
+from utils.trove.registry import add_to_startup, remove_from_startup
 from persistent import AsyncFileEventHandler
 from watchdog.observers import Observer
 from tasks import events
@@ -51,6 +52,9 @@ from tasks import events
 
 if getattr(sys, "frozen", False):
     os.chdir(Path(sys.executable).parent)
+
+
+MINIMIZED = "--minimized" in sys.argv
 
 
 class App:
@@ -94,6 +98,8 @@ class App:
         await self.process_login()
         if os.name == "nt":
             events.event_receiver.start(self.page)
+            if MINIMIZED:
+                await self.hide_window()
 
     async def start_web(self):
         self.setup_folders()
@@ -455,6 +461,12 @@ class App:
             )
         except Exception as e:
             print(e)
+
+    async def add_start_with_windows(self):
+        add_to_startup(sys.executable, "Renewed Trove Tools", "--minimized")
+
+    async def remove_start_with_windows(self):
+        remove_from_startup("Renewed Trove Tools")
 
 
 if __name__ == "__main__":
