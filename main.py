@@ -53,8 +53,9 @@ from tasks import events
 if getattr(sys, "frozen", False):
     os.chdir(Path(sys.executable).parent)
 
-
 MINIMIZED = "--minimized" in sys.argv
+if MINIMIZED:
+    sys.argv.remove("--minimized")
 
 
 class App:
@@ -99,6 +100,7 @@ class App:
         if os.name == "nt":
             events.event_receiver.start(self.page)
             if MINIMIZED:
+                await asyncio.sleep(2)
                 await self.hide_window()
 
     async def start_web(self):
@@ -306,8 +308,6 @@ class App:
         await self.start_tasks()
 
         data = sys.argv[1:]
-        if "--minimized" in data:
-            data.remove("--minimized")
         if data and not logout:
             uri = urlparse(data[0])
             if uri.scheme == "rtt":
