@@ -306,6 +306,8 @@ class App:
         await self.start_tasks()
 
         data = sys.argv[1:]
+        if "--minimized" in data:
+            data.remove("--minimized")
         if data and not logout:
             uri = urlparse(data[0])
             if uri.scheme == "rtt":
