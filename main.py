@@ -28,10 +28,10 @@ import shutil
 if os.name == "nt":
     import win32gui
     import win32con
-import pystray
+    import pystray
+    import win11toast
 from PIL import Image
 import threading
-import win11toast
 
 import requests
 from flet import app_async, AppView, Theme, Row, Text, Icon
