@@ -119,13 +119,15 @@ class CustomAppBar(AppBar):
                 ),
                 *(
                     [
-                        IconButton(
-                            icon=NOTIFICATIONS,
-                            on_click=self.open_notifications,
-                            tooltip=loc("Notifications"),
+                        (
+                            IconButton(
+                                icon=NOTIFICATIONS,
+                                on_click=self.open_notifications,
+                                tooltip=loc("Notifications"),
+                            )
+                            if not self.page.web
+                            else []
                         )
-                        if not self.page.web
-                        else []
                     ]
                 ),
                 IconButton(
