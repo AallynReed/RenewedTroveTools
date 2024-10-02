@@ -24,8 +24,10 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 import shutil
-import win32gui
-import win32con
+
+if os.name == "nt":
+    import win32gui
+    import win32con
 import pystray
 from PIL import Image
 import threading
