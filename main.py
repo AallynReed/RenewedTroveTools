@@ -414,18 +414,19 @@ class App:
         asyncio.run_coroutine_threadsafe(self.unhide_window(), self.loop)
 
     def run_tray_icon(self, loop):
-        self.icon = pystray.Icon(
-            "Renewed Trove Tools",
-            self.create_image(),
-            menu=pystray.Menu(
-                pystray.MenuItem("Show", self.show_app, default=True),
-                pystray.MenuItem("Quit", self.quit_app),
-            ),
-        )
+        if os.name == "nt":
+            self.icon = pystray.Icon(
+                "Renewed Trove Tools",
+                self.create_image(),
+                menu=pystray.Menu(
+                    pystray.MenuItem("Show", self.show_app, default=True),
+                    pystray.MenuItem("Quit", self.quit_app),
+                ),
+            )
+            self.icon.run()
         threading.Thread(
             target=loop.run_forever, name="Renewed Trove Tools", daemon=True
         ).start()
-        self.icon.run()
 
     async def send_notification(self, title, message, type, url=None):
         notification_settings = self.page.preferences.notifications
