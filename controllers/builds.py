@@ -184,7 +184,11 @@ class GemBuildsController(Controller):
                                                     == self.config.build_type.name,
                                                 )
                                                 for b in BuildType
-                                                if b != BuildType.health
+                                                if b
+                                                not in [
+                                                    BuildType.health,
+                                                    BuildType.farm,
+                                                ]
                                             ],
                                             text_size=14,
                                             height=58,
