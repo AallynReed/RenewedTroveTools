@@ -151,7 +151,7 @@ class App:
             self.create_folder(modcfgs_folder)
 
             # Monitor the ModCfgs folder
-            self.monitor_modcfgs_folder(appdata)
+            asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
 
     def get_app_data_directory(self):
         """Get the correct app data directory based on platform."""
@@ -177,10 +177,6 @@ class App:
                     old_dir.rename(old_dir.parent.joinpath(new_folder))
                 except FileExistsError:
                     shutil.rmtree(old_dir)
-
-    def monitor_modcfgs_folder(self, modcfgs_folder):
-        """Monitor the ModCfgs folder."""
-        asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
 
     async def load_configurations(self):
         self.page.user_data = None
