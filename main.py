@@ -129,7 +129,9 @@ class App:
     def setup_folders(self):
         self.compiled = getattr(sys, "frozen", False)
         self.app_path = BasePath
-        self.page.metadata = Metadata.load_from_file(self.app_path.joinpath("data/metadata.json"))
+        self.page.metadata = Metadata.load_from_file(
+            self.app_path.joinpath("data/metadata.json")
+        )
 
         if not self.page.web:
             # Get app data directory (handles both Windows and Linux)
@@ -166,10 +168,7 @@ class App:
 
     def rebrand_old_folders(self, appdata):
         """Rebrand old folders if they exist."""
-        old_folders = [
-            ("Sly", "Aallyn"),
-            ("Trove/sly.dev", "aallyn")
-        ]
+        old_folders = [("Sly", "Aallyn"), ("Trove/sly.dev", "aallyn")]
         for old_folder, new_folder in old_folders:
             old_dir = appdata.joinpath(old_folder)
             if old_dir.exists() and old_dir.is_dir():
@@ -177,7 +176,7 @@ class App:
                     old_dir.rename(old_dir.parent.joinpath(new_folder))
                 except FileExistsError:
                     shutil.rmtree(old_dir)
-    
+
     def monitor_modcfgs_folder(self, modcfgs_folder):
         """Monitor the ModCfgs folder."""
         asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
@@ -269,7 +268,10 @@ class App:
             height = self.page.window_height
             self.page.preferences.window_size = (width, height)
         elif e.data == "close":
-            await self.hide_window()
+            if os.name == "nt":
+                await self.hide_window()
+            else:
+                await self.close_window()
         self.page.preferences.save()
 
     async def renderer_error_logger(self, e):
