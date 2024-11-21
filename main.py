@@ -138,15 +138,17 @@ class App:
             # Rebrand old folders
             self.rebrand_old_folders(appdata)
 
-            # Set up main app data and logs folders
+            # Set up main app data folder
             self.app_data = appdata.joinpath(self.page.metadata.tech_name)
             self.create_folder(self.app_data)
-            
+
+            # setup logs folder
             self.logs_folder = self.app_data.joinpath("logs")
             self.create_folder(self.logs_folder)
 
-            # Ensure ModCfgs folder exists
-            self.ensure_modcfgs_folder_exists(appdata)
+            # setup ModCfgs folder
+            modcfgs_folder = appdata.joinpath("Trove/ModCfgs")
+            self.create_folder(modcfgs_folder)
 
             # Monitor the ModCfgs folder
             self.monitor_modcfgs_folder(appdata)
@@ -176,14 +178,8 @@ class App:
                 except FileExistsError:
                     shutil.rmtree(old_dir)
 
-    def ensure_modcfgs_folder_exists(self, appdata):
-        """Ensure that the ModCfgs folder exists."""
-        modcfgs_folder = appdata.joinpath("Trove/ModCfgs")
-        self.create_folder(modcfgs_folder)
-
-    def monitor_modcfgs_folder(self, appdata):
+    def monitor_modcfgs_folder(self, modcfgs_folder):
         """Monitor the ModCfgs folder."""
-        modcfgs_folder = appdata.joinpath("Trove/ModCfgs")
         asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
 
     async def load_configurations(self):
