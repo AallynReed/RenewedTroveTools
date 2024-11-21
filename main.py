@@ -157,15 +157,13 @@ class App:
             self.logs_folder = self.app_data.joinpath("logs")
             self.logs_folder.mkdir(parents=True, exist_ok=True)
             self.app_data.mkdir(parents=True, exist_ok=True)
-            
+
             # Ensure ModCfgs folder exists
             modcfgs_folder = APPDATA.joinpath("Trove/ModCfgs")
             modcfgs_folder.mkdir(parents=True, exist_ok=True)  # Create if not exists
-            
+
             # Watch CFG edits
-            asyncio.create_task(
-                self.monitor_directory(modcfgs_folder, self.loop)
-            )
+            asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
 
     async def load_configurations(self):
         self.page.user_data = None
@@ -254,7 +252,10 @@ class App:
             height = self.page.window_height
             self.page.preferences.window_size = (width, height)
         elif e.data == "close":
-            await self.hide_window()
+            if os.name == "nt":
+                await self.hide_window()
+            else:
+                await self.close_window()
         self.page.preferences.save()
 
     async def renderer_error_logger(self, e):
