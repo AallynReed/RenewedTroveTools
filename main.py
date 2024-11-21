@@ -129,43 +129,58 @@ class App:
     def setup_folders(self):
         self.compiled = getattr(sys, "frozen", False)
         self.app_path = BasePath
-        self.page.metadata = Metadata.load_from_file(
-            self.app_path.joinpath("data/metadata.json")
-        )
+        self.page.metadata = Metadata.load_from_file(self.app_path.joinpath("data/metadata.json"))
+
         if not self.page.web:
-            try:
-                APPDATA = Path(os.environ.get("APPDATA"))
-            except TypeError:
-                # Patch for Linux support
-                APPDATA = Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
-            # Rebrand old folder
-            old_dir = APPDATA.joinpath("Sly")
-            try:
-                if old_dir.exists() and old_dir.is_dir():
-                    old_dir.rename(old_dir.parent.joinpath("Aallyn"))
-            except FileExistsError:
-                shutil.rmtree(old_dir)
-            old_dir = APPDATA.joinpath("Trove/sly.dev")
-            try:
-                if old_dir.exists() and old_dir.is_dir():
-                    old_dir.rename(old_dir.parent.joinpath("aallyn"))
-            except FileExistsError:
-                shutil.rmtree(old_dir)
-            self.app_data = APPDATA.joinpath("Trove/aallyn").joinpath(
-                self.page.metadata.tech_name
-            )
+            # Get app data directory (handles both Windows and Linux)
+            appdata = self.get_app_data_directory()
+
+            # Rebrand old folders
+            self.rebrand_old_folders(appdata)
+
+            # Set up main app data folder
+            self.app_data = appdata.joinpath(self.page.metadata.tech_name)
+            self.create_folder(self.app_data)
+
+            # setup logs folder
             self.logs_folder = self.app_data.joinpath("logs")
-            self.logs_folder.mkdir(parents=True, exist_ok=True)
-            self.app_data.mkdir(parents=True, exist_ok=True)
-            
-            # Ensure ModCfgs folder exists
-            modcfgs_folder = APPDATA.joinpath("Trove/ModCfgs")
-            modcfgs_folder.mkdir(parents=True, exist_ok=True)  # Create if not exists
-            
-            # Watch CFG edits
-            asyncio.create_task(
-                self.monitor_directory(modcfgs_folder, self.loop)
-            )
+            self.create_folder(self.logs_folder)
+
+            # setup ModCfgs folder
+            modcfgs_folder = appdata.joinpath("Trove/ModCfgs")
+            self.create_folder(modcfgs_folder)
+
+            # Monitor the ModCfgs folder
+            self.monitor_modcfgs_folder(modcfgs_folder)
+
+    def get_app_data_directory(self):
+        """Get the correct app data directory based on platform."""
+        try:
+            return Path(os.environ.get("APPDATA"))
+        except TypeError:
+            return Path(os.getenv("HOME") + "/.steam/Steam/steamapps/common")
+
+    def create_folder(self, folder_path):
+        """Ensure the folder exists, creating it if necessary."""
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+    def rebrand_old_folders(self, appdata):
+        """Rebrand old folders if they exist."""
+        old_folders = [
+            ("Sly", "Aallyn"),
+            ("Trove/sly.dev", "aallyn")
+        ]
+        for old_folder, new_folder in old_folders:
+            old_dir = appdata.joinpath(old_folder)
+            if old_dir.exists() and old_dir.is_dir():
+                try:
+                    old_dir.rename(old_dir.parent.joinpath(new_folder))
+                except FileExistsError:
+                    shutil.rmtree(old_dir)
+    
+    def monitor_modcfgs_folder(self, modcfgs_folder):
+        """Monitor the ModCfgs folder."""
+        asyncio.create_task(self.monitor_directory(modcfgs_folder, self.loop))
 
     async def load_configurations(self):
         self.page.user_data = None
