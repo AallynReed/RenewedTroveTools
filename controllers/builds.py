@@ -929,7 +929,7 @@ class GemBuildsController(Controller):
         cosmic_first = 0
         cosmic_second = 0
         if not hasattr(self, "gem_stats"):
-            self.gem_stats = files_cache["gems/crystal.json"]
+            self.gem_stats = files_cache["gems/mystic.json"]
         if config.build_type == BuildType.health:
             first_lesser = self.gem_stats["Lesser"]["Maximum Health"]
             first_empowered = self.gem_stats["Empowered"]["Maximum Health"]

@@ -62,6 +62,12 @@ class GemController(Controller):
                                 bgcolor=GemTierColor.crystal.value,
                                 color="black",
                             ),
+                            ElevatedButton(
+                                text=loc("Mystic"),
+                                on_click=self.reroll_mystic,
+                                bgcolor=GemTierColor.mystic.value,
+                                color="black",
+                            ),
                             Text(loc("Lesser")),
                             Switch(value=self.empower, on_change=self.switch_empower),
                             Text(loc("Empowered")),
@@ -416,6 +422,10 @@ class GemController(Controller):
     async def reroll_crystal(self, _):
         gem_type = EmpoweredGem if self.empower else LesserGem
         self.setup_controls(gem_type.random_gem(GemTier.crystal), None)
+
+    async def reroll_mystic(self, _):
+        gem_type = EmpoweredGem if self.empower else LesserGem
+        self.setup_controls(gem_type.random_gem(GemTier.mystic), None)
 
     async def max_level_down(self, _):
         self.selected_gem.set_level(1)

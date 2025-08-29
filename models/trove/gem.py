@@ -28,7 +28,8 @@ from pydantic import BaseModel, Field
 
 from models.trove.gems import (
     max_levels,
-    stat_multipliers,
+    lesser_stat_multipliers,
+    empowered_stat_multipliers,
     gem_min_max,
     gem_container_pr,
     level_increments,
@@ -142,7 +143,10 @@ class GemStat(BaseModel):
     def get_values(self):
         """Returns the calculated values for the current stat."""
 
-        min_val, max_val = stat_multipliers[self.gem.tier.name][self.name.value]
+        if self.gem.type == GemType.lesser:
+            min_val, max_val = lesser_stat_multipliers[self.gem.tier.name][self.name.value]
+        else:
+            min_val, max_val = empowered_stat_multipliers[self.gem.tier.name][self.name.value]
         min_inc, max_inc = gem_min_max[self.gem.tier.name][self.name.value][
             self.gem.type.name
         ]
@@ -312,12 +316,14 @@ class GemTier(Enum):
     radiant = "radiant"
     stellar = "stellar"
     crystal = "crystal"
+    mystic = "mystic"
 
 
 class GemTierColor(Enum):
     radiant = "#dff6ff"
     stellar = "#f0e62a"
     crystal = "#77e4ac"
+    mystic = "#a03fba"
 
 
 class GemType(Enum):

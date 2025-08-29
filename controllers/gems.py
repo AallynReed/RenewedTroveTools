@@ -91,6 +91,11 @@ class GemSetController(Controller):
                                         on_click=self.on_full_crystal,
                                         col=4,
                                     ),
+                                    ElevatedButton(
+                                        loc("Mystic"),
+                                        on_click=self.on_full_mystic,
+                                        col=4,
+                                    ),
                                 ],
                                 col={"xxl": 3},
                             ),
@@ -871,6 +876,22 @@ class GemSetController(Controller):
                     elif gem.type == GemType.lesser:
                         gem = LesserGem.random_gem(
                             tier=GemTier.crystal, element=gem.element
+                        )
+                    gs[i] = gem
+        self.setup_controls(self.selected_gem)
+        await self.page.update_async()
+
+    async def on_full_mystic(self, event):
+        for gs in self.gem_set:
+            for i, gem in enumerate(copy(gs)):
+                if gem.tier != GemTier.mystic:
+                    if gem.type == GemType.empowered:
+                        gem = EmpoweredGem.random_gem(
+                            tier=GemTier.mystic, element=gem.element
+                        )
+                    elif gem.type == GemType.lesser:
+                        gem = LesserGem.random_gem(
+                            tier=GemTier.mystic, element=gem.element
                         )
                     gs[i] = gem
         self.setup_controls(self.selected_gem)
