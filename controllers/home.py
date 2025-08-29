@@ -301,7 +301,7 @@ class HomeController(Controller):
                                     RTTImage(
                                         f"images/biomes/{b['icon']}.png", width=20
                                     ),
-                                    Text(b["final_name"], size=13),
+                                    Text(loc(b["final_name"]), size=13),
                                 ],
                             ),
                             padding=padding.symmetric(5, 15),
@@ -318,7 +318,7 @@ class HomeController(Controller):
                                     RTTImage(
                                         f"images/biomes/{b['icon']}.png", width=20
                                     ),
-                                    Text(b["final_name"], size=13),
+                                    Text(loc(b["final_name"]), size=13),
                                 ],
                             ),
                             padding=padding.symmetric(5, 15),
