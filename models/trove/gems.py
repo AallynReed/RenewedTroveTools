@@ -141,8 +141,8 @@ lesser_stat_multipliers = {
         "Light": [5 / 7, 5 / 7],
     },
     "mystic": {
-        "Physical Damage": [19, 19],
-        "Magic Damage": [19, 19],
+        "Physical Damage": [168 / 9, 168 / 9],
+        "Magic Damage": [168 / 9, 168 / 9],
         "Critical Damage": [2.5 / 9, 2.5 / 9],
         "Critical Hit": [0.25 / 9, 0.25 / 9],
         "Maximum Health %": [5.25 / 9, 5.25 / 9],
