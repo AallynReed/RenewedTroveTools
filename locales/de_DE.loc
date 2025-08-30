@@ -89,7 +89,6 @@ Alchemy»»Alchemy
 Alchemy and Healing»»Alchemy and Healing
 Alchemy, Heartiness and Leaping»»Alchemy, Heartiness and Leaping
 All»»All
-All Notifications»»All Notifications
 All gems have been de-augmented.»»All gems have been de-augmented.
 All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).»»All gems have been zero-ed in augmentation (This is irreversible, reroll gems to get new ones).
 All gems have fully augmented.»»All gems have fully augmented.
@@ -237,6 +236,7 @@ Create project»»Create project
 Create version»»Create version
 Critical»»Critical
 Critical Damage»»Critical Damage
+Critical Damage Bonus»»Critical Damage Bonus
 Critical Hit»»Critical Hit
 Crystal»»Crystal
 Crystal 4 Ring»»Crystal 4 Ring
@@ -686,6 +686,7 @@ Move Boost»»Move Boost
 Movement Speed»»Movement Speed
 My Mods»»My Mods
 My Mods tiles toggle mods»»My Mods tiles toggle mods
+Mystic»»Mystic
 Mystic 1 Face»»Mystic 1 Face
 Mystic 1 Hat»»Mystic 1 Hat
 Mystic 1 Weapon»»Mystic 1 Weapon

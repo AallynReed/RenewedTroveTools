@@ -598,6 +598,7 @@ class GemBuildsController(Controller):
                 second,
                 third,
                 fourth,
+                fifth,
                 final,
                 class_bonus,
                 coefficient,
@@ -624,6 +625,7 @@ class GemBuildsController(Controller):
                     second,
                     third,
                     fourth,
+                    fifth,
                     final,
                     class_bonus,
                     coefficient,
@@ -649,7 +651,16 @@ class GemBuildsController(Controller):
                                 )
                             ),
                             DataCell(content=Text(f"{round(final):,}")),
-                            DataCell(content=Text(f"{round(second, 1):,}%")),
+                            DataCell(
+                                content=Text(
+                                    f"{round(second, 1):,}%"
+                                    + (
+                                        f" + {round(fifth - 100, 1)}%"
+                                        if fifth - 100
+                                        else ""
+                                    )
+                                )
+                            ),
                             DataCell(
                                 content=Text(f"{coefficient:,}"),
                                 on_tap=self.copy_to_clipboard,
@@ -673,6 +684,7 @@ class GemBuildsController(Controller):
                                                     second,
                                                     third,
                                                     fourth,
+                                                    fifth,
                                                     final,
                                                     class_bonus,
                                                     coefficient,
@@ -828,7 +840,10 @@ class GemBuildsController(Controller):
                 else:
                     first += stat["value"]
             if stat["name"] == StatName.critical_damage.value:
-                second += stat["value"]
+                if stat["percentage"]:
+                    fifth += stat["value"]
+                else:
+                    second += stat["value"]
             if stat["name"] == StatName.light.value:
                 third += stat["value"]
         # Remove critical damage stats from equipments (movement speed builds)
@@ -903,8 +918,8 @@ class GemBuildsController(Controller):
             final = cfirst * (1 + fourth / 100)
             if class_bonus is not None:
                 final *= 1 + (class_bonus / 100)
-            coefficient = int(
-                round(final) * (1 + (round(csecond, 1) * (fifth / 100)) / 100)
+            coefficient = round(
+                final * (1 + (csecond * (fifth / 100)) / 100), 2
             )
             build_stats = [
                 build,
@@ -912,6 +927,7 @@ class GemBuildsController(Controller):
                 csecond,
                 int(cthird * (sixth / 100)),
                 fourth,
+                fifth,
                 final,
                 class_bonus,
                 coefficient,
@@ -1105,13 +1121,14 @@ class GemBuildsController(Controller):
         string = ""
         string += loc("Build") + f": {data[0]}\n"
         string += loc("Light") + f": {data[3]}\n"
-        string += loc("Base Damage") + f": {round(data[1], 2)}\n"
-        string += loc("Bonus Damage") + f": {round(data[4], 2)}\n"
-        string += loc("Damage") + f": {round(data[5])}\n"
-        string += loc("Critical Damage") + f": {round(data[2], 1)}\n"
+        string += loc("Base Damage") + f": {data[1], 2}\n"
+        string += loc("Bonus Damage") + f": {data[4], 2}\n"
+        string += loc("Damage") + f": {data[6]}\n"
+        string += loc("Critical Damage") + f": {data[2]}\n"
+        string += loc("Critical Damage Bonus") + f": {(data[5] - 100)}\n"
         if data[6] is not None:
-            string += loc("Class Bonus") + f": {data[6]}\n"
-        string += loc("Coefficient") + f": {data[7]}"
+            string += loc("Class Bonus") + f": {data[7]}\n"
+        string += loc("Coefficient") + f": {data[8]}"
         return string
 
     async def copy_build_clipboard(self, event):

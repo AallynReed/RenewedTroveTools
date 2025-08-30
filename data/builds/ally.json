@@ -1,4 +1,104 @@
 {
+    "spidermonkey_heckbug": {
+        "qualified_name": "[CD|LT] Bulbous Heckmantis",
+        "stats": [
+            {
+                "name": "Light",
+                "value": 150.0,
+                "percentage": false
+            },
+            {
+                "name": "Critical Damage",
+                "value": 30.0,
+                "percentage": true
+            }
+        ],
+        "abilities": [
+        ]
+    },
+    "trex_manabeast_fire": {
+        "qualified_name": "[PD|CD|LT] Mini Fire Manabeast",
+        "stats": [
+            {
+                "name": "Light",
+                "value": 200.0,
+                "percentage": false
+            },
+            {
+                "name": "Physical Damage",
+                "value": 25.0,
+                "percentage": true
+            },
+            {
+                "name": "Critical Damage",
+                "value": 15.0,
+                "percentage": true
+            }
+        ],
+        "abilities": [
+        ]
+    },
+    "trex_manabeast_water": {
+        "qualified_name": "[PD|CD|LT] Mini Water Manabeast",
+        "stats": [
+            {
+                "name": "Light",
+                "value": 200.0,
+                "percentage": false
+            },
+            {
+                "name": "Magic Damage",
+                "value": 25.0,
+                "percentage": true
+            },
+            {
+                "name": "Critical Damage",
+                "value": 15.0,
+                "percentage": true
+            }
+        ],
+        "abilities": [
+        ]
+    },
+    "venturous_vivian": {
+        "qualified_name": "[MD|PD|LT] Venturous Vivian",
+        "stats": [
+            {
+                "name": "Light",
+                "value": 450.0,
+                "percentage": false
+            },
+            {
+                "name": "Physical Damage",
+                "value": 10.0,
+                "percentage": true
+            },
+            {
+                "name": "Magic Damage",
+                "value": 10.0,
+                "percentage": true
+            }
+        ],
+        "abilities": [
+        ]
+    },
+    "goat_pinata_moontouched": {
+        "qualified_name": "[PD|LT] The Moontouched of All Time",
+        "stats": [
+            {
+                "name": "Light",
+                "value": 450.0,
+                "percentage": false
+            },
+            {
+                "name": "Physical Damage",
+                "value": 10.0,
+                "percentage": true
+            }
+        ],
+        "abilities": [
+        ]
+    },
     "phoenix_stars": {
         "qualified_name": "[MD|LT] Starry Skyfire",
         "stats": [
@@ -10,88 +110,6 @@
             {
                 "name": "Magic Damage",
                 "value": 25.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Increases cooldown recovery speed by 25%."
-        ]
-    },
-    "octopus_flower_prestige": {
-        "qualified_name": "[MD|LT] Orchian",
-        "stats": [
-            {
-                "name": "Light",
-                "value": 400.0,
-                "percentage": false
-            },
-            {
-                "name": "Magic Damage",
-                "value": 25.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "delve_dragonfly_jadedrake": {
-        "qualified_name": "[MD|LT] Aevyr",
-        "stats": [
-            {
-                "name": "Light",
-                "value": 300.0,
-                "percentage": false
-            },
-            {
-                "name": "Magic Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Gain 15% health when a nearby enemy dies.",
-            "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "qubesly_penguin_gentleman": {
-        "qualified_name": "[MD] Prefect Penguin",
-        "stats": [
-            {
-                "name": "Magic Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Gain 15% health when a nearby enemy dies.",
-            "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "delve_goldfish_balladine": {
-        "qualified_name": "[MD|LT] Puck",
-        "stats": [
-            {
-                "name": "Light",
-                "value": 300.0,
-                "percentage": false
-            },
-            {
-                "name": "Magic Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Increases cooldown recovery speed by 25%."
-        ]
-    },
-    "qubesly_chronomancer": {
-        "qualified_name": "[MD] Chronomancer Qubesly",
-        "stats": [
-            {
-                "name": "Magic Damage",
-                "value": 20.0,
                 "percentage": true
             }
         ],
@@ -116,88 +134,6 @@
         "abilities": [
             "Gain 15% health when a nearby enemy dies.",
             "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "delve_tato_jug": {
-        "qualified_name": "[PD|LT] Animated Jug",
-        "stats": [
-            {
-                "name": "Light",
-                "value": 300.0,
-                "percentage": false
-            },
-            {
-                "name": "Physical Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Gain 15% health when a nearby enemy dies.",
-            "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "raptor_zerker": {
-        "qualified_name": "[PD] Rapt Berserker",
-        "stats": [
-            {
-                "name": "Physical Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Gain 15% health when a nearby enemy dies.",
-            "Gain a movement speed boost when a nearby enemy dies."
-        ]
-    },
-    "delve_stack_coins": {
-        "qualified_name": "[PD|LT] Jingles",
-        "stats": [
-            {
-                "name": "Light",
-                "value": 300.0,
-                "percentage": false
-            },
-            {
-                "name": "Physical Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Increases cooldown recovery speed by 25%."
-        ]
-    },
-    "stack_hamburger": {
-        "qualified_name": "[PD] Lil Burgie",
-        "stats": [
-            {
-                "name": "Physical Damage",
-                "value": 20.0,
-                "percentage": true
-            }
-        ],
-        "abilities": [
-            "Increases cooldown recovery speed by 25%."
-        ]
-    },
-    "goat_prestige": {
-        "qualified_name": "[PD|LT] Earnie",
-        "stats": [
-            {
-                "name": "Physical Damage",
-                "value": 25.0,
-                "percentage": true
-            },
-            {
-                "name": "Light",
-                "value": 400,
-                "percentage": false
-            }
-        ],
-        "abilities": [
-            "Gain a protective shield when a nearby enemy dies."
         ]
     },
     "quarble_stars": {
