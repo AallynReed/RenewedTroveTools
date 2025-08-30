@@ -655,7 +655,7 @@ class GemBuildsController(Controller):
                                 content=Text(
                                     f"{round(second, 1):,}%"
                                     + (
-                                        f" + {round(fifth - 100, 1)}%"
+                                        f" (+{round(fifth - 100, 1)}%)"
                                         if fifth - 100
                                         else ""
                                     )
