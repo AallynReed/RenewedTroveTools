@@ -1582,7 +1582,7 @@ class ModsController(Controller):
 
     async def commit_change_mod_version(self, event):
         mod, file = event.control.data
-        url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file.file_id}"
+        url = f"https://kiwiapi.aallyn.xyz/v1/mods/downloadfile.php?fileid={file.file_id}"
         async with ClientSession() as session:
             async with session.get(url) as response:
                 data = await response.read()
@@ -1672,7 +1672,7 @@ class ModsController(Controller):
                 hash = md5(mod_file.read_bytes()).hexdigest()
                 if hash in hashes:
                     mod_file.unlink()
-        url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file_data.file_id}"
+        url = f"https://kiwiapi.aallyn.xyz/v1/mods/downloadfile.php?fileid={file_data.file_id}"
         headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
         async with ClientSession(headers=headers) as session:
             async with session.get(url) as response:

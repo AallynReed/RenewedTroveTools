@@ -507,6 +507,8 @@ class CustomAppBar(AppBar):
                         rtt_path = appdata.joinpath("Trove/aallyn").joinpath(
                             self.page.metadata.tech_name
                         )
+                        if not rtt_path.exists():
+                            rtt_path.mkdir(parents=True)
                         update_file = rtt_path / "update.msi"
                         update_file.write_bytes(await response.read())
                         subprocess.Popen(

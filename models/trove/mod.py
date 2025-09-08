@@ -536,7 +536,7 @@ class TroveMod:
             files.sort(key=lambda f: -f.file_id)
             if files:
                 file = files[0]
-                url = f"https://trovesaurus.com/client/downloadfile.php?fileid={file.file_id}"
+                url = f"https://kiwiapi.aallyn.xyz/v1/mods/downloadfile.php?fileid={file.file_id}"
                 async with ClientSession() as session:
                     async with session.get(url) as response:
                         data = await response.read()

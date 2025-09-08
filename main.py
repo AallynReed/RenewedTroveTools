@@ -289,7 +289,6 @@ class App:
     async def login(self, token):
         if token is None:
             return None
-
         headers = {"User-Agent": f"RenewedTroveTools/{self.page.metadata.version}"}
         try:
             response = requests.get(
