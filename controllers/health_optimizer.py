@@ -401,7 +401,7 @@ class HealthOptimizerController(Controller):
         eligible.sort(key=lambda x: x[1])
         # lowest = eligible[0]
         # eligible = list(filter(lambda x: x[1] == lowest[1], eligible))
-        eligible.sort(key=lambda x: (x[1], -(x[2] * x[3])))
+        eligible.sort(key=lambda x: (-(x[2] * x[3]), x[1]))
         return eligible
 
     def gem_combinations(self):
