@@ -384,7 +384,7 @@ class HealthOptimizerController(Controller):
         if self.config.ring_ch:
             first += 6.1  # Ring
         # Populate Base Max Health
-        second += 50000  # Dragons
+        second += 51000  # Dragons
         second += 37700 * 2  # Gear
         # Populate Base Max Health %
         third += 142  # Dragons
@@ -419,8 +419,8 @@ class HealthOptimizerController(Controller):
 
     def calculate_gem_stats(self, first, second, third):
         # Gem Stats (CH, MH, MH%)
-        emp_gem_stats = [14, 36750, 367.5]
-        lesser_gem_stats = [13, 33250, 332.5]
+        emp_gem_stats = [25.25, 61950, 619.5]
+        lesser_gem_stats = [24, 56700, 567.0]
         for combo in self.gem_combinations():
             first_add, second_add, third_add = 0, 0, 0
             # Calculate empowered gem stats
