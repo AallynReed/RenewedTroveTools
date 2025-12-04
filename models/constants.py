@@ -17,7 +17,7 @@ async def fetch_files(local_data=False, local_locales=False):
             fail = False
             try:
                 response = await session.get(
-                    "https://kiwiapi.aallyn.xyz/v1/stats/get_data", timeout=5
+                    "https://kiwiapi.aallyn.xyz/v1/stats/get_data", timeout=60
                 )
                 if response.status != 200:
                     log("Network").error(
@@ -57,7 +57,7 @@ async def fetch_files(local_data=False, local_locales=False):
             fail = False
             try:
                 response = await session.get(
-                    "https://kiwiapi.aallyn.xyz/v1/misc/locales", timeout=5
+                    "https://kiwiapi.aallyn.xyz/v1/misc/locales", timeout=60
                 )
                 if response.status != 200:
                     log("Network").error(
